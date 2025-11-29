@@ -1,0 +1,267 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"st7735_reg.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/ST7735/st7735_reg.c"
+  19              		.section	.text.st7735_read_reg,"ax",%progbits
+  20              		.align	1
+  21              		.global	st7735_read_reg
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	st7735_read_reg:
+  27              	.LVL0:
+  28              	.LFB0:
+   1:Drivers/BSP/ST7735/st7735_reg.c **** /**
+   2:Drivers/BSP/ST7735/st7735_reg.c ****   ******************************************************************************
+   3:Drivers/BSP/ST7735/st7735_reg.c ****   * @file    st7735_reg.c
+   4:Drivers/BSP/ST7735/st7735_reg.c ****   * @author  MCD Application Team
+   5:Drivers/BSP/ST7735/st7735_reg.c ****   * @brief   This file includes the LCD driver for st7735 LCD.
+   6:Drivers/BSP/ST7735/st7735_reg.c ****   ******************************************************************************
+   7:Drivers/BSP/ST7735/st7735_reg.c ****   * @attention
+   8:Drivers/BSP/ST7735/st7735_reg.c ****   *
+   9:Drivers/BSP/ST7735/st7735_reg.c ****   * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
+  10:Drivers/BSP/ST7735/st7735_reg.c ****   * All rights reserved.</center></h2>
+  11:Drivers/BSP/ST7735/st7735_reg.c ****   *
+  12:Drivers/BSP/ST7735/st7735_reg.c ****   * This software component is licensed by ST under BSD 3-Clause license,
+  13:Drivers/BSP/ST7735/st7735_reg.c ****   * the "License"; You may not use this file except in compliance with the
+  14:Drivers/BSP/ST7735/st7735_reg.c ****   * License. You may obtain a copy of the License at:
+  15:Drivers/BSP/ST7735/st7735_reg.c ****   *                        opensource.org/licenses/BSD-3-Clause
+  16:Drivers/BSP/ST7735/st7735_reg.c ****   *
+  17:Drivers/BSP/ST7735/st7735_reg.c ****   ******************************************************************************
+  18:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  19:Drivers/BSP/ST7735/st7735_reg.c **** 
+  20:Drivers/BSP/ST7735/st7735_reg.c **** /* Includes ------------------------------------------------------------------*/
+  21:Drivers/BSP/ST7735/st7735_reg.c **** #include "st7735_reg.h"
+  22:Drivers/BSP/ST7735/st7735_reg.c **** 
+  23:Drivers/BSP/ST7735/st7735_reg.c **** /** @addtogroup BSP
+  24:Drivers/BSP/ST7735/st7735_reg.c ****   * @{
+  25:Drivers/BSP/ST7735/st7735_reg.c ****   */ 
+  26:Drivers/BSP/ST7735/st7735_reg.c **** 
+  27:Drivers/BSP/ST7735/st7735_reg.c **** /** @addtogroup Components
+  28:Drivers/BSP/ST7735/st7735_reg.c ****   * @{
+  29:Drivers/BSP/ST7735/st7735_reg.c ****   */ 
+  30:Drivers/BSP/ST7735/st7735_reg.c ****   
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 2
+
+
+  31:Drivers/BSP/ST7735/st7735_reg.c **** /** @addtogroup ST7735_REG
+  32:Drivers/BSP/ST7735/st7735_reg.c ****   * @{
+  33:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  34:Drivers/BSP/ST7735/st7735_reg.c ****  
+  35:Drivers/BSP/ST7735/st7735_reg.c **** /** @addtogroup ST7735_REG_Exported_Functions
+  36:Drivers/BSP/ST7735/st7735_reg.c ****   * @{
+  37:Drivers/BSP/ST7735/st7735_reg.c ****   */   
+  38:Drivers/BSP/ST7735/st7735_reg.c **** 
+  39:Drivers/BSP/ST7735/st7735_reg.c **** /**
+  40:Drivers/BSP/ST7735/st7735_reg.c ****   * @brief  Read ST7735 register
+  41:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  ctx   Component context
+  42:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  reg   Register to read
+  43:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  pdata data to read from the register
+  44:Drivers/BSP/ST7735/st7735_reg.c ****   * @retval Component status
+  45:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  46:Drivers/BSP/ST7735/st7735_reg.c **** int32_t st7735_read_reg(st7735_ctx_t *ctx, uint8_t reg, uint8_t *pdata)
+  47:Drivers/BSP/ST7735/st7735_reg.c **** {
+  29              		.loc 1 47 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 47 1 is_stmt 0 view .LVU1
+  34 0000 08B5     		push	{r3, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38              		.cfi_offset 14, -4
+  48:Drivers/BSP/ST7735/st7735_reg.c ****   return ctx->ReadReg(ctx->handle, reg, pdata);
+  39              		.loc 1 48 3 is_stmt 1 view .LVU2
+  40              		.loc 1 48 13 is_stmt 0 view .LVU3
+  41 0002 4368     		ldr	r3, [r0, #4]
+  42              		.loc 1 48 10 view .LVU4
+  43 0004 0069     		ldr	r0, [r0, #16]
+  44              	.LVL1:
+  45              		.loc 1 48 10 view .LVU5
+  46 0006 9847     		blx	r3
+  47              	.LVL2:
+  49:Drivers/BSP/ST7735/st7735_reg.c **** }
+  48              		.loc 1 49 1 view .LVU6
+  49 0008 08BD     		pop	{r3, pc}
+  50              		.cfi_endproc
+  51              	.LFE0:
+  53              		.section	.text.st7735_write_reg,"ax",%progbits
+  54              		.align	1
+  55              		.global	st7735_write_reg
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	st7735_write_reg:
+  61              	.LVL3:
+  62              	.LFB1:
+  50:Drivers/BSP/ST7735/st7735_reg.c **** 
+  51:Drivers/BSP/ST7735/st7735_reg.c **** /**
+  52:Drivers/BSP/ST7735/st7735_reg.c ****   * @brief  Write ST7735 register
+  53:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  ctx    Component context
+  54:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  reg    Register to write
+  55:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  pdata  data to write to the register
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 3
+
+
+  56:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  length length of data to write to the register
+  57:Drivers/BSP/ST7735/st7735_reg.c ****   * @retval Component status
+  58:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  59:Drivers/BSP/ST7735/st7735_reg.c **** int32_t st7735_write_reg(st7735_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint32_t length)
+  60:Drivers/BSP/ST7735/st7735_reg.c **** {
+  63              		.loc 1 60 1 is_stmt 1 view -0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67              		.loc 1 60 1 is_stmt 0 view .LVU8
+  68 0000 10B5     		push	{r4, lr}
+  69              	.LCFI1:
+  70              		.cfi_def_cfa_offset 8
+  71              		.cfi_offset 4, -8
+  72              		.cfi_offset 14, -4
+  61:Drivers/BSP/ST7735/st7735_reg.c ****   return ctx->WriteReg(ctx->handle, reg, pdata, length);
+  73              		.loc 1 61 3 is_stmt 1 view .LVU9
+  74              		.loc 1 61 13 is_stmt 0 view .LVU10
+  75 0002 0468     		ldr	r4, [r0]
+  76              		.loc 1 61 10 view .LVU11
+  77 0004 0069     		ldr	r0, [r0, #16]
+  78              	.LVL4:
+  79              		.loc 1 61 10 view .LVU12
+  80 0006 A047     		blx	r4
+  81              	.LVL5:
+  62:Drivers/BSP/ST7735/st7735_reg.c **** }
+  82              		.loc 1 62 1 view .LVU13
+  83 0008 10BD     		pop	{r4, pc}
+  84              		.cfi_endproc
+  85              	.LFE1:
+  87              		.section	.text.st7735_send_data,"ax",%progbits
+  88              		.align	1
+  89              		.global	st7735_send_data
+  90              		.syntax unified
+  91              		.thumb
+  92              		.thumb_func
+  94              	st7735_send_data:
+  95              	.LVL6:
+  96              	.LFB2:
+  63:Drivers/BSP/ST7735/st7735_reg.c **** 
+  64:Drivers/BSP/ST7735/st7735_reg.c **** /**
+  65:Drivers/BSP/ST7735/st7735_reg.c ****   * @brief  Send data
+  66:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  ctx    Component context
+  67:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  pdata  data to write
+  68:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  length length of data to write
+  69:Drivers/BSP/ST7735/st7735_reg.c ****   * @retval Component status
+  70:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  71:Drivers/BSP/ST7735/st7735_reg.c **** int32_t st7735_send_data(st7735_ctx_t *ctx, uint8_t *pdata, uint32_t length)
+  72:Drivers/BSP/ST7735/st7735_reg.c **** {
+  97              		.loc 1 72 1 is_stmt 1 view -0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101              		.loc 1 72 1 is_stmt 0 view .LVU15
+ 102 0000 08B5     		push	{r3, lr}
+ 103              	.LCFI2:
+ 104              		.cfi_def_cfa_offset 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 4
+
+
+ 105              		.cfi_offset 3, -8
+ 106              		.cfi_offset 14, -4
+  73:Drivers/BSP/ST7735/st7735_reg.c ****   return ctx->SendData(ctx->handle, pdata, length);
+ 107              		.loc 1 73 3 is_stmt 1 view .LVU16
+ 108              		.loc 1 73 13 is_stmt 0 view .LVU17
+ 109 0002 8368     		ldr	r3, [r0, #8]
+ 110              		.loc 1 73 10 view .LVU18
+ 111 0004 0069     		ldr	r0, [r0, #16]
+ 112              	.LVL7:
+ 113              		.loc 1 73 10 view .LVU19
+ 114 0006 9847     		blx	r3
+ 115              	.LVL8:
+  74:Drivers/BSP/ST7735/st7735_reg.c **** }
+ 116              		.loc 1 74 1 view .LVU20
+ 117 0008 08BD     		pop	{r3, pc}
+ 118              		.cfi_endproc
+ 119              	.LFE2:
+ 121              		.section	.text.st7735_recv_data,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	st7735_recv_data
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 128              	st7735_recv_data:
+ 129              	.LVL9:
+ 130              	.LFB3:
+  75:Drivers/BSP/ST7735/st7735_reg.c **** 
+  76:Drivers/BSP/ST7735/st7735_reg.c **** /**
+  77:Drivers/BSP/ST7735/st7735_reg.c ****   * @brief  Recieve data
+  78:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  ctx    Component context
+  79:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  pdata  data to read
+  80:Drivers/BSP/ST7735/st7735_reg.c ****   * @param  length length of data to read
+  81:Drivers/BSP/ST7735/st7735_reg.c ****   * @retval Component status
+  82:Drivers/BSP/ST7735/st7735_reg.c ****   */
+  83:Drivers/BSP/ST7735/st7735_reg.c **** int32_t st7735_recv_data(st7735_ctx_t *ctx, uint8_t *pdata, uint32_t length)
+  84:Drivers/BSP/ST7735/st7735_reg.c **** {
+ 131              		.loc 1 84 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135              		.loc 1 84 1 is_stmt 0 view .LVU22
+ 136 0000 08B5     		push	{r3, lr}
+ 137              	.LCFI3:
+ 138              		.cfi_def_cfa_offset 8
+ 139              		.cfi_offset 3, -8
+ 140              		.cfi_offset 14, -4
+  85:Drivers/BSP/ST7735/st7735_reg.c ****   return ctx->RecvData(ctx->handle, pdata, length);
+ 141              		.loc 1 85 3 is_stmt 1 view .LVU23
+ 142              		.loc 1 85 13 is_stmt 0 view .LVU24
+ 143 0002 C368     		ldr	r3, [r0, #12]
+ 144              		.loc 1 85 10 view .LVU25
+ 145 0004 0069     		ldr	r0, [r0, #16]
+ 146              	.LVL10:
+ 147              		.loc 1 85 10 view .LVU26
+ 148 0006 9847     		blx	r3
+ 149              	.LVL11:
+  86:Drivers/BSP/ST7735/st7735_reg.c **** }
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 5
+
+
+ 150              		.loc 1 86 1 view .LVU27
+ 151 0008 08BD     		pop	{r3, pc}
+ 152              		.cfi_endproc
+ 153              	.LFE3:
+ 155              		.text
+ 156              	.Letext0:
+ 157              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 158              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 159              		.file 4 "Drivers/BSP/ST7735/st7735_reg.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 st7735_reg.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:20     .text.st7735_read_reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:26     .text.st7735_read_reg:00000000 st7735_read_reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:54     .text.st7735_write_reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:60     .text.st7735_write_reg:00000000 st7735_write_reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:88     .text.st7735_send_data:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:94     .text.st7735_send_data:00000000 st7735_send_data
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:122    .text.st7735_recv_data:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccU3fPHE.s:128    .text.st7735_recv_data:00000000 st7735_recv_data
+
+NO UNDEFINED SYMBOLS

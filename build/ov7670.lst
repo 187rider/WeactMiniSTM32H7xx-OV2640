@@ -1,0 +1,1931 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov7670.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov7670.c"
+  19              		.section	.text.OV7670_WriteReg,"ax",%progbits
+  20              		.align	1
+  21              		.global	OV7670_WriteReg
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	OV7670_WriteReg:
+  27              	.LVL0:
+  28              	.LFB144:
+   1:Drivers/BSP/Camera/ov7670.c **** #include "ov7670.h"
+   2:Drivers/BSP/Camera/ov7670.c **** #include "ov7670_regs.h"
+   3:Drivers/BSP/Camera/ov7670.c **** 
+   4:Drivers/BSP/Camera/ov7670.c **** int OV7670_WriteReg(uint8_t regAddr, const uint8_t *pData)
+   5:Drivers/BSP/Camera/ov7670.c **** {
+  29              		.loc 1 5 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 5 1 is_stmt 0 view .LVU1
+  34 0000 00B5     		push	{lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 14, -4
+  38 0002 85B0     		sub	sp, sp, #20
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 24
+   6:Drivers/BSP/Camera/ov7670.c **** 	uint8_t tt[2];
+  41              		.loc 1 6 2 is_stmt 1 view .LVU2
+   7:Drivers/BSP/Camera/ov7670.c **** 	tt[0] = regAddr;
+  42              		.loc 1 7 2 view .LVU3
+  43              		.loc 1 7 8 is_stmt 0 view .LVU4
+  44 0004 8DF80C00 		strb	r0, [sp, #12]
+   8:Drivers/BSP/Camera/ov7670.c **** 	tt[1] = pData[0];
+  45              		.loc 1 8 2 is_stmt 1 view .LVU5
+  46              		.loc 1 8 15 is_stmt 0 view .LVU6
+  47 0008 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  48              		.loc 1 8 8 view .LVU7
+  49 000a 8DF80D30 		strb	r3, [sp, #13]
+   9:Drivers/BSP/Camera/ov7670.c **** 	if (HAL_I2C_Master_Transmit(hcamera.hi2c, hcamera.addr,tt,2,hcamera.timeout) == HAL_OK)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 2
+
+
+  50              		.loc 1 9 2 is_stmt 1 view .LVU8
+  51              		.loc 1 9 51 is_stmt 0 view .LVU9
+  52 000e 0748     		ldr	r0, .L5
+  53              	.LVL1:
+  54              		.loc 1 9 6 view .LVU10
+  55 0010 8368     		ldr	r3, [r0, #8]
+  56 0012 0093     		str	r3, [sp]
+  57 0014 0223     		movs	r3, #2
+  58 0016 03AA     		add	r2, sp, #12
+  59              	.LVL2:
+  60              		.loc 1 9 6 view .LVU11
+  61 0018 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+  62              	.LVL3:
+  63              		.loc 1 9 6 view .LVU12
+  64 001a 0068     		ldr	r0, [r0]
+  65 001c FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+  66              	.LVL4:
+  67              		.loc 1 9 5 discriminator 1 view .LVU13
+  68 0020 00B1     		cbz	r0, .L1
+  10:Drivers/BSP/Camera/ov7670.c **** 	{
+  11:Drivers/BSP/Camera/ov7670.c **** 		return OV7670_OK;
+  12:Drivers/BSP/Camera/ov7670.c **** 	}
+  13:Drivers/BSP/Camera/ov7670.c **** 	else
+  14:Drivers/BSP/Camera/ov7670.c **** 	{
+  15:Drivers/BSP/Camera/ov7670.c **** 		return OV7670_ERROR;
+  69              		.loc 1 15 10 view .LVU14
+  70 0022 0120     		movs	r0, #1
+  71              	.L1:
+  16:Drivers/BSP/Camera/ov7670.c **** 	}
+  17:Drivers/BSP/Camera/ov7670.c **** }
+  72              		.loc 1 17 1 view .LVU15
+  73 0024 05B0     		add	sp, sp, #20
+  74              	.LCFI2:
+  75              		.cfi_def_cfa_offset 4
+  76              		@ sp needed
+  77 0026 5DF804FB 		ldr	pc, [sp], #4
+  78              	.L6:
+  79 002a 00BF     		.align	2
+  80              	.L5:
+  81 002c 00000000 		.word	hcamera
+  82              		.cfi_endproc
+  83              	.LFE144:
+  85              		.section	.text.OV7670_ReadReg,"ax",%progbits
+  86              		.align	1
+  87              		.global	OV7670_ReadReg
+  88              		.syntax unified
+  89              		.thumb
+  90              		.thumb_func
+  92              	OV7670_ReadReg:
+  93              	.LVL5:
+  94              	.LFB145:
+  18:Drivers/BSP/Camera/ov7670.c **** 
+  19:Drivers/BSP/Camera/ov7670.c **** int OV7670_ReadReg(uint8_t regAddr, uint8_t *pData)
+  20:Drivers/BSP/Camera/ov7670.c **** {
+  95              		.loc 1 20 1 is_stmt 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 3
+
+
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		.loc 1 20 1 is_stmt 0 view .LVU17
+ 100 0000 30B5     		push	{r4, r5, lr}
+ 101              	.LCFI3:
+ 102              		.cfi_def_cfa_offset 12
+ 103              		.cfi_offset 4, -12
+ 104              		.cfi_offset 5, -8
+ 105              		.cfi_offset 14, -4
+ 106 0002 85B0     		sub	sp, sp, #20
+ 107              	.LCFI4:
+ 108              		.cfi_def_cfa_offset 32
+ 109 0004 0D46     		mov	r5, r1
+ 110 0006 8DF80F00 		strb	r0, [sp, #15]
+  21:Drivers/BSP/Camera/ov7670.c **** 	HAL_I2C_Master_Transmit(hcamera.hi2c, hcamera.addr+1,&regAddr,1,hcamera.timeout);
+ 111              		.loc 1 21 2 is_stmt 1 view .LVU18
+ 112              		.loc 1 21 47 is_stmt 0 view .LVU19
+ 113 000a 0C4C     		ldr	r4, .L11
+ 114 000c 2179     		ldrb	r1, [r4, #4]	@ zero_extendqisi2
+ 115              	.LVL6:
+ 116              		.loc 1 21 2 view .LVU20
+ 117 000e A368     		ldr	r3, [r4, #8]
+ 118 0010 0093     		str	r3, [sp]
+ 119 0012 0123     		movs	r3, #1
+ 120 0014 0DF10F02 		add	r2, sp, #15
+ 121 0018 1944     		add	r1, r1, r3
+ 122 001a 2068     		ldr	r0, [r4]
+ 123              	.LVL7:
+ 124              		.loc 1 21 2 view .LVU21
+ 125 001c FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 126              	.LVL8:
+  22:Drivers/BSP/Camera/ov7670.c **** 	if (HAL_I2C_Master_Receive(hcamera.hi2c, hcamera.addr+1,pData,1,hcamera.timeout) == HAL_OK)
+ 127              		.loc 1 22 2 is_stmt 1 view .LVU22
+ 128              		.loc 1 22 50 is_stmt 0 view .LVU23
+ 129 0020 2179     		ldrb	r1, [r4, #4]	@ zero_extendqisi2
+ 130              		.loc 1 22 6 view .LVU24
+ 131 0022 A368     		ldr	r3, [r4, #8]
+ 132 0024 0093     		str	r3, [sp]
+ 133 0026 0123     		movs	r3, #1
+ 134 0028 2A46     		mov	r2, r5
+ 135 002a 1944     		add	r1, r1, r3
+ 136 002c 2068     		ldr	r0, [r4]
+ 137 002e FFF7FEFF 		bl	HAL_I2C_Master_Receive
+ 138              	.LVL9:
+ 139              		.loc 1 22 5 discriminator 1 view .LVU25
+ 140 0032 00B1     		cbz	r0, .L7
+  23:Drivers/BSP/Camera/ov7670.c **** 	{
+  24:Drivers/BSP/Camera/ov7670.c **** 		return OV7670_OK;
+  25:Drivers/BSP/Camera/ov7670.c **** 	}
+  26:Drivers/BSP/Camera/ov7670.c **** 	else
+  27:Drivers/BSP/Camera/ov7670.c **** 	{
+  28:Drivers/BSP/Camera/ov7670.c **** 		return OV7670_ERROR;
+ 141              		.loc 1 28 10 view .LVU26
+ 142 0034 0120     		movs	r0, #1
+ 143              	.L7:
+  29:Drivers/BSP/Camera/ov7670.c **** 	}
+  30:Drivers/BSP/Camera/ov7670.c **** }
+ 144              		.loc 1 30 1 view .LVU27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 4
+
+
+ 145 0036 05B0     		add	sp, sp, #20
+ 146              	.LCFI5:
+ 147              		.cfi_def_cfa_offset 12
+ 148              		@ sp needed
+ 149 0038 30BD     		pop	{r4, r5, pc}
+ 150              	.LVL10:
+ 151              	.L12:
+ 152              		.loc 1 30 1 view .LVU28
+ 153 003a 00BF     		.align	2
+ 154              	.L11:
+ 155 003c 00000000 		.word	hcamera
+ 156              		.cfi_endproc
+ 157              	.LFE145:
+ 159              		.section	.text.OV7670_Reset,"ax",%progbits
+ 160              		.align	1
+ 161              		.global	OV7670_Reset
+ 162              		.syntax unified
+ 163              		.thumb
+ 164              		.thumb_func
+ 166              	OV7670_Reset:
+ 167              	.LFB146:
+  31:Drivers/BSP/Camera/ov7670.c **** 
+  32:Drivers/BSP/Camera/ov7670.c **** int OV7670_Reset(void)
+  33:Drivers/BSP/Camera/ov7670.c **** {
+ 168              		.loc 1 33 1 is_stmt 1 view -0
+ 169              		.cfi_startproc
+ 170              		@ args = 0, pretend = 0, frame = 8
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172 0000 10B5     		push	{r4, lr}
+ 173              	.LCFI6:
+ 174              		.cfi_def_cfa_offset 8
+ 175              		.cfi_offset 4, -8
+ 176              		.cfi_offset 14, -4
+ 177 0002 82B0     		sub	sp, sp, #8
+ 178              	.LCFI7:
+ 179              		.cfi_def_cfa_offset 16
+  34:Drivers/BSP/Camera/ov7670.c **** 	HAL_Delay(100);
+ 180              		.loc 1 34 2 view .LVU30
+ 181 0004 6420     		movs	r0, #100
+ 182 0006 FFF7FEFF 		bl	HAL_Delay
+ 183              	.LVL11:
+  35:Drivers/BSP/Camera/ov7670.c **** 	uint8_t data = COM7_RESET;
+ 184              		.loc 1 35 2 view .LVU31
+ 185              		.loc 1 35 10 is_stmt 0 view .LVU32
+ 186 000a 8023     		movs	r3, #128
+ 187 000c 8DF80730 		strb	r3, [sp, #7]
+  36:Drivers/BSP/Camera/ov7670.c **** 	if (OV7670_WriteReg(REG_COM7, &data) != OV7670_OK)
+ 188              		.loc 1 36 2 is_stmt 1 view .LVU33
+ 189              		.loc 1 36 6 is_stmt 0 view .LVU34
+ 190 0010 0DF10701 		add	r1, sp, #7
+ 191 0014 1220     		movs	r0, #18
+ 192 0016 FFF7FEFF 		bl	OV7670_WriteReg
+ 193              	.LVL12:
+ 194              		.loc 1 36 5 discriminator 1 view .LVU35
+ 195 001a 18B1     		cbz	r0, .L17
+  37:Drivers/BSP/Camera/ov7670.c **** 	{
+  38:Drivers/BSP/Camera/ov7670.c **** 		return OV7670_ERROR;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 5
+
+
+ 196              		.loc 1 38 10 view .LVU36
+ 197 001c 0124     		movs	r4, #1
+ 198              	.L13:
+  39:Drivers/BSP/Camera/ov7670.c **** 	}
+  40:Drivers/BSP/Camera/ov7670.c **** 	HAL_Delay(100);
+  41:Drivers/BSP/Camera/ov7670.c **** 	return OV7670_OK;
+  42:Drivers/BSP/Camera/ov7670.c **** }
+ 199              		.loc 1 42 1 view .LVU37
+ 200 001e 2046     		mov	r0, r4
+ 201 0020 02B0     		add	sp, sp, #8
+ 202              	.LCFI8:
+ 203              		.cfi_remember_state
+ 204              		.cfi_def_cfa_offset 8
+ 205              		@ sp needed
+ 206 0022 10BD     		pop	{r4, pc}
+ 207              	.L17:
+ 208              	.LCFI9:
+ 209              		.cfi_restore_state
+ 210 0024 0446     		mov	r4, r0
+  40:Drivers/BSP/Camera/ov7670.c **** 	return OV7670_OK;
+ 211              		.loc 1 40 2 is_stmt 1 view .LVU38
+ 212 0026 6420     		movs	r0, #100
+ 213 0028 FFF7FEFF 		bl	HAL_Delay
+ 214              	.LVL13:
+  41:Drivers/BSP/Camera/ov7670.c **** }
+ 215              		.loc 1 41 2 view .LVU39
+  41:Drivers/BSP/Camera/ov7670.c **** }
+ 216              		.loc 1 41 9 is_stmt 0 view .LVU40
+ 217 002c F7E7     		b	.L13
+ 218              		.cfi_endproc
+ 219              	.LFE146:
+ 221              		.section	.text.OV7670_WriteRegList,"ax",%progbits
+ 222              		.align	1
+ 223              		.global	OV7670_WriteRegList
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 228              	OV7670_WriteRegList:
+ 229              	.LVL14:
+ 230              	.LFB147:
+  43:Drivers/BSP/Camera/ov7670.c **** 
+  44:Drivers/BSP/Camera/ov7670.c **** int OV7670_WriteRegList(const struct regval_t *reg_list)
+  45:Drivers/BSP/Camera/ov7670.c **** {
+ 231              		.loc 1 45 1 is_stmt 1 view -0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              		.loc 1 45 1 is_stmt 0 view .LVU42
+ 236 0000 10B5     		push	{r4, lr}
+ 237              	.LCFI10:
+ 238              		.cfi_def_cfa_offset 8
+ 239              		.cfi_offset 4, -8
+ 240              		.cfi_offset 14, -4
+ 241 0002 0446     		mov	r4, r0
+  46:Drivers/BSP/Camera/ov7670.c **** 	const struct regval_t *pReg = reg_list;
+ 242              		.loc 1 46 2 is_stmt 1 view .LVU43
+ 243              	.LVL15:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 6
+
+
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 244              		.loc 1 47 2 view .LVU44
+ 245              		.loc 1 47 8 is_stmt 0 view .LVU45
+ 246 0004 00E0     		b	.L19
+ 247              	.LVL16:
+ 248              	.L25:
+ 249              	.LBB2:
+  48:Drivers/BSP/Camera/ov7670.c **** 	{
+  49:Drivers/BSP/Camera/ov7670.c **** 		int write_result = OV7670_WriteReg( pReg->reg_addr, &(pReg->value));
+  50:Drivers/BSP/Camera/ov7670.c **** 		if (write_result != OV7670_OK)
+  51:Drivers/BSP/Camera/ov7670.c **** 		{
+  52:Drivers/BSP/Camera/ov7670.c **** 			return write_result;
+  53:Drivers/BSP/Camera/ov7670.c **** 		}
+  54:Drivers/BSP/Camera/ov7670.c **** 		pReg++;
+ 250              		.loc 1 54 3 is_stmt 1 view .LVU46
+ 251              		.loc 1 54 7 is_stmt 0 view .LVU47
+ 252 0006 0234     		adds	r4, r4, #2
+ 253              	.LVL17:
+ 254              	.L19:
+ 255              		.loc 1 54 7 view .LVU48
+ 256              	.LBE2:
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 257              		.loc 1 47 32 is_stmt 1 view .LVU49
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 258              		.loc 1 47 13 is_stmt 0 view .LVU50
+ 259 0008 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 260              		.loc 1 47 32 view .LVU51
+ 261 000a FF28     		cmp	r0, #255
+ 262 000c 0BD0     		beq	.L22
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 263              		.loc 1 47 39 discriminator 1 view .LVU52
+ 264 000e 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+  47:Drivers/BSP/Camera/ov7670.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 265              		.loc 1 47 32 discriminator 1 view .LVU53
+ 266 0010 FF2B     		cmp	r3, #255
+ 267 0012 06D0     		beq	.L24
+ 268              	.LBB3:
+  49:Drivers/BSP/Camera/ov7670.c **** 		if (write_result != OV7670_OK)
+ 269              		.loc 1 49 3 is_stmt 1 view .LVU54
+  49:Drivers/BSP/Camera/ov7670.c **** 		if (write_result != OV7670_OK)
+ 270              		.loc 1 49 22 is_stmt 0 view .LVU55
+ 271 0014 611C     		adds	r1, r4, #1
+ 272 0016 FFF7FEFF 		bl	OV7670_WriteReg
+ 273              	.LVL18:
+  50:Drivers/BSP/Camera/ov7670.c **** 		{
+ 274              		.loc 1 50 3 is_stmt 1 view .LVU56
+  50:Drivers/BSP/Camera/ov7670.c **** 		{
+ 275              		.loc 1 50 6 is_stmt 0 view .LVU57
+ 276 001a 0346     		mov	r3, r0
+ 277 001c 0028     		cmp	r0, #0
+ 278 001e F2D0     		beq	.L25
+ 279 0020 02E0     		b	.L18
+ 280              	.LVL19:
+ 281              	.L24:
+  50:Drivers/BSP/Camera/ov7670.c **** 		{
+ 282              		.loc 1 50 6 view .LVU58
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 7
+
+
+ 283              	.LBE3:
+  55:Drivers/BSP/Camera/ov7670.c **** 	}
+  56:Drivers/BSP/Camera/ov7670.c **** 	return OV7670_OK;
+ 284              		.loc 1 56 9 view .LVU59
+ 285 0022 0023     		movs	r3, #0
+ 286 0024 00E0     		b	.L18
+ 287              	.L22:
+ 288 0026 0023     		movs	r3, #0
+ 289              	.L18:
+  57:Drivers/BSP/Camera/ov7670.c **** }
+ 290              		.loc 1 57 1 view .LVU60
+ 291 0028 1846     		mov	r0, r3
+ 292 002a 10BD     		pop	{r4, pc}
+ 293              		.loc 1 57 1 view .LVU61
+ 294              		.cfi_endproc
+ 295              	.LFE147:
+ 297              		.section	.text.OV7670_Light_Mode,"ax",%progbits
+ 298              		.align	1
+ 299              		.global	OV7670_Light_Mode
+ 300              		.syntax unified
+ 301              		.thumb
+ 302              		.thumb_func
+ 304              	OV7670_Light_Mode:
+ 305              	.LVL20:
+ 306              	.LFB148:
+  58:Drivers/BSP/Camera/ov7670.c **** 
+  59:Drivers/BSP/Camera/ov7670.c **** ////////////////////////////////////////////////////////////////////////////
+  60:Drivers/BSP/Camera/ov7670.c **** //OV7670功能设置
+  61:Drivers/BSP/Camera/ov7670.c **** //白平衡设置
+  62:Drivers/BSP/Camera/ov7670.c **** //0:自动
+  63:Drivers/BSP/Camera/ov7670.c **** //1:太阳sunny
+  64:Drivers/BSP/Camera/ov7670.c **** //2,阴天cloudy
+  65:Drivers/BSP/Camera/ov7670.c **** //3,办公室office
+  66:Drivers/BSP/Camera/ov7670.c **** //4,家里home
+  67:Drivers/BSP/Camera/ov7670.c **** void OV7670_Light_Mode(uint8_t mode)
+  68:Drivers/BSP/Camera/ov7670.c **** {
+ 307              		.loc 1 68 1 is_stmt 1 view -0
+ 308              		.cfi_startproc
+ 309              		@ args = 0, pretend = 0, frame = 8
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311              		.loc 1 68 1 is_stmt 0 view .LVU63
+ 312 0000 00B5     		push	{lr}
+ 313              	.LCFI11:
+ 314              		.cfi_def_cfa_offset 4
+ 315              		.cfi_offset 14, -4
+ 316 0002 83B0     		sub	sp, sp, #12
+ 317              	.LCFI12:
+ 318              		.cfi_def_cfa_offset 16
+  69:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg13val=0XE7;//默认就是设置为自动白平衡
+ 319              		.loc 1 69 2 is_stmt 1 view .LVU64
+ 320              		.loc 1 69 10 is_stmt 0 view .LVU65
+ 321 0004 E723     		movs	r3, #231
+ 322 0006 8DF80730 		strb	r3, [sp, #7]
+  70:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg01val=0;
+ 323              		.loc 1 70 2 is_stmt 1 view .LVU66
+ 324              		.loc 1 70 10 is_stmt 0 view .LVU67
+ 325 000a 0023     		movs	r3, #0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 8
+
+
+ 326 000c 8DF80630 		strb	r3, [sp, #6]
+  71:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg02val=0;
+ 327              		.loc 1 71 2 is_stmt 1 view .LVU68
+ 328              		.loc 1 71 10 is_stmt 0 view .LVU69
+ 329 0010 8DF80530 		strb	r3, [sp, #5]
+  72:Drivers/BSP/Camera/ov7670.c **** 	switch(mode)
+ 330              		.loc 1 72 2 is_stmt 1 view .LVU70
+ 331 0014 0138     		subs	r0, r0, #1
+ 332              	.LVL21:
+ 333              		.loc 1 72 2 is_stmt 0 view .LVU71
+ 334 0016 0328     		cmp	r0, #3
+ 335 0018 0CD8     		bhi	.L27
+ 336 001a DFE800F0 		tbb	[pc, r0]
+ 337              	.L29:
+ 338 001e 02       		.byte	(.L32-.L29)/2
+ 339 001f 1D       		.byte	(.L31-.L29)/2
+ 340 0020 27       		.byte	(.L30-.L29)/2
+ 341 0021 31       		.byte	(.L28-.L29)/2
+ 342              		.p2align 1
+ 343              	.L32:
+  73:Drivers/BSP/Camera/ov7670.c **** 	{
+  74:Drivers/BSP/Camera/ov7670.c **** 		case 1://sunny
+  75:Drivers/BSP/Camera/ov7670.c **** 			reg13val=0XE5;
+ 344              		.loc 1 75 4 is_stmt 1 view .LVU72
+ 345              		.loc 1 75 12 is_stmt 0 view .LVU73
+ 346 0022 E523     		movs	r3, #229
+ 347 0024 8DF80730 		strb	r3, [sp, #7]
+  76:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X5A;
+ 348              		.loc 1 76 4 is_stmt 1 view .LVU74
+ 349              		.loc 1 76 12 is_stmt 0 view .LVU75
+ 350 0028 5A23     		movs	r3, #90
+ 351 002a 8DF80630 		strb	r3, [sp, #6]
+  77:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X5C;
+ 352              		.loc 1 77 4 is_stmt 1 view .LVU76
+ 353              		.loc 1 77 12 is_stmt 0 view .LVU77
+ 354 002e 5C23     		movs	r3, #92
+ 355 0030 8DF80530 		strb	r3, [sp, #5]
+  78:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 356              		.loc 1 78 4 is_stmt 1 view .LVU78
+ 357              	.L27:
+  79:Drivers/BSP/Camera/ov7670.c **** 		case 2://cloudy
+  80:Drivers/BSP/Camera/ov7670.c **** 			reg13val=0XE5;
+  81:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X58;
+  82:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X60;
+  83:Drivers/BSP/Camera/ov7670.c **** 			break;	
+  84:Drivers/BSP/Camera/ov7670.c **** 		case 3://office
+  85:Drivers/BSP/Camera/ov7670.c **** 			reg13val=0XE5;
+  86:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X84;
+  87:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X4c;
+  88:Drivers/BSP/Camera/ov7670.c **** 			break;	
+  89:Drivers/BSP/Camera/ov7670.c **** 		case 4://home
+  90:Drivers/BSP/Camera/ov7670.c **** 			reg13val=0XE5;
+  91:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X96;
+  92:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X40;
+  93:Drivers/BSP/Camera/ov7670.c **** 			break;	
+  94:Drivers/BSP/Camera/ov7670.c **** 	}
+  95:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_COM8, &reg13val);//COM8设置 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 9
+
+
+ 358              		.loc 1 95 2 view .LVU79
+ 359 0034 0DF10701 		add	r1, sp, #7
+ 360 0038 1320     		movs	r0, #19
+ 361              	.LVL22:
+ 362              		.loc 1 95 2 is_stmt 0 view .LVU80
+ 363 003a FFF7FEFF 		bl	OV7670_WriteReg
+ 364              	.LVL23:
+  96:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_BLUE,&reg01val);//AWB蓝色通道增益 
+ 365              		.loc 1 96 2 is_stmt 1 view .LVU81
+ 366 003e 0DF10601 		add	r1, sp, #6
+ 367 0042 0120     		movs	r0, #1
+ 368 0044 FFF7FEFF 		bl	OV7670_WriteReg
+ 369              	.LVL24:
+  97:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_RED,&reg02val);//AWB红色通道增益 
+ 370              		.loc 1 97 2 view .LVU82
+ 371 0048 0DF10501 		add	r1, sp, #5
+ 372 004c 0220     		movs	r0, #2
+ 373 004e FFF7FEFF 		bl	OV7670_WriteReg
+ 374              	.LVL25:
+  98:Drivers/BSP/Camera/ov7670.c **** }				
+ 375              		.loc 1 98 1 is_stmt 0 view .LVU83
+ 376 0052 03B0     		add	sp, sp, #12
+ 377              	.LCFI13:
+ 378              		.cfi_remember_state
+ 379              		.cfi_def_cfa_offset 4
+ 380              		@ sp needed
+ 381 0054 5DF804FB 		ldr	pc, [sp], #4
+ 382              	.L31:
+ 383              	.LCFI14:
+ 384              		.cfi_restore_state
+  80:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X58;
+ 385              		.loc 1 80 4 is_stmt 1 view .LVU84
+  80:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X58;
+ 386              		.loc 1 80 12 is_stmt 0 view .LVU85
+ 387 0058 E523     		movs	r3, #229
+ 388 005a 8DF80730 		strb	r3, [sp, #7]
+  81:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X60;
+ 389              		.loc 1 81 4 is_stmt 1 view .LVU86
+  81:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X60;
+ 390              		.loc 1 81 12 is_stmt 0 view .LVU87
+ 391 005e 5823     		movs	r3, #88
+ 392 0060 8DF80630 		strb	r3, [sp, #6]
+  82:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 393              		.loc 1 82 4 is_stmt 1 view .LVU88
+  82:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 394              		.loc 1 82 12 is_stmt 0 view .LVU89
+ 395 0064 6023     		movs	r3, #96
+ 396 0066 8DF80530 		strb	r3, [sp, #5]
+  83:Drivers/BSP/Camera/ov7670.c **** 		case 3://office
+ 397              		.loc 1 83 4 is_stmt 1 view .LVU90
+ 398 006a E3E7     		b	.L27
+ 399              	.L30:
+  85:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X84;
+ 400              		.loc 1 85 4 view .LVU91
+  85:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X84;
+ 401              		.loc 1 85 12 is_stmt 0 view .LVU92
+ 402 006c E523     		movs	r3, #229
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 10
+
+
+ 403 006e 8DF80730 		strb	r3, [sp, #7]
+  86:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X4c;
+ 404              		.loc 1 86 4 is_stmt 1 view .LVU93
+  86:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X4c;
+ 405              		.loc 1 86 12 is_stmt 0 view .LVU94
+ 406 0072 8423     		movs	r3, #132
+ 407 0074 8DF80630 		strb	r3, [sp, #6]
+  87:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 408              		.loc 1 87 4 is_stmt 1 view .LVU95
+  87:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 409              		.loc 1 87 12 is_stmt 0 view .LVU96
+ 410 0078 4C23     		movs	r3, #76
+ 411 007a 8DF80530 		strb	r3, [sp, #5]
+  88:Drivers/BSP/Camera/ov7670.c **** 		case 4://home
+ 412              		.loc 1 88 4 is_stmt 1 view .LVU97
+ 413 007e D9E7     		b	.L27
+ 414              	.L28:
+  90:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X96;
+ 415              		.loc 1 90 4 view .LVU98
+  90:Drivers/BSP/Camera/ov7670.c **** 			reg01val=0X96;
+ 416              		.loc 1 90 12 is_stmt 0 view .LVU99
+ 417 0080 E523     		movs	r3, #229
+ 418 0082 8DF80730 		strb	r3, [sp, #7]
+  91:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X40;
+ 419              		.loc 1 91 4 is_stmt 1 view .LVU100
+  91:Drivers/BSP/Camera/ov7670.c **** 			reg02val=0X40;
+ 420              		.loc 1 91 12 is_stmt 0 view .LVU101
+ 421 0086 9623     		movs	r3, #150
+ 422 0088 8DF80630 		strb	r3, [sp, #6]
+  92:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 423              		.loc 1 92 4 is_stmt 1 view .LVU102
+  92:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 424              		.loc 1 92 12 is_stmt 0 view .LVU103
+ 425 008c 4023     		movs	r3, #64
+ 426 008e 8DF80530 		strb	r3, [sp, #5]
+  93:Drivers/BSP/Camera/ov7670.c **** 	}
+ 427              		.loc 1 93 4 is_stmt 1 view .LVU104
+ 428 0092 CFE7     		b	.L27
+ 429              		.cfi_endproc
+ 430              	.LFE148:
+ 432              		.section	.text.OV7670_Color_Saturation,"ax",%progbits
+ 433              		.align	1
+ 434              		.global	OV7670_Color_Saturation
+ 435              		.syntax unified
+ 436              		.thumb
+ 437              		.thumb_func
+ 439              	OV7670_Color_Saturation:
+ 440              	.LVL26:
+ 441              	.LFB149:
+  99:Drivers/BSP/Camera/ov7670.c **** 
+ 100:Drivers/BSP/Camera/ov7670.c **** //色度设置
+ 101:Drivers/BSP/Camera/ov7670.c **** //0:-2
+ 102:Drivers/BSP/Camera/ov7670.c **** //1:-1
+ 103:Drivers/BSP/Camera/ov7670.c **** //2,0
+ 104:Drivers/BSP/Camera/ov7670.c **** //3,1
+ 105:Drivers/BSP/Camera/ov7670.c **** //4,2
+ 106:Drivers/BSP/Camera/ov7670.c **** void OV7670_Color_Saturation(uint8_t sat)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 11
+
+
+ 107:Drivers/BSP/Camera/ov7670.c **** {
+ 442              		.loc 1 107 1 view -0
+ 443              		.cfi_startproc
+ 444              		@ args = 0, pretend = 0, frame = 8
+ 445              		@ frame_needed = 0, uses_anonymous_args = 0
+ 446              		.loc 1 107 1 is_stmt 0 view .LVU106
+ 447 0000 00B5     		push	{lr}
+ 448              	.LCFI15:
+ 449              		.cfi_def_cfa_offset 4
+ 450              		.cfi_offset 14, -4
+ 451 0002 83B0     		sub	sp, sp, #12
+ 452              	.LCFI16:
+ 453              		.cfi_def_cfa_offset 16
+ 108:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg4f5054val=0X80;//默认就是sat=2,即不调节色度的设置
+ 454              		.loc 1 108 2 is_stmt 1 view .LVU107
+ 455              		.loc 1 108 10 is_stmt 0 view .LVU108
+ 456 0004 8023     		movs	r3, #128
+ 457 0006 8DF80730 		strb	r3, [sp, #7]
+ 109:Drivers/BSP/Camera/ov7670.c ****  	uint8_t reg52val=0X22;
+ 458              		.loc 1 109 3 is_stmt 1 view .LVU109
+ 459              		.loc 1 109 11 is_stmt 0 view .LVU110
+ 460 000a 2223     		movs	r3, #34
+ 461 000c 8DF80630 		strb	r3, [sp, #6]
+ 110:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg53val=0X5E;
+ 462              		.loc 1 110 2 is_stmt 1 view .LVU111
+ 463              		.loc 1 110 10 is_stmt 0 view .LVU112
+ 464 0010 5E23     		movs	r3, #94
+ 465 0012 8DF80530 		strb	r3, [sp, #5]
+ 111:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg54val=0X9E;
+ 466              		.loc 1 111 2 is_stmt 1 view .LVU113
+ 467              		.loc 1 111 10 is_stmt 0 view .LVU114
+ 468 0016 9E23     		movs	r3, #158
+ 469 0018 8DF80430 		strb	r3, [sp, #4]
+ 112:Drivers/BSP/Camera/ov7670.c ****  	switch(sat)
+ 470              		.loc 1 112 3 is_stmt 1 view .LVU115
+ 471 001c 0428     		cmp	r0, #4
+ 472 001e 0DD8     		bhi	.L36
+ 473 0020 DFE800F0 		tbb	[pc, r0]
+ 474              	.L38:
+ 475 0024 03       		.byte	(.L41-.L38)/2
+ 476 0025 30       		.byte	(.L40-.L38)/2
+ 477 0026 0C       		.byte	(.L36-.L38)/2
+ 478 0027 3A       		.byte	(.L39-.L38)/2
+ 479 0028 44       		.byte	(.L37-.L38)/2
+ 480 0029 00       		.p2align 1
+ 481              	.L41:
+ 113:Drivers/BSP/Camera/ov7670.c **** 	{
+ 114:Drivers/BSP/Camera/ov7670.c **** 		case 0://-2
+ 115:Drivers/BSP/Camera/ov7670.c **** 			reg4f5054val=0X40;  	 
+ 482              		.loc 1 115 4 view .LVU116
+ 483              		.loc 1 115 16 is_stmt 0 view .LVU117
+ 484 002a 4023     		movs	r3, #64
+ 485 002c 8DF80730 		strb	r3, [sp, #7]
+ 116:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X11;
+ 486              		.loc 1 116 4 is_stmt 1 view .LVU118
+ 487              		.loc 1 116 12 is_stmt 0 view .LVU119
+ 488 0030 1123     		movs	r3, #17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 12
+
+
+ 489 0032 8DF80630 		strb	r3, [sp, #6]
+ 117:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X2F;	 	 
+ 490              		.loc 1 117 4 is_stmt 1 view .LVU120
+ 491              		.loc 1 117 12 is_stmt 0 view .LVU121
+ 492 0036 2F23     		movs	r3, #47
+ 493 0038 8DF80530 		strb	r3, [sp, #5]
+ 118:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 494              		.loc 1 118 4 is_stmt 1 view .LVU122
+ 495              	.L36:
+ 119:Drivers/BSP/Camera/ov7670.c **** 		case 1://-1
+ 120:Drivers/BSP/Camera/ov7670.c **** 			reg4f5054val=0X66;	    
+ 121:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X1B;
+ 122:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X4B;	  
+ 123:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 124:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 125:Drivers/BSP/Camera/ov7670.c **** 			reg4f5054val=0X99;	   
+ 126:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X28;
+ 127:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X71;	   
+ 128:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 129:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 130:Drivers/BSP/Camera/ov7670.c **** 			reg4f5054val=0XC0;	   
+ 131:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X33;
+ 132:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X8D;	   
+ 133:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 134:Drivers/BSP/Camera/ov7670.c **** 	}
+ 135:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX1,&reg4f5054val);	//色彩矩阵系数1
+ 496              		.loc 1 135 2 view .LVU123
+ 497 003c 0DF10701 		add	r1, sp, #7
+ 498 0040 4F20     		movs	r0, #79
+ 499              	.LVL27:
+ 500              		.loc 1 135 2 is_stmt 0 view .LVU124
+ 501 0042 FFF7FEFF 		bl	OV7670_WriteReg
+ 502              	.LVL28:
+ 136:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX2,&reg4f5054val);	//色彩矩阵系数2 
+ 503              		.loc 1 136 2 is_stmt 1 view .LVU125
+ 504 0046 0DF10701 		add	r1, sp, #7
+ 505 004a 5020     		movs	r0, #80
+ 506 004c FFF7FEFF 		bl	OV7670_WriteReg
+ 507              	.LVL29:
+ 137:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX3,0X00);			//色彩矩阵系数3  
+ 508              		.loc 1 137 2 view .LVU126
+ 509 0050 0021     		movs	r1, #0
+ 510 0052 5120     		movs	r0, #81
+ 511 0054 FFF7FEFF 		bl	OV7670_WriteReg
+ 512              	.LVL30:
+ 138:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX4,&reg52val);		//色彩矩阵系数4 
+ 513              		.loc 1 138 2 view .LVU127
+ 514 0058 0DF10601 		add	r1, sp, #6
+ 515 005c 5220     		movs	r0, #82
+ 516 005e FFF7FEFF 		bl	OV7670_WriteReg
+ 517              	.LVL31:
+ 139:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX5,&reg53val);		//色彩矩阵系数5 
+ 518              		.loc 1 139 2 view .LVU128
+ 519 0062 0DF10501 		add	r1, sp, #5
+ 520 0066 5320     		movs	r0, #83
+ 521 0068 FFF7FEFF 		bl	OV7670_WriteReg
+ 522              	.LVL32:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 13
+
+
+ 140:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTX6,&reg4f5054val);	//色彩矩阵系数6  
+ 523              		.loc 1 140 2 view .LVU129
+ 524 006c 0DF10701 		add	r1, sp, #7
+ 525 0070 5420     		movs	r0, #84
+ 526 0072 FFF7FEFF 		bl	OV7670_WriteReg
+ 527              	.LVL33:
+ 141:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(MTXS,&reg54val);			//MTXS 
+ 528              		.loc 1 141 2 view .LVU130
+ 529 0076 01A9     		add	r1, sp, #4
+ 530 0078 5820     		movs	r0, #88
+ 531 007a FFF7FEFF 		bl	OV7670_WriteReg
+ 532              	.LVL34:
+ 142:Drivers/BSP/Camera/ov7670.c **** }
+ 533              		.loc 1 142 1 is_stmt 0 view .LVU131
+ 534 007e 03B0     		add	sp, sp, #12
+ 535              	.LCFI17:
+ 536              		.cfi_remember_state
+ 537              		.cfi_def_cfa_offset 4
+ 538              		@ sp needed
+ 539 0080 5DF804FB 		ldr	pc, [sp], #4
+ 540              	.LVL35:
+ 541              	.L40:
+ 542              	.LCFI18:
+ 543              		.cfi_restore_state
+ 120:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X1B;
+ 544              		.loc 1 120 4 is_stmt 1 view .LVU132
+ 120:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X1B;
+ 545              		.loc 1 120 16 is_stmt 0 view .LVU133
+ 546 0084 6623     		movs	r3, #102
+ 547 0086 8DF80730 		strb	r3, [sp, #7]
+ 121:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X4B;	  
+ 548              		.loc 1 121 4 is_stmt 1 view .LVU134
+ 121:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X4B;	  
+ 549              		.loc 1 121 12 is_stmt 0 view .LVU135
+ 550 008a 1B23     		movs	r3, #27
+ 551 008c 8DF80630 		strb	r3, [sp, #6]
+ 122:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 552              		.loc 1 122 4 is_stmt 1 view .LVU136
+ 122:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 553              		.loc 1 122 12 is_stmt 0 view .LVU137
+ 554 0090 4B23     		movs	r3, #75
+ 555 0092 8DF80530 		strb	r3, [sp, #5]
+ 123:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 556              		.loc 1 123 4 is_stmt 1 view .LVU138
+ 557 0096 D1E7     		b	.L36
+ 558              	.L39:
+ 125:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X28;
+ 559              		.loc 1 125 4 view .LVU139
+ 125:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X28;
+ 560              		.loc 1 125 16 is_stmt 0 view .LVU140
+ 561 0098 9923     		movs	r3, #153
+ 562 009a 8DF80730 		strb	r3, [sp, #7]
+ 126:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X71;	   
+ 563              		.loc 1 126 4 is_stmt 1 view .LVU141
+ 126:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X71;	   
+ 564              		.loc 1 126 12 is_stmt 0 view .LVU142
+ 565 009e 2823     		movs	r3, #40
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 14
+
+
+ 566 00a0 8DF80630 		strb	r3, [sp, #6]
+ 127:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 567              		.loc 1 127 4 is_stmt 1 view .LVU143
+ 127:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 568              		.loc 1 127 12 is_stmt 0 view .LVU144
+ 569 00a4 7123     		movs	r3, #113
+ 570 00a6 8DF80530 		strb	r3, [sp, #5]
+ 128:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 571              		.loc 1 128 4 is_stmt 1 view .LVU145
+ 572 00aa C7E7     		b	.L36
+ 573              	.L37:
+ 130:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X33;
+ 574              		.loc 1 130 4 view .LVU146
+ 130:Drivers/BSP/Camera/ov7670.c **** 			reg52val=0X33;
+ 575              		.loc 1 130 16 is_stmt 0 view .LVU147
+ 576 00ac C023     		movs	r3, #192
+ 577 00ae 8DF80730 		strb	r3, [sp, #7]
+ 131:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X8D;	   
+ 578              		.loc 1 131 4 is_stmt 1 view .LVU148
+ 131:Drivers/BSP/Camera/ov7670.c **** 			reg53val=0X8D;	   
+ 579              		.loc 1 131 12 is_stmt 0 view .LVU149
+ 580 00b2 3323     		movs	r3, #51
+ 581 00b4 8DF80630 		strb	r3, [sp, #6]
+ 132:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 582              		.loc 1 132 4 is_stmt 1 view .LVU150
+ 132:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 583              		.loc 1 132 12 is_stmt 0 view .LVU151
+ 584 00b8 8D23     		movs	r3, #141
+ 585 00ba 8DF80530 		strb	r3, [sp, #5]
+ 133:Drivers/BSP/Camera/ov7670.c **** 	}
+ 586              		.loc 1 133 4 is_stmt 1 view .LVU152
+ 587 00be BDE7     		b	.L36
+ 588              		.cfi_endproc
+ 589              	.LFE149:
+ 591              		.section	.text.OV7670_Brightness,"ax",%progbits
+ 592              		.align	1
+ 593              		.global	OV7670_Brightness
+ 594              		.syntax unified
+ 595              		.thumb
+ 596              		.thumb_func
+ 598              	OV7670_Brightness:
+ 599              	.LVL36:
+ 600              	.LFB150:
+ 143:Drivers/BSP/Camera/ov7670.c **** 
+ 144:Drivers/BSP/Camera/ov7670.c **** //亮度设置
+ 145:Drivers/BSP/Camera/ov7670.c **** //0:-2
+ 146:Drivers/BSP/Camera/ov7670.c **** //1:-1
+ 147:Drivers/BSP/Camera/ov7670.c **** //2,0
+ 148:Drivers/BSP/Camera/ov7670.c **** //3,1
+ 149:Drivers/BSP/Camera/ov7670.c **** //4,2
+ 150:Drivers/BSP/Camera/ov7670.c **** void OV7670_Brightness(uint8_t bright)
+ 151:Drivers/BSP/Camera/ov7670.c **** {
+ 601              		.loc 1 151 1 view -0
+ 602              		.cfi_startproc
+ 603              		@ args = 0, pretend = 0, frame = 8
+ 604              		@ frame_needed = 0, uses_anonymous_args = 0
+ 605              		.loc 1 151 1 is_stmt 0 view .LVU154
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 15
+
+
+ 606 0000 00B5     		push	{lr}
+ 607              	.LCFI19:
+ 608              		.cfi_def_cfa_offset 4
+ 609              		.cfi_offset 14, -4
+ 610 0002 83B0     		sub	sp, sp, #12
+ 611              	.LCFI20:
+ 612              		.cfi_def_cfa_offset 16
+ 152:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg55val=0X00;//默认就是bright=2
+ 613              		.loc 1 152 2 is_stmt 1 view .LVU155
+ 614              		.loc 1 152 10 is_stmt 0 view .LVU156
+ 615 0004 0023     		movs	r3, #0
+ 616 0006 8DF80730 		strb	r3, [sp, #7]
+ 153:Drivers/BSP/Camera/ov7670.c ****   	switch(bright)
+ 617              		.loc 1 153 4 is_stmt 1 view .LVU157
+ 618 000a 0428     		cmp	r0, #4
+ 619 000c 07D8     		bhi	.L45
+ 620 000e DFE800F0 		tbb	[pc, r0]
+ 621              	.L47:
+ 622 0012 03       		.byte	(.L50-.L47)/2
+ 623 0013 0E       		.byte	(.L49-.L47)/2
+ 624 0014 06       		.byte	(.L45-.L47)/2
+ 625 0015 12       		.byte	(.L48-.L47)/2
+ 626 0016 16       		.byte	(.L46-.L47)/2
+ 627 0017 00       		.p2align 1
+ 628              	.L50:
+ 154:Drivers/BSP/Camera/ov7670.c **** 	{
+ 155:Drivers/BSP/Camera/ov7670.c **** 		case 0://-2
+ 156:Drivers/BSP/Camera/ov7670.c **** 			reg55val=0XB0;	 	 
+ 629              		.loc 1 156 4 view .LVU158
+ 630              		.loc 1 156 12 is_stmt 0 view .LVU159
+ 631 0018 B023     		movs	r3, #176
+ 632 001a 8DF80730 		strb	r3, [sp, #7]
+ 157:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 633              		.loc 1 157 4 is_stmt 1 view .LVU160
+ 634              	.L45:
+ 158:Drivers/BSP/Camera/ov7670.c **** 		case 1://-1
+ 159:Drivers/BSP/Camera/ov7670.c **** 			reg55val=0X98;	 	 
+ 160:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 161:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 162:Drivers/BSP/Camera/ov7670.c **** 			reg55val=0X18;	 	 
+ 163:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 164:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 165:Drivers/BSP/Camera/ov7670.c **** 			reg55val=0X30;	 	 
+ 166:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 167:Drivers/BSP/Camera/ov7670.c **** 	}
+ 168:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_BRIGHT,&reg55val);	//亮度调节 
+ 635              		.loc 1 168 2 view .LVU161
+ 636 001e 0DF10701 		add	r1, sp, #7
+ 637 0022 5520     		movs	r0, #85
+ 638              	.LVL37:
+ 639              		.loc 1 168 2 is_stmt 0 view .LVU162
+ 640 0024 FFF7FEFF 		bl	OV7670_WriteReg
+ 641              	.LVL38:
+ 169:Drivers/BSP/Camera/ov7670.c **** }
+ 642              		.loc 1 169 1 view .LVU163
+ 643 0028 03B0     		add	sp, sp, #12
+ 644              	.LCFI21:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 16
+
+
+ 645              		.cfi_remember_state
+ 646              		.cfi_def_cfa_offset 4
+ 647              		@ sp needed
+ 648 002a 5DF804FB 		ldr	pc, [sp], #4
+ 649              	.LVL39:
+ 650              	.L49:
+ 651              	.LCFI22:
+ 652              		.cfi_restore_state
+ 159:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 653              		.loc 1 159 4 is_stmt 1 view .LVU164
+ 159:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 654              		.loc 1 159 12 is_stmt 0 view .LVU165
+ 655 002e 9823     		movs	r3, #152
+ 656 0030 8DF80730 		strb	r3, [sp, #7]
+ 160:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 657              		.loc 1 160 4 is_stmt 1 view .LVU166
+ 658 0034 F3E7     		b	.L45
+ 659              	.L48:
+ 162:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 660              		.loc 1 162 4 view .LVU167
+ 162:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 661              		.loc 1 162 12 is_stmt 0 view .LVU168
+ 662 0036 1823     		movs	r3, #24
+ 663 0038 8DF80730 		strb	r3, [sp, #7]
+ 163:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 664              		.loc 1 163 4 is_stmt 1 view .LVU169
+ 665 003c EFE7     		b	.L45
+ 666              	.L46:
+ 165:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 667              		.loc 1 165 4 view .LVU170
+ 165:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 668              		.loc 1 165 12 is_stmt 0 view .LVU171
+ 669 003e 3023     		movs	r3, #48
+ 670 0040 8DF80730 		strb	r3, [sp, #7]
+ 166:Drivers/BSP/Camera/ov7670.c **** 	}
+ 671              		.loc 1 166 4 is_stmt 1 view .LVU172
+ 672 0044 EBE7     		b	.L45
+ 673              		.cfi_endproc
+ 674              	.LFE150:
+ 676              		.section	.text.OV7670_Contrast,"ax",%progbits
+ 677              		.align	1
+ 678              		.global	OV7670_Contrast
+ 679              		.syntax unified
+ 680              		.thumb
+ 681              		.thumb_func
+ 683              	OV7670_Contrast:
+ 684              	.LVL40:
+ 685              	.LFB151:
+ 170:Drivers/BSP/Camera/ov7670.c **** 
+ 171:Drivers/BSP/Camera/ov7670.c **** //对比度设置
+ 172:Drivers/BSP/Camera/ov7670.c **** //0:-2
+ 173:Drivers/BSP/Camera/ov7670.c **** //1:-1
+ 174:Drivers/BSP/Camera/ov7670.c **** //2,0
+ 175:Drivers/BSP/Camera/ov7670.c **** //3,1
+ 176:Drivers/BSP/Camera/ov7670.c **** //4,2
+ 177:Drivers/BSP/Camera/ov7670.c **** void OV7670_Contrast(uint8_t contrast)
+ 178:Drivers/BSP/Camera/ov7670.c **** {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 17
+
+
+ 686              		.loc 1 178 1 view -0
+ 687              		.cfi_startproc
+ 688              		@ args = 0, pretend = 0, frame = 8
+ 689              		@ frame_needed = 0, uses_anonymous_args = 0
+ 690              		.loc 1 178 1 is_stmt 0 view .LVU174
+ 691 0000 00B5     		push	{lr}
+ 692              	.LCFI23:
+ 693              		.cfi_def_cfa_offset 4
+ 694              		.cfi_offset 14, -4
+ 695 0002 83B0     		sub	sp, sp, #12
+ 696              	.LCFI24:
+ 697              		.cfi_def_cfa_offset 16
+ 179:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg56val=0X40;//默认就是contrast=2
+ 698              		.loc 1 179 2 is_stmt 1 view .LVU175
+ 699              		.loc 1 179 10 is_stmt 0 view .LVU176
+ 700 0004 4023     		movs	r3, #64
+ 701 0006 8DF80730 		strb	r3, [sp, #7]
+ 180:Drivers/BSP/Camera/ov7670.c ****   	switch(contrast)
+ 702              		.loc 1 180 4 is_stmt 1 view .LVU177
+ 703 000a 0428     		cmp	r0, #4
+ 704 000c 07D8     		bhi	.L54
+ 705 000e DFE800F0 		tbb	[pc, r0]
+ 706              	.L56:
+ 707 0012 03       		.byte	(.L59-.L56)/2
+ 708 0013 0E       		.byte	(.L58-.L56)/2
+ 709 0014 06       		.byte	(.L54-.L56)/2
+ 710 0015 12       		.byte	(.L57-.L56)/2
+ 711 0016 16       		.byte	(.L55-.L56)/2
+ 712 0017 00       		.p2align 1
+ 713              	.L59:
+ 181:Drivers/BSP/Camera/ov7670.c **** 	{
+ 182:Drivers/BSP/Camera/ov7670.c **** 		case 0://-2
+ 183:Drivers/BSP/Camera/ov7670.c **** 			reg56val=0X30;	 	 
+ 714              		.loc 1 183 4 view .LVU178
+ 715              		.loc 1 183 12 is_stmt 0 view .LVU179
+ 716 0018 3023     		movs	r3, #48
+ 717 001a 8DF80730 		strb	r3, [sp, #7]
+ 184:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 718              		.loc 1 184 4 is_stmt 1 view .LVU180
+ 719              	.L54:
+ 185:Drivers/BSP/Camera/ov7670.c **** 		case 1://-1
+ 186:Drivers/BSP/Camera/ov7670.c **** 			reg56val=0X38;	 	 
+ 187:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 188:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 189:Drivers/BSP/Camera/ov7670.c **** 			reg56val=0X50;	 	 
+ 190:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 191:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 192:Drivers/BSP/Camera/ov7670.c **** 			reg56val=0X60;	 	 
+ 193:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 194:Drivers/BSP/Camera/ov7670.c **** 	}
+ 195:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_CONTRAS,&reg56val);	//对比度调节 
+ 720              		.loc 1 195 2 view .LVU181
+ 721 001e 0DF10701 		add	r1, sp, #7
+ 722 0022 5620     		movs	r0, #86
+ 723              	.LVL41:
+ 724              		.loc 1 195 2 is_stmt 0 view .LVU182
+ 725 0024 FFF7FEFF 		bl	OV7670_WriteReg
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 18
+
+
+ 726              	.LVL42:
+ 196:Drivers/BSP/Camera/ov7670.c **** }
+ 727              		.loc 1 196 1 view .LVU183
+ 728 0028 03B0     		add	sp, sp, #12
+ 729              	.LCFI25:
+ 730              		.cfi_remember_state
+ 731              		.cfi_def_cfa_offset 4
+ 732              		@ sp needed
+ 733 002a 5DF804FB 		ldr	pc, [sp], #4
+ 734              	.LVL43:
+ 735              	.L58:
+ 736              	.LCFI26:
+ 737              		.cfi_restore_state
+ 186:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 738              		.loc 1 186 4 is_stmt 1 view .LVU184
+ 186:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 739              		.loc 1 186 12 is_stmt 0 view .LVU185
+ 740 002e 3823     		movs	r3, #56
+ 741 0030 8DF80730 		strb	r3, [sp, #7]
+ 187:Drivers/BSP/Camera/ov7670.c **** 		case 3://1
+ 742              		.loc 1 187 4 is_stmt 1 view .LVU186
+ 743 0034 F3E7     		b	.L54
+ 744              	.L57:
+ 189:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 745              		.loc 1 189 4 view .LVU187
+ 189:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 746              		.loc 1 189 12 is_stmt 0 view .LVU188
+ 747 0036 5023     		movs	r3, #80
+ 748 0038 8DF80730 		strb	r3, [sp, #7]
+ 190:Drivers/BSP/Camera/ov7670.c **** 		case 4://2
+ 749              		.loc 1 190 4 is_stmt 1 view .LVU189
+ 750 003c EFE7     		b	.L54
+ 751              	.L55:
+ 192:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 752              		.loc 1 192 4 view .LVU190
+ 192:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 753              		.loc 1 192 12 is_stmt 0 view .LVU191
+ 754 003e 6023     		movs	r3, #96
+ 755 0040 8DF80730 		strb	r3, [sp, #7]
+ 193:Drivers/BSP/Camera/ov7670.c **** 	}
+ 756              		.loc 1 193 4 is_stmt 1 view .LVU192
+ 757 0044 EBE7     		b	.L54
+ 758              		.cfi_endproc
+ 759              	.LFE151:
+ 761              		.section	.text.OV7670_Special_Effects,"ax",%progbits
+ 762              		.align	1
+ 763              		.global	OV7670_Special_Effects
+ 764              		.syntax unified
+ 765              		.thumb
+ 766              		.thumb_func
+ 768              	OV7670_Special_Effects:
+ 769              	.LVL44:
+ 770              	.LFB152:
+ 197:Drivers/BSP/Camera/ov7670.c **** 
+ 198:Drivers/BSP/Camera/ov7670.c **** //特效设置
+ 199:Drivers/BSP/Camera/ov7670.c **** //0:普通模式    
+ 200:Drivers/BSP/Camera/ov7670.c **** //1,负片
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 19
+
+
+ 201:Drivers/BSP/Camera/ov7670.c **** //2,黑白   
+ 202:Drivers/BSP/Camera/ov7670.c **** //3,偏红色
+ 203:Drivers/BSP/Camera/ov7670.c **** //4,偏绿色
+ 204:Drivers/BSP/Camera/ov7670.c **** //5,偏蓝色
+ 205:Drivers/BSP/Camera/ov7670.c **** //6,复古	    
+ 206:Drivers/BSP/Camera/ov7670.c **** void OV7670_Special_Effects(uint8_t eft)
+ 207:Drivers/BSP/Camera/ov7670.c **** {
+ 771              		.loc 1 207 1 view -0
+ 772              		.cfi_startproc
+ 773              		@ args = 0, pretend = 0, frame = 8
+ 774              		@ frame_needed = 0, uses_anonymous_args = 0
+ 775              		.loc 1 207 1 is_stmt 0 view .LVU194
+ 776 0000 00B5     		push	{lr}
+ 777              	.LCFI27:
+ 778              		.cfi_def_cfa_offset 4
+ 779              		.cfi_offset 14, -4
+ 780 0002 83B0     		sub	sp, sp, #12
+ 781              	.LCFI28:
+ 782              		.cfi_def_cfa_offset 16
+ 208:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg3aval=0X04;//默认为普通模式
+ 783              		.loc 1 208 2 is_stmt 1 view .LVU195
+ 784              		.loc 1 208 10 is_stmt 0 view .LVU196
+ 785 0004 0423     		movs	r3, #4
+ 786 0006 8DF80730 		strb	r3, [sp, #7]
+ 209:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg67val=0XC0;
+ 787              		.loc 1 209 2 is_stmt 1 view .LVU197
+ 788              		.loc 1 209 10 is_stmt 0 view .LVU198
+ 789 000a C023     		movs	r3, #192
+ 790 000c 8DF80630 		strb	r3, [sp, #6]
+ 210:Drivers/BSP/Camera/ov7670.c **** 	uint8_t reg68val=0X80;
+ 791              		.loc 1 210 2 is_stmt 1 view .LVU199
+ 792              		.loc 1 210 10 is_stmt 0 view .LVU200
+ 793 0010 8023     		movs	r3, #128
+ 794 0012 8DF80530 		strb	r3, [sp, #5]
+ 211:Drivers/BSP/Camera/ov7670.c **** 	switch(eft)
+ 795              		.loc 1 211 2 is_stmt 1 view .LVU201
+ 796 0016 0138     		subs	r0, r0, #1
+ 797              	.LVL45:
+ 798              		.loc 1 211 2 is_stmt 0 view .LVU202
+ 799 0018 0528     		cmp	r0, #5
+ 800 001a 0AD8     		bhi	.L63
+ 801 001c DFE800F0 		tbb	[pc, r0]
+ 802              	.L65:
+ 803 0020 03       		.byte	(.L70-.L65)/2
+ 804 0021 1B       		.byte	(.L69-.L65)/2
+ 805 0022 22       		.byte	(.L68-.L65)/2
+ 806 0023 26       		.byte	(.L67-.L65)/2
+ 807 0024 2F       		.byte	(.L66-.L65)/2
+ 808 0025 39       		.byte	(.L64-.L65)/2
+ 809              		.p2align 1
+ 810              	.L70:
+ 212:Drivers/BSP/Camera/ov7670.c **** 	{
+ 213:Drivers/BSP/Camera/ov7670.c **** 		case 1://负片
+ 214:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X24;
+ 811              		.loc 1 214 4 is_stmt 1 view .LVU203
+ 812              		.loc 1 214 12 is_stmt 0 view .LVU204
+ 813 0026 2423     		movs	r3, #36
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 20
+
+
+ 814 0028 8DF80730 		strb	r3, [sp, #7]
+ 215:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 815              		.loc 1 215 4 is_stmt 1 view .LVU205
+ 816              		.loc 1 215 12 is_stmt 0 view .LVU206
+ 817 002c 8023     		movs	r3, #128
+ 818 002e 8DF80630 		strb	r3, [sp, #6]
+ 216:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 819              		.loc 1 216 4 is_stmt 1 view .LVU207
+ 217:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 820              		.loc 1 217 4 view .LVU208
+ 821              	.L63:
+ 218:Drivers/BSP/Camera/ov7670.c **** 		case 2://黑白
+ 219:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X14;
+ 220:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 221:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 222:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 223:Drivers/BSP/Camera/ov7670.c **** 		case 3://偏红色
+ 224:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X14;
+ 225:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0Xc0;
+ 226:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 227:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 228:Drivers/BSP/Camera/ov7670.c **** 		case 4://偏绿色
+ 229:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X14;
+ 230:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X40;
+ 231:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 232:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 233:Drivers/BSP/Camera/ov7670.c **** 		case 5://偏蓝色
+ 234:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X14;
+ 235:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 236:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0XC0;
+ 237:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 238:Drivers/BSP/Camera/ov7670.c **** 		case 6://复古
+ 239:Drivers/BSP/Camera/ov7670.c **** 			reg3aval=0X14;
+ 240:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0XA0;
+ 241:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 242:Drivers/BSP/Camera/ov7670.c **** 			break;	 
+ 243:Drivers/BSP/Camera/ov7670.c **** 	}
+ 244:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(REG_TSLB,&reg3aval);//TSLB设置 
+ 822              		.loc 1 244 2 view .LVU209
+ 823 0032 0DF10701 		add	r1, sp, #7
+ 824 0036 3A20     		movs	r0, #58
+ 825              	.LVL46:
+ 826              		.loc 1 244 2 is_stmt 0 view .LVU210
+ 827 0038 FFF7FEFF 		bl	OV7670_WriteReg
+ 828              	.LVL47:
+ 245:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X68,&reg67val);//MANU,手动U值 
+ 829              		.loc 1 245 2 is_stmt 1 view .LVU211
+ 830 003c 0DF10601 		add	r1, sp, #6
+ 831 0040 6820     		movs	r0, #104
+ 832 0042 FFF7FEFF 		bl	OV7670_WriteReg
+ 833              	.LVL48:
+ 246:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X67,&reg68val);//MANV,手动V值 
+ 834              		.loc 1 246 2 view .LVU212
+ 835 0046 0DF10501 		add	r1, sp, #5
+ 836 004a 6720     		movs	r0, #103
+ 837 004c FFF7FEFF 		bl	OV7670_WriteReg
+ 838              	.LVL49:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 21
+
+
+ 247:Drivers/BSP/Camera/ov7670.c **** }
+ 839              		.loc 1 247 1 is_stmt 0 view .LVU213
+ 840 0050 03B0     		add	sp, sp, #12
+ 841              	.LCFI29:
+ 842              		.cfi_remember_state
+ 843              		.cfi_def_cfa_offset 4
+ 844              		@ sp needed
+ 845 0052 5DF804FB 		ldr	pc, [sp], #4
+ 846              	.L69:
+ 847              	.LCFI30:
+ 848              		.cfi_restore_state
+ 219:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 849              		.loc 1 219 4 is_stmt 1 view .LVU214
+ 219:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 850              		.loc 1 219 12 is_stmt 0 view .LVU215
+ 851 0056 1423     		movs	r3, #20
+ 852 0058 8DF80730 		strb	r3, [sp, #7]
+ 220:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 853              		.loc 1 220 4 is_stmt 1 view .LVU216
+ 220:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 854              		.loc 1 220 12 is_stmt 0 view .LVU217
+ 855 005c 8023     		movs	r3, #128
+ 856 005e 8DF80630 		strb	r3, [sp, #6]
+ 221:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 857              		.loc 1 221 4 is_stmt 1 view .LVU218
+ 222:Drivers/BSP/Camera/ov7670.c **** 		case 3://偏红色
+ 858              		.loc 1 222 4 view .LVU219
+ 859 0062 E6E7     		b	.L63
+ 860              	.L68:
+ 224:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0Xc0;
+ 861              		.loc 1 224 4 view .LVU220
+ 224:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0Xc0;
+ 862              		.loc 1 224 12 is_stmt 0 view .LVU221
+ 863 0064 1423     		movs	r3, #20
+ 864 0066 8DF80730 		strb	r3, [sp, #7]
+ 225:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X80;
+ 865              		.loc 1 225 4 is_stmt 1 view .LVU222
+ 226:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 866              		.loc 1 226 4 view .LVU223
+ 227:Drivers/BSP/Camera/ov7670.c **** 		case 4://偏绿色
+ 867              		.loc 1 227 4 view .LVU224
+ 868 006a E2E7     		b	.L63
+ 869              	.L67:
+ 229:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X40;
+ 870              		.loc 1 229 4 view .LVU225
+ 229:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X40;
+ 871              		.loc 1 229 12 is_stmt 0 view .LVU226
+ 872 006c 1423     		movs	r3, #20
+ 873 006e 8DF80730 		strb	r3, [sp, #7]
+ 230:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 874              		.loc 1 230 4 is_stmt 1 view .LVU227
+ 230:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 875              		.loc 1 230 12 is_stmt 0 view .LVU228
+ 876 0072 4023     		movs	r3, #64
+ 877 0074 8DF80630 		strb	r3, [sp, #6]
+ 231:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 878              		.loc 1 231 4 is_stmt 1 view .LVU229
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 22
+
+
+ 231:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 879              		.loc 1 231 12 is_stmt 0 view .LVU230
+ 880 0078 8DF80530 		strb	r3, [sp, #5]
+ 232:Drivers/BSP/Camera/ov7670.c **** 		case 5://偏蓝色
+ 881              		.loc 1 232 4 is_stmt 1 view .LVU231
+ 882 007c D9E7     		b	.L63
+ 883              	.L66:
+ 234:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 884              		.loc 1 234 4 view .LVU232
+ 234:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0X80;
+ 885              		.loc 1 234 12 is_stmt 0 view .LVU233
+ 886 007e 1423     		movs	r3, #20
+ 887 0080 8DF80730 		strb	r3, [sp, #7]
+ 235:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0XC0;
+ 888              		.loc 1 235 4 is_stmt 1 view .LVU234
+ 235:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0XC0;
+ 889              		.loc 1 235 12 is_stmt 0 view .LVU235
+ 890 0084 8023     		movs	r3, #128
+ 891 0086 8DF80630 		strb	r3, [sp, #6]
+ 236:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 892              		.loc 1 236 4 is_stmt 1 view .LVU236
+ 236:Drivers/BSP/Camera/ov7670.c **** 			break;	
+ 893              		.loc 1 236 12 is_stmt 0 view .LVU237
+ 894 008a C023     		movs	r3, #192
+ 895 008c 8DF80530 		strb	r3, [sp, #5]
+ 237:Drivers/BSP/Camera/ov7670.c **** 		case 6://复古
+ 896              		.loc 1 237 4 is_stmt 1 view .LVU238
+ 897 0090 CFE7     		b	.L63
+ 898              	.L64:
+ 239:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0XA0;
+ 899              		.loc 1 239 4 view .LVU239
+ 239:Drivers/BSP/Camera/ov7670.c **** 			reg67val=0XA0;
+ 900              		.loc 1 239 12 is_stmt 0 view .LVU240
+ 901 0092 1423     		movs	r3, #20
+ 902 0094 8DF80730 		strb	r3, [sp, #7]
+ 240:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 903              		.loc 1 240 4 is_stmt 1 view .LVU241
+ 240:Drivers/BSP/Camera/ov7670.c **** 			reg68val=0X40;
+ 904              		.loc 1 240 12 is_stmt 0 view .LVU242
+ 905 0098 A023     		movs	r3, #160
+ 906 009a 8DF80630 		strb	r3, [sp, #6]
+ 241:Drivers/BSP/Camera/ov7670.c **** 			break;	 
+ 907              		.loc 1 241 4 is_stmt 1 view .LVU243
+ 241:Drivers/BSP/Camera/ov7670.c **** 			break;	 
+ 908              		.loc 1 241 12 is_stmt 0 view .LVU244
+ 909 009e 4023     		movs	r3, #64
+ 910 00a0 8DF80530 		strb	r3, [sp, #5]
+ 242:Drivers/BSP/Camera/ov7670.c **** 	}
+ 911              		.loc 1 242 4 is_stmt 1 view .LVU245
+ 912 00a4 C5E7     		b	.L63
+ 913              		.cfi_endproc
+ 914              	.LFE152:
+ 916              		.section	.text.ov7670_Window_Set,"ax",%progbits
+ 917              		.align	1
+ 918              		.global	ov7670_Window_Set
+ 919              		.syntax unified
+ 920              		.thumb
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 23
+
+
+ 921              		.thumb_func
+ 923              	ov7670_Window_Set:
+ 924              	.LVL50:
+ 925              	.LFB153:
+ 248:Drivers/BSP/Camera/ov7670.c **** 
+ 249:Drivers/BSP/Camera/ov7670.c **** //设置图像输出窗口
+ 250:Drivers/BSP/Camera/ov7670.c **** //对QVGA设置。
+ 251:Drivers/BSP/Camera/ov7670.c **** void ov7670_Window_Set(uint16_t sx,uint16_t sy,uint16_t width,uint16_t height)
+ 252:Drivers/BSP/Camera/ov7670.c **** {
+ 926              		.loc 1 252 1 view -0
+ 927              		.cfi_startproc
+ 928              		@ args = 0, pretend = 0, frame = 16
+ 929              		@ frame_needed = 0, uses_anonymous_args = 0
+ 930              		.loc 1 252 1 is_stmt 0 view .LVU247
+ 931 0000 00B5     		push	{lr}
+ 932              	.LCFI31:
+ 933              		.cfi_def_cfa_offset 4
+ 934              		.cfi_offset 14, -4
+ 935 0002 85B0     		sub	sp, sp, #20
+ 936              	.LCFI32:
+ 937              		.cfi_def_cfa_offset 24
+ 938 0004 ADF80600 		strh	r0, [sp, #6]	@ movhi
+ 939 0008 ADF80410 		strh	r1, [sp, #4]	@ movhi
+ 253:Drivers/BSP/Camera/ov7670.c **** 	uint16_t endx;
+ 940              		.loc 1 253 2 is_stmt 1 view .LVU248
+ 254:Drivers/BSP/Camera/ov7670.c **** 	uint16_t endy;
+ 941              		.loc 1 254 2 view .LVU249
+ 255:Drivers/BSP/Camera/ov7670.c **** 	uint8_t temp; 
+ 942              		.loc 1 255 2 view .LVU250
+ 256:Drivers/BSP/Camera/ov7670.c **** 	endx=sx+width*2;	//V*2
+ 943              		.loc 1 256 2 view .LVU251
+ 944              		.loc 1 256 9 is_stmt 0 view .LVU252
+ 945 000c 00EB4200 		add	r0, r0, r2, lsl #1
+ 946              	.LVL51:
+ 947              		.loc 1 256 6 view .LVU253
+ 948 0010 ADF80E00 		strh	r0, [sp, #14]	@ movhi
+ 257:Drivers/BSP/Camera/ov7670.c ****  	endy=sy+height*2;
+ 949              		.loc 1 257 3 is_stmt 1 view .LVU254
+ 950              		.loc 1 257 10 is_stmt 0 view .LVU255
+ 951 0014 01EB4301 		add	r1, r1, r3, lsl #1
+ 952              	.LVL52:
+ 953              		.loc 1 257 10 view .LVU256
+ 954 0018 89B2     		uxth	r1, r1
+ 955              		.loc 1 257 7 view .LVU257
+ 956 001a ADF80C10 		strh	r1, [sp, #12]	@ movhi
+ 258:Drivers/BSP/Camera/ov7670.c **** 	if(endy>784) endy-=784;
+ 957              		.loc 1 258 2 is_stmt 1 view .LVU258
+ 958              		.loc 1 258 4 is_stmt 0 view .LVU259
+ 959 001e B1F5447F 		cmp	r1, #784
+ 960 0022 03D9     		bls	.L74
+ 961              		.loc 1 258 15 is_stmt 1 discriminator 1 view .LVU260
+ 962              		.loc 1 258 19 is_stmt 0 discriminator 1 view .LVU261
+ 963 0024 A1F54471 		sub	r1, r1, #784
+ 964 0028 ADF80C10 		strh	r1, [sp, #12]	@ movhi
+ 965              	.L74:
+ 259:Drivers/BSP/Camera/ov7670.c **** 	
+ 260:Drivers/BSP/Camera/ov7670.c **** 	OV7670_ReadReg(0X03,&temp);				//读取Vref之前的值
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 24
+
+
+ 966              		.loc 1 260 2 is_stmt 1 view .LVU262
+ 967 002c 0DF10B01 		add	r1, sp, #11
+ 968 0030 0320     		movs	r0, #3
+ 969 0032 FFF7FEFF 		bl	OV7670_ReadReg
+ 970              	.LVL53:
+ 261:Drivers/BSP/Camera/ov7670.c **** 	temp&=0XF0;
+ 971              		.loc 1 261 2 view .LVU263
+ 972              		.loc 1 261 6 is_stmt 0 view .LVU264
+ 973 0036 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 974 003a 02F0F002 		and	r2, r2, #240
+ 975 003e 8DF80B20 		strb	r2, [sp, #11]
+ 262:Drivers/BSP/Camera/ov7670.c **** 	temp|=((endx&0X03)<<2)|(sx&0X03);
+ 976              		.loc 1 262 2 is_stmt 1 view .LVU265
+ 977              		.loc 1 262 20 is_stmt 0 view .LVU266
+ 978 0042 BDF80E30 		ldrh	r3, [sp, #14]
+ 979 0046 9B00     		lsls	r3, r3, #2
+ 980 0048 03F00C03 		and	r3, r3, #12
+ 981              		.loc 1 262 28 view .LVU267
+ 982 004c BDF80610 		ldrh	r1, [sp, #6]
+ 983 0050 01F00301 		and	r1, r1, #3
+ 984              		.loc 1 262 24 view .LVU268
+ 985 0054 0B43     		orrs	r3, r3, r1
+ 986              		.loc 1 262 6 view .LVU269
+ 987 0056 1A43     		orrs	r2, r2, r3
+ 988 0058 8DF80B20 		strb	r2, [sp, #11]
+ 263:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X03,&temp);				//设置Vref的start和end的最低2位
+ 989              		.loc 1 263 2 is_stmt 1 view .LVU270
+ 990 005c 0DF10B01 		add	r1, sp, #11
+ 991 0060 0320     		movs	r0, #3
+ 992 0062 FFF7FEFF 		bl	OV7670_WriteReg
+ 993              	.LVL54:
+ 264:Drivers/BSP/Camera/ov7670.c **** 	sx = (sx >>2)&0xFF;
+ 994              		.loc 1 264 2 view .LVU271
+ 995              		.loc 1 264 15 is_stmt 0 view .LVU272
+ 996 0066 BDF80630 		ldrh	r3, [sp, #6]
+ 997 006a C3F38703 		ubfx	r3, r3, #2, #8
+ 998              		.loc 1 264 5 view .LVU273
+ 999 006e ADF80630 		strh	r3, [sp, #6]	@ movhi
+ 265:Drivers/BSP/Camera/ov7670.c **** 	endx = (endx >>2)&0xFF;
+ 1000              		.loc 1 265 2 is_stmt 1 view .LVU274
+ 1001              		.loc 1 265 19 is_stmt 0 view .LVU275
+ 1002 0072 BDF80E30 		ldrh	r3, [sp, #14]
+ 1003 0076 C3F38703 		ubfx	r3, r3, #2, #8
+ 1004              		.loc 1 265 7 view .LVU276
+ 1005 007a ADF80E30 		strh	r3, [sp, #14]	@ movhi
+ 266:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X19,(uint8_t *)&sx);			//设置Vref的start高8位
+ 1006              		.loc 1 266 2 is_stmt 1 view .LVU277
+ 1007 007e 0DF10601 		add	r1, sp, #6
+ 1008 0082 1920     		movs	r0, #25
+ 1009 0084 FFF7FEFF 		bl	OV7670_WriteReg
+ 1010              	.LVL55:
+ 267:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X1A,(uint8_t *)&endx);			//设置Vref的end的高8位
+ 1011              		.loc 1 267 2 view .LVU278
+ 1012 0088 0DF10E01 		add	r1, sp, #14
+ 1013 008c 1A20     		movs	r0, #26
+ 1014 008e FFF7FEFF 		bl	OV7670_WriteReg
+ 1015              	.LVL56:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 25
+
+
+ 268:Drivers/BSP/Camera/ov7670.c **** 
+ 269:Drivers/BSP/Camera/ov7670.c **** 	OV7670_ReadReg(0X32,&temp);				//读取Href之前的值
+ 1016              		.loc 1 269 2 view .LVU279
+ 1017 0092 0DF10B01 		add	r1, sp, #11
+ 1018 0096 3220     		movs	r0, #50
+ 1019 0098 FFF7FEFF 		bl	OV7670_ReadReg
+ 1020              	.LVL57:
+ 270:Drivers/BSP/Camera/ov7670.c **** 	temp&=0XC0;
+ 1021              		.loc 1 270 2 view .LVU280
+ 1022              		.loc 1 270 6 is_stmt 0 view .LVU281
+ 1023 009c 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 1024 00a0 02F0C002 		and	r2, r2, #192
+ 1025 00a4 8DF80B20 		strb	r2, [sp, #11]
+ 271:Drivers/BSP/Camera/ov7670.c **** 	temp|=((endy&0X07)<<3)|(sy&0X07);
+ 1026              		.loc 1 271 2 is_stmt 1 view .LVU282
+ 1027              		.loc 1 271 20 is_stmt 0 view .LVU283
+ 1028 00a8 BDF80C30 		ldrh	r3, [sp, #12]
+ 1029 00ac DB00     		lsls	r3, r3, #3
+ 1030 00ae 03F03803 		and	r3, r3, #56
+ 1031              		.loc 1 271 28 view .LVU284
+ 1032 00b2 BDF80410 		ldrh	r1, [sp, #4]
+ 1033 00b6 01F00701 		and	r1, r1, #7
+ 1034              		.loc 1 271 24 view .LVU285
+ 1035 00ba 0B43     		orrs	r3, r3, r1
+ 1036              		.loc 1 271 6 view .LVU286
+ 1037 00bc 1A43     		orrs	r2, r2, r3
+ 1038 00be 8DF80B20 		strb	r2, [sp, #11]
+ 272:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X32,&temp);
+ 1039              		.loc 1 272 2 is_stmt 1 view .LVU287
+ 1040 00c2 0DF10B01 		add	r1, sp, #11
+ 1041 00c6 3220     		movs	r0, #50
+ 1042 00c8 FFF7FEFF 		bl	OV7670_WriteReg
+ 1043              	.LVL58:
+ 273:Drivers/BSP/Camera/ov7670.c **** 	sy = (sy>>3)&0xFF;
+ 1044              		.loc 1 273 2 view .LVU288
+ 1045              		.loc 1 273 14 is_stmt 0 view .LVU289
+ 1046 00cc BDF80430 		ldrh	r3, [sp, #4]
+ 1047 00d0 C3F3C703 		ubfx	r3, r3, #3, #8
+ 1048              		.loc 1 273 5 view .LVU290
+ 1049 00d4 ADF80430 		strh	r3, [sp, #4]	@ movhi
+ 274:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X17,(uint8_t *)&sy);			//设置Href的start高8位
+ 1050              		.loc 1 274 2 is_stmt 1 view .LVU291
+ 1051 00d8 01A9     		add	r1, sp, #4
+ 1052 00da 1720     		movs	r0, #23
+ 1053 00dc FFF7FEFF 		bl	OV7670_WriteReg
+ 1054              	.LVL59:
+ 275:Drivers/BSP/Camera/ov7670.c **** 	endy = (endy>>3)&0xFF;
+ 1055              		.loc 1 275 2 view .LVU292
+ 1056              		.loc 1 275 18 is_stmt 0 view .LVU293
+ 1057 00e0 BDF80C30 		ldrh	r3, [sp, #12]
+ 1058 00e4 C3F3C703 		ubfx	r3, r3, #3, #8
+ 1059              		.loc 1 275 7 view .LVU294
+ 1060 00e8 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 276:Drivers/BSP/Camera/ov7670.c **** 	OV7670_WriteReg(0X18,(uint8_t *)&endy);			//设置Href的end的高8位
+ 1061              		.loc 1 276 2 is_stmt 1 view .LVU295
+ 1062 00ec 03A9     		add	r1, sp, #12
+ 1063 00ee 1820     		movs	r0, #24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 26
+
+
+ 1064 00f0 FFF7FEFF 		bl	OV7670_WriteReg
+ 1065              	.LVL60:
+ 277:Drivers/BSP/Camera/ov7670.c **** }
+ 1066              		.loc 1 277 1 is_stmt 0 view .LVU296
+ 1067 00f4 05B0     		add	sp, sp, #20
+ 1068              	.LCFI33:
+ 1069              		.cfi_def_cfa_offset 4
+ 1070              		@ sp needed
+ 1071 00f6 5DF804FB 		ldr	pc, [sp], #4
+ 1072              		.cfi_endproc
+ 1073              	.LFE153:
+ 1075              		.section	.text.OV7670_Config,"ax",%progbits
+ 1076              		.align	1
+ 1077              		.global	OV7670_Config
+ 1078              		.syntax unified
+ 1079              		.thumb
+ 1080              		.thumb_func
+ 1082              	OV7670_Config:
+ 1083              	.LFB154:
+ 278:Drivers/BSP/Camera/ov7670.c **** 
+ 279:Drivers/BSP/Camera/ov7670.c **** int OV7670_Config(void)
+ 280:Drivers/BSP/Camera/ov7670.c **** {
+ 1084              		.loc 1 280 1 is_stmt 1 view -0
+ 1085              		.cfi_startproc
+ 1086              		@ args = 0, pretend = 0, frame = 8
+ 1087              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1088 0000 10B5     		push	{r4, lr}
+ 1089              	.LCFI34:
+ 1090              		.cfi_def_cfa_offset 8
+ 1091              		.cfi_offset 4, -8
+ 1092              		.cfi_offset 14, -4
+ 1093 0002 82B0     		sub	sp, sp, #8
+ 1094              	.LCFI35:
+ 1095              		.cfi_def_cfa_offset 16
+ 281:Drivers/BSP/Camera/ov7670.c **** 	int ov_reset_result = OV7670_Reset();
+ 1096              		.loc 1 281 2 view .LVU298
+ 1097              		.loc 1 281 24 is_stmt 0 view .LVU299
+ 1098 0004 FFF7FEFF 		bl	OV7670_Reset
+ 1099              	.LVL61:
+ 282:Drivers/BSP/Camera/ov7670.c **** 	if (ov_reset_result != OV7670_OK)
+ 1100              		.loc 1 282 2 is_stmt 1 view .LVU300
+ 1101              		.loc 1 282 5 is_stmt 0 view .LVU301
+ 1102 0008 0446     		mov	r4, r0
+ 1103 000a 10B1     		cbz	r0, .L79
+ 1104              	.LVL62:
+ 1105              	.L76:
+ 283:Drivers/BSP/Camera/ov7670.c **** 	{
+ 284:Drivers/BSP/Camera/ov7670.c **** 		return ov_reset_result;
+ 285:Drivers/BSP/Camera/ov7670.c **** 	}
+ 286:Drivers/BSP/Camera/ov7670.c **** 	int ov_read_reg_result = OV7670_ERROR;
+ 287:Drivers/BSP/Camera/ov7670.c **** 	int ov_write_reg_result = OV7670_ERROR;
+ 288:Drivers/BSP/Camera/ov7670.c **** 
+ 289:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteRegList( ov7670_default_regs);
+ 290:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 291:Drivers/BSP/Camera/ov7670.c **** 	{
+ 292:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 293:Drivers/BSP/Camera/ov7670.c **** 	}
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 27
+
+
+ 294:Drivers/BSP/Camera/ov7670.c **** 
+ 295:Drivers/BSP/Camera/ov7670.c **** 	uint8_t ov_com3 = 0x04; // REG_COM3 enable scaling
+ 296:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_COM3, &ov_com3);
+ 297:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 298:Drivers/BSP/Camera/ov7670.c **** 	{
+ 299:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 300:Drivers/BSP/Camera/ov7670.c **** 	}
+ 301:Drivers/BSP/Camera/ov7670.c **** 
+ 302:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteRegList( qqvga_ov7670);
+ 303:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 304:Drivers/BSP/Camera/ov7670.c **** 	{
+ 305:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 306:Drivers/BSP/Camera/ov7670.c **** 	}
+ 307:Drivers/BSP/Camera/ov7670.c **** 
+ 308:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteRegList( rgb565_ov7670);
+ 309:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 310:Drivers/BSP/Camera/ov7670.c **** 	{
+ 311:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 312:Drivers/BSP/Camera/ov7670.c **** 	}
+ 313:Drivers/BSP/Camera/ov7670.c **** 	
+ 314:Drivers/BSP/Camera/ov7670.c **** 	// configure PCLK to 24MHz, input clk 12MHz
+ 315:Drivers/BSP/Camera/ov7670.c **** 
+ 316:Drivers/BSP/Camera/ov7670.c **** 	uint8_t ov_clk_rc = 0;
+ 317:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_CLKRC, &ov_clk_rc);
+ 318:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 319:Drivers/BSP/Camera/ov7670.c **** 	{
+ 320:Drivers/BSP/Camera/ov7670.c **** 		return ov_read_reg_result;
+ 321:Drivers/BSP/Camera/ov7670.c **** 	}
+ 322:Drivers/BSP/Camera/ov7670.c **** 	ov_clk_rc = (ov_clk_rc & 0x80) | 0x01; // to enable prescaler by 2
+ 323:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_CLKRC, &ov_clk_rc);
+ 324:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 325:Drivers/BSP/Camera/ov7670.c **** 	{
+ 326:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 327:Drivers/BSP/Camera/ov7670.c **** 	}
+ 328:Drivers/BSP/Camera/ov7670.c **** 
+ 329:Drivers/BSP/Camera/ov7670.c **** 	uint8_t ov_dblv = 0;
+ 330:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_DBLV, &ov_dblv);
+ 331:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 332:Drivers/BSP/Camera/ov7670.c **** 	{
+ 333:Drivers/BSP/Camera/ov7670.c **** 		return ov_read_reg_result;
+ 334:Drivers/BSP/Camera/ov7670.c **** 	}
+ 335:Drivers/BSP/Camera/ov7670.c **** 	ov_dblv = (ov_dblv & 0x3F) | DBLV_PLL4; // to enable PLL x4
+ 336:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_DBLV, &ov_dblv);
+ 337:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 338:Drivers/BSP/Camera/ov7670.c **** 	{
+ 339:Drivers/BSP/Camera/ov7670.c **** 		return ov_write_reg_result;
+ 340:Drivers/BSP/Camera/ov7670.c **** 	}
+ 341:Drivers/BSP/Camera/ov7670.c **** 	
+ 342:Drivers/BSP/Camera/ov7670.c **** 	HAL_Delay(100);
+ 343:Drivers/BSP/Camera/ov7670.c **** 	
+ 344:Drivers/BSP/Camera/ov7670.c **** //	OV7670_Light_Mode(4);
+ 345:Drivers/BSP/Camera/ov7670.c **** //	OV7670_Color_Saturation(2);
+ 346:Drivers/BSP/Camera/ov7670.c **** //	OV7670_Brightness(2);
+ 347:Drivers/BSP/Camera/ov7670.c **** //	OV7670_Contrast(2);
+ 348:Drivers/BSP/Camera/ov7670.c **** //	OV7670_Special_Effects(0);
+ 349:Drivers/BSP/Camera/ov7670.c **** //	ov7670_Window_Set(0,320,160,120);
+ 350:Drivers/BSP/Camera/ov7670.c **** 	
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 28
+
+
+ 351:Drivers/BSP/Camera/ov7670.c **** 	return OV7670_OK;
+ 352:Drivers/BSP/Camera/ov7670.c **** }
+ 1106              		.loc 1 352 1 view .LVU302
+ 1107 000c 2046     		mov	r0, r4
+ 1108 000e 02B0     		add	sp, sp, #8
+ 1109              	.LCFI36:
+ 1110              		.cfi_remember_state
+ 1111              		.cfi_def_cfa_offset 8
+ 1112              		@ sp needed
+ 1113 0010 10BD     		pop	{r4, pc}
+ 1114              	.LVL63:
+ 1115              	.L79:
+ 1116              	.LCFI37:
+ 1117              		.cfi_restore_state
+ 286:Drivers/BSP/Camera/ov7670.c **** 	int ov_write_reg_result = OV7670_ERROR;
+ 1118              		.loc 1 286 2 is_stmt 1 view .LVU303
+ 287:Drivers/BSP/Camera/ov7670.c **** 
+ 1119              		.loc 1 287 2 view .LVU304
+ 289:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1120              		.loc 1 289 2 view .LVU305
+ 289:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1121              		.loc 1 289 24 is_stmt 0 view .LVU306
+ 1122 0012 2B48     		ldr	r0, .L80
+ 1123              	.LVL64:
+ 289:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1124              		.loc 1 289 24 view .LVU307
+ 1125 0014 FFF7FEFF 		bl	OV7670_WriteRegList
+ 1126              	.LVL65:
+ 290:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1127              		.loc 1 290 2 is_stmt 1 view .LVU308
+ 290:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1128              		.loc 1 290 5 is_stmt 0 view .LVU309
+ 1129 0018 0446     		mov	r4, r0
+ 1130              	.LVL66:
+ 290:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1131              		.loc 1 290 5 view .LVU310
+ 1132 001a 0028     		cmp	r0, #0
+ 1133 001c F6D1     		bne	.L76
+ 295:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_COM3, &ov_com3);
+ 1134              		.loc 1 295 2 is_stmt 1 view .LVU311
+ 295:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_COM3, &ov_com3);
+ 1135              		.loc 1 295 10 is_stmt 0 view .LVU312
+ 1136 001e 0423     		movs	r3, #4
+ 1137 0020 8DF80730 		strb	r3, [sp, #7]
+ 296:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1138              		.loc 1 296 2 is_stmt 1 view .LVU313
+ 296:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1139              		.loc 1 296 24 is_stmt 0 view .LVU314
+ 1140 0024 0DF10701 		add	r1, sp, #7
+ 1141 0028 0C20     		movs	r0, #12
+ 1142              	.LVL67:
+ 296:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1143              		.loc 1 296 24 view .LVU315
+ 1144 002a FFF7FEFF 		bl	OV7670_WriteReg
+ 1145              	.LVL68:
+ 297:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1146              		.loc 1 297 2 is_stmt 1 view .LVU316
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 29
+
+
+ 297:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1147              		.loc 1 297 5 is_stmt 0 view .LVU317
+ 1148 002e 0446     		mov	r4, r0
+ 1149 0030 0028     		cmp	r0, #0
+ 1150 0032 EBD1     		bne	.L76
+ 302:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1151              		.loc 1 302 2 is_stmt 1 view .LVU318
+ 302:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1152              		.loc 1 302 24 is_stmt 0 view .LVU319
+ 1153 0034 2348     		ldr	r0, .L80+4
+ 1154              	.LVL69:
+ 302:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1155              		.loc 1 302 24 view .LVU320
+ 1156 0036 FFF7FEFF 		bl	OV7670_WriteRegList
+ 1157              	.LVL70:
+ 303:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1158              		.loc 1 303 2 is_stmt 1 view .LVU321
+ 303:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1159              		.loc 1 303 5 is_stmt 0 view .LVU322
+ 1160 003a 0446     		mov	r4, r0
+ 1161 003c 0028     		cmp	r0, #0
+ 1162 003e E5D1     		bne	.L76
+ 308:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1163              		.loc 1 308 2 is_stmt 1 view .LVU323
+ 308:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1164              		.loc 1 308 24 is_stmt 0 view .LVU324
+ 1165 0040 2148     		ldr	r0, .L80+8
+ 1166              	.LVL71:
+ 308:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1167              		.loc 1 308 24 view .LVU325
+ 1168 0042 FFF7FEFF 		bl	OV7670_WriteRegList
+ 1169              	.LVL72:
+ 309:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1170              		.loc 1 309 2 is_stmt 1 view .LVU326
+ 309:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1171              		.loc 1 309 5 is_stmt 0 view .LVU327
+ 1172 0046 0446     		mov	r4, r0
+ 1173 0048 0028     		cmp	r0, #0
+ 1174 004a DFD1     		bne	.L76
+ 316:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_CLKRC, &ov_clk_rc);
+ 1175              		.loc 1 316 2 is_stmt 1 view .LVU328
+ 316:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_CLKRC, &ov_clk_rc);
+ 1176              		.loc 1 316 10 is_stmt 0 view .LVU329
+ 1177 004c 0023     		movs	r3, #0
+ 1178 004e 8DF80630 		strb	r3, [sp, #6]
+ 317:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1179              		.loc 1 317 2 is_stmt 1 view .LVU330
+ 317:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1180              		.loc 1 317 23 is_stmt 0 view .LVU331
+ 1181 0052 0DF10601 		add	r1, sp, #6
+ 1182 0056 1120     		movs	r0, #17
+ 1183              	.LVL73:
+ 317:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1184              		.loc 1 317 23 view .LVU332
+ 1185 0058 FFF7FEFF 		bl	OV7670_ReadReg
+ 1186              	.LVL74:
+ 318:Drivers/BSP/Camera/ov7670.c **** 	{
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 30
+
+
+ 1187              		.loc 1 318 2 is_stmt 1 view .LVU333
+ 318:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1188              		.loc 1 318 5 is_stmt 0 view .LVU334
+ 1189 005c 0446     		mov	r4, r0
+ 1190              	.LVL75:
+ 318:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1191              		.loc 1 318 5 view .LVU335
+ 1192 005e 0028     		cmp	r0, #0
+ 1193 0060 D4D1     		bne	.L76
+ 322:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_CLKRC, &ov_clk_rc);
+ 1194              		.loc 1 322 2 is_stmt 1 view .LVU336
+ 322:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_CLKRC, &ov_clk_rc);
+ 1195              		.loc 1 322 25 is_stmt 0 view .LVU337
+ 1196 0062 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 322:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_CLKRC, &ov_clk_rc);
+ 1197              		.loc 1 322 12 view .LVU338
+ 1198 0066 23F07F03 		bic	r3, r3, #127
+ 1199 006a 43F00103 		orr	r3, r3, #1
+ 1200 006e 8DF80630 		strb	r3, [sp, #6]
+ 323:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1201              		.loc 1 323 2 is_stmt 1 view .LVU339
+ 323:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1202              		.loc 1 323 24 is_stmt 0 view .LVU340
+ 1203 0072 0DF10601 		add	r1, sp, #6
+ 1204 0076 1120     		movs	r0, #17
+ 1205              	.LVL76:
+ 323:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1206              		.loc 1 323 24 view .LVU341
+ 1207 0078 FFF7FEFF 		bl	OV7670_WriteReg
+ 1208              	.LVL77:
+ 324:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1209              		.loc 1 324 2 is_stmt 1 view .LVU342
+ 324:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1210              		.loc 1 324 5 is_stmt 0 view .LVU343
+ 1211 007c 0446     		mov	r4, r0
+ 1212              	.LVL78:
+ 324:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1213              		.loc 1 324 5 view .LVU344
+ 1214 007e 0028     		cmp	r0, #0
+ 1215 0080 C4D1     		bne	.L76
+ 329:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_DBLV, &ov_dblv);
+ 1216              		.loc 1 329 2 is_stmt 1 view .LVU345
+ 329:Drivers/BSP/Camera/ov7670.c **** 	ov_read_reg_result = OV7670_ReadReg( REG_DBLV, &ov_dblv);
+ 1217              		.loc 1 329 10 is_stmt 0 view .LVU346
+ 1218 0082 0023     		movs	r3, #0
+ 1219 0084 8DF80530 		strb	r3, [sp, #5]
+ 330:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1220              		.loc 1 330 2 is_stmt 1 view .LVU347
+ 330:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1221              		.loc 1 330 23 is_stmt 0 view .LVU348
+ 1222 0088 0DF10501 		add	r1, sp, #5
+ 1223 008c 6B20     		movs	r0, #107
+ 1224              	.LVL79:
+ 330:Drivers/BSP/Camera/ov7670.c **** 	if (ov_read_reg_result != OV7670_OK)
+ 1225              		.loc 1 330 23 view .LVU349
+ 1226 008e FFF7FEFF 		bl	OV7670_ReadReg
+ 1227              	.LVL80:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 31
+
+
+ 331:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1228              		.loc 1 331 2 is_stmt 1 view .LVU350
+ 331:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1229              		.loc 1 331 5 is_stmt 0 view .LVU351
+ 1230 0092 0446     		mov	r4, r0
+ 1231              	.LVL81:
+ 331:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1232              		.loc 1 331 5 view .LVU352
+ 1233 0094 0028     		cmp	r0, #0
+ 1234 0096 B9D1     		bne	.L76
+ 335:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_DBLV, &ov_dblv);
+ 1235              		.loc 1 335 2 is_stmt 1 view .LVU353
+ 335:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_DBLV, &ov_dblv);
+ 1236              		.loc 1 335 21 is_stmt 0 view .LVU354
+ 1237 0098 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 335:Drivers/BSP/Camera/ov7670.c **** 	ov_write_reg_result = OV7670_WriteReg( REG_DBLV, &ov_dblv);
+ 1238              		.loc 1 335 10 view .LVU355
+ 1239 009c 03F03F03 		and	r3, r3, #63
+ 1240 00a0 43F04003 		orr	r3, r3, #64
+ 1241 00a4 8DF80530 		strb	r3, [sp, #5]
+ 336:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1242              		.loc 1 336 2 is_stmt 1 view .LVU356
+ 336:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1243              		.loc 1 336 24 is_stmt 0 view .LVU357
+ 1244 00a8 0DF10501 		add	r1, sp, #5
+ 1245 00ac 6B20     		movs	r0, #107
+ 1246              	.LVL82:
+ 336:Drivers/BSP/Camera/ov7670.c **** 	if (ov_write_reg_result != OV7670_OK)
+ 1247              		.loc 1 336 24 view .LVU358
+ 1248 00ae FFF7FEFF 		bl	OV7670_WriteReg
+ 1249              	.LVL83:
+ 337:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1250              		.loc 1 337 2 is_stmt 1 view .LVU359
+ 337:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1251              		.loc 1 337 5 is_stmt 0 view .LVU360
+ 1252 00b2 0446     		mov	r4, r0
+ 1253              	.LVL84:
+ 337:Drivers/BSP/Camera/ov7670.c **** 	{
+ 1254              		.loc 1 337 5 view .LVU361
+ 1255 00b4 0028     		cmp	r0, #0
+ 1256 00b6 A9D1     		bne	.L76
+ 342:Drivers/BSP/Camera/ov7670.c **** 	
+ 1257              		.loc 1 342 2 is_stmt 1 view .LVU362
+ 1258 00b8 6420     		movs	r0, #100
+ 1259              	.LVL85:
+ 342:Drivers/BSP/Camera/ov7670.c **** 	
+ 1260              		.loc 1 342 2 is_stmt 0 view .LVU363
+ 1261 00ba FFF7FEFF 		bl	HAL_Delay
+ 1262              	.LVL86:
+ 351:Drivers/BSP/Camera/ov7670.c **** }
+ 1263              		.loc 1 351 2 is_stmt 1 view .LVU364
+ 351:Drivers/BSP/Camera/ov7670.c **** }
+ 1264              		.loc 1 351 9 is_stmt 0 view .LVU365
+ 1265 00be A5E7     		b	.L76
+ 1266              	.L81:
+ 1267              		.align	2
+ 1268              	.L80:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 32
+
+
+ 1269 00c0 00000000 		.word	ov7670_default_regs
+ 1270 00c4 00000000 		.word	qqvga_ov7670
+ 1271 00c8 00000000 		.word	rgb565_ov7670
+ 1272              		.cfi_endproc
+ 1273              	.LFE154:
+ 1275              		.text
+ 1276              	.Letext0:
+ 1277              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1278              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1279              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 1280              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 1281              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 1282              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 1283              		.file 8 "Drivers/BSP/Camera/camera.h"
+ 1284              		.file 9 "Drivers/BSP/Camera/ov7670_regs.h"
+ 1285              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s 			page 33
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov7670.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:20     .text.OV7670_WriteReg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:26     .text.OV7670_WriteReg:00000000 OV7670_WriteReg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:81     .text.OV7670_WriteReg:0000002c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:86     .text.OV7670_ReadReg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:92     .text.OV7670_ReadReg:00000000 OV7670_ReadReg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:155    .text.OV7670_ReadReg:0000003c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:160    .text.OV7670_Reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:166    .text.OV7670_Reset:00000000 OV7670_Reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:222    .text.OV7670_WriteRegList:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:228    .text.OV7670_WriteRegList:00000000 OV7670_WriteRegList
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:298    .text.OV7670_Light_Mode:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:304    .text.OV7670_Light_Mode:00000000 OV7670_Light_Mode
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:338    .text.OV7670_Light_Mode:0000001e $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:342    .text.OV7670_Light_Mode:00000022 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:433    .text.OV7670_Color_Saturation:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:439    .text.OV7670_Color_Saturation:00000000 OV7670_Color_Saturation
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:475    .text.OV7670_Color_Saturation:00000024 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:592    .text.OV7670_Brightness:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:598    .text.OV7670_Brightness:00000000 OV7670_Brightness
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:622    .text.OV7670_Brightness:00000012 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:677    .text.OV7670_Contrast:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:683    .text.OV7670_Contrast:00000000 OV7670_Contrast
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:707    .text.OV7670_Contrast:00000012 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:762    .text.OV7670_Special_Effects:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:768    .text.OV7670_Special_Effects:00000000 OV7670_Special_Effects
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:803    .text.OV7670_Special_Effects:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:809    .text.OV7670_Special_Effects:00000026 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:917    .text.ov7670_Window_Set:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:923    .text.ov7670_Window_Set:00000000 ov7670_Window_Set
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:1076   .text.OV7670_Config:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:1082   .text.OV7670_Config:00000000 OV7670_Config
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:1269   .text.OV7670_Config:000000c0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:480    .text.OV7670_Color_Saturation:00000029 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:480    .text.OV7670_Color_Saturation:0000002a $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:627    .text.OV7670_Brightness:00000017 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:627    .text.OV7670_Brightness:00000018 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:712    .text.OV7670_Contrast:00000017 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccbWxGn8.s:712    .text.OV7670_Contrast:00000018 $t
+
+UNDEFINED SYMBOLS
+HAL_I2C_Master_Transmit
+hcamera
+HAL_I2C_Master_Receive
+HAL_Delay
+ov7670_default_regs
+qqvga_ov7670
+rgb565_ov7670

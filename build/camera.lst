@@ -1,0 +1,1417 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"camera.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/camera.c"
+  19              		.section	.text.Camera_WriteReg,"ax",%progbits
+  20              		.align	1
+  21              		.global	Camera_WriteReg
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Camera_WriteReg:
+  27              	.LVL0:
+  28              	.LFB147:
+   1:Drivers/BSP/Camera/camera.c **** 
+   2:Drivers/BSP/Camera/camera.c **** #include <stdint.h>
+   3:Drivers/BSP/Camera/camera.c **** #include <stdio.h>
+   4:Drivers/BSP/Camera/camera.c **** #include "main.h"
+   5:Drivers/BSP/Camera/camera.c **** #include "camera.h"
+   6:Drivers/BSP/Camera/camera.c **** #include "lcd.h"
+   7:Drivers/BSP/Camera/camera.c **** #include "tim.h"
+   8:Drivers/BSP/Camera/camera.c **** #include "ov7670.h"
+   9:Drivers/BSP/Camera/camera.c **** #include "ov2640.h"
+  10:Drivers/BSP/Camera/camera.c **** #include "ov7725.h"
+  11:Drivers/BSP/Camera/camera.c **** #include "ov5640.h"
+  12:Drivers/BSP/Camera/camera.c **** 
+  13:Drivers/BSP/Camera/camera.c **** Camera_HandleTypeDef hcamera;
+  14:Drivers/BSP/Camera/camera.c **** // Resolution table
+  15:Drivers/BSP/Camera/camera.c **** //----------------------------------------
+  16:Drivers/BSP/Camera/camera.c **** const uint16_t dvp_cam_resolution[][2] = {
+  17:Drivers/BSP/Camera/camera.c **** 	{0, 0},
+  18:Drivers/BSP/Camera/camera.c **** 	// C/SIF Resolutions
+  19:Drivers/BSP/Camera/camera.c **** 	{88, 72},	/* QQCIF     */
+  20:Drivers/BSP/Camera/camera.c **** 	{176, 144}, /* QCIF      */
+  21:Drivers/BSP/Camera/camera.c **** 	{352, 288}, /* CIF       */
+  22:Drivers/BSP/Camera/camera.c **** 	{88, 60},	/* QQSIF     */
+  23:Drivers/BSP/Camera/camera.c **** 	{176, 120}, /* QSIF      */
+  24:Drivers/BSP/Camera/camera.c **** 	{352, 240}, /* SIF       */
+  25:Drivers/BSP/Camera/camera.c **** 	// VGA Resolutions
+  26:Drivers/BSP/Camera/camera.c **** 	{40, 30},	/* QQQQVGA   */
+  27:Drivers/BSP/Camera/camera.c **** 	{80, 60},	/* QQQVGA    */
+  28:Drivers/BSP/Camera/camera.c **** 	{160, 120}, /* QQVGA     */
+  29:Drivers/BSP/Camera/camera.c **** 	{320, 240}, /* QVGA      */
+  30:Drivers/BSP/Camera/camera.c **** 	{640, 480}, /* VGA       */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 2
+
+
+  31:Drivers/BSP/Camera/camera.c **** 	{60, 40},	/* HQQQVGA   */
+  32:Drivers/BSP/Camera/camera.c **** 	{120, 80},	/* HQQVGA    */
+  33:Drivers/BSP/Camera/camera.c **** 	{240, 160}, /* HQVGA     */
+  34:Drivers/BSP/Camera/camera.c **** 	{480, 320}, /* HVGA      */
+  35:Drivers/BSP/Camera/camera.c **** 	// FFT Resolutions
+  36:Drivers/BSP/Camera/camera.c **** 	{64, 32},	/* 64x32     */
+  37:Drivers/BSP/Camera/camera.c **** 	{64, 64},	/* 64x64     */
+  38:Drivers/BSP/Camera/camera.c **** 	{128, 64},	/* 128x64    */
+  39:Drivers/BSP/Camera/camera.c **** 	{128, 128}, /* 128x64    */
+  40:Drivers/BSP/Camera/camera.c **** 	// Other
+  41:Drivers/BSP/Camera/camera.c **** 	{128, 160},	  /* LCD       */
+  42:Drivers/BSP/Camera/camera.c **** 	{128, 160},	  /* QQVGA2    */
+  43:Drivers/BSP/Camera/camera.c **** 	{720, 480},	  /* WVGA      */
+  44:Drivers/BSP/Camera/camera.c **** 	{752, 480},	  /* WVGA2     */
+  45:Drivers/BSP/Camera/camera.c **** 	{800, 600},	  /* SVGA      */
+  46:Drivers/BSP/Camera/camera.c **** 	{1024, 768},  /* XGA       */
+  47:Drivers/BSP/Camera/camera.c **** 	{1280, 1024}, /* SXGA      */
+  48:Drivers/BSP/Camera/camera.c **** 	{1600, 1200}, /* UXGA      */
+  49:Drivers/BSP/Camera/camera.c **** 	{1280, 720},  /* 720P      */
+  50:Drivers/BSP/Camera/camera.c **** 	{1920, 1080}, /* 1080P     */
+  51:Drivers/BSP/Camera/camera.c **** 	{1280, 960},  /* 960P      */
+  52:Drivers/BSP/Camera/camera.c **** 	{2592, 1944}, /* 5MP       */
+  53:Drivers/BSP/Camera/camera.c **** };
+  54:Drivers/BSP/Camera/camera.c **** 
+  55:Drivers/BSP/Camera/camera.c **** int32_t Camera_WriteReg(Camera_HandleTypeDef *hov, uint8_t regAddr, const uint8_t *pData)
+  56:Drivers/BSP/Camera/camera.c **** {
+  29              		.loc 1 56 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 56 1 is_stmt 0 view .LVU1
+  34 0000 00B5     		push	{lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 14, -4
+  38 0002 85B0     		sub	sp, sp, #20
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 24
+  57:Drivers/BSP/Camera/camera.c **** 	uint8_t tt[2];
+  41              		.loc 1 57 2 is_stmt 1 view .LVU2
+  58:Drivers/BSP/Camera/camera.c **** 	tt[0] = regAddr;
+  42              		.loc 1 58 2 view .LVU3
+  43              		.loc 1 58 8 is_stmt 0 view .LVU4
+  44 0004 8DF80C10 		strb	r1, [sp, #12]
+  59:Drivers/BSP/Camera/camera.c **** 	tt[1] = pData[0];
+  45              		.loc 1 59 2 is_stmt 1 view .LVU5
+  46              		.loc 1 59 15 is_stmt 0 view .LVU6
+  47 0008 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  48              		.loc 1 59 8 view .LVU7
+  49 000a 8DF80D30 		strb	r3, [sp, #13]
+  60:Drivers/BSP/Camera/camera.c **** 	if (HAL_I2C_Master_Transmit(hov->hi2c, hov->addr, tt, 2, hov->timeout) == HAL_OK)
+  50              		.loc 1 60 2 is_stmt 1 view .LVU8
+  51              		.loc 1 60 6 is_stmt 0 view .LVU9
+  52 000e 8368     		ldr	r3, [r0, #8]
+  53 0010 0093     		str	r3, [sp]
+  54 0012 0223     		movs	r3, #2
+  55 0014 03AA     		add	r2, sp, #12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 3
+
+
+  56              	.LVL1:
+  57              		.loc 1 60 6 view .LVU10
+  58 0016 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+  59              	.LVL2:
+  60              		.loc 1 60 6 view .LVU11
+  61 0018 0068     		ldr	r0, [r0]
+  62              	.LVL3:
+  63              		.loc 1 60 6 view .LVU12
+  64 001a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+  65              	.LVL4:
+  66              		.loc 1 60 5 discriminator 1 view .LVU13
+  67 001e 00B1     		cbz	r0, .L1
+  61:Drivers/BSP/Camera/camera.c **** 	{
+  62:Drivers/BSP/Camera/camera.c **** 		return Camera_OK;
+  63:Drivers/BSP/Camera/camera.c **** 	}
+  64:Drivers/BSP/Camera/camera.c **** 	else
+  65:Drivers/BSP/Camera/camera.c **** 	{
+  66:Drivers/BSP/Camera/camera.c **** 		return camera_ERROR;
+  68              		.loc 1 66 10 view .LVU14
+  69 0020 0120     		movs	r0, #1
+  70              	.L1:
+  67:Drivers/BSP/Camera/camera.c **** 	}
+  68:Drivers/BSP/Camera/camera.c **** }
+  71              		.loc 1 68 1 view .LVU15
+  72 0022 05B0     		add	sp, sp, #20
+  73              	.LCFI2:
+  74              		.cfi_def_cfa_offset 4
+  75              		@ sp needed
+  76 0024 5DF804FB 		ldr	pc, [sp], #4
+  77              		.cfi_endproc
+  78              	.LFE147:
+  80              		.section	.text.Camera_ReadReg,"ax",%progbits
+  81              		.align	1
+  82              		.global	Camera_ReadReg
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+  87              	Camera_ReadReg:
+  88              	.LVL5:
+  89              	.LFB148:
+  69:Drivers/BSP/Camera/camera.c **** 
+  70:Drivers/BSP/Camera/camera.c **** int32_t Camera_ReadReg(Camera_HandleTypeDef *hov, uint8_t regAddr, uint8_t *pData)
+  71:Drivers/BSP/Camera/camera.c **** {
+  90              		.loc 1 71 1 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 8
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94              		.loc 1 71 1 is_stmt 0 view .LVU17
+  95 0000 30B5     		push	{r4, r5, lr}
+  96              	.LCFI3:
+  97              		.cfi_def_cfa_offset 12
+  98              		.cfi_offset 4, -12
+  99              		.cfi_offset 5, -8
+ 100              		.cfi_offset 14, -4
+ 101 0002 85B0     		sub	sp, sp, #20
+ 102              	.LCFI4:
+ 103              		.cfi_def_cfa_offset 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 4
+
+
+ 104 0004 0446     		mov	r4, r0
+ 105 0006 1546     		mov	r5, r2
+ 106 0008 8DF80F10 		strb	r1, [sp, #15]
+  72:Drivers/BSP/Camera/camera.c **** 	HAL_I2C_Master_Transmit(hov->hi2c, hov->addr, &regAddr, 1, hov->timeout);
+ 107              		.loc 1 72 2 is_stmt 1 view .LVU18
+ 108 000c 8368     		ldr	r3, [r0, #8]
+ 109 000e 0093     		str	r3, [sp]
+ 110 0010 0123     		movs	r3, #1
+ 111 0012 0DF10F02 		add	r2, sp, #15
+ 112              	.LVL6:
+ 113              		.loc 1 72 2 is_stmt 0 view .LVU19
+ 114 0016 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 115              	.LVL7:
+ 116              		.loc 1 72 2 view .LVU20
+ 117 0018 0068     		ldr	r0, [r0]
+ 118              	.LVL8:
+ 119              		.loc 1 72 2 view .LVU21
+ 120 001a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 121              	.LVL9:
+  73:Drivers/BSP/Camera/camera.c **** 	if (HAL_I2C_Master_Receive(hov->hi2c, hov->addr, pData, 1, hov->timeout) == HAL_OK)
+ 122              		.loc 1 73 2 is_stmt 1 view .LVU22
+ 123              		.loc 1 73 6 is_stmt 0 view .LVU23
+ 124 001e A368     		ldr	r3, [r4, #8]
+ 125 0020 0093     		str	r3, [sp]
+ 126 0022 0123     		movs	r3, #1
+ 127 0024 2A46     		mov	r2, r5
+ 128 0026 2179     		ldrb	r1, [r4, #4]	@ zero_extendqisi2
+ 129 0028 2068     		ldr	r0, [r4]
+ 130 002a FFF7FEFF 		bl	HAL_I2C_Master_Receive
+ 131              	.LVL10:
+ 132              		.loc 1 73 5 discriminator 1 view .LVU24
+ 133 002e 00B1     		cbz	r0, .L5
+  74:Drivers/BSP/Camera/camera.c **** 	{
+  75:Drivers/BSP/Camera/camera.c **** 		return Camera_OK;
+  76:Drivers/BSP/Camera/camera.c **** 	}
+  77:Drivers/BSP/Camera/camera.c **** 	else
+  78:Drivers/BSP/Camera/camera.c **** 	{
+  79:Drivers/BSP/Camera/camera.c **** 		return camera_ERROR;
+ 134              		.loc 1 79 10 view .LVU25
+ 135 0030 0120     		movs	r0, #1
+ 136              	.L5:
+  80:Drivers/BSP/Camera/camera.c **** 	}
+  81:Drivers/BSP/Camera/camera.c **** }
+ 137              		.loc 1 81 1 view .LVU26
+ 138 0032 05B0     		add	sp, sp, #20
+ 139              	.LCFI5:
+ 140              		.cfi_def_cfa_offset 12
+ 141              		@ sp needed
+ 142 0034 30BD     		pop	{r4, r5, pc}
+ 143              		.loc 1 81 1 view .LVU27
+ 144              		.cfi_endproc
+ 145              	.LFE148:
+ 147              		.section	.text.Camera_WriteRegb2,"ax",%progbits
+ 148              		.align	1
+ 149              		.global	Camera_WriteRegb2
+ 150              		.syntax unified
+ 151              		.thumb
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 5
+
+
+ 152              		.thumb_func
+ 154              	Camera_WriteRegb2:
+ 155              	.LVL11:
+ 156              	.LFB149:
+  82:Drivers/BSP/Camera/camera.c **** 
+  83:Drivers/BSP/Camera/camera.c **** int32_t Camera_WriteRegb2(Camera_HandleTypeDef *hov, uint16_t reg_addr, uint8_t reg_data)
+  84:Drivers/BSP/Camera/camera.c **** {
+ 157              		.loc 1 84 1 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 8
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		.loc 1 84 1 is_stmt 0 view .LVU29
+ 162 0000 00B5     		push	{lr}
+ 163              	.LCFI6:
+ 164              		.cfi_def_cfa_offset 4
+ 165              		.cfi_offset 14, -4
+ 166 0002 87B0     		sub	sp, sp, #28
+ 167              	.LCFI7:
+ 168              		.cfi_def_cfa_offset 32
+ 169 0004 8DF81720 		strb	r2, [sp, #23]
+  85:Drivers/BSP/Camera/camera.c **** 	if (HAL_I2C_Mem_Write(hov->hi2c, hov->addr, reg_addr,
+ 170              		.loc 1 85 2 is_stmt 1 view .LVU30
+ 171              		.loc 1 85 6 is_stmt 0 view .LVU31
+ 172 0008 8368     		ldr	r3, [r0, #8]
+ 173 000a 0293     		str	r3, [sp, #8]
+ 174 000c 0123     		movs	r3, #1
+ 175 000e 0193     		str	r3, [sp, #4]
+ 176 0010 0DF11703 		add	r3, sp, #23
+ 177 0014 0093     		str	r3, [sp]
+ 178 0016 0223     		movs	r3, #2
+ 179 0018 0A46     		mov	r2, r1
+ 180              	.LVL12:
+ 181              		.loc 1 85 6 view .LVU32
+ 182 001a 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 183              	.LVL13:
+ 184              		.loc 1 85 6 view .LVU33
+ 185 001c 0068     		ldr	r0, [r0]
+ 186              	.LVL14:
+ 187              		.loc 1 85 6 view .LVU34
+ 188 001e FFF7FEFF 		bl	HAL_I2C_Mem_Write
+ 189              	.LVL15:
+ 190              		.loc 1 85 5 discriminator 1 view .LVU35
+ 191 0022 00B1     		cbz	r0, .L9
+  86:Drivers/BSP/Camera/camera.c **** 						  I2C_MEMADD_SIZE_16BIT, &reg_data, 1, hov->timeout) == HAL_OK)
+  87:Drivers/BSP/Camera/camera.c **** 	{
+  88:Drivers/BSP/Camera/camera.c **** 		return Camera_OK;
+  89:Drivers/BSP/Camera/camera.c **** 	}
+  90:Drivers/BSP/Camera/camera.c **** 	else
+  91:Drivers/BSP/Camera/camera.c **** 	{
+  92:Drivers/BSP/Camera/camera.c **** 		return camera_ERROR;
+ 192              		.loc 1 92 10 view .LVU36
+ 193 0024 0120     		movs	r0, #1
+ 194              	.L9:
+  93:Drivers/BSP/Camera/camera.c **** 	}
+  94:Drivers/BSP/Camera/camera.c **** }
+ 195              		.loc 1 94 1 view .LVU37
+ 196 0026 07B0     		add	sp, sp, #28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 6
+
+
+ 197              	.LCFI8:
+ 198              		.cfi_def_cfa_offset 4
+ 199              		@ sp needed
+ 200 0028 5DF804FB 		ldr	pc, [sp], #4
+ 201              		.cfi_endproc
+ 202              	.LFE149:
+ 204              		.section	.text.Camera_ReadRegb2,"ax",%progbits
+ 205              		.align	1
+ 206              		.global	Camera_ReadRegb2
+ 207              		.syntax unified
+ 208              		.thumb
+ 209              		.thumb_func
+ 211              	Camera_ReadRegb2:
+ 212              	.LVL16:
+ 213              	.LFB150:
+  95:Drivers/BSP/Camera/camera.c **** 
+  96:Drivers/BSP/Camera/camera.c **** int32_t Camera_ReadRegb2(Camera_HandleTypeDef *hov, uint16_t reg_addr, uint8_t *reg_data)
+  97:Drivers/BSP/Camera/camera.c **** {
+ 214              		.loc 1 97 1 is_stmt 1 view -0
+ 215              		.cfi_startproc
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218              		.loc 1 97 1 is_stmt 0 view .LVU39
+ 219 0000 00B5     		push	{lr}
+ 220              	.LCFI9:
+ 221              		.cfi_def_cfa_offset 4
+ 222              		.cfi_offset 14, -4
+ 223 0002 85B0     		sub	sp, sp, #20
+ 224              	.LCFI10:
+ 225              		.cfi_def_cfa_offset 24
+  98:Drivers/BSP/Camera/camera.c **** 	if (HAL_I2C_Mem_Read(hov->hi2c, hov->addr, reg_addr,
+ 226              		.loc 1 98 2 is_stmt 1 view .LVU40
+ 227              		.loc 1 98 6 is_stmt 0 view .LVU41
+ 228 0004 8368     		ldr	r3, [r0, #8]
+ 229 0006 0293     		str	r3, [sp, #8]
+ 230 0008 0123     		movs	r3, #1
+ 231 000a 0193     		str	r3, [sp, #4]
+ 232 000c 0092     		str	r2, [sp]
+ 233 000e 0223     		movs	r3, #2
+ 234 0010 0A46     		mov	r2, r1
+ 235              	.LVL17:
+ 236              		.loc 1 98 6 view .LVU42
+ 237 0012 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 238              	.LVL18:
+ 239              		.loc 1 98 6 view .LVU43
+ 240 0014 0068     		ldr	r0, [r0]
+ 241              	.LVL19:
+ 242              		.loc 1 98 6 view .LVU44
+ 243 0016 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 244              	.LVL20:
+ 245              		.loc 1 98 5 discriminator 1 view .LVU45
+ 246 001a 00B1     		cbz	r0, .L13
+  99:Drivers/BSP/Camera/camera.c **** 						 I2C_MEMADD_SIZE_16BIT, reg_data, 1, hov->timeout) == HAL_OK)
+ 100:Drivers/BSP/Camera/camera.c **** 	{
+ 101:Drivers/BSP/Camera/camera.c **** 		return Camera_OK;
+ 102:Drivers/BSP/Camera/camera.c **** 	}
+ 103:Drivers/BSP/Camera/camera.c **** 	else
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 7
+
+
+ 104:Drivers/BSP/Camera/camera.c **** 	{
+ 105:Drivers/BSP/Camera/camera.c **** 		return camera_ERROR;
+ 247              		.loc 1 105 10 view .LVU46
+ 248 001c 0120     		movs	r0, #1
+ 249              	.L13:
+ 106:Drivers/BSP/Camera/camera.c **** 	}
+ 107:Drivers/BSP/Camera/camera.c **** }
+ 250              		.loc 1 107 1 view .LVU47
+ 251 001e 05B0     		add	sp, sp, #20
+ 252              	.LCFI11:
+ 253              		.cfi_def_cfa_offset 4
+ 254              		@ sp needed
+ 255 0020 5DF804FB 		ldr	pc, [sp], #4
+ 256              		.cfi_endproc
+ 257              	.LFE150:
+ 259              		.section	.text.Camera_WriteRegList,"ax",%progbits
+ 260              		.align	1
+ 261              		.global	Camera_WriteRegList
+ 262              		.syntax unified
+ 263              		.thumb
+ 264              		.thumb_func
+ 266              	Camera_WriteRegList:
+ 267              	.LVL21:
+ 268              	.LFB151:
+ 108:Drivers/BSP/Camera/camera.c **** 
+ 109:Drivers/BSP/Camera/camera.c **** int32_t Camera_WriteRegList(Camera_HandleTypeDef *hov, const struct regval_t *reg_list)
+ 110:Drivers/BSP/Camera/camera.c **** {
+ 269              		.loc 1 110 1 is_stmt 1 view -0
+ 270              		.cfi_startproc
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		.loc 1 110 1 is_stmt 0 view .LVU49
+ 274 0000 38B5     		push	{r3, r4, r5, lr}
+ 275              	.LCFI12:
+ 276              		.cfi_def_cfa_offset 16
+ 277              		.cfi_offset 3, -16
+ 278              		.cfi_offset 4, -12
+ 279              		.cfi_offset 5, -8
+ 280              		.cfi_offset 14, -4
+ 281 0002 0546     		mov	r5, r0
+ 282 0004 0C46     		mov	r4, r1
+ 111:Drivers/BSP/Camera/camera.c **** 	const struct regval_t *pReg = reg_list;
+ 283              		.loc 1 111 2 is_stmt 1 view .LVU50
+ 284              	.LVL22:
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 285              		.loc 1 112 2 view .LVU51
+ 286              		.loc 1 112 8 is_stmt 0 view .LVU52
+ 287 0006 00E0     		b	.L18
+ 288              	.LVL23:
+ 289              	.L24:
+ 290              	.LBB2:
+ 113:Drivers/BSP/Camera/camera.c **** 	{
+ 114:Drivers/BSP/Camera/camera.c **** 		int write_result = Camera_WriteReg(hov, pReg->reg_addr, &(pReg->value));
+ 115:Drivers/BSP/Camera/camera.c **** 		if (write_result != Camera_OK)
+ 116:Drivers/BSP/Camera/camera.c **** 		{
+ 117:Drivers/BSP/Camera/camera.c **** 			return write_result;
+ 118:Drivers/BSP/Camera/camera.c **** 		}
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 8
+
+
+ 119:Drivers/BSP/Camera/camera.c **** 		pReg++;
+ 291              		.loc 1 119 3 is_stmt 1 view .LVU53
+ 292              		.loc 1 119 7 is_stmt 0 view .LVU54
+ 293 0008 0234     		adds	r4, r4, #2
+ 294              	.LVL24:
+ 295              	.L18:
+ 296              		.loc 1 119 7 view .LVU55
+ 297              	.LBE2:
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 298              		.loc 1 112 32 is_stmt 1 view .LVU56
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 299              		.loc 1 112 13 is_stmt 0 view .LVU57
+ 300 000a 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 301              		.loc 1 112 32 view .LVU58
+ 302 000c FF29     		cmp	r1, #255
+ 303 000e 0CD0     		beq	.L21
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 304              		.loc 1 112 39 discriminator 1 view .LVU59
+ 305 0010 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 112:Drivers/BSP/Camera/camera.c **** 	while (pReg->reg_addr != 0xFF && pReg->value != 0xFF)
+ 306              		.loc 1 112 32 discriminator 1 view .LVU60
+ 307 0012 FF2B     		cmp	r3, #255
+ 308 0014 07D0     		beq	.L23
+ 309              	.LBB3:
+ 114:Drivers/BSP/Camera/camera.c **** 		if (write_result != Camera_OK)
+ 310              		.loc 1 114 3 is_stmt 1 view .LVU61
+ 114:Drivers/BSP/Camera/camera.c **** 		if (write_result != Camera_OK)
+ 311              		.loc 1 114 22 is_stmt 0 view .LVU62
+ 312 0016 621C     		adds	r2, r4, #1
+ 313 0018 2846     		mov	r0, r5
+ 314 001a FFF7FEFF 		bl	Camera_WriteReg
+ 315              	.LVL25:
+ 115:Drivers/BSP/Camera/camera.c **** 		{
+ 316              		.loc 1 115 3 is_stmt 1 view .LVU63
+ 115:Drivers/BSP/Camera/camera.c **** 		{
+ 317              		.loc 1 115 6 is_stmt 0 view .LVU64
+ 318 001e 0346     		mov	r3, r0
+ 319 0020 0028     		cmp	r0, #0
+ 320 0022 F1D0     		beq	.L24
+ 321 0024 02E0     		b	.L17
+ 322              	.LVL26:
+ 323              	.L23:
+ 115:Drivers/BSP/Camera/camera.c **** 		{
+ 324              		.loc 1 115 6 view .LVU65
+ 325              	.LBE3:
+ 120:Drivers/BSP/Camera/camera.c **** 	}
+ 121:Drivers/BSP/Camera/camera.c **** 	return Camera_OK;
+ 326              		.loc 1 121 9 view .LVU66
+ 327 0026 0023     		movs	r3, #0
+ 328 0028 00E0     		b	.L17
+ 329              	.L21:
+ 330 002a 0023     		movs	r3, #0
+ 331              	.L17:
+ 122:Drivers/BSP/Camera/camera.c **** }
+ 332              		.loc 1 122 1 view .LVU67
+ 333 002c 1846     		mov	r0, r3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 9
+
+
+ 334 002e 38BD     		pop	{r3, r4, r5, pc}
+ 335              		.loc 1 122 1 view .LVU68
+ 336              		.cfi_endproc
+ 337              	.LFE151:
+ 339              		.section	.text.Camera_read_id,"ax",%progbits
+ 340              		.align	1
+ 341              		.global	Camera_read_id
+ 342              		.syntax unified
+ 343              		.thumb
+ 344              		.thumb_func
+ 346              	Camera_read_id:
+ 347              	.LVL27:
+ 348              	.LFB152:
+ 123:Drivers/BSP/Camera/camera.c **** 
+ 124:Drivers/BSP/Camera/camera.c **** int32_t Camera_read_id(Camera_HandleTypeDef *hov)
+ 125:Drivers/BSP/Camera/camera.c **** {
+ 349              		.loc 1 125 1 is_stmt 1 view -0
+ 350              		.cfi_startproc
+ 351              		@ args = 0, pretend = 0, frame = 8
+ 352              		@ frame_needed = 0, uses_anonymous_args = 0
+ 353              		.loc 1 125 1 is_stmt 0 view .LVU70
+ 354 0000 30B5     		push	{r4, r5, lr}
+ 355              	.LCFI13:
+ 356              		.cfi_def_cfa_offset 12
+ 357              		.cfi_offset 4, -12
+ 358              		.cfi_offset 5, -8
+ 359              		.cfi_offset 14, -4
+ 360 0002 83B0     		sub	sp, sp, #12
+ 361              	.LCFI14:
+ 362              		.cfi_def_cfa_offset 24
+ 363 0004 0446     		mov	r4, r0
+ 126:Drivers/BSP/Camera/camera.c **** 	uint8_t temp[2];
+ 364              		.loc 1 126 2 is_stmt 1 view .LVU71
+ 127:Drivers/BSP/Camera/camera.c **** 	temp[0] = 0x01;
+ 365              		.loc 1 127 2 view .LVU72
+ 366              		.loc 1 127 10 is_stmt 0 view .LVU73
+ 367 0006 0123     		movs	r3, #1
+ 368 0008 8DF80430 		strb	r3, [sp, #4]
+ 128:Drivers/BSP/Camera/camera.c **** 	if (hov->addr != OV5640_ADDRESS)
+ 369              		.loc 1 128 2 is_stmt 1 view .LVU74
+ 370              		.loc 1 128 9 is_stmt 0 view .LVU75
+ 371 000c 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+ 372              		.loc 1 128 5 view .LVU76
+ 373 000e 782B     		cmp	r3, #120
+ 374 0010 2AD0     		beq	.L26
+ 129:Drivers/BSP/Camera/camera.c **** 	{
+ 130:Drivers/BSP/Camera/camera.c **** 		Camera_WriteReg(hov, 0xFF, temp);
+ 375              		.loc 1 130 3 is_stmt 1 view .LVU77
+ 376 0012 01AA     		add	r2, sp, #4
+ 377 0014 FF21     		movs	r1, #255
+ 378 0016 FFF7FEFF 		bl	Camera_WriteReg
+ 379              	.LVL28:
+ 131:Drivers/BSP/Camera/camera.c **** 		Camera_ReadReg(hov, 0x1C, &temp[0]);
+ 380              		.loc 1 131 3 view .LVU78
+ 381 001a 01AA     		add	r2, sp, #4
+ 382 001c 1C21     		movs	r1, #28
+ 383 001e 2046     		mov	r0, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 10
+
+
+ 384 0020 FFF7FEFF 		bl	Camera_ReadReg
+ 385              	.LVL29:
+ 132:Drivers/BSP/Camera/camera.c **** 		Camera_ReadReg(hov, 0x1D, &temp[1]);
+ 386              		.loc 1 132 3 view .LVU79
+ 387 0024 0DF10502 		add	r2, sp, #5
+ 388 0028 1D21     		movs	r1, #29
+ 389 002a 2046     		mov	r0, r4
+ 390 002c FFF7FEFF 		bl	Camera_ReadReg
+ 391              	.LVL30:
+ 133:Drivers/BSP/Camera/camera.c **** 		hov->manuf_id = ((uint16_t)temp[0] << 8) | temp[1];
+ 392              		.loc 1 133 3 view .LVU80
+ 393              		.loc 1 133 34 is_stmt 0 view .LVU81
+ 394 0030 9DF80420 		ldrb	r2, [sp, #4]	@ zero_extendqisi2
+ 395              		.loc 1 133 50 view .LVU82
+ 396 0034 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 397              		.loc 1 133 44 view .LVU83
+ 398 0038 43EA0223 		orr	r3, r3, r2, lsl #8
+ 399              		.loc 1 133 17 view .LVU84
+ 400 003c A381     		strh	r3, [r4, #12]	@ movhi
+ 134:Drivers/BSP/Camera/camera.c **** 		Camera_ReadReg(hov, 0x0A, &temp[0]);
+ 401              		.loc 1 134 3 is_stmt 1 view .LVU85
+ 402 003e 01AA     		add	r2, sp, #4
+ 403 0040 0A21     		movs	r1, #10
+ 404 0042 2046     		mov	r0, r4
+ 405 0044 FFF7FEFF 		bl	Camera_ReadReg
+ 406              	.LVL31:
+ 135:Drivers/BSP/Camera/camera.c **** 		Camera_ReadReg(hov, 0x0B, &temp[1]);
+ 407              		.loc 1 135 3 view .LVU86
+ 408 0048 0DF10502 		add	r2, sp, #5
+ 409 004c 0B21     		movs	r1, #11
+ 410 004e 2046     		mov	r0, r4
+ 411 0050 FFF7FEFF 		bl	Camera_ReadReg
+ 412              	.LVL32:
+ 413              	.L27:
+ 136:Drivers/BSP/Camera/camera.c **** 	}
+ 137:Drivers/BSP/Camera/camera.c **** 	else
+ 138:Drivers/BSP/Camera/camera.c **** 	{
+ 139:Drivers/BSP/Camera/camera.c **** #define OV5640_CHIP_IDH 0x300A
+ 140:Drivers/BSP/Camera/camera.c **** #define OV5640_CHIP_IDL 0x300B
+ 141:Drivers/BSP/Camera/camera.c **** 		Camera_ReadRegb2(&hcamera, OV5640_CHIP_IDH, &temp[0]);
+ 142:Drivers/BSP/Camera/camera.c **** 		Camera_ReadRegb2(&hcamera, OV5640_CHIP_IDL, &temp[1]);
+ 143:Drivers/BSP/Camera/camera.c **** 		hov->manuf_id = 0;
+ 144:Drivers/BSP/Camera/camera.c **** 	}
+ 145:Drivers/BSP/Camera/camera.c **** 	hov->device_id = ((uint16_t)temp[0] << 8) | temp[1];
+ 414              		.loc 1 145 2 view .LVU87
+ 415              		.loc 1 145 34 is_stmt 0 view .LVU88
+ 416 0054 9DF80420 		ldrb	r2, [sp, #4]	@ zero_extendqisi2
+ 417              		.loc 1 145 50 view .LVU89
+ 418 0058 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 419              		.loc 1 145 44 view .LVU90
+ 420 005c 43EA0223 		orr	r3, r3, r2, lsl #8
+ 421              		.loc 1 145 17 view .LVU91
+ 422 0060 E381     		strh	r3, [r4, #14]	@ movhi
+ 146:Drivers/BSP/Camera/camera.c **** 	return 0;
+ 423              		.loc 1 146 2 is_stmt 1 view .LVU92
+ 147:Drivers/BSP/Camera/camera.c **** }
+ 424              		.loc 1 147 1 is_stmt 0 view .LVU93
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 11
+
+
+ 425 0062 0020     		movs	r0, #0
+ 426 0064 03B0     		add	sp, sp, #12
+ 427              	.LCFI15:
+ 428              		.cfi_remember_state
+ 429              		.cfi_def_cfa_offset 12
+ 430              		@ sp needed
+ 431 0066 30BD     		pop	{r4, r5, pc}
+ 432              	.LVL33:
+ 433              	.L26:
+ 434              	.LCFI16:
+ 435              		.cfi_restore_state
+ 141:Drivers/BSP/Camera/camera.c **** 		Camera_ReadRegb2(&hcamera, OV5640_CHIP_IDL, &temp[1]);
+ 436              		.loc 1 141 3 is_stmt 1 view .LVU94
+ 437 0068 084D     		ldr	r5, .L29
+ 438 006a 01AA     		add	r2, sp, #4
+ 439 006c 43F20A01 		movw	r1, #12298
+ 440 0070 2846     		mov	r0, r5
+ 441              	.LVL34:
+ 141:Drivers/BSP/Camera/camera.c **** 		Camera_ReadRegb2(&hcamera, OV5640_CHIP_IDL, &temp[1]);
+ 442              		.loc 1 141 3 is_stmt 0 view .LVU95
+ 443 0072 FFF7FEFF 		bl	Camera_ReadRegb2
+ 444              	.LVL35:
+ 142:Drivers/BSP/Camera/camera.c **** 		hov->manuf_id = 0;
+ 445              		.loc 1 142 3 is_stmt 1 view .LVU96
+ 446 0076 0DF10502 		add	r2, sp, #5
+ 447 007a 43F20B01 		movw	r1, #12299
+ 448 007e 2846     		mov	r0, r5
+ 449 0080 FFF7FEFF 		bl	Camera_ReadRegb2
+ 450              	.LVL36:
+ 143:Drivers/BSP/Camera/camera.c **** 	}
+ 451              		.loc 1 143 3 view .LVU97
+ 143:Drivers/BSP/Camera/camera.c **** 	}
+ 452              		.loc 1 143 17 is_stmt 0 view .LVU98
+ 453 0084 0023     		movs	r3, #0
+ 454 0086 A381     		strh	r3, [r4, #12]	@ movhi
+ 455 0088 E4E7     		b	.L27
+ 456              	.L30:
+ 457 008a 00BF     		.align	2
+ 458              	.L29:
+ 459 008c 00000000 		.word	hcamera
+ 460              		.cfi_endproc
+ 461              	.LFE152:
+ 463              		.section	.text.Camera_Reset,"ax",%progbits
+ 464              		.align	1
+ 465              		.global	Camera_Reset
+ 466              		.syntax unified
+ 467              		.thumb
+ 468              		.thumb_func
+ 470              	Camera_Reset:
+ 471              	.LVL37:
+ 472              	.LFB153:
+ 148:Drivers/BSP/Camera/camera.c **** 
+ 149:Drivers/BSP/Camera/camera.c **** void Camera_Reset(Camera_HandleTypeDef *hov)
+ 150:Drivers/BSP/Camera/camera.c **** {
+ 473              		.loc 1 150 1 is_stmt 1 view -0
+ 474              		.cfi_startproc
+ 475              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 12
+
+
+ 476              		@ frame_needed = 0, uses_anonymous_args = 0
+ 477              		.loc 1 150 1 is_stmt 0 view .LVU100
+ 478 0000 10B5     		push	{r4, lr}
+ 479              	.LCFI17:
+ 480              		.cfi_def_cfa_offset 8
+ 481              		.cfi_offset 4, -8
+ 482              		.cfi_offset 14, -4
+ 483 0002 82B0     		sub	sp, sp, #8
+ 484              	.LCFI18:
+ 485              		.cfi_def_cfa_offset 16
+ 486 0004 0446     		mov	r4, r0
+ 151:Drivers/BSP/Camera/camera.c **** 	uint8_t temp;
+ 487              		.loc 1 151 2 is_stmt 1 view .LVU101
+ 152:Drivers/BSP/Camera/camera.c **** 	temp = 0x01;
+ 488              		.loc 1 152 2 view .LVU102
+ 489              		.loc 1 152 7 is_stmt 0 view .LVU103
+ 490 0006 0123     		movs	r3, #1
+ 491 0008 8DF80730 		strb	r3, [sp, #7]
+ 153:Drivers/BSP/Camera/camera.c **** 	Camera_WriteReg(hov, 0xFF, &temp);
+ 492              		.loc 1 153 2 is_stmt 1 view .LVU104
+ 493 000c 0DF10702 		add	r2, sp, #7
+ 494 0010 FF21     		movs	r1, #255
+ 495 0012 FFF7FEFF 		bl	Camera_WriteReg
+ 496              	.LVL38:
+ 154:Drivers/BSP/Camera/camera.c **** 	temp = 0x80;
+ 497              		.loc 1 154 2 view .LVU105
+ 498              		.loc 1 154 7 is_stmt 0 view .LVU106
+ 499 0016 8023     		movs	r3, #128
+ 500 0018 8DF80730 		strb	r3, [sp, #7]
+ 155:Drivers/BSP/Camera/camera.c **** 	Camera_WriteReg(hov, 0x12, &temp);
+ 501              		.loc 1 155 2 is_stmt 1 view .LVU107
+ 502 001c 0DF10702 		add	r2, sp, #7
+ 503 0020 1221     		movs	r1, #18
+ 504 0022 2046     		mov	r0, r4
+ 505 0024 FFF7FEFF 		bl	Camera_WriteReg
+ 506              	.LVL39:
+ 156:Drivers/BSP/Camera/camera.c **** 	HAL_Delay(100);
+ 507              		.loc 1 156 2 view .LVU108
+ 508 0028 6420     		movs	r0, #100
+ 509 002a FFF7FEFF 		bl	HAL_Delay
+ 510              	.LVL40:
+ 157:Drivers/BSP/Camera/camera.c **** }
+ 511              		.loc 1 157 1 is_stmt 0 view .LVU109
+ 512 002e 02B0     		add	sp, sp, #8
+ 513              	.LCFI19:
+ 514              		.cfi_def_cfa_offset 8
+ 515              		@ sp needed
+ 516 0030 10BD     		pop	{r4, pc}
+ 517              		.loc 1 157 1 view .LVU110
+ 518              		.cfi_endproc
+ 519              	.LFE153:
+ 521              		.section	.text.Camera_XCLK_Set,"ax",%progbits
+ 522              		.align	1
+ 523              		.global	Camera_XCLK_Set
+ 524              		.syntax unified
+ 525              		.thumb
+ 526              		.thumb_func
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 13
+
+
+ 528              	Camera_XCLK_Set:
+ 529              	.LVL41:
+ 530              	.LFB154:
+ 158:Drivers/BSP/Camera/camera.c **** 
+ 159:Drivers/BSP/Camera/camera.c **** void Camera_XCLK_Set(uint8_t xclktype)
+ 160:Drivers/BSP/Camera/camera.c **** {
+ 531              		.loc 1 160 1 is_stmt 1 view -0
+ 532              		.cfi_startproc
+ 533              		@ args = 0, pretend = 0, frame = 56
+ 534              		@ frame_needed = 0, uses_anonymous_args = 0
+ 535              		.loc 1 160 1 is_stmt 0 view .LVU112
+ 536 0000 30B5     		push	{r4, r5, lr}
+ 537              	.LCFI20:
+ 538              		.cfi_def_cfa_offset 12
+ 539              		.cfi_offset 4, -12
+ 540              		.cfi_offset 5, -8
+ 541              		.cfi_offset 14, -4
+ 542 0002 8FB0     		sub	sp, sp, #60
+ 543              	.LCFI21:
+ 544              		.cfi_def_cfa_offset 72
+ 161:Drivers/BSP/Camera/camera.c **** #define USE_LCD 1
+ 162:Drivers/BSP/Camera/camera.c **** 
+ 163:Drivers/BSP/Camera/camera.c **** #if USE_LCD
+ 164:Drivers/BSP/Camera/camera.c **** #include "lcd.h"
+ 165:Drivers/BSP/Camera/camera.c **** #endif
+ 166:Drivers/BSP/Camera/camera.c **** 	if (xclktype == XCLK_TIM)
+ 545              		.loc 1 166 2 is_stmt 1 view .LVU113
+ 546              		.loc 1 166 5 is_stmt 0 view .LVU114
+ 547 0004 0028     		cmp	r0, #0
+ 548 0006 5CD1     		bne	.L34
+ 549              	.LBB4:
+ 167:Drivers/BSP/Camera/camera.c **** 	{
+ 168:Drivers/BSP/Camera/camera.c **** 		TIM_OC_InitTypeDef sConfigOC = {0};
+ 550              		.loc 1 168 3 is_stmt 1 view .LVU115
+ 551              		.loc 1 168 22 is_stmt 0 view .LVU116
+ 552 0008 0024     		movs	r4, #0
+ 553 000a 0794     		str	r4, [sp, #28]
+ 554 000c 0894     		str	r4, [sp, #32]
+ 555 000e 0994     		str	r4, [sp, #36]
+ 556 0010 0A94     		str	r4, [sp, #40]
+ 557 0012 0B94     		str	r4, [sp, #44]
+ 558 0014 0C94     		str	r4, [sp, #48]
+ 559 0016 0D94     		str	r4, [sp, #52]
+ 169:Drivers/BSP/Camera/camera.c **** 		GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 560              		.loc 1 169 3 is_stmt 1 view .LVU117
+ 561              		.loc 1 169 20 is_stmt 0 view .LVU118
+ 562 0018 0294     		str	r4, [sp, #8]
+ 563 001a 0394     		str	r4, [sp, #12]
+ 564 001c 0494     		str	r4, [sp, #16]
+ 565 001e 0594     		str	r4, [sp, #20]
+ 566 0020 0694     		str	r4, [sp, #24]
+ 170:Drivers/BSP/Camera/camera.c **** 
+ 171:Drivers/BSP/Camera/camera.c **** 		// DeInit TIM1 PWM OutPut
+ 172:Drivers/BSP/Camera/camera.c **** 		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8);
+ 567              		.loc 1 172 3 is_stmt 1 view .LVU119
+ 568 0022 4FF48071 		mov	r1, #256
+ 569 0026 3148     		ldr	r0, .L41
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 14
+
+
+ 570              	.LVL42:
+ 571              		.loc 1 172 3 is_stmt 0 view .LVU120
+ 572 0028 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 573              	.LVL43:
+ 173:Drivers/BSP/Camera/camera.c **** 		HAL_TIM_PWM_DeInit(&htim1);
+ 574              		.loc 1 173 3 is_stmt 1 view .LVU121
+ 575 002c 304D     		ldr	r5, .L41+4
+ 576 002e 2846     		mov	r0, r5
+ 577 0030 FFF7FEFF 		bl	HAL_TIM_PWM_DeInit
+ 578              	.LVL44:
+ 174:Drivers/BSP/Camera/camera.c **** 
+ 175:Drivers/BSP/Camera/camera.c **** 		// Init TIM1 Channel 1 12Mhz PWM Output
+ 176:Drivers/BSP/Camera/camera.c **** 		htim1.Instance = TIM1;
+ 579              		.loc 1 176 3 view .LVU122
+ 580              		.loc 1 176 18 is_stmt 0 view .LVU123
+ 581 0034 2F4B     		ldr	r3, .L41+8
+ 582 0036 2B60     		str	r3, [r5]
+ 177:Drivers/BSP/Camera/camera.c **** 		htim1.Init.Prescaler = 1 - 1;
+ 583              		.loc 1 177 3 is_stmt 1 view .LVU124
+ 584              		.loc 1 177 24 is_stmt 0 view .LVU125
+ 585 0038 6C60     		str	r4, [r5, #4]
+ 178:Drivers/BSP/Camera/camera.c **** 		htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 586              		.loc 1 178 3 is_stmt 1 view .LVU126
+ 587              		.loc 1 178 26 is_stmt 0 view .LVU127
+ 588 003a AC60     		str	r4, [r5, #8]
+ 179:Drivers/BSP/Camera/camera.c **** 		htim1.Init.Period = 10 - 1;
+ 589              		.loc 1 179 3 is_stmt 1 view .LVU128
+ 590              		.loc 1 179 21 is_stmt 0 view .LVU129
+ 591 003c 0923     		movs	r3, #9
+ 592 003e EB60     		str	r3, [r5, #12]
+ 180:Drivers/BSP/Camera/camera.c **** 		htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 593              		.loc 1 180 3 is_stmt 1 view .LVU130
+ 594              		.loc 1 180 28 is_stmt 0 view .LVU131
+ 595 0040 2C61     		str	r4, [r5, #16]
+ 181:Drivers/BSP/Camera/camera.c **** 		htim1.Init.RepetitionCounter = 0;
+ 596              		.loc 1 181 3 is_stmt 1 view .LVU132
+ 597              		.loc 1 181 32 is_stmt 0 view .LVU133
+ 598 0042 6C61     		str	r4, [r5, #20]
+ 182:Drivers/BSP/Camera/camera.c **** 		htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 599              		.loc 1 182 3 is_stmt 1 view .LVU134
+ 600              		.loc 1 182 32 is_stmt 0 view .LVU135
+ 601 0044 AC61     		str	r4, [r5, #24]
+ 183:Drivers/BSP/Camera/camera.c **** 		if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
+ 602              		.loc 1 183 3 is_stmt 1 view .LVU136
+ 603              		.loc 1 183 7 is_stmt 0 view .LVU137
+ 604 0046 2846     		mov	r0, r5
+ 605 0048 FFF7FEFF 		bl	HAL_TIM_PWM_Init
+ 606              	.LVL45:
+ 607              		.loc 1 183 6 discriminator 1 view .LVU138
+ 608 004c 0028     		cmp	r0, #0
+ 609 004e 32D1     		bne	.L39
+ 610              	.L35:
+ 184:Drivers/BSP/Camera/camera.c **** 		{
+ 185:Drivers/BSP/Camera/camera.c **** 			Error_Handler();
+ 186:Drivers/BSP/Camera/camera.c **** 		}
+ 187:Drivers/BSP/Camera/camera.c **** 
+ 188:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCMode = TIM_OCMODE_PWM1;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 15
+
+
+ 611              		.loc 1 188 3 is_stmt 1 view .LVU139
+ 612              		.loc 1 188 20 is_stmt 0 view .LVU140
+ 613 0050 6023     		movs	r3, #96
+ 614 0052 0793     		str	r3, [sp, #28]
+ 189:Drivers/BSP/Camera/camera.c **** 		sConfigOC.Pulse = 5;
+ 615              		.loc 1 189 3 is_stmt 1 view .LVU141
+ 616              		.loc 1 189 19 is_stmt 0 view .LVU142
+ 617 0054 0523     		movs	r3, #5
+ 618 0056 0893     		str	r3, [sp, #32]
+ 190:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+ 619              		.loc 1 190 3 is_stmt 1 view .LVU143
+ 620              		.loc 1 190 24 is_stmt 0 view .LVU144
+ 621 0058 0022     		movs	r2, #0
+ 622 005a 0992     		str	r2, [sp, #36]
+ 191:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+ 623              		.loc 1 191 3 is_stmt 1 view .LVU145
+ 624              		.loc 1 191 25 is_stmt 0 view .LVU146
+ 625 005c 0A92     		str	r2, [sp, #40]
+ 192:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+ 626              		.loc 1 192 3 is_stmt 1 view .LVU147
+ 627              		.loc 1 192 24 is_stmt 0 view .LVU148
+ 628 005e 0B92     		str	r2, [sp, #44]
+ 193:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+ 629              		.loc 1 193 3 is_stmt 1 view .LVU149
+ 630              		.loc 1 193 25 is_stmt 0 view .LVU150
+ 631 0060 0C92     		str	r2, [sp, #48]
+ 194:Drivers/BSP/Camera/camera.c **** 		sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+ 632              		.loc 1 194 3 is_stmt 1 view .LVU151
+ 633              		.loc 1 194 26 is_stmt 0 view .LVU152
+ 634 0062 0D92     		str	r2, [sp, #52]
+ 195:Drivers/BSP/Camera/camera.c **** 		if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+ 635              		.loc 1 195 3 is_stmt 1 view .LVU153
+ 636              		.loc 1 195 7 is_stmt 0 view .LVU154
+ 637 0064 07A9     		add	r1, sp, #28
+ 638 0066 2248     		ldr	r0, .L41+4
+ 639 0068 FFF7FEFF 		bl	HAL_TIM_PWM_ConfigChannel
+ 640              	.LVL46:
+ 641              		.loc 1 195 6 discriminator 1 view .LVU155
+ 642 006c 30BB     		cbnz	r0, .L40
+ 643              	.L36:
+ 196:Drivers/BSP/Camera/camera.c **** 		{
+ 197:Drivers/BSP/Camera/camera.c **** 			Error_Handler();
+ 198:Drivers/BSP/Camera/camera.c **** 		}
+ 199:Drivers/BSP/Camera/camera.c **** 
+ 200:Drivers/BSP/Camera/camera.c **** 		__HAL_RCC_GPIOA_CLK_ENABLE();
+ 644              		.loc 1 200 3 is_stmt 1 view .LVU156
+ 645              	.LBB5:
+ 646              		.loc 1 200 3 view .LVU157
+ 647              		.loc 1 200 3 view .LVU158
+ 648 006e 224B     		ldr	r3, .L41+12
+ 649 0070 D3F8E020 		ldr	r2, [r3, #224]
+ 650 0074 42F00102 		orr	r2, r2, #1
+ 651 0078 C3F8E020 		str	r2, [r3, #224]
+ 652              		.loc 1 200 3 view .LVU159
+ 653 007c D3F8E030 		ldr	r3, [r3, #224]
+ 654 0080 03F00103 		and	r3, r3, #1
+ 655 0084 0193     		str	r3, [sp, #4]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 16
+
+
+ 656              		.loc 1 200 3 view .LVU160
+ 657 0086 019B     		ldr	r3, [sp, #4]
+ 658              	.LBE5:
+ 659              		.loc 1 200 3 view .LVU161
+ 201:Drivers/BSP/Camera/camera.c **** 		GPIO_InitStruct.Pin = GPIO_PIN_8;
+ 660              		.loc 1 201 3 view .LVU162
+ 661              		.loc 1 201 23 is_stmt 0 view .LVU163
+ 662 0088 4FF48073 		mov	r3, #256
+ 663 008c 0293     		str	r3, [sp, #8]
+ 202:Drivers/BSP/Camera/camera.c **** 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 664              		.loc 1 202 3 is_stmt 1 view .LVU164
+ 665              		.loc 1 202 24 is_stmt 0 view .LVU165
+ 666 008e 0223     		movs	r3, #2
+ 667 0090 0393     		str	r3, [sp, #12]
+ 203:Drivers/BSP/Camera/camera.c **** 		GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 668              		.loc 1 203 3 is_stmt 1 view .LVU166
+ 669              		.loc 1 203 24 is_stmt 0 view .LVU167
+ 670 0092 0024     		movs	r4, #0
+ 671 0094 0494     		str	r4, [sp, #16]
+ 204:Drivers/BSP/Camera/camera.c **** 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 672              		.loc 1 204 3 is_stmt 1 view .LVU168
+ 673              		.loc 1 204 25 is_stmt 0 view .LVU169
+ 674 0096 0323     		movs	r3, #3
+ 675 0098 0593     		str	r3, [sp, #20]
+ 205:Drivers/BSP/Camera/camera.c **** 		GPIO_InitStruct.Alternate = GPIO_AF1_TIM1;
+ 676              		.loc 1 205 3 is_stmt 1 view .LVU170
+ 677              		.loc 1 205 29 is_stmt 0 view .LVU171
+ 678 009a 0123     		movs	r3, #1
+ 679 009c 0693     		str	r3, [sp, #24]
+ 206:Drivers/BSP/Camera/camera.c **** 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 680              		.loc 1 206 3 is_stmt 1 view .LVU172
+ 681 009e 02A9     		add	r1, sp, #8
+ 682 00a0 1248     		ldr	r0, .L41
+ 683 00a2 FFF7FEFF 		bl	HAL_GPIO_Init
+ 684              	.LVL47:
+ 207:Drivers/BSP/Camera/camera.c **** 
+ 208:Drivers/BSP/Camera/camera.c **** 		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+ 685              		.loc 1 208 3 view .LVU173
+ 686 00a6 2146     		mov	r1, r4
+ 687 00a8 1148     		ldr	r0, .L41+4
+ 688 00aa FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 689              	.LVL48:
+ 209:Drivers/BSP/Camera/camera.c **** 
+ 210:Drivers/BSP/Camera/camera.c **** #if USE_LCD
+ 211:Drivers/BSP/Camera/camera.c **** 		// Init 0.96''LCD Light Timer
+ 212:Drivers/BSP/Camera/camera.c **** 		LCD_SoftPWMCtrlInit();
+ 690              		.loc 1 212 3 view .LVU174
+ 691 00ae FFF7FEFF 		bl	LCD_SoftPWMCtrlInit
+ 692              	.LVL49:
+ 693              	.L33:
+ 694              	.LBE4:
+ 213:Drivers/BSP/Camera/camera.c **** #endif
+ 214:Drivers/BSP/Camera/camera.c **** 	}
+ 215:Drivers/BSP/Camera/camera.c **** 	else
+ 216:Drivers/BSP/Camera/camera.c **** 	{
+ 217:Drivers/BSP/Camera/camera.c **** #if USE_LCD
+ 218:Drivers/BSP/Camera/camera.c **** 		// DeInit 0.96''LCD Light Timer
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 17
+
+
+ 219:Drivers/BSP/Camera/camera.c **** 		LCD_SoftPWMCtrlDeInit();
+ 220:Drivers/BSP/Camera/camera.c **** #endif
+ 221:Drivers/BSP/Camera/camera.c **** 
+ 222:Drivers/BSP/Camera/camera.c **** 		// DeInit TIM1 PWM OutPut
+ 223:Drivers/BSP/Camera/camera.c **** 		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8);
+ 224:Drivers/BSP/Camera/camera.c **** 		HAL_TIM_PWM_DeInit(&htim1);
+ 225:Drivers/BSP/Camera/camera.c **** 
+ 226:Drivers/BSP/Camera/camera.c **** #if USE_LCD
+ 227:Drivers/BSP/Camera/camera.c **** 		// Init TIM1 Channel 2N 10Khz PWM Output
+ 228:Drivers/BSP/Camera/camera.c **** 		MX_TIM1_Init();
+ 229:Drivers/BSP/Camera/camera.c **** 		LCD_SoftPWMEnable(0);
+ 230:Drivers/BSP/Camera/camera.c **** 		HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+ 231:Drivers/BSP/Camera/camera.c **** #endif
+ 232:Drivers/BSP/Camera/camera.c **** 
+ 233:Drivers/BSP/Camera/camera.c **** 		// Init MCO1 PA8 12Mhz Output
+ 234:Drivers/BSP/Camera/camera.c **** 		//HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI48, RCC_MCODIV_2);
+ 235:Drivers/BSP/Camera/camera.c **** 	}
+ 236:Drivers/BSP/Camera/camera.c **** }
+ 695              		.loc 1 236 1 is_stmt 0 view .LVU175
+ 696 00b2 0FB0     		add	sp, sp, #60
+ 697              	.LCFI22:
+ 698              		.cfi_remember_state
+ 699              		.cfi_def_cfa_offset 12
+ 700              		@ sp needed
+ 701 00b4 30BD     		pop	{r4, r5, pc}
+ 702              	.L39:
+ 703              	.LCFI23:
+ 704              		.cfi_restore_state
+ 705              	.LBB6:
+ 185:Drivers/BSP/Camera/camera.c **** 		}
+ 706              		.loc 1 185 4 is_stmt 1 view .LVU176
+ 707 00b6 FFF7FEFF 		bl	Error_Handler
+ 708              	.LVL50:
+ 709 00ba C9E7     		b	.L35
+ 710              	.L40:
+ 197:Drivers/BSP/Camera/camera.c **** 		}
+ 711              		.loc 1 197 4 view .LVU177
+ 712 00bc FFF7FEFF 		bl	Error_Handler
+ 713              	.LVL51:
+ 714 00c0 D5E7     		b	.L36
+ 715              	.LVL52:
+ 716              	.L34:
+ 197:Drivers/BSP/Camera/camera.c **** 		}
+ 717              		.loc 1 197 4 is_stmt 0 view .LVU178
+ 718              	.LBE6:
+ 219:Drivers/BSP/Camera/camera.c **** #endif
+ 719              		.loc 1 219 3 is_stmt 1 view .LVU179
+ 720 00c2 FFF7FEFF 		bl	LCD_SoftPWMCtrlDeInit
+ 721              	.LVL53:
+ 223:Drivers/BSP/Camera/camera.c **** 		HAL_TIM_PWM_DeInit(&htim1);
+ 722              		.loc 1 223 3 view .LVU180
+ 723 00c6 4FF48071 		mov	r1, #256
+ 724 00ca 0848     		ldr	r0, .L41
+ 725 00cc FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 726              	.LVL54:
+ 224:Drivers/BSP/Camera/camera.c **** 
+ 727              		.loc 1 224 3 view .LVU181
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 18
+
+
+ 728 00d0 074C     		ldr	r4, .L41+4
+ 729 00d2 2046     		mov	r0, r4
+ 730 00d4 FFF7FEFF 		bl	HAL_TIM_PWM_DeInit
+ 731              	.LVL55:
+ 228:Drivers/BSP/Camera/camera.c **** 		LCD_SoftPWMEnable(0);
+ 732              		.loc 1 228 3 view .LVU182
+ 733 00d8 FFF7FEFF 		bl	MX_TIM1_Init
+ 734              	.LVL56:
+ 229:Drivers/BSP/Camera/camera.c **** 		HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+ 735              		.loc 1 229 3 view .LVU183
+ 736 00dc 0020     		movs	r0, #0
+ 737 00de FFF7FEFF 		bl	LCD_SoftPWMEnable
+ 738              	.LVL57:
+ 230:Drivers/BSP/Camera/camera.c **** #endif
+ 739              		.loc 1 230 3 view .LVU184
+ 740 00e2 0421     		movs	r1, #4
+ 741 00e4 2046     		mov	r0, r4
+ 742 00e6 FFF7FEFF 		bl	HAL_TIMEx_PWMN_Start
+ 743              	.LVL58:
+ 744              		.loc 1 236 1 is_stmt 0 view .LVU185
+ 745 00ea E2E7     		b	.L33
+ 746              	.L42:
+ 747              		.align	2
+ 748              	.L41:
+ 749 00ec 00000258 		.word	1476526080
+ 750 00f0 00000000 		.word	htim1
+ 751 00f4 00000140 		.word	1073807360
+ 752 00f8 00440258 		.word	1476543488
+ 753              		.cfi_endproc
+ 754              	.LFE154:
+ 756              		.section	.text.Camera_Init_Device,"ax",%progbits
+ 757              		.align	1
+ 758              		.global	Camera_Init_Device
+ 759              		.syntax unified
+ 760              		.thumb
+ 761              		.thumb_func
+ 763              	Camera_Init_Device:
+ 764              	.LVL59:
+ 765              	.LFB155:
+ 237:Drivers/BSP/Camera/camera.c **** 
+ 238:Drivers/BSP/Camera/camera.c **** void Camera_Init_Device(I2C_HandleTypeDef *hi2c, framesize_t framesize)
+ 239:Drivers/BSP/Camera/camera.c **** {
+ 766              		.loc 1 239 1 is_stmt 1 view -0
+ 767              		.cfi_startproc
+ 768              		@ args = 0, pretend = 0, frame = 0
+ 769              		@ frame_needed = 0, uses_anonymous_args = 0
+ 770              		.loc 1 239 1 is_stmt 0 view .LVU187
+ 771 0000 38B5     		push	{r3, r4, r5, lr}
+ 772              	.LCFI24:
+ 773              		.cfi_def_cfa_offset 16
+ 774              		.cfi_offset 3, -16
+ 775              		.cfi_offset 4, -12
+ 776              		.cfi_offset 5, -8
+ 777              		.cfi_offset 14, -4
+ 778 0002 0D46     		mov	r5, r1
+ 240:Drivers/BSP/Camera/camera.c **** 	hcamera.hi2c = hi2c;
+ 779              		.loc 1 240 2 is_stmt 1 view .LVU188
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 19
+
+
+ 780              		.loc 1 240 15 is_stmt 0 view .LVU189
+ 781 0004 0D4C     		ldr	r4, .L48
+ 782 0006 2060     		str	r0, [r4]
+ 241:Drivers/BSP/Camera/camera.c **** 	hcamera.addr = OV2640_ADDRESS;
+ 783              		.loc 1 241 2 is_stmt 1 view .LVU190
+ 784              		.loc 1 241 15 is_stmt 0 view .LVU191
+ 785 0008 6023     		movs	r3, #96
+ 786 000a 2371     		strb	r3, [r4, #4]
+ 242:Drivers/BSP/Camera/camera.c **** 	hcamera.timeout = 100;
+ 787              		.loc 1 242 2 is_stmt 1 view .LVU192
+ 788              		.loc 1 242 18 is_stmt 0 view .LVU193
+ 789 000c 6423     		movs	r3, #100
+ 790 000e A360     		str	r3, [r4, #8]
+ 243:Drivers/BSP/Camera/camera.c **** 	
+ 244:Drivers/BSP/Camera/camera.c ****     Camera_read_id(&hcamera);
+ 791              		.loc 1 244 5 is_stmt 1 view .LVU194
+ 792 0010 2046     		mov	r0, r4
+ 793              	.LVL60:
+ 794              		.loc 1 244 5 is_stmt 0 view .LVU195
+ 795 0012 FFF7FEFF 		bl	Camera_read_id
+ 796              	.LVL61:
+ 245:Drivers/BSP/Camera/camera.c ****     if (hcamera.manuf_id == 0x7fa2 && ((hcamera.device_id - 0x2641) <= 2))
+ 797              		.loc 1 245 5 is_stmt 1 view .LVU196
+ 798              		.loc 1 245 16 is_stmt 0 view .LVU197
+ 799 0016 A289     		ldrh	r2, [r4, #12]
+ 800              		.loc 1 245 8 view .LVU198
+ 801 0018 47F6A273 		movw	r3, #32674
+ 802 001c 9A42     		cmp	r2, r3
+ 803 001e 04D0     		beq	.L47
+ 804              	.L44:
+ 246:Drivers/BSP/Camera/camera.c ****     {
+ 247:Drivers/BSP/Camera/camera.c ****         // Setup XCLK using TIM1 PWM mode
+ 248:Drivers/BSP/Camera/camera.c ****         //Camera_XCLK_Set(RCC_MCO1);
+ 249:Drivers/BSP/Camera/camera.c ****         ov2640_init(framesize);
+ 250:Drivers/BSP/Camera/camera.c ****     }
+ 251:Drivers/BSP/Camera/camera.c ****     else
+ 252:Drivers/BSP/Camera/camera.c ****     {
+ 253:Drivers/BSP/Camera/camera.c ****         hcamera.addr = 0;
+ 805              		.loc 1 253 9 is_stmt 1 view .LVU199
+ 806              		.loc 1 253 22 is_stmt 0 view .LVU200
+ 807 0020 064B     		ldr	r3, .L48
+ 808 0022 0022     		movs	r2, #0
+ 809 0024 1A71     		strb	r2, [r3, #4]
+ 254:Drivers/BSP/Camera/camera.c ****         hcamera.device_id = 0;
+ 810              		.loc 1 254 9 is_stmt 1 view .LVU201
+ 811              		.loc 1 254 27 is_stmt 0 view .LVU202
+ 812 0026 DA81     		strh	r2, [r3, #14]	@ movhi
+ 813              	.L43:
+ 255:Drivers/BSP/Camera/camera.c ****     }
+ 256:Drivers/BSP/Camera/camera.c **** 
+ 257:Drivers/BSP/Camera/camera.c **** }
+ 814              		.loc 1 257 1 view .LVU203
+ 815 0028 38BD     		pop	{r3, r4, r5, pc}
+ 816              	.LVL62:
+ 817              	.L47:
+ 245:Drivers/BSP/Camera/camera.c ****     {
+ 818              		.loc 1 245 48 discriminator 1 view .LVU204
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 20
+
+
+ 819 002a E289     		ldrh	r2, [r4, #14]
+ 245:Drivers/BSP/Camera/camera.c ****     {
+ 820              		.loc 1 245 36 discriminator 1 view .LVU205
+ 821 002c 42F24363 		movw	r3, #9795
+ 822 0030 9A42     		cmp	r2, r3
+ 823 0032 F5D8     		bhi	.L44
+ 249:Drivers/BSP/Camera/camera.c ****     }
+ 824              		.loc 1 249 9 is_stmt 1 view .LVU206
+ 825 0034 2846     		mov	r0, r5
+ 826 0036 FFF7FEFF 		bl	ov2640_init
+ 827              	.LVL63:
+ 828 003a F5E7     		b	.L43
+ 829              	.L49:
+ 830              		.align	2
+ 831              	.L48:
+ 832 003c 00000000 		.word	hcamera
+ 833              		.cfi_endproc
+ 834              	.LFE155:
+ 836              		.section	.text.Camera_Picture_Device,"ax",%progbits
+ 837              		.align	1
+ 838              		.global	Camera_Picture_Device
+ 839              		.syntax unified
+ 840              		.thumb
+ 841              		.thumb_func
+ 843              	Camera_Picture_Device:
+ 844              	.LVL64:
+ 845              	.LFB156:
+ 258:Drivers/BSP/Camera/camera.c **** 
+ 259:Drivers/BSP/Camera/camera.c **** 
+ 260:Drivers/BSP/Camera/camera.c **** void Camera_Picture_Device(I2C_HandleTypeDef *hi2c)
+ 261:Drivers/BSP/Camera/camera.c **** {
+ 846              		.loc 1 261 1 view -0
+ 847              		.cfi_startproc
+ 848              		@ args = 0, pretend = 0, frame = 0
+ 849              		@ frame_needed = 0, uses_anonymous_args = 0
+ 850              		.loc 1 261 1 is_stmt 0 view .LVU208
+ 851 0000 10B5     		push	{r4, lr}
+ 852              	.LCFI25:
+ 853              		.cfi_def_cfa_offset 8
+ 854              		.cfi_offset 4, -8
+ 855              		.cfi_offset 14, -4
+ 262:Drivers/BSP/Camera/camera.c **** 	hcamera.hi2c = hi2c;
+ 856              		.loc 1 262 2 is_stmt 1 view .LVU209
+ 857              		.loc 1 262 15 is_stmt 0 view .LVU210
+ 858 0002 0D4C     		ldr	r4, .L55
+ 859 0004 2060     		str	r0, [r4]
+ 263:Drivers/BSP/Camera/camera.c **** 	hcamera.addr = OV2640_ADDRESS;
+ 860              		.loc 1 263 2 is_stmt 1 view .LVU211
+ 861              		.loc 1 263 15 is_stmt 0 view .LVU212
+ 862 0006 6023     		movs	r3, #96
+ 863 0008 2371     		strb	r3, [r4, #4]
+ 264:Drivers/BSP/Camera/camera.c **** 	hcamera.timeout = 100;
+ 864              		.loc 1 264 2 is_stmt 1 view .LVU213
+ 865              		.loc 1 264 18 is_stmt 0 view .LVU214
+ 866 000a 6423     		movs	r3, #100
+ 867 000c A360     		str	r3, [r4, #8]
+ 265:Drivers/BSP/Camera/camera.c **** 	
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 21
+
+
+ 266:Drivers/BSP/Camera/camera.c ****     Camera_read_id(&hcamera);
+ 868              		.loc 1 266 5 is_stmt 1 view .LVU215
+ 869 000e 2046     		mov	r0, r4
+ 870              	.LVL65:
+ 871              		.loc 1 266 5 is_stmt 0 view .LVU216
+ 872 0010 FFF7FEFF 		bl	Camera_read_id
+ 873              	.LVL66:
+ 267:Drivers/BSP/Camera/camera.c ****     if (hcamera.manuf_id == 0x7fa2 && ((hcamera.device_id - 0x2641) <= 2))
+ 874              		.loc 1 267 5 is_stmt 1 view .LVU217
+ 875              		.loc 1 267 16 is_stmt 0 view .LVU218
+ 876 0014 A289     		ldrh	r2, [r4, #12]
+ 877              		.loc 1 267 8 view .LVU219
+ 878 0016 47F6A273 		movw	r3, #32674
+ 879 001a 9A42     		cmp	r2, r3
+ 880 001c 04D0     		beq	.L54
+ 881              	.L51:
+ 268:Drivers/BSP/Camera/camera.c ****     {
+ 269:Drivers/BSP/Camera/camera.c ****         // Setup XCLK using TIM1 PWM mode
+ 270:Drivers/BSP/Camera/camera.c ****       //  Camera_XCLK_Set(RCC_MCO1);
+ 271:Drivers/BSP/Camera/camera.c ****         ov2640_init_pic();
+ 272:Drivers/BSP/Camera/camera.c ****     }
+ 273:Drivers/BSP/Camera/camera.c ****     else
+ 274:Drivers/BSP/Camera/camera.c ****     {
+ 275:Drivers/BSP/Camera/camera.c ****         hcamera.addr = 0;
+ 882              		.loc 1 275 9 is_stmt 1 view .LVU220
+ 883              		.loc 1 275 22 is_stmt 0 view .LVU221
+ 884 001e 064B     		ldr	r3, .L55
+ 885 0020 0022     		movs	r2, #0
+ 886 0022 1A71     		strb	r2, [r3, #4]
+ 276:Drivers/BSP/Camera/camera.c ****         hcamera.device_id = 0;
+ 887              		.loc 1 276 9 is_stmt 1 view .LVU222
+ 888              		.loc 1 276 27 is_stmt 0 view .LVU223
+ 889 0024 DA81     		strh	r2, [r3, #14]	@ movhi
+ 890              	.L50:
+ 277:Drivers/BSP/Camera/camera.c ****     }
+ 278:Drivers/BSP/Camera/camera.c **** 
+ 279:Drivers/BSP/Camera/camera.c **** }
+ 891              		.loc 1 279 1 view .LVU224
+ 892 0026 10BD     		pop	{r4, pc}
+ 893              	.L54:
+ 267:Drivers/BSP/Camera/camera.c ****     {
+ 894              		.loc 1 267 48 discriminator 1 view .LVU225
+ 895 0028 E289     		ldrh	r2, [r4, #14]
+ 267:Drivers/BSP/Camera/camera.c ****     {
+ 896              		.loc 1 267 36 discriminator 1 view .LVU226
+ 897 002a 42F24363 		movw	r3, #9795
+ 898 002e 9A42     		cmp	r2, r3
+ 899 0030 F5D8     		bhi	.L51
+ 271:Drivers/BSP/Camera/camera.c ****     }
+ 900              		.loc 1 271 9 is_stmt 1 view .LVU227
+ 901 0032 FFF7FEFF 		bl	ov2640_init_pic
+ 902              	.LVL67:
+ 903 0036 F6E7     		b	.L50
+ 904              	.L56:
+ 905              		.align	2
+ 906              	.L55:
+ 907 0038 00000000 		.word	hcamera
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 22
+
+
+ 908              		.cfi_endproc
+ 909              	.LFE156:
+ 911              		.global	dvp_cam_resolution
+ 912              		.section	.rodata.dvp_cam_resolution,"a"
+ 913              		.align	2
+ 916              	dvp_cam_resolution:
+ 917 0000 0000     		.short	0
+ 918 0002 0000     		.short	0
+ 919 0004 5800     		.short	88
+ 920 0006 4800     		.short	72
+ 921 0008 B000     		.short	176
+ 922 000a 9000     		.short	144
+ 923 000c 6001     		.short	352
+ 924 000e 2001     		.short	288
+ 925 0010 5800     		.short	88
+ 926 0012 3C00     		.short	60
+ 927 0014 B000     		.short	176
+ 928 0016 7800     		.short	120
+ 929 0018 6001     		.short	352
+ 930 001a F000     		.short	240
+ 931 001c 2800     		.short	40
+ 932 001e 1E00     		.short	30
+ 933 0020 5000     		.short	80
+ 934 0022 3C00     		.short	60
+ 935 0024 A000     		.short	160
+ 936 0026 7800     		.short	120
+ 937 0028 4001     		.short	320
+ 938 002a F000     		.short	240
+ 939 002c 8002     		.short	640
+ 940 002e E001     		.short	480
+ 941 0030 3C00     		.short	60
+ 942 0032 2800     		.short	40
+ 943 0034 7800     		.short	120
+ 944 0036 5000     		.short	80
+ 945 0038 F000     		.short	240
+ 946 003a A000     		.short	160
+ 947 003c E001     		.short	480
+ 948 003e 4001     		.short	320
+ 949 0040 4000     		.short	64
+ 950 0042 2000     		.short	32
+ 951 0044 4000     		.short	64
+ 952 0046 4000     		.short	64
+ 953 0048 8000     		.short	128
+ 954 004a 4000     		.short	64
+ 955 004c 8000     		.short	128
+ 956 004e 8000     		.short	128
+ 957 0050 8000     		.short	128
+ 958 0052 A000     		.short	160
+ 959 0054 8000     		.short	128
+ 960 0056 A000     		.short	160
+ 961 0058 D002     		.short	720
+ 962 005a E001     		.short	480
+ 963 005c F002     		.short	752
+ 964 005e E001     		.short	480
+ 965 0060 2003     		.short	800
+ 966 0062 5802     		.short	600
+ 967 0064 0004     		.short	1024
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 23
+
+
+ 968 0066 0003     		.short	768
+ 969 0068 0005     		.short	1280
+ 970 006a 0004     		.short	1024
+ 971 006c 4006     		.short	1600
+ 972 006e B004     		.short	1200
+ 973 0070 0005     		.short	1280
+ 974 0072 D002     		.short	720
+ 975 0074 8007     		.short	1920
+ 976 0076 3804     		.short	1080
+ 977 0078 0005     		.short	1280
+ 978 007a C003     		.short	960
+ 979 007c 200A     		.short	2592
+ 980 007e 9807     		.short	1944
+ 981              		.global	hcamera
+ 982              		.section	.bss.hcamera,"aw",%nobits
+ 983              		.align	2
+ 986              	hcamera:
+ 987 0000 00000000 		.space	20
+ 987      00000000 
+ 987      00000000 
+ 987      00000000 
+ 987      00000000 
+ 988              		.text
+ 989              	.Letext0:
+ 990              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 991              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 992              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 993              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 994              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h"
+ 995              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 996              		.file 8 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 997              		.file 9 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h"
+ 998              		.file 10 "Drivers/BSP/Camera/camera.h"
+ 999              		.file 11 "Inc/tim.h"
+ 1000              		.file 12 "Drivers/BSP/Camera/ov2640.h"
+ 1001              		.file 13 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h"
+ 1002              		.file 14 "Drivers/BSP/ST7735/lcd.h"
+ 1003              		.file 15 "Inc/main.h"
+ 1004              		.file 16 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 camera.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:20     .text.Camera_WriteReg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:26     .text.Camera_WriteReg:00000000 Camera_WriteReg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:81     .text.Camera_ReadReg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:87     .text.Camera_ReadReg:00000000 Camera_ReadReg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:148    .text.Camera_WriteRegb2:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:154    .text.Camera_WriteRegb2:00000000 Camera_WriteRegb2
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:205    .text.Camera_ReadRegb2:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:211    .text.Camera_ReadRegb2:00000000 Camera_ReadRegb2
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:260    .text.Camera_WriteRegList:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:266    .text.Camera_WriteRegList:00000000 Camera_WriteRegList
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:340    .text.Camera_read_id:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:346    .text.Camera_read_id:00000000 Camera_read_id
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:459    .text.Camera_read_id:0000008c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:986    .bss.hcamera:00000000 hcamera
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:464    .text.Camera_Reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:470    .text.Camera_Reset:00000000 Camera_Reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:522    .text.Camera_XCLK_Set:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:528    .text.Camera_XCLK_Set:00000000 Camera_XCLK_Set
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:749    .text.Camera_XCLK_Set:000000ec $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:757    .text.Camera_Init_Device:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:763    .text.Camera_Init_Device:00000000 Camera_Init_Device
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:832    .text.Camera_Init_Device:0000003c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:837    .text.Camera_Picture_Device:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:843    .text.Camera_Picture_Device:00000000 Camera_Picture_Device
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:907    .text.Camera_Picture_Device:00000038 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:916    .rodata.dvp_cam_resolution:00000000 dvp_cam_resolution
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:913    .rodata.dvp_cam_resolution:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cce2KLs8.s:983    .bss.hcamera:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Master_Transmit
+HAL_I2C_Master_Receive
+HAL_I2C_Mem_Write
+HAL_I2C_Mem_Read
+HAL_Delay
+HAL_GPIO_DeInit
+HAL_TIM_PWM_DeInit
+HAL_TIM_PWM_Init
+HAL_TIM_PWM_ConfigChannel
+HAL_GPIO_Init
+HAL_TIM_PWM_Start
+LCD_SoftPWMCtrlInit
+Error_Handler
+LCD_SoftPWMCtrlDeInit
+MX_TIM1_Init
+LCD_SoftPWMEnable
+HAL_TIMEx_PWMN_Start
+htim1
+ov2640_init
+ov2640_init_pic

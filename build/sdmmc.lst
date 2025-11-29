@@ -1,0 +1,675 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"sdmmc.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Src/sdmmc.c"
+  19              		.section	.text.MX_SDMMC1_SD_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_SDMMC1_SD_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_SDMMC1_SD_Init:
+  27              	.LFB144:
+   1:Src/sdmmc.c   **** /* USER CODE BEGIN Header */
+   2:Src/sdmmc.c   **** /**
+   3:Src/sdmmc.c   ****   ******************************************************************************
+   4:Src/sdmmc.c   ****   * @file    sdmmc.c
+   5:Src/sdmmc.c   ****   * @brief   This file provides code for the configuration
+   6:Src/sdmmc.c   ****   *          of the SDMMC instances.
+   7:Src/sdmmc.c   ****   ******************************************************************************
+   8:Src/sdmmc.c   ****   * @attention
+   9:Src/sdmmc.c   ****   *
+  10:Src/sdmmc.c   ****   * Copyright (c) 2025 STMicroelectronics.
+  11:Src/sdmmc.c   ****   * All rights reserved.
+  12:Src/sdmmc.c   ****   *
+  13:Src/sdmmc.c   ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Src/sdmmc.c   ****   * in the root directory of this software component.
+  15:Src/sdmmc.c   ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Src/sdmmc.c   ****   *
+  17:Src/sdmmc.c   ****   ******************************************************************************
+  18:Src/sdmmc.c   ****   */
+  19:Src/sdmmc.c   **** /* USER CODE END Header */
+  20:Src/sdmmc.c   **** /* Includes ------------------------------------------------------------------*/
+  21:Src/sdmmc.c   **** #include "sdmmc.h"
+  22:Src/sdmmc.c   **** 
+  23:Src/sdmmc.c   **** /* USER CODE BEGIN 0 */
+  24:Src/sdmmc.c   **** 
+  25:Src/sdmmc.c   **** /* USER CODE END 0 */
+  26:Src/sdmmc.c   **** 
+  27:Src/sdmmc.c   **** SD_HandleTypeDef hsd1;
+  28:Src/sdmmc.c   **** 
+  29:Src/sdmmc.c   **** /* SDMMC1 init function */
+  30:Src/sdmmc.c   **** 
+  31:Src/sdmmc.c   **** void MX_SDMMC1_SD_Init(void)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 2
+
+
+  32:Src/sdmmc.c   **** {
+  28              		.loc 1 32 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+  33:Src/sdmmc.c   **** 
+  34:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_Init 0 */
+  35:Src/sdmmc.c   **** 
+  36:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_Init 0 */
+  37:Src/sdmmc.c   **** 
+  38:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_Init 1 */
+  39:Src/sdmmc.c   **** 
+  40:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_Init 1 */
+  41:Src/sdmmc.c   ****   hsd1.Instance = SDMMC1;
+  37              		.loc 1 41 3 view .LVU1
+  38              		.loc 1 41 17 is_stmt 0 view .LVU2
+  39 0002 0948     		ldr	r0, .L5
+  40 0004 094B     		ldr	r3, .L5+4
+  41 0006 0360     		str	r3, [r0]
+  42:Src/sdmmc.c   ****   hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
+  42              		.loc 1 42 3 is_stmt 1 view .LVU3
+  43              		.loc 1 42 23 is_stmt 0 view .LVU4
+  44 0008 0023     		movs	r3, #0
+  45 000a 4360     		str	r3, [r0, #4]
+  43:Src/sdmmc.c   ****   hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+  46              		.loc 1 43 3 is_stmt 1 view .LVU5
+  47              		.loc 1 43 28 is_stmt 0 view .LVU6
+  48 000c 8360     		str	r3, [r0, #8]
+  44:Src/sdmmc.c   ****   hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
+  49              		.loc 1 44 3 is_stmt 1 view .LVU7
+  50              		.loc 1 44 21 is_stmt 0 view .LVU8
+  51 000e 4FF48042 		mov	r2, #16384
+  52 0012 C260     		str	r2, [r0, #12]
+  45:Src/sdmmc.c   ****   hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
+  53              		.loc 1 45 3 is_stmt 1 view .LVU9
+  54              		.loc 1 45 33 is_stmt 0 view .LVU10
+  55 0014 0361     		str	r3, [r0, #16]
+  46:Src/sdmmc.c   ****   hsd1.Init.ClockDiv = 5;
+  56              		.loc 1 46 3 is_stmt 1 view .LVU11
+  57              		.loc 1 46 22 is_stmt 0 view .LVU12
+  58 0016 0523     		movs	r3, #5
+  59 0018 4361     		str	r3, [r0, #20]
+  47:Src/sdmmc.c   ****   if (HAL_SD_Init(&hsd1) != HAL_OK)
+  60              		.loc 1 47 3 is_stmt 1 view .LVU13
+  61              		.loc 1 47 7 is_stmt 0 view .LVU14
+  62 001a FFF7FEFF 		bl	HAL_SD_Init
+  63              	.LVL0:
+  64              		.loc 1 47 6 discriminator 1 view .LVU15
+  65 001e 00B9     		cbnz	r0, .L4
+  66              	.L1:
+  48:Src/sdmmc.c   ****   {
+  49:Src/sdmmc.c   ****     Error_Handler();
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 3
+
+
+  50:Src/sdmmc.c   ****   }
+  51:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_Init 2 */
+  52:Src/sdmmc.c   **** 
+  53:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_Init 2 */
+  54:Src/sdmmc.c   **** 
+  55:Src/sdmmc.c   **** }
+  67              		.loc 1 55 1 view .LVU16
+  68 0020 08BD     		pop	{r3, pc}
+  69              	.L4:
+  49:Src/sdmmc.c   ****   }
+  70              		.loc 1 49 5 is_stmt 1 view .LVU17
+  71 0022 FFF7FEFF 		bl	Error_Handler
+  72              	.LVL1:
+  73              		.loc 1 55 1 is_stmt 0 view .LVU18
+  74 0026 FBE7     		b	.L1
+  75              	.L6:
+  76              		.align	2
+  77              	.L5:
+  78 0028 00000000 		.word	hsd1
+  79 002c 00700052 		.word	1375760384
+  80              		.cfi_endproc
+  81              	.LFE144:
+  83              		.section	.text.HAL_SD_MspInit,"ax",%progbits
+  84              		.align	1
+  85              		.global	HAL_SD_MspInit
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	HAL_SD_MspInit:
+  91              	.LVL2:
+  92              	.LFB145:
+  56:Src/sdmmc.c   **** 
+  57:Src/sdmmc.c   **** void HAL_SD_MspInit(SD_HandleTypeDef* sdHandle)
+  58:Src/sdmmc.c   **** {
+  93              		.loc 1 58 1 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 232
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		.loc 1 58 1 is_stmt 0 view .LVU20
+  98 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  99              	.LCFI1:
+ 100              		.cfi_def_cfa_offset 20
+ 101              		.cfi_offset 4, -20
+ 102              		.cfi_offset 5, -16
+ 103              		.cfi_offset 6, -12
+ 104              		.cfi_offset 7, -8
+ 105              		.cfi_offset 14, -4
+ 106 0002 BBB0     		sub	sp, sp, #236
+ 107              	.LCFI2:
+ 108              		.cfi_def_cfa_offset 256
+ 109 0004 0446     		mov	r4, r0
+  59:Src/sdmmc.c   **** 
+  60:Src/sdmmc.c   ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 110              		.loc 1 60 3 is_stmt 1 view .LVU21
+ 111              		.loc 1 60 20 is_stmt 0 view .LVU22
+ 112 0006 0021     		movs	r1, #0
+ 113 0008 3591     		str	r1, [sp, #212]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 4
+
+
+ 114 000a 3691     		str	r1, [sp, #216]
+ 115 000c 3791     		str	r1, [sp, #220]
+ 116 000e 3891     		str	r1, [sp, #224]
+ 117 0010 3991     		str	r1, [sp, #228]
+  61:Src/sdmmc.c   ****   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+ 118              		.loc 1 61 3 is_stmt 1 view .LVU23
+ 119              		.loc 1 61 28 is_stmt 0 view .LVU24
+ 120 0012 C022     		movs	r2, #192
+ 121 0014 04A8     		add	r0, sp, #16
+ 122              	.LVL3:
+ 123              		.loc 1 61 28 view .LVU25
+ 124 0016 FFF7FEFF 		bl	memset
+ 125              	.LVL4:
+  62:Src/sdmmc.c   ****   if(sdHandle->Instance==SDMMC1)
+ 126              		.loc 1 62 3 is_stmt 1 view .LVU26
+ 127              		.loc 1 62 14 is_stmt 0 view .LVU27
+ 128 001a 2268     		ldr	r2, [r4]
+ 129              		.loc 1 62 5 view .LVU28
+ 130 001c 324B     		ldr	r3, .L13
+ 131 001e 9A42     		cmp	r2, r3
+ 132 0020 01D0     		beq	.L11
+ 133              	.LVL5:
+ 134              	.L7:
+  63:Src/sdmmc.c   ****   {
+  64:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspInit 0 */
+  65:Src/sdmmc.c   **** 
+  66:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_MspInit 0 */
+  67:Src/sdmmc.c   **** 
+  68:Src/sdmmc.c   ****   /** Initializes the peripherals clock
+  69:Src/sdmmc.c   ****   */
+  70:Src/sdmmc.c   ****     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SDMMC;
+  71:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2M = 32;
+  72:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2N = 129;
+  73:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2P = 2;
+  74:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2Q = 2;
+  75:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2R = 2;
+  76:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_1;
+  77:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+  78:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2FRACN = 0.0;
+  79:Src/sdmmc.c   ****     PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL2;
+  80:Src/sdmmc.c   ****     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  81:Src/sdmmc.c   ****     {
+  82:Src/sdmmc.c   ****       Error_Handler();
+  83:Src/sdmmc.c   ****     }
+  84:Src/sdmmc.c   **** 
+  85:Src/sdmmc.c   ****     /* SDMMC1 clock enable */
+  86:Src/sdmmc.c   ****     __HAL_RCC_SDMMC1_CLK_ENABLE();
+  87:Src/sdmmc.c   **** 
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+  89:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+  90:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+  91:Src/sdmmc.c   ****     PC8     ------> SDMMC1_D0
+  92:Src/sdmmc.c   ****     PC9     ------> SDMMC1_D1
+  93:Src/sdmmc.c   ****     PC10     ------> SDMMC1_D2
+  94:Src/sdmmc.c   ****     PC11     ------> SDMMC1_D3
+  95:Src/sdmmc.c   ****     PC12     ------> SDMMC1_CK
+  96:Src/sdmmc.c   ****     PD2     ------> SDMMC1_CMD
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 5
+
+
+  97:Src/sdmmc.c   ****     */
+  98:Src/sdmmc.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11
+  99:Src/sdmmc.c   ****                           |GPIO_PIN_12;
+ 100:Src/sdmmc.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 101:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 102:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 103:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 104:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 105:Src/sdmmc.c   **** 
+ 106:Src/sdmmc.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_2;
+ 107:Src/sdmmc.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 108:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 109:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 110:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 111:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 112:Src/sdmmc.c   **** 
+ 113:Src/sdmmc.c   ****     /* SDMMC1 interrupt Init */
+ 114:Src/sdmmc.c   ****     HAL_NVIC_SetPriority(SDMMC1_IRQn, 0, 0);
+ 115:Src/sdmmc.c   ****     HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
+ 116:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspInit 1 */
+ 117:Src/sdmmc.c   **** 
+ 118:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_MspInit 1 */
+ 119:Src/sdmmc.c   ****   }
+ 120:Src/sdmmc.c   **** }
+ 135              		.loc 1 120 1 view .LVU29
+ 136 0022 3BB0     		add	sp, sp, #236
+ 137              	.LCFI3:
+ 138              		.cfi_remember_state
+ 139              		.cfi_def_cfa_offset 20
+ 140              		@ sp needed
+ 141 0024 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 142              	.LVL6:
+ 143              	.L11:
+ 144              	.LCFI4:
+ 145              		.cfi_restore_state
+  70:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2M = 32;
+ 146              		.loc 1 70 5 is_stmt 1 view .LVU30
+  70:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2M = 32;
+ 147              		.loc 1 70 46 is_stmt 0 view .LVU31
+ 148 0026 4FF48032 		mov	r2, #65536
+ 149 002a 0023     		movs	r3, #0
+ 150 002c CDE90423 		strd	r2, [sp, #16]
+  71:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2N = 129;
+ 151              		.loc 1 71 5 is_stmt 1 view .LVU32
+  71:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2N = 129;
+ 152              		.loc 1 71 36 is_stmt 0 view .LVU33
+ 153 0030 2023     		movs	r3, #32
+ 154 0032 0693     		str	r3, [sp, #24]
+  72:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2P = 2;
+ 155              		.loc 1 72 5 is_stmt 1 view .LVU34
+  72:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2P = 2;
+ 156              		.loc 1 72 36 is_stmt 0 view .LVU35
+ 157 0034 8123     		movs	r3, #129
+ 158 0036 0793     		str	r3, [sp, #28]
+  73:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2Q = 2;
+ 159              		.loc 1 73 5 is_stmt 1 view .LVU36
+  73:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2Q = 2;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 6
+
+
+ 160              		.loc 1 73 36 is_stmt 0 view .LVU37
+ 161 0038 0223     		movs	r3, #2
+ 162 003a 0893     		str	r3, [sp, #32]
+  74:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2R = 2;
+ 163              		.loc 1 74 5 is_stmt 1 view .LVU38
+  74:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2R = 2;
+ 164              		.loc 1 74 36 is_stmt 0 view .LVU39
+ 165 003c 0993     		str	r3, [sp, #36]
+  75:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_1;
+ 166              		.loc 1 75 5 is_stmt 1 view .LVU40
+  75:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_1;
+ 167              		.loc 1 75 36 is_stmt 0 view .LVU41
+ 168 003e 0A93     		str	r3, [sp, #40]
+  76:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+ 169              		.loc 1 76 5 is_stmt 1 view .LVU42
+  76:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+ 170              		.loc 1 76 38 is_stmt 0 view .LVU43
+ 171 0040 4023     		movs	r3, #64
+ 172 0042 0B93     		str	r3, [sp, #44]
+  77:Src/sdmmc.c   ****     PeriphClkInitStruct.PLL2.PLL2FRACN = 0.0;
+ 173              		.loc 1 77 5 is_stmt 1 view .LVU44
+  78:Src/sdmmc.c   ****     PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL2;
+ 174              		.loc 1 78 5 view .LVU45
+  79:Src/sdmmc.c   ****     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+ 175              		.loc 1 79 5 view .LVU46
+  79:Src/sdmmc.c   ****     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+ 176              		.loc 1 79 45 is_stmt 0 view .LVU47
+ 177 0044 4FF48033 		mov	r3, #65536
+ 178 0048 1893     		str	r3, [sp, #96]
+  80:Src/sdmmc.c   ****     {
+ 179              		.loc 1 80 5 is_stmt 1 view .LVU48
+  80:Src/sdmmc.c   ****     {
+ 180              		.loc 1 80 9 is_stmt 0 view .LVU49
+ 181 004a 04A8     		add	r0, sp, #16
+ 182 004c FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 183              	.LVL7:
+  80:Src/sdmmc.c   ****     {
+ 184              		.loc 1 80 8 discriminator 1 view .LVU50
+ 185 0050 0028     		cmp	r0, #0
+ 186 0052 46D1     		bne	.L12
+ 187              	.L9:
+  86:Src/sdmmc.c   **** 
+ 188              		.loc 1 86 5 is_stmt 1 view .LVU51
+ 189              	.LBB2:
+  86:Src/sdmmc.c   **** 
+ 190              		.loc 1 86 5 view .LVU52
+  86:Src/sdmmc.c   **** 
+ 191              		.loc 1 86 5 view .LVU53
+ 192 0054 254B     		ldr	r3, .L13+4
+ 193 0056 D3F8D420 		ldr	r2, [r3, #212]
+ 194 005a 42F48032 		orr	r2, r2, #65536
+ 195 005e C3F8D420 		str	r2, [r3, #212]
+  86:Src/sdmmc.c   **** 
+ 196              		.loc 1 86 5 view .LVU54
+ 197 0062 D3F8D420 		ldr	r2, [r3, #212]
+ 198 0066 02F48032 		and	r2, r2, #65536
+ 199 006a 0192     		str	r2, [sp, #4]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 7
+
+
+  86:Src/sdmmc.c   **** 
+ 200              		.loc 1 86 5 view .LVU55
+ 201 006c 019A     		ldr	r2, [sp, #4]
+ 202              	.LBE2:
+  86:Src/sdmmc.c   **** 
+ 203              		.loc 1 86 5 view .LVU56
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 204              		.loc 1 88 5 view .LVU57
+ 205              	.LBB3:
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 206              		.loc 1 88 5 view .LVU58
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 207              		.loc 1 88 5 view .LVU59
+ 208 006e D3F8E020 		ldr	r2, [r3, #224]
+ 209 0072 42F00402 		orr	r2, r2, #4
+ 210 0076 C3F8E020 		str	r2, [r3, #224]
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 211              		.loc 1 88 5 view .LVU60
+ 212 007a D3F8E020 		ldr	r2, [r3, #224]
+ 213 007e 02F00402 		and	r2, r2, #4
+ 214 0082 0292     		str	r2, [sp, #8]
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 215              		.loc 1 88 5 view .LVU61
+ 216 0084 029A     		ldr	r2, [sp, #8]
+ 217              	.LBE3:
+  88:Src/sdmmc.c   ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 218              		.loc 1 88 5 view .LVU62
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 219              		.loc 1 89 5 view .LVU63
+ 220              	.LBB4:
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 221              		.loc 1 89 5 view .LVU64
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 222              		.loc 1 89 5 view .LVU65
+ 223 0086 D3F8E020 		ldr	r2, [r3, #224]
+ 224 008a 42F00802 		orr	r2, r2, #8
+ 225 008e C3F8E020 		str	r2, [r3, #224]
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 226              		.loc 1 89 5 view .LVU66
+ 227 0092 D3F8E030 		ldr	r3, [r3, #224]
+ 228 0096 03F00803 		and	r3, r3, #8
+ 229 009a 0393     		str	r3, [sp, #12]
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 230              		.loc 1 89 5 view .LVU67
+ 231 009c 039B     		ldr	r3, [sp, #12]
+ 232              	.LBE4:
+  89:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 233              		.loc 1 89 5 view .LVU68
+  98:Src/sdmmc.c   ****                           |GPIO_PIN_12;
+ 234              		.loc 1 98 5 view .LVU69
+  98:Src/sdmmc.c   ****                           |GPIO_PIN_12;
+ 235              		.loc 1 98 25 is_stmt 0 view .LVU70
+ 236 009e 4FF4F853 		mov	r3, #7936
+ 237 00a2 3593     		str	r3, [sp, #212]
+ 100:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 238              		.loc 1 100 5 is_stmt 1 view .LVU71
+ 100:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 8
+
+
+ 239              		.loc 1 100 26 is_stmt 0 view .LVU72
+ 240 00a4 0227     		movs	r7, #2
+ 241 00a6 3697     		str	r7, [sp, #216]
+ 101:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 242              		.loc 1 101 5 is_stmt 1 view .LVU73
+ 101:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 243              		.loc 1 101 26 is_stmt 0 view .LVU74
+ 244 00a8 0024     		movs	r4, #0
+ 245              	.LVL8:
+ 101:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 246              		.loc 1 101 26 view .LVU75
+ 247 00aa 3794     		str	r4, [sp, #220]
+ 102:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 248              		.loc 1 102 5 is_stmt 1 view .LVU76
+ 102:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 249              		.loc 1 102 27 is_stmt 0 view .LVU77
+ 250 00ac 0326     		movs	r6, #3
+ 251 00ae 3896     		str	r6, [sp, #224]
+ 103:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 252              		.loc 1 103 5 is_stmt 1 view .LVU78
+ 103:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 253              		.loc 1 103 31 is_stmt 0 view .LVU79
+ 254 00b0 0C25     		movs	r5, #12
+ 255 00b2 3995     		str	r5, [sp, #228]
+ 104:Src/sdmmc.c   **** 
+ 256              		.loc 1 104 5 is_stmt 1 view .LVU80
+ 257 00b4 35A9     		add	r1, sp, #212
+ 258 00b6 0E48     		ldr	r0, .L13+8
+ 259 00b8 FFF7FEFF 		bl	HAL_GPIO_Init
+ 260              	.LVL9:
+ 106:Src/sdmmc.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 261              		.loc 1 106 5 view .LVU81
+ 106:Src/sdmmc.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 262              		.loc 1 106 25 is_stmt 0 view .LVU82
+ 263 00bc 0423     		movs	r3, #4
+ 264 00be 3593     		str	r3, [sp, #212]
+ 107:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 265              		.loc 1 107 5 is_stmt 1 view .LVU83
+ 107:Src/sdmmc.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 266              		.loc 1 107 26 is_stmt 0 view .LVU84
+ 267 00c0 3697     		str	r7, [sp, #216]
+ 108:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 268              		.loc 1 108 5 is_stmt 1 view .LVU85
+ 108:Src/sdmmc.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 269              		.loc 1 108 26 is_stmt 0 view .LVU86
+ 270 00c2 3794     		str	r4, [sp, #220]
+ 109:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 271              		.loc 1 109 5 is_stmt 1 view .LVU87
+ 109:Src/sdmmc.c   ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
+ 272              		.loc 1 109 27 is_stmt 0 view .LVU88
+ 273 00c4 3896     		str	r6, [sp, #224]
+ 110:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 274              		.loc 1 110 5 is_stmt 1 view .LVU89
+ 110:Src/sdmmc.c   ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 275              		.loc 1 110 31 is_stmt 0 view .LVU90
+ 276 00c6 3995     		str	r5, [sp, #228]
+ 111:Src/sdmmc.c   **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 9
+
+
+ 277              		.loc 1 111 5 is_stmt 1 view .LVU91
+ 278 00c8 35A9     		add	r1, sp, #212
+ 279 00ca 0A48     		ldr	r0, .L13+12
+ 280 00cc FFF7FEFF 		bl	HAL_GPIO_Init
+ 281              	.LVL10:
+ 114:Src/sdmmc.c   ****     HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
+ 282              		.loc 1 114 5 view .LVU92
+ 283 00d0 2246     		mov	r2, r4
+ 284 00d2 2146     		mov	r1, r4
+ 285 00d4 3120     		movs	r0, #49
+ 286 00d6 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 287              	.LVL11:
+ 115:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspInit 1 */
+ 288              		.loc 1 115 5 view .LVU93
+ 289 00da 3120     		movs	r0, #49
+ 290 00dc FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 291              	.LVL12:
+ 292              		.loc 1 120 1 is_stmt 0 view .LVU94
+ 293 00e0 9FE7     		b	.L7
+ 294              	.LVL13:
+ 295              	.L12:
+  82:Src/sdmmc.c   ****     }
+ 296              		.loc 1 82 7 is_stmt 1 view .LVU95
+ 297 00e2 FFF7FEFF 		bl	Error_Handler
+ 298              	.LVL14:
+ 299 00e6 B5E7     		b	.L9
+ 300              	.L14:
+ 301              		.align	2
+ 302              	.L13:
+ 303 00e8 00700052 		.word	1375760384
+ 304 00ec 00440258 		.word	1476543488
+ 305 00f0 00080258 		.word	1476528128
+ 306 00f4 000C0258 		.word	1476529152
+ 307              		.cfi_endproc
+ 308              	.LFE145:
+ 310              		.section	.text.HAL_SD_MspDeInit,"ax",%progbits
+ 311              		.align	1
+ 312              		.global	HAL_SD_MspDeInit
+ 313              		.syntax unified
+ 314              		.thumb
+ 315              		.thumb_func
+ 317              	HAL_SD_MspDeInit:
+ 318              	.LVL15:
+ 319              	.LFB146:
+ 121:Src/sdmmc.c   **** 
+ 122:Src/sdmmc.c   **** void HAL_SD_MspDeInit(SD_HandleTypeDef* sdHandle)
+ 123:Src/sdmmc.c   **** {
+ 320              		.loc 1 123 1 view -0
+ 321              		.cfi_startproc
+ 322              		@ args = 0, pretend = 0, frame = 0
+ 323              		@ frame_needed = 0, uses_anonymous_args = 0
+ 324              		.loc 1 123 1 is_stmt 0 view .LVU97
+ 325 0000 08B5     		push	{r3, lr}
+ 326              	.LCFI5:
+ 327              		.cfi_def_cfa_offset 8
+ 328              		.cfi_offset 3, -8
+ 329              		.cfi_offset 14, -4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 10
+
+
+ 124:Src/sdmmc.c   **** 
+ 125:Src/sdmmc.c   ****   if(sdHandle->Instance==SDMMC1)
+ 330              		.loc 1 125 3 is_stmt 1 view .LVU98
+ 331              		.loc 1 125 14 is_stmt 0 view .LVU99
+ 332 0002 0268     		ldr	r2, [r0]
+ 333              		.loc 1 125 5 view .LVU100
+ 334 0004 0B4B     		ldr	r3, .L19
+ 335 0006 9A42     		cmp	r2, r3
+ 336 0008 00D0     		beq	.L18
+ 337              	.LVL16:
+ 338              	.L15:
+ 126:Src/sdmmc.c   ****   {
+ 127:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspDeInit 0 */
+ 128:Src/sdmmc.c   **** 
+ 129:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_MspDeInit 0 */
+ 130:Src/sdmmc.c   ****     /* Peripheral clock disable */
+ 131:Src/sdmmc.c   ****     __HAL_RCC_SDMMC1_CLK_DISABLE();
+ 132:Src/sdmmc.c   **** 
+ 133:Src/sdmmc.c   ****     /**SDMMC1 GPIO Configuration
+ 134:Src/sdmmc.c   ****     PC8     ------> SDMMC1_D0
+ 135:Src/sdmmc.c   ****     PC9     ------> SDMMC1_D1
+ 136:Src/sdmmc.c   ****     PC10     ------> SDMMC1_D2
+ 137:Src/sdmmc.c   ****     PC11     ------> SDMMC1_D3
+ 138:Src/sdmmc.c   ****     PC12     ------> SDMMC1_CK
+ 139:Src/sdmmc.c   ****     PD2     ------> SDMMC1_CMD
+ 140:Src/sdmmc.c   ****     */
+ 141:Src/sdmmc.c   ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11
+ 142:Src/sdmmc.c   ****                           |GPIO_PIN_12);
+ 143:Src/sdmmc.c   **** 
+ 144:Src/sdmmc.c   ****     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
+ 145:Src/sdmmc.c   **** 
+ 146:Src/sdmmc.c   ****     /* SDMMC1 interrupt Deinit */
+ 147:Src/sdmmc.c   ****     HAL_NVIC_DisableIRQ(SDMMC1_IRQn);
+ 148:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspDeInit 1 */
+ 149:Src/sdmmc.c   **** 
+ 150:Src/sdmmc.c   ****   /* USER CODE END SDMMC1_MspDeInit 1 */
+ 151:Src/sdmmc.c   ****   }
+ 152:Src/sdmmc.c   **** }
+ 339              		.loc 1 152 1 view .LVU101
+ 340 000a 08BD     		pop	{r3, pc}
+ 341              	.LVL17:
+ 342              	.L18:
+ 131:Src/sdmmc.c   **** 
+ 343              		.loc 1 131 5 is_stmt 1 view .LVU102
+ 344 000c 0A4A     		ldr	r2, .L19+4
+ 345 000e D2F8D430 		ldr	r3, [r2, #212]
+ 346 0012 23F48033 		bic	r3, r3, #65536
+ 347 0016 C2F8D430 		str	r3, [r2, #212]
+ 141:Src/sdmmc.c   ****                           |GPIO_PIN_12);
+ 348              		.loc 1 141 5 view .LVU103
+ 349 001a 4FF4F851 		mov	r1, #7936
+ 350 001e 0748     		ldr	r0, .L19+8
+ 351              	.LVL18:
+ 141:Src/sdmmc.c   ****                           |GPIO_PIN_12);
+ 352              		.loc 1 141 5 is_stmt 0 view .LVU104
+ 353 0020 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 354              	.LVL19:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 11
+
+
+ 144:Src/sdmmc.c   **** 
+ 355              		.loc 1 144 5 is_stmt 1 view .LVU105
+ 356 0024 0421     		movs	r1, #4
+ 357 0026 0648     		ldr	r0, .L19+12
+ 358 0028 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 359              	.LVL20:
+ 147:Src/sdmmc.c   ****   /* USER CODE BEGIN SDMMC1_MspDeInit 1 */
+ 360              		.loc 1 147 5 view .LVU106
+ 361 002c 3120     		movs	r0, #49
+ 362 002e FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 363              	.LVL21:
+ 364              		.loc 1 152 1 is_stmt 0 view .LVU107
+ 365 0032 EAE7     		b	.L15
+ 366              	.L20:
+ 367              		.align	2
+ 368              	.L19:
+ 369 0034 00700052 		.word	1375760384
+ 370 0038 00440258 		.word	1476543488
+ 371 003c 00080258 		.word	1476528128
+ 372 0040 000C0258 		.word	1476529152
+ 373              		.cfi_endproc
+ 374              	.LFE146:
+ 376              		.global	hsd1
+ 377              		.section	.bss.hsd1,"aw",%nobits
+ 378              		.align	2
+ 381              	hsd1:
+ 382 0000 00000000 		.space	124
+ 382      00000000 
+ 382      00000000 
+ 382      00000000 
+ 382      00000000 
+ 383              		.text
+ 384              	.Letext0:
+ 385              		.file 2 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 386              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 387              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 388              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 389              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h"
+ 390              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h"
+ 391              		.file 8 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_sdmmc.h"
+ 392              		.file 9 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h"
+ 393              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h"
+ 394              		.file 11 "Inc/sdmmc.h"
+ 395              		.file 12 "Inc/main.h"
+ 396              		.file 13 "<built-in>"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 sdmmc.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:20     .text.MX_SDMMC1_SD_Init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:26     .text.MX_SDMMC1_SD_Init:00000000 MX_SDMMC1_SD_Init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:78     .text.MX_SDMMC1_SD_Init:00000028 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:381    .bss.hsd1:00000000 hsd1
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:84     .text.HAL_SD_MspInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:90     .text.HAL_SD_MspInit:00000000 HAL_SD_MspInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:303    .text.HAL_SD_MspInit:000000e8 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:311    .text.HAL_SD_MspDeInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:317    .text.HAL_SD_MspDeInit:00000000 HAL_SD_MspDeInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:369    .text.HAL_SD_MspDeInit:00000034 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccWy7sP4.s:378    .bss.hsd1:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_SD_Init
+Error_Handler
+memset
+HAL_RCCEx_PeriphCLKConfig
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_GPIO_DeInit
+HAL_NVIC_DisableIRQ

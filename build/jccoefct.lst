@@ -1,0 +1,2367 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jccoefct.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jccoefct.c"
+  19              		.section	.text.start_iMCU_row,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	start_iMCU_row:
+  26              	.LVL0:
+  27              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * jccoefct.c
+   3:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Copyright (C) 1994-1997, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Modified 2003-2011 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * This file contains the coefficient buffer controller for compression.
+  10:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * This controller is the top level of the JPEG compressor proper.
+  11:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * The coefficient buffer lies between forward-DCT and entropy encoding steps.
+  12:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+  13:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  14:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #define JPEG_INTERNALS
+  15:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #include "jinclude.h"
+  16:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #include "jpeglib.h"
+  17:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  18:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /* We use a full-image coefficient buffer when doing Huffman optimization,
+  20:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * and also for writing multiple-scan JPEG files.  In all cases, the DCT
+  21:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * step is run during the first pass, and subsequent passes need only read
+  22:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * the buffered coefficients.
+  23:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+  24:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef ENTROPY_OPT_SUPPORTED
+  25:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #define FULL_COEF_BUFFER_SUPPORTED
+  26:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #else
+  27:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef C_MULTISCAN_FILES_SUPPORTED
+  28:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #define FULL_COEF_BUFFER_SUPPORTED
+  29:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+  30:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+  31:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 2
+
+
+  32:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  33:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /* Private buffer controller object */
+  34:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  35:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** typedef struct {
+  36:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   struct jpeg_c_coef_controller pub; /* public fields */
+  37:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  38:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION iMCU_row_num;	/* iMCU row # within image */
+  39:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION mcu_ctr;		/* counts MCUs processed in current row */
+  40:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int MCU_vert_offset;		/* counts MCU rows within iMCU row */
+  41:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int MCU_rows_per_iMCU_row;	/* number of such rows needed */
+  42:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  43:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* For single-pass compression, it's sufficient to buffer just one MCU
+  44:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * (although this may prove a bit slow in practice).  We allocate a
+  45:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * workspace of C_MAX_BLOCKS_IN_MCU coefficient blocks, and reuse it for each
+  46:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * MCU constructed and sent.  (On 80x86, the workspace is FAR even though
+  47:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * it's not really very big; this is to keep the module interfaces unchanged
+  48:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * when a large coefficient buffer is necessary.)
+  49:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * In multi-pass modes, this array points to the current MCU's blocks
+  50:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * within the virtual arrays.
+  51:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    */
+  52:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKROW MCU_buffer[C_MAX_BLOCKS_IN_MCU];
+  53:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  54:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* In multi-pass modes, we need a virtual block array for each component. */
+  55:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jvirt_barray_ptr whole_image[MAX_COMPONENTS];
+  56:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** } my_coef_controller;
+  57:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  58:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** typedef my_coef_controller * my_coef_ptr;
+  59:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  60:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  61:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /* Forward declarations */
+  62:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean) compress_data
+  63:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
+  64:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef FULL_COEF_BUFFER_SUPPORTED
+  65:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean) compress_first_pass
+  66:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
+  67:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean) compress_output
+  68:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
+  69:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+  70:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  71:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  72:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** LOCAL(void)
+  73:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** start_iMCU_row (j_compress_ptr cinfo)
+  74:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /* Reset within-iMCU-row counters for a new row */
+  75:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+  28              		.loc 1 75 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  76:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+  33              		.loc 1 76 3 view .LVU1
+  34              		.loc 1 76 15 is_stmt 0 view .LVU2
+  35 0000 D0F89031 		ldr	r3, [r0, #400]
+  36              	.LVL1:
+  77:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  78:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* In an interleaved scan, an MCU row is the same as an iMCU row.
+  79:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * In a noninterleaved scan, an iMCU row has v_samp_factor MCU rows.
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 3
+
+
+  80:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * But at the bottom of the image, process only what's left.
+  81:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    */
+  82:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   if (cinfo->comps_in_scan > 1) {
+  37              		.loc 1 82 3 is_stmt 1 view .LVU3
+  38              		.loc 1 82 12 is_stmt 0 view .LVU4
+  39 0004 D0F82021 		ldr	r2, [r0, #288]
+  40              		.loc 1 82 6 view .LVU5
+  41 0008 012A     		cmp	r2, #1
+  42 000a 05DD     		ble	.L2
+  83:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->MCU_rows_per_iMCU_row = 1;
+  43              		.loc 1 83 5 is_stmt 1 view .LVU6
+  44              		.loc 1 83 33 is_stmt 0 view .LVU7
+  45 000c 0122     		movs	r2, #1
+  46 000e 5A61     		str	r2, [r3, #20]
+  47              	.L3:
+  84:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   } else {
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->iMCU_row_num < (cinfo->total_iMCU_rows-1))
+  86:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  87:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else
+  88:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->last_row_height;
+  89:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+  90:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  91:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->mcu_ctr = 0;
+  48              		.loc 1 91 3 is_stmt 1 view .LVU8
+  49              		.loc 1 91 17 is_stmt 0 view .LVU9
+  50 0010 0022     		movs	r2, #0
+  51 0012 DA60     		str	r2, [r3, #12]
+  92:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->MCU_vert_offset = 0;
+  52              		.loc 1 92 3 is_stmt 1 view .LVU10
+  53              		.loc 1 92 25 is_stmt 0 view .LVU11
+  54 0014 1A61     		str	r2, [r3, #16]
+  93:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+  55              		.loc 1 93 1 view .LVU12
+  56 0016 7047     		bx	lr
+  57              	.L2:
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  58              		.loc 1 85 5 is_stmt 1 view .LVU13
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  59              		.loc 1 85 13 is_stmt 0 view .LVU14
+  60 0018 9968     		ldr	r1, [r3, #8]
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  61              		.loc 1 85 36 view .LVU15
+  62 001a D0F81C21 		ldr	r2, [r0, #284]
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  63              		.loc 1 85 53 view .LVU16
+  64 001e 013A     		subs	r2, r2, #1
+  85:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+  65              		.loc 1 85 8 view .LVU17
+  66 0020 9142     		cmp	r1, r2
+  67 0022 04D2     		bcs	.L4
+  86:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else
+  68              		.loc 1 86 7 is_stmt 1 view .LVU18
+  86:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else
+  69              		.loc 1 86 57 is_stmt 0 view .LVU19
+  70 0024 D0F82421 		ldr	r2, [r0, #292]
+  86:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else
+  71              		.loc 1 86 60 view .LVU20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 4
+
+
+  72 0028 D268     		ldr	r2, [r2, #12]
+  86:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else
+  73              		.loc 1 86 35 view .LVU21
+  74 002a 5A61     		str	r2, [r3, #20]
+  75 002c F0E7     		b	.L3
+  76              	.L4:
+  88:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+  77              		.loc 1 88 7 is_stmt 1 view .LVU22
+  88:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+  78              		.loc 1 88 57 is_stmt 0 view .LVU23
+  79 002e D0F82421 		ldr	r2, [r0, #292]
+  88:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+  80              		.loc 1 88 60 view .LVU24
+  81 0032 D26C     		ldr	r2, [r2, #76]
+  88:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+  82              		.loc 1 88 35 view .LVU25
+  83 0034 5A61     		str	r2, [r3, #20]
+  84 0036 EBE7     		b	.L3
+  85              		.cfi_endproc
+  86              	.LFE147:
+  88              		.section	.text.start_pass_coef,"ax",%progbits
+  89              		.align	1
+  90              		.syntax unified
+  91              		.thumb
+  92              		.thumb_func
+  94              	start_pass_coef:
+  95              	.LVL2:
+  96              	.LFB148:
+  94:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  95:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+  96:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+  97:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Initialize for a processing pass.
+  98:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+  99:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 100:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(void)
+ 101:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** start_pass_coef (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
+ 102:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+  97              		.loc 1 102 1 is_stmt 1 view -0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101              		.loc 1 102 1 is_stmt 0 view .LVU27
+ 102 0000 70B5     		push	{r4, r5, r6, lr}
+ 103              	.LCFI0:
+ 104              		.cfi_def_cfa_offset 16
+ 105              		.cfi_offset 4, -16
+ 106              		.cfi_offset 5, -12
+ 107              		.cfi_offset 6, -8
+ 108              		.cfi_offset 14, -4
+ 109 0002 0446     		mov	r4, r0
+ 110 0004 0D46     		mov	r5, r1
+ 103:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 111              		.loc 1 103 3 is_stmt 1 view .LVU28
+ 112              		.loc 1 103 15 is_stmt 0 view .LVU29
+ 113 0006 D0F89061 		ldr	r6, [r0, #400]
+ 114              	.LVL3:
+ 104:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 5
+
+
+ 105:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->iMCU_row_num = 0;
+ 115              		.loc 1 105 3 is_stmt 1 view .LVU30
+ 116              		.loc 1 105 22 is_stmt 0 view .LVU31
+ 117 000a 0023     		movs	r3, #0
+ 118 000c B360     		str	r3, [r6, #8]
+ 106:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 119              		.loc 1 106 3 is_stmt 1 view .LVU32
+ 120 000e FFF7FEFF 		bl	start_iMCU_row
+ 121              	.LVL4:
+ 107:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 108:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   switch (pass_mode) {
+ 122              		.loc 1 108 3 view .LVU33
+ 123 0012 022D     		cmp	r5, #2
+ 124 0014 1BD0     		beq	.L6
+ 125 0016 032D     		cmp	r5, #3
+ 126 0018 0CD0     		beq	.L7
+ 127 001a 2DBB     		cbnz	r5, .L8
+ 109:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   case JBUF_PASS_THRU:
+ 110:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->whole_image[0] != NULL)
+ 128              		.loc 1 110 5 view .LVU34
+ 129              		.loc 1 110 26 is_stmt 0 view .LVU35
+ 130 001c 336C     		ldr	r3, [r6, #64]
+ 131              		.loc 1 110 8 view .LVU36
+ 132 001e 33B1     		cbz	r3, .L9
+ 111:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 133              		.loc 1 111 7 is_stmt 1 view .LVU37
+ 134 0020 2368     		ldr	r3, [r4]
+ 135 0022 0322     		movs	r2, #3
+ 136 0024 5A61     		str	r2, [r3, #20]
+ 137 0026 2368     		ldr	r3, [r4]
+ 138 0028 1B68     		ldr	r3, [r3]
+ 139 002a 2046     		mov	r0, r4
+ 140 002c 9847     		blx	r3
+ 141              	.LVL5:
+ 142              	.L9:
+ 112:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->pub.compress_data = compress_data;
+ 143              		.loc 1 112 5 view .LVU38
+ 144              		.loc 1 112 29 is_stmt 0 view .LVU39
+ 145 002e 124B     		ldr	r3, .L16
+ 146 0030 7360     		str	r3, [r6, #4]
+ 113:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 147              		.loc 1 113 5 is_stmt 1 view .LVU40
+ 148              	.L5:
+ 114:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef FULL_COEF_BUFFER_SUPPORTED
+ 115:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   case JBUF_SAVE_AND_PASS:
+ 116:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->whole_image[0] == NULL)
+ 117:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 118:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->pub.compress_data = compress_first_pass;
+ 119:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 120:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   case JBUF_CRANK_DEST:
+ 121:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->whole_image[0] == NULL)
+ 122:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 123:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->pub.compress_data = compress_output;
+ 124:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 125:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+ 126:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   default:
+ 127:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 6
+
+
+ 128:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 129:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 130:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 149              		.loc 1 130 1 is_stmt 0 view .LVU41
+ 150 0032 70BD     		pop	{r4, r5, r6, pc}
+ 151              	.LVL6:
+ 152              	.L7:
+ 116:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 153              		.loc 1 116 5 is_stmt 1 view .LVU42
+ 116:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 154              		.loc 1 116 26 is_stmt 0 view .LVU43
+ 155 0034 336C     		ldr	r3, [r6, #64]
+ 116:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 156              		.loc 1 116 8 view .LVU44
+ 157 0036 13B1     		cbz	r3, .L14
+ 158              	.L11:
+ 118:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 159              		.loc 1 118 5 is_stmt 1 view .LVU45
+ 118:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 160              		.loc 1 118 29 is_stmt 0 view .LVU46
+ 161 0038 104B     		ldr	r3, .L16+4
+ 162 003a 7360     		str	r3, [r6, #4]
+ 119:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   case JBUF_CRANK_DEST:
+ 163              		.loc 1 119 5 is_stmt 1 view .LVU47
+ 164 003c F9E7     		b	.L5
+ 165              	.L14:
+ 117:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->pub.compress_data = compress_first_pass;
+ 166              		.loc 1 117 7 view .LVU48
+ 167 003e 2368     		ldr	r3, [r4]
+ 168 0040 0322     		movs	r2, #3
+ 169 0042 5A61     		str	r2, [r3, #20]
+ 170 0044 2368     		ldr	r3, [r4]
+ 171 0046 1B68     		ldr	r3, [r3]
+ 172 0048 2046     		mov	r0, r4
+ 173 004a 9847     		blx	r3
+ 174              	.LVL7:
+ 175 004c F4E7     		b	.L11
+ 176              	.L6:
+ 121:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 177              		.loc 1 121 5 view .LVU49
+ 121:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 178              		.loc 1 121 26 is_stmt 0 view .LVU50
+ 179 004e 336C     		ldr	r3, [r6, #64]
+ 121:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 180              		.loc 1 121 8 view .LVU51
+ 181 0050 13B1     		cbz	r3, .L15
+ 182              	.L12:
+ 123:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 183              		.loc 1 123 5 is_stmt 1 view .LVU52
+ 123:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 184              		.loc 1 123 29 is_stmt 0 view .LVU53
+ 185 0052 0B4B     		ldr	r3, .L16+8
+ 186 0054 7360     		str	r3, [r6, #4]
+ 124:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+ 187              		.loc 1 124 5 is_stmt 1 view .LVU54
+ 188 0056 ECE7     		b	.L5
+ 189              	.L15:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 7
+
+
+ 122:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->pub.compress_data = compress_output;
+ 190              		.loc 1 122 7 view .LVU55
+ 191 0058 2368     		ldr	r3, [r4]
+ 192 005a 0322     		movs	r2, #3
+ 193 005c 5A61     		str	r2, [r3, #20]
+ 194 005e 2368     		ldr	r3, [r4]
+ 195 0060 1B68     		ldr	r3, [r3]
+ 196 0062 2046     		mov	r0, r4
+ 197 0064 9847     		blx	r3
+ 198              	.LVL8:
+ 199 0066 F4E7     		b	.L12
+ 200              	.L8:
+ 127:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     break;
+ 201              		.loc 1 127 5 view .LVU56
+ 202 0068 2368     		ldr	r3, [r4]
+ 203 006a 0322     		movs	r2, #3
+ 204 006c 5A61     		str	r2, [r3, #20]
+ 205 006e 2368     		ldr	r3, [r4]
+ 206 0070 1B68     		ldr	r3, [r3]
+ 207 0072 2046     		mov	r0, r4
+ 208 0074 9847     		blx	r3
+ 209              	.LVL9:
+ 128:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 210              		.loc 1 128 5 view .LVU57
+ 211              		.loc 1 130 1 is_stmt 0 view .LVU58
+ 212 0076 DCE7     		b	.L5
+ 213              	.L17:
+ 214              		.align	2
+ 215              	.L16:
+ 216 0078 00000000 		.word	compress_data
+ 217 007c 00000000 		.word	compress_first_pass
+ 218 0080 00000000 		.word	compress_output
+ 219              		.cfi_endproc
+ 220              	.LFE148:
+ 222              		.section	.text.compress_output,"ax",%progbits
+ 223              		.align	1
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 228              	compress_output:
+ 229              	.LVL10:
+ 230              	.LFB151:
+ 131:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 132:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 133:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+ 134:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Process some data in the single-pass case.
+ 135:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
+ 136:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * per call, ie, v_samp_factor block rows for each component in the image.
+ 137:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Returns TRUE if the iMCU row is completed, FALSE if suspended.
+ 138:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+ 139:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * NB: input_buf contains a plane for each component in image,
+ 140:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * which we index according to the component's SOF position.
+ 141:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+ 142:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 143:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean)
+ 144:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
+ 145:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 8
+
+
+ 146:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 147:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION MCU_col_num;	/* index of current MCU within row */
+ 148:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
+ 149:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 150:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int blkn, bi, ci, yindex, yoffset, blockcnt;
+ 151:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION ypos, xpos;
+ 152:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jpeg_component_info *compptr;
+ 153:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   forward_DCT_ptr forward_DCT;
+ 154:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 155:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Loop to write as much as one whole iMCU row */
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   for (yoffset = coef->MCU_vert_offset; yoffset < coef->MCU_rows_per_iMCU_row;
+ 157:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 158:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num <= last_MCU_col;
+ 159:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 160:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Determine where data comes from in input_buf and do the DCT thing.
+ 161:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * Each call on forward_DCT processes a horizontal row of DCT blocks
+ 162:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * as wide as an MCU; we rely on having allocated the MCU_buffer[] blocks
+ 163:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * sequentially.  Dummy blocks at the right or bottom edge are filled in
+ 164:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * specially.  The data in them does not matter for image reconstruction,
+ 165:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * so we fill them with values that will encode to the smallest amount of
+ 166:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * data, viz: all zeroes in the AC entries, DC entries equal to previous
+ 167:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * block's DC value.  (Thanks to Thomas Kinsman for this idea.)
+ 168:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        */
+ 169:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blkn = 0;
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+ 171:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 172:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
+ 173:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
+ 174:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 						: compptr->last_col_width;
+ 175:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	xpos = MCU_col_num * compptr->MCU_sample_width;
+ 176:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	ypos = yoffset * compptr->DCT_v_scaled_size;
+ 177:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* ypos == (yoffset+yindex) * DCTSIZE */
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
+ 179:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 180:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      yoffset+yindex < compptr->last_row_height) {
+ 181:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    (*forward_DCT) (cinfo, compptr,
+ 182:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    input_buf[compptr->component_index],
+ 183:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    coef->MCU_buffer[blkn],
+ 184:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    ypos, xpos, (JDIMENSION) blockcnt);
+ 185:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    if (blockcnt < compptr->MCU_width) {
+ 186:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      /* Create some dummy blocks at the right edge of the image. */
+ 187:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      FMEMZERO((void FAR *) coef->MCU_buffer[blkn + blockcnt],
+ 188:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		       (compptr->MCU_width - blockcnt) * SIZEOF(JBLOCK));
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      for (bi = blockcnt; bi < compptr->MCU_width; bi++) {
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 191:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 192:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 193:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  } else {
+ 194:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    /* Create a row of dummy blocks at the bottom of the image. */
+ 195:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    FMEMZERO((void FAR *) coef->MCU_buffer[blkn],
+ 196:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		     compptr->MCU_width * SIZEOF(JBLOCK));
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    for (bi = 0; bi < compptr->MCU_width; bi++) {
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 199:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 200:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 201:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  blkn += compptr->MCU_width;
+ 202:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  ypos += compptr->DCT_v_scaled_size;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 9
+
+
+ 203:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 204:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 205:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Try to write the MCU.  In event of a suspension failure, we will
+ 206:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        * re-DCT the MCU on restart (a bit inefficient, could be fixed...)
+ 207:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        */
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (! (*cinfo->entropy->encode_mcu) (cinfo, coef->MCU_buffer)) {
+ 209:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 210:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->MCU_vert_offset = yoffset;
+ 211:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->mcu_ctr = MCU_col_num;
+ 212:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	return FALSE;
+ 213:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 214:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 215:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Completed an MCU row, but perhaps not an iMCU row */
+ 216:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->mcu_ctr = 0;
+ 217:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 218:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Completed the iMCU row, advance counters for next one */
+ 219:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->iMCU_row_num++;
+ 220:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 221:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   return TRUE;
+ 222:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 223:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 224:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 225:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef FULL_COEF_BUFFER_SUPPORTED
+ 226:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 227:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+ 228:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Process some data in the first pass of a multi-pass case.
+ 229:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
+ 230:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * per call, ie, v_samp_factor block rows for each component in the image.
+ 231:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * This amount of data is read from the source buffer, DCT'd and quantized,
+ 232:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * and saved into the virtual arrays.  We also generate suitable dummy blocks
+ 233:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * as needed at the right and lower edges.  (The dummy blocks are constructed
+ 234:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * in the virtual arrays, which have been padded appropriately.)  This makes
+ 235:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * it possible for subsequent passes not to worry about real vs. dummy blocks.
+ 236:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+ 237:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * We must also emit the data to the entropy encoder.  This is conveniently
+ 238:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * done by calling compress_output() after we've loaded the current strip
+ 239:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * of the virtual arrays.
+ 240:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+ 241:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * NB: input_buf contains a plane for each component in image.  All
+ 242:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * components are DCT'd and loaded into the virtual arrays in this pass.
+ 243:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * However, it may be that only a subset of the components are emitted to
+ 244:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * the entropy encoder during this first pass; be careful about looking
+ 245:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * at the scan-dependent variables (MCU dimensions, etc).
+ 246:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+ 247:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 248:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean)
+ 249:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
+ 250:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+ 251:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 252:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 253:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION blocks_across, MCUs_across, MCUindex;
+ 254:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int bi, ci, h_samp_factor, block_row, block_rows, ndummy;
+ 255:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JCOEF lastDC;
+ 256:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jpeg_component_info *compptr;
+ 257:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKARRAY buffer;
+ 258:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKROW thisblockrow, lastblockrow;
+ 259:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   forward_DCT_ptr forward_DCT;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 10
+
+
+ 260:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 262:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 263:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Align the virtual buffer for this component. */
+ 264:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer = (*cinfo->mem->access_virt_barray)
+ 265:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ((j_common_ptr) cinfo, coef->whole_image[ci],
+ 266:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        coef->iMCU_row_num * compptr->v_samp_factor,
+ 267:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        (JDIMENSION) compptr->v_samp_factor, TRUE);
+ 268:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Count non-dummy DCT block rows in this iMCU row. */
+ 269:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->iMCU_row_num < last_iMCU_row)
+ 270:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       block_rows = compptr->v_samp_factor;
+ 271:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else {
+ 272:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* NB: can't use last_row_height here, since may not be set! */
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       block_rows = (int) (compptr->height_in_blocks % compptr->v_samp_factor);
+ 274:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 275:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 276:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     blocks_across = compptr->width_in_blocks;
+ 277:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     h_samp_factor = compptr->h_samp_factor;
+ 278:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Count number of dummy blocks to be added at the right margin. */
+ 279:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     ndummy = (int) (blocks_across % h_samp_factor);
+ 280:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (ndummy > 0)
+ 281:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ndummy = h_samp_factor - ndummy;
+ 282:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     forward_DCT = cinfo->fdct->forward_DCT[ci];
+ 283:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
+ 284:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      * on forward_DCT processes a complete horizontal row of DCT blocks.
+ 285:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      */
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (block_row = 0; block_row < block_rows; block_row++) {
+ 287:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ 288:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       (*forward_DCT) (cinfo, compptr, input_buf[ci], thisblockrow,
+ 289:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) (block_row * compptr->DCT_v_scaled_size),
+ 290:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) 0, blocks_across);
+ 291:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (ndummy > 0) {
+ 292:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Create dummy blocks at the right edge of the image. */
+ 293:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	thisblockrow += blocks_across; /* => first dummy block */
+ 294:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow, ndummy * SIZEOF(JBLOCK));
+ 295:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	lastDC = thisblockrow[-1][0];
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (bi = 0; bi < ndummy; bi++) {
+ 297:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 298:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 299:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 300:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 301:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* If at end of image, create dummy block rows as needed.
+ 302:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      * The tricky part here is that within each MCU, we want the DC values
+ 303:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      * of the dummy blocks to match the last real block's DC value.
+ 304:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      * This squeezes a few more bytes out of the resulting file...
+ 305:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****      */
+ 306:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (coef->iMCU_row_num == last_iMCU_row) {
+ 307:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blocks_across += ndummy;	/* include lower right corner */
+ 308:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       MCUs_across = blocks_across / h_samp_factor;
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (block_row = block_rows; block_row < compptr->v_samp_factor;
+ 310:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 311:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	thisblockrow = buffer[block_row];
+ 312:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	lastblockrow = buffer[block_row-1];
+ 313:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow,
+ 314:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		 (size_t) (blocks_across * SIZEOF(JBLOCK)));
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (MCUindex = 0; MCUindex < MCUs_across; MCUindex++) {
+ 316:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 11
+
+
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (bi = 0; bi < h_samp_factor; bi++) {
+ 318:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 319:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 320:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow += h_samp_factor; /* advance to next MCU in row */
+ 321:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastblockrow += h_samp_factor;
+ 322:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 323:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 324:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 325:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 326:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* NB: compress_output will increment iMCU_row_num if successful.
+ 327:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * A suspension return will result in redoing all the work above next time.
+ 328:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    */
+ 329:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 330:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Emit data to the entropy encoder, sharing code with subsequent passes */
+ 331:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   return compress_output(cinfo, input_buf);
+ 332:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 333:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 334:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 335:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+ 336:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Process some data in subsequent passes of a multi-pass case.
+ 337:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
+ 338:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * per call, ie, v_samp_factor block rows for each component in the scan.
+ 339:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * The data is obtained from the virtual arrays and fed to the entropy coder.
+ 340:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Returns TRUE if the iMCU row is completed, FALSE if suspended.
+ 341:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  *
+ 342:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * NB: input_buf is ignored; it is likely to be a NULL pointer.
+ 343:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+ 344:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 345:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** METHODDEF(boolean)
+ 346:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
+ 347:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+ 231              		.loc 1 347 1 is_stmt 1 view -0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 16
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              		.loc 1 347 1 is_stmt 0 view .LVU60
+ 236 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 237              	.LCFI1:
+ 238              		.cfi_def_cfa_offset 28
+ 239              		.cfi_offset 4, -28
+ 240              		.cfi_offset 5, -24
+ 241              		.cfi_offset 6, -20
+ 242              		.cfi_offset 7, -16
+ 243              		.cfi_offset 8, -12
+ 244              		.cfi_offset 9, -8
+ 245              		.cfi_offset 14, -4
+ 246 0004 87B0     		sub	sp, sp, #28
+ 247              	.LCFI2:
+ 248              		.cfi_def_cfa_offset 56
+ 249 0006 0646     		mov	r6, r0
+ 348:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 250              		.loc 1 348 3 is_stmt 1 view .LVU61
+ 251              		.loc 1 348 15 is_stmt 0 view .LVU62
+ 252 0008 D0F89041 		ldr	r4, [r0, #400]
+ 253              	.LVL11:
+ 349:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION MCU_col_num;	/* index of current MCU within row */
+ 254              		.loc 1 349 3 is_stmt 1 view .LVU63
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 12
+
+
+ 350:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int blkn, ci, xindex, yindex, yoffset;
+ 255              		.loc 1 350 3 view .LVU64
+ 351:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION start_col;
+ 256              		.loc 1 351 3 view .LVU65
+ 352:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKARRAY buffer[MAX_COMPS_IN_SCAN];
+ 257              		.loc 1 352 3 view .LVU66
+ 353:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKROW buffer_ptr;
+ 258              		.loc 1 353 3 view .LVU67
+ 354:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jpeg_component_info *compptr;
+ 259              		.loc 1 354 3 view .LVU68
+ 355:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 356:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Align the virtual buffers for the components used in this scan.
+ 357:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * NB: during first pass, this is safe only because the buffers will
+ 358:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    * already be aligned properly, so jmemmgr.c won't need to do any I/O.
+ 359:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****    */
+ 360:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+ 260              		.loc 1 360 3 view .LVU69
+ 261              		.loc 1 360 11 is_stmt 0 view .LVU70
+ 262 000c 0025     		movs	r5, #0
+ 263              		.loc 1 360 3 view .LVU71
+ 264 000e 18E0     		b	.L19
+ 265              	.LVL12:
+ 266              	.L20:
+ 361:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     compptr = cinfo->cur_comp_info[ci];
+ 267              		.loc 1 361 5 is_stmt 1 view .LVU72
+ 268              		.loc 1 361 13 is_stmt 0 view .LVU73
+ 269 0010 05F14803 		add	r3, r5, #72
+ 270 0014 06EB8303 		add	r3, r6, r3, lsl #2
+ 271 0018 5B68     		ldr	r3, [r3, #4]
+ 272              	.LVL13:
+ 362:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer[ci] = (*cinfo->mem->access_virt_barray)
+ 273              		.loc 1 362 5 is_stmt 1 view .LVU74
+ 274              		.loc 1 362 25 is_stmt 0 view .LVU75
+ 275 001a 7068     		ldr	r0, [r6, #4]
+ 363:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ((j_common_ptr) cinfo, coef->whole_image[compptr->component_index],
+ 276              		.loc 1 363 55 view .LVU76
+ 277 001c 5968     		ldr	r1, [r3, #4]
+ 364:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        coef->iMCU_row_num * compptr->v_samp_factor,
+ 278              		.loc 1 364 12 view .LVU77
+ 279 001e A268     		ldr	r2, [r4, #8]
+ 280              		.loc 1 364 36 view .LVU78
+ 281 0020 DB68     		ldr	r3, [r3, #12]
+ 282              	.LVL14:
+ 362:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer[ci] = (*cinfo->mem->access_virt_barray)
+ 283              		.loc 1 362 19 view .LVU79
+ 284 0022 1031     		adds	r1, r1, #16
+ 285 0024 54F82110 		ldr	r1, [r4, r1, lsl #2]
+ 286 0028 0027     		movs	r7, #0
+ 287 002a 0097     		str	r7, [sp]
+ 288              	.LVL15:
+ 362:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer[ci] = (*cinfo->mem->access_virt_barray)
+ 289              		.loc 1 362 19 view .LVU80
+ 290 002c 076A     		ldr	r7, [r0, #32]
+ 291 002e 03FB02F2 		mul	r2, r3, r2
+ 292 0032 3046     		mov	r0, r6
+ 293 0034 B847     		blx	r7
+ 294              	.LVL16:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 13
+
+
+ 362:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer[ci] = (*cinfo->mem->access_virt_barray)
+ 295              		.loc 1 362 16 discriminator 1 view .LVU81
+ 296 0036 06AB     		add	r3, sp, #24
+ 297 0038 03EB8503 		add	r3, r3, r5, lsl #2
+ 298 003c 43F8100C 		str	r0, [r3, #-16]
+ 360:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     compptr = cinfo->cur_comp_info[ci];
+ 299              		.loc 1 360 45 is_stmt 1 discriminator 3 view .LVU82
+ 300 0040 0135     		adds	r5, r5, #1
+ 301              	.LVL17:
+ 302              	.L19:
+ 360:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     compptr = cinfo->cur_comp_info[ci];
+ 303              		.loc 1 360 19 discriminator 1 view .LVU83
+ 360:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     compptr = cinfo->cur_comp_info[ci];
+ 304              		.loc 1 360 26 is_stmt 0 discriminator 1 view .LVU84
+ 305 0042 D6F82031 		ldr	r3, [r6, #288]
+ 360:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     compptr = cinfo->cur_comp_info[ci];
+ 306              		.loc 1 360 19 discriminator 1 view .LVU85
+ 307 0046 AB42     		cmp	r3, r5
+ 308 0048 E2DC     		bgt	.L20
+ 365:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        (JDIMENSION) compptr->v_samp_factor, FALSE);
+ 366:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 367:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 368:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Loop to process one whole iMCU row */
+ 369:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   for (yoffset = coef->MCU_vert_offset; yoffset < coef->MCU_rows_per_iMCU_row;
+ 309              		.loc 1 369 3 is_stmt 1 view .LVU86
+ 310              		.loc 1 369 16 is_stmt 0 view .LVU87
+ 311 004a 2569     		ldr	r5, [r4, #16]
+ 312              	.LVL18:
+ 313              	.L21:
+ 314              		.loc 1 369 49 is_stmt 1 discriminator 1 view .LVU88
+ 315              		.loc 1 369 55 is_stmt 0 discriminator 1 view .LVU89
+ 316 004c 6369     		ldr	r3, [r4, #20]
+ 317              		.loc 1 369 49 discriminator 1 view .LVU90
+ 318 004e AB42     		cmp	r3, r5
+ 319 0050 4DDD     		ble	.L34
+ 370:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 371:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num < cinfo->MCUs_per_row;
+ 320              		.loc 1 371 5 is_stmt 1 view .LVU91
+ 321              		.loc 1 371 22 is_stmt 0 view .LVU92
+ 322 0052 E768     		ldr	r7, [r4, #12]
+ 323              	.LVL19:
+ 324              		.loc 1 371 5 view .LVU93
+ 325 0054 39E0     		b	.L22
+ 326              	.LVL20:
+ 327              	.L25:
+ 372:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 373:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Construct list of pointers to DCT blocks belonging to this MCU */
+ 374:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blkn = 0;			/* index of current DCT block within MCU */
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+ 376:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 377:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	start_col = MCU_col_num * compptr->MCU_width;
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 381:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 328              		.loc 1 381 6 is_stmt 1 view .LVU94
+ 329              		.loc 1 381 31 is_stmt 0 view .LVU95
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 14
+
+
+ 330 0056 881D     		adds	r0, r1, #6
+ 331 0058 44F82030 		str	r3, [r4, r0, lsl #2]
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 332              		.loc 1 380 56 is_stmt 1 discriminator 3 view .LVU96
+ 333 005c 0132     		adds	r2, r2, #1
+ 334              	.LVL21:
+ 335              		.loc 1 381 43 is_stmt 0 view .LVU97
+ 336 005e 8033     		adds	r3, r3, #128
+ 337              	.LVL22:
+ 338              		.loc 1 381 27 view .LVU98
+ 339 0060 0131     		adds	r1, r1, #1
+ 340              	.LVL23:
+ 341              	.L24:
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 342              		.loc 1 380 28 is_stmt 1 discriminator 1 view .LVU99
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 343              		.loc 1 380 37 is_stmt 0 discriminator 1 view .LVU100
+ 344 0062 DCF83800 		ldr	r0, [ip, #56]
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 345              		.loc 1 380 28 discriminator 1 view .LVU101
+ 346 0066 9042     		cmp	r0, r2
+ 347 0068 F5DC     		bgt	.L25
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 348              		.loc 1 378 55 is_stmt 1 discriminator 2 view .LVU102
+ 349 006a 0EF1010E 		add	lr, lr, #1
+ 350              	.LVL24:
+ 351              	.L23:
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 352              		.loc 1 378 26 discriminator 1 view .LVU103
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 353              		.loc 1 378 35 is_stmt 0 discriminator 1 view .LVU104
+ 354 006e DCF83C30 		ldr	r3, [ip, #60]
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 355              		.loc 1 378 26 discriminator 1 view .LVU105
+ 356 0072 7345     		cmp	r3, lr
+ 357 0074 0CDD     		ble	.L35
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 358              		.loc 1 379 4 is_stmt 1 view .LVU106
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 359              		.loc 1 379 23 is_stmt 0 view .LVU107
+ 360 0076 06AB     		add	r3, sp, #24
+ 361 0078 03EB8803 		add	r3, r3, r8, lsl #2
+ 362 007c 53F8103C 		ldr	r3, [r3, #-16]
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 363              		.loc 1 379 34 view .LVU108
+ 364 0080 0EEB0502 		add	r2, lr, r5
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 365              		.loc 1 379 27 view .LVU109
+ 366 0084 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 379:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
+ 367              		.loc 1 379 15 view .LVU110
+ 368 0088 03EBC913 		add	r3, r3, r9, lsl #7
+ 369              	.LVL25:
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 370              		.loc 1 380 4 is_stmt 1 view .LVU111
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 371              		.loc 1 380 16 is_stmt 0 view .LVU112
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 15
+
+
+ 372 008c 0022     		movs	r2, #0
+ 380:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    coef->MCU_buffer[blkn++] = buffer_ptr++;
+ 373              		.loc 1 380 4 view .LVU113
+ 374 008e E8E7     		b	.L24
+ 375              	.LVL26:
+ 376              	.L35:
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 377              		.loc 1 375 49 is_stmt 1 discriminator 2 view .LVU114
+ 378 0090 08F10108 		add	r8, r8, #1
+ 379              	.LVL27:
+ 380              	.L30:
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 381              		.loc 1 375 23 discriminator 1 view .LVU115
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 382              		.loc 1 375 30 is_stmt 0 discriminator 1 view .LVU116
+ 383 0094 D6F82031 		ldr	r3, [r6, #288]
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 384              		.loc 1 375 23 discriminator 1 view .LVU117
+ 385 0098 4345     		cmp	r3, r8
+ 386 009a 0CDD     		ble	.L36
+ 376:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	start_col = MCU_col_num * compptr->MCU_width;
+ 387              		.loc 1 376 2 is_stmt 1 view .LVU118
+ 376:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	start_col = MCU_col_num * compptr->MCU_width;
+ 388              		.loc 1 376 10 is_stmt 0 view .LVU119
+ 389 009c 08F14803 		add	r3, r8, #72
+ 390 00a0 06EB8303 		add	r3, r6, r3, lsl #2
+ 391 00a4 D3F804C0 		ldr	ip, [r3, #4]
+ 392              	.LVL28:
+ 377:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
+ 393              		.loc 1 377 2 is_stmt 1 view .LVU120
+ 377:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
+ 394              		.loc 1 377 35 is_stmt 0 view .LVU121
+ 395 00a8 DCF83830 		ldr	r3, [ip, #56]
+ 377:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
+ 396              		.loc 1 377 12 view .LVU122
+ 397 00ac 07FB03F9 		mul	r9, r7, r3
+ 398              	.LVL29:
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 399              		.loc 1 378 2 is_stmt 1 view .LVU123
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 400              		.loc 1 378 14 is_stmt 0 view .LVU124
+ 401 00b0 4FF0000E 		mov	lr, #0
+ 378:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
+ 402              		.loc 1 378 2 view .LVU125
+ 403 00b4 DBE7     		b	.L23
+ 404              	.LVL30:
+ 405              	.L36:
+ 382:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 383:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 384:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 385:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Try to write the MCU. */
+ 386:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (! (*cinfo->entropy->encode_mcu) (cinfo, coef->MCU_buffer)) {
+ 406              		.loc 1 386 7 is_stmt 1 view .LVU126
+ 407              		.loc 1 386 20 is_stmt 0 view .LVU127
+ 408 00b6 D6F8A431 		ldr	r3, [r6, #420]
+ 409              		.loc 1 386 14 view .LVU128
+ 410 00ba 5B68     		ldr	r3, [r3, #4]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 16
+
+
+ 411 00bc 04F11801 		add	r1, r4, #24
+ 412              	.LVL31:
+ 413              		.loc 1 386 14 view .LVU129
+ 414 00c0 3046     		mov	r0, r6
+ 415 00c2 9847     		blx	r3
+ 416              	.LVL32:
+ 417              		.loc 1 386 10 discriminator 1 view .LVU130
+ 418 00c4 0346     		mov	r3, r0
+ 419 00c6 40B1     		cbz	r0, .L37
+ 372:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Construct list of pointers to DCT blocks belonging to this MCU */
+ 420              		.loc 1 372 14 is_stmt 1 view .LVU131
+ 421 00c8 0137     		adds	r7, r7, #1
+ 422              	.LVL33:
+ 423              	.L22:
+ 371:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 424              		.loc 1 371 51 discriminator 1 view .LVU132
+ 371:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 425              		.loc 1 371 58 is_stmt 0 discriminator 1 view .LVU133
+ 426 00ca D6F83431 		ldr	r3, [r6, #308]
+ 371:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 427              		.loc 1 371 51 discriminator 1 view .LVU134
+ 428 00ce BB42     		cmp	r3, r7
+ 429 00d0 09D9     		bls	.L38
+ 375:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 430              		.loc 1 375 15 view .LVU135
+ 431 00d2 4FF00008 		mov	r8, #0
+ 374:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+ 432              		.loc 1 374 12 view .LVU136
+ 433 00d6 4146     		mov	r1, r8
+ 434 00d8 DCE7     		b	.L30
+ 435              	.LVL34:
+ 436              	.L37:
+ 387:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 388:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->MCU_vert_offset = yoffset;
+ 437              		.loc 1 388 2 is_stmt 1 view .LVU137
+ 438              		.loc 1 388 24 is_stmt 0 view .LVU138
+ 439 00da 2561     		str	r5, [r4, #16]
+ 389:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->mcu_ctr = MCU_col_num;
+ 440              		.loc 1 389 2 is_stmt 1 view .LVU139
+ 441              		.loc 1 389 16 is_stmt 0 view .LVU140
+ 442 00dc E760     		str	r7, [r4, #12]
+ 390:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	return FALSE;
+ 443              		.loc 1 390 2 is_stmt 1 view .LVU141
+ 444              	.LVL35:
+ 445              	.L18:
+ 391:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 392:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 393:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Completed an MCU row, but perhaps not an iMCU row */
+ 394:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->mcu_ctr = 0;
+ 395:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 396:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Completed the iMCU row, advance counters for next one */
+ 397:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->iMCU_row_num++;
+ 398:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 399:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   return TRUE;
+ 400:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 446              		.loc 1 400 1 is_stmt 0 view .LVU142
+ 447 00de 1846     		mov	r0, r3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 17
+
+
+ 448 00e0 07B0     		add	sp, sp, #28
+ 449              	.LCFI3:
+ 450              		.cfi_remember_state
+ 451              		.cfi_def_cfa_offset 28
+ 452              		@ sp needed
+ 453 00e2 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 454              	.LVL36:
+ 455              	.L38:
+ 456              	.LCFI4:
+ 457              		.cfi_restore_state
+ 394:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 458              		.loc 1 394 5 is_stmt 1 view .LVU143
+ 394:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 459              		.loc 1 394 19 is_stmt 0 view .LVU144
+ 460 00e6 0023     		movs	r3, #0
+ 461 00e8 E360     		str	r3, [r4, #12]
+ 370:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num < cinfo->MCUs_per_row;
+ 462              		.loc 1 370 15 is_stmt 1 view .LVU145
+ 463 00ea 0135     		adds	r5, r5, #1
+ 464              	.LVL37:
+ 370:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num < cinfo->MCUs_per_row;
+ 465              		.loc 1 370 15 is_stmt 0 view .LVU146
+ 466 00ec AEE7     		b	.L21
+ 467              	.LVL38:
+ 468              	.L34:
+ 397:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 469              		.loc 1 397 3 is_stmt 1 view .LVU147
+ 397:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 470              		.loc 1 397 7 is_stmt 0 view .LVU148
+ 471 00ee A368     		ldr	r3, [r4, #8]
+ 397:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 472              		.loc 1 397 21 view .LVU149
+ 473 00f0 0133     		adds	r3, r3, #1
+ 474 00f2 A360     		str	r3, [r4, #8]
+ 398:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   return TRUE;
+ 475              		.loc 1 398 3 is_stmt 1 view .LVU150
+ 476 00f4 3046     		mov	r0, r6
+ 477 00f6 FFF7FEFF 		bl	start_iMCU_row
+ 478              	.LVL39:
+ 399:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 479              		.loc 1 399 3 view .LVU151
+ 399:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 480              		.loc 1 399 10 is_stmt 0 view .LVU152
+ 481 00fa 0123     		movs	r3, #1
+ 482 00fc EFE7     		b	.L18
+ 483              		.cfi_endproc
+ 484              	.LFE151:
+ 486              		.section	.text.compress_first_pass,"ax",%progbits
+ 487              		.align	1
+ 488              		.syntax unified
+ 489              		.thumb
+ 490              		.thumb_func
+ 492              	compress_first_pass:
+ 493              	.LVL40:
+ 494              	.LFB150:
+ 250:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 495              		.loc 1 250 1 is_stmt 1 view -0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 18
+
+
+ 496              		.cfi_startproc
+ 497              		@ args = 0, pretend = 0, frame = 32
+ 498              		@ frame_needed = 0, uses_anonymous_args = 0
+ 250:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 499              		.loc 1 250 1 is_stmt 0 view .LVU154
+ 500 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 501              	.LCFI5:
+ 502              		.cfi_def_cfa_offset 36
+ 503              		.cfi_offset 4, -36
+ 504              		.cfi_offset 5, -32
+ 505              		.cfi_offset 6, -28
+ 506              		.cfi_offset 7, -24
+ 507              		.cfi_offset 8, -20
+ 508              		.cfi_offset 9, -16
+ 509              		.cfi_offset 10, -12
+ 510              		.cfi_offset 11, -8
+ 511              		.cfi_offset 14, -4
+ 512 0004 8DB0     		sub	sp, sp, #52
+ 513              	.LCFI6:
+ 514              		.cfi_def_cfa_offset 88
+ 515 0006 8346     		mov	fp, r0
+ 516 0008 0891     		str	r1, [sp, #32]
+ 251:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 517              		.loc 1 251 3 is_stmt 1 view .LVU155
+ 251:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 518              		.loc 1 251 15 is_stmt 0 view .LVU156
+ 519 000a D0F89061 		ldr	r6, [r0, #400]
+ 520              	.LVL41:
+ 252:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION blocks_across, MCUs_across, MCUindex;
+ 521              		.loc 1 252 3 is_stmt 1 view .LVU157
+ 252:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION blocks_across, MCUs_across, MCUindex;
+ 522              		.loc 1 252 35 is_stmt 0 view .LVU158
+ 523 000e D0F81C31 		ldr	r3, [r0, #284]
+ 252:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION blocks_across, MCUs_across, MCUindex;
+ 524              		.loc 1 252 14 view .LVU159
+ 525 0012 013B     		subs	r3, r3, #1
+ 526 0014 0993     		str	r3, [sp, #36]
+ 527              	.LVL42:
+ 253:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int bi, ci, h_samp_factor, block_row, block_rows, ndummy;
+ 528              		.loc 1 253 3 is_stmt 1 view .LVU160
+ 254:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JCOEF lastDC;
+ 529              		.loc 1 254 3 view .LVU161
+ 255:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jpeg_component_info *compptr;
+ 530              		.loc 1 255 3 view .LVU162
+ 256:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKARRAY buffer;
+ 531              		.loc 1 256 3 view .LVU163
+ 257:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JBLOCKROW thisblockrow, lastblockrow;
+ 532              		.loc 1 257 3 view .LVU164
+ 258:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   forward_DCT_ptr forward_DCT;
+ 533              		.loc 1 258 3 view .LVU165
+ 259:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 534              		.loc 1 259 3 view .LVU166
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 535              		.loc 1 261 3 view .LVU167
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 536              		.loc 1 261 24 is_stmt 0 view .LVU168
+ 537 0016 D0F85480 		ldr	r8, [r0, #84]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 19
+
+
+ 538              	.LVL43:
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 539              		.loc 1 261 11 view .LVU169
+ 540 001a 4FF0000A 		mov	r10, #0
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 541              		.loc 1 261 3 view .LVU170
+ 542 001e 41E0     		b	.L40
+ 543              	.LVL44:
+ 544              	.L41:
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 545              		.loc 1 273 7 is_stmt 1 view .LVU171
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 546              		.loc 1 273 34 is_stmt 0 view .LVU172
+ 547 0020 D8F82030 		ldr	r3, [r8, #32]
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 548              		.loc 1 273 62 view .LVU173
+ 549 0024 D8F80C90 		ldr	r9, [r8, #12]
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 550              		.loc 1 273 53 view .LVU174
+ 551 0028 B3FBF9F2 		udiv	r2, r3, r9
+ 552 002c 09FB1233 		mls	r3, r9, r2, r3
+ 553              	.LVL45:
+ 274:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 554              		.loc 1 274 7 is_stmt 1 view .LVU175
+ 274:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 555              		.loc 1 274 10 is_stmt 0 view .LVU176
+ 556 0030 002B     		cmp	r3, #0
+ 557 0032 52D0     		beq	.L42
+ 273:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       if (block_rows == 0) block_rows = compptr->v_samp_factor;
+ 558              		.loc 1 273 18 view .LVU177
+ 559 0034 9946     		mov	r9, r3
+ 560 0036 50E0     		b	.L42
+ 561              	.LVL46:
+ 562              	.L47:
+ 297:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 563              		.loc 1 297 4 is_stmt 1 view .LVU178
+ 297:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 564              		.loc 1 297 16 is_stmt 0 view .LVU179
+ 565 0038 DA01     		lsls	r2, r3, #7
+ 297:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 566              		.loc 1 297 24 view .LVU180
+ 567 003a A152     		strh	r1, [r4, r2]	@ movhi
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 568              		.loc 1 296 30 is_stmt 1 discriminator 3 view .LVU181
+ 569 003c 0133     		adds	r3, r3, #1
+ 570              	.LVL47:
+ 571              	.L46:
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 572              		.loc 1 296 18 discriminator 1 view .LVU182
+ 573 003e BB42     		cmp	r3, r7
+ 574 0040 FADB     		blt	.L47
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 575              		.loc 1 296 18 is_stmt 0 discriminator 1 view .LVU183
+ 576 0042 0596     		str	r6, [sp, #20]
+ 577              	.LVL48:
+ 578              	.L45:
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 20
+
+
+ 579              		.loc 1 286 58 is_stmt 1 discriminator 2 view .LVU184
+ 580 0044 0135     		adds	r5, r5, #1
+ 581              	.LVL49:
+ 582              	.L44:
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ 583              		.loc 1 286 35 discriminator 1 view .LVU185
+ 584 0046 4D45     		cmp	r5, r9
+ 585 0048 21DA     		bge	.L58
+ 287:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       (*forward_DCT) (cinfo, compptr, input_buf[ci], thisblockrow,
+ 586              		.loc 1 287 7 view .LVU186
+ 287:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       (*forward_DCT) (cinfo, compptr, input_buf[ci], thisblockrow,
+ 587              		.loc 1 287 20 is_stmt 0 view .LVU187
+ 588 004a 069B     		ldr	r3, [sp, #24]
+ 589 004c 53F82540 		ldr	r4, [r3, r5, lsl #2]
+ 590              	.LVL50:
+ 288:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) (block_row * compptr->DCT_v_scaled_size),
+ 591              		.loc 1 288 7 is_stmt 1 view .LVU188
+ 289:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) 0, blocks_across);
+ 592              		.loc 1 289 42 is_stmt 0 view .LVU189
+ 593 0050 D8F82830 		ldr	r3, [r8, #40]
+ 289:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) 0, blocks_across);
+ 594              		.loc 1 289 33 view .LVU190
+ 595 0054 05FB03F3 		mul	r3, r5, r3
+ 288:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		      (JDIMENSION) (block_row * compptr->DCT_v_scaled_size),
+ 596              		.loc 1 288 8 view .LVU191
+ 597 0058 059A     		ldr	r2, [sp, #20]
+ 598 005a 0292     		str	r2, [sp, #8]
+ 599 005c 0022     		movs	r2, #0
+ 600 005e 0192     		str	r2, [sp, #4]
+ 601 0060 0093     		str	r3, [sp]
+ 602 0062 2346     		mov	r3, r4
+ 603 0064 089A     		ldr	r2, [sp, #32]
+ 604 0066 52F82A20 		ldr	r2, [r2, r10, lsl #2]
+ 605 006a 4146     		mov	r1, r8
+ 606 006c 5846     		mov	r0, fp
+ 607 006e 079E     		ldr	r6, [sp, #28]
+ 608 0070 B047     		blx	r6
+ 609              	.LVL51:
+ 291:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Create dummy blocks at the right edge of the image. */
+ 610              		.loc 1 291 7 is_stmt 1 view .LVU192
+ 291:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Create dummy blocks at the right edge of the image. */
+ 611              		.loc 1 291 10 is_stmt 0 view .LVU193
+ 612 0072 002F     		cmp	r7, #0
+ 613 0074 E6DD     		ble	.L45
+ 293:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow, ndummy * SIZEOF(JBLOCK));
+ 614              		.loc 1 293 2 is_stmt 1 view .LVU194
+ 293:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow, ndummy * SIZEOF(JBLOCK));
+ 615              		.loc 1 293 15 is_stmt 0 view .LVU195
+ 616 0076 059E     		ldr	r6, [sp, #20]
+ 617 0078 04EBC614 		add	r4, r4, r6, lsl #7
+ 618              	.LVL52:
+ 294:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	lastDC = thisblockrow[-1][0];
+ 619              		.loc 1 294 2 is_stmt 1 view .LVU196
+ 620 007c FA01     		lsls	r2, r7, #7
+ 621 007e 0021     		movs	r1, #0
+ 622 0080 2046     		mov	r0, r4
+ 623 0082 FFF7FEFF 		bl	memset
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 21
+
+
+ 624              	.LVL53:
+ 295:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (bi = 0; bi < ndummy; bi++) {
+ 625              		.loc 1 295 2 view .LVU197
+ 295:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	for (bi = 0; bi < ndummy; bi++) {
+ 626              		.loc 1 295 9 is_stmt 0 view .LVU198
+ 627 0086 34F9801C 		ldrsh	r1, [r4, #-128]
+ 628              	.LVL54:
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 629              		.loc 1 296 2 is_stmt 1 view .LVU199
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 630              		.loc 1 296 10 is_stmt 0 view .LVU200
+ 631 008a 0023     		movs	r3, #0
+ 296:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  thisblockrow[bi][0] = lastDC;
+ 632              		.loc 1 296 2 view .LVU201
+ 633 008c D7E7     		b	.L46
+ 634              	.LVL55:
+ 635              	.L58:
+ 306:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blocks_across += ndummy;	/* include lower right corner */
+ 636              		.loc 1 306 13 view .LVU202
+ 637 008e 0599     		ldr	r1, [sp, #20]
+ 638 0090 0A9E     		ldr	r6, [sp, #40]
+ 639 0092 0B9C     		ldr	r4, [sp, #44]
+ 306:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blocks_across += ndummy;	/* include lower right corner */
+ 640              		.loc 1 306 5 is_stmt 1 view .LVU203
+ 306:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blocks_across += ndummy;	/* include lower right corner */
+ 641              		.loc 1 306 13 is_stmt 0 view .LVU204
+ 642 0094 B368     		ldr	r3, [r6, #8]
+ 306:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       blocks_across += ndummy;	/* include lower right corner */
+ 643              		.loc 1 306 8 view .LVU205
+ 644 0096 099A     		ldr	r2, [sp, #36]
+ 645 0098 9342     		cmp	r3, r2
+ 646 009a 34D0     		beq	.L59
+ 647              	.LVL56:
+ 648              	.L49:
+ 262:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Align the virtual buffer for this component. */
+ 649              		.loc 1 262 12 is_stmt 1 view .LVU206
+ 262:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Align the virtual buffer for this component. */
+ 650              		.loc 1 262 10 is_stmt 0 view .LVU207
+ 651 009c 0AF1010A 		add	r10, r10, #1
+ 652              	.LVL57:
+ 262:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Align the virtual buffer for this component. */
+ 653              		.loc 1 262 21 view .LVU208
+ 654 00a0 08F15808 		add	r8, r8, #88
+ 655              	.LVL58:
+ 656              	.L40:
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 657              		.loc 1 261 47 is_stmt 1 discriminator 1 view .LVU209
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 658              		.loc 1 261 54 is_stmt 0 discriminator 1 view .LVU210
+ 659 00a4 DBF84C30 		ldr	r3, [fp, #76]
+ 261:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        ci++, compptr++) {
+ 660              		.loc 1 261 47 discriminator 1 view .LVU211
+ 661 00a8 5345     		cmp	r3, r10
+ 662 00aa 66DD     		ble	.L60
+ 264:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ((j_common_ptr) cinfo, coef->whole_image[ci],
+ 663              		.loc 1 264 5 is_stmt 1 view .LVU212
+ 264:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ((j_common_ptr) cinfo, coef->whole_image[ci],
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 22
+
+
+ 664              		.loc 1 264 21 is_stmt 0 view .LVU213
+ 665 00ac DBF80400 		ldr	r0, [fp, #4]
+ 266:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        (JDIMENSION) compptr->v_samp_factor, TRUE);
+ 666              		.loc 1 266 12 view .LVU214
+ 667 00b0 B268     		ldr	r2, [r6, #8]
+ 266:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        (JDIMENSION) compptr->v_samp_factor, TRUE);
+ 668              		.loc 1 266 36 view .LVU215
+ 669 00b2 D8F80C30 		ldr	r3, [r8, #12]
+ 264:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ((j_common_ptr) cinfo, coef->whole_image[ci],
+ 670              		.loc 1 264 15 view .LVU216
+ 671 00b6 0AF11001 		add	r1, r10, #16
+ 672 00ba 56F82110 		ldr	r1, [r6, r1, lsl #2]
+ 673 00be 0124     		movs	r4, #1
+ 674 00c0 0094     		str	r4, [sp]
+ 675 00c2 046A     		ldr	r4, [r0, #32]
+ 676 00c4 03FB02F2 		mul	r2, r3, r2
+ 677 00c8 5846     		mov	r0, fp
+ 678 00ca A047     		blx	r4
+ 679              	.LVL59:
+ 680 00cc 0690     		str	r0, [sp, #24]
+ 681              	.LVL60:
+ 269:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       block_rows = compptr->v_samp_factor;
+ 682              		.loc 1 269 5 is_stmt 1 view .LVU217
+ 269:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       block_rows = compptr->v_samp_factor;
+ 683              		.loc 1 269 13 is_stmt 0 view .LVU218
+ 684 00ce B368     		ldr	r3, [r6, #8]
+ 269:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       block_rows = compptr->v_samp_factor;
+ 685              		.loc 1 269 8 view .LVU219
+ 686 00d0 099A     		ldr	r2, [sp, #36]
+ 687 00d2 9342     		cmp	r3, r2
+ 688 00d4 A4D2     		bcs	.L41
+ 270:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else {
+ 689              		.loc 1 270 7 is_stmt 1 view .LVU220
+ 270:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     else {
+ 690              		.loc 1 270 18 is_stmt 0 view .LVU221
+ 691 00d6 D8F80C90 		ldr	r9, [r8, #12]
+ 692              	.LVL61:
+ 693              	.L42:
+ 276:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     h_samp_factor = compptr->h_samp_factor;
+ 694              		.loc 1 276 5 is_stmt 1 view .LVU222
+ 276:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     h_samp_factor = compptr->h_samp_factor;
+ 695              		.loc 1 276 19 is_stmt 0 view .LVU223
+ 696 00da D8F81C10 		ldr	r1, [r8, #28]
+ 697              	.LVL62:
+ 277:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Count number of dummy blocks to be added at the right margin. */
+ 698              		.loc 1 277 5 is_stmt 1 view .LVU224
+ 277:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Count number of dummy blocks to be added at the right margin. */
+ 699              		.loc 1 277 19 is_stmt 0 view .LVU225
+ 700 00de D8F80840 		ldr	r4, [r8, #8]
+ 701              	.LVL63:
+ 279:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (ndummy > 0)
+ 702              		.loc 1 279 5 is_stmt 1 view .LVU226
+ 279:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     if (ndummy > 0)
+ 703              		.loc 1 279 35 is_stmt 0 view .LVU227
+ 704 00e2 B1FBF4F7 		udiv	r7, r1, r4
+ 705 00e6 04FB1717 		mls	r7, r4, r7, r1
+ 706              	.LVL64:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 23
+
+
+ 280:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ndummy = h_samp_factor - ndummy;
+ 707              		.loc 1 280 5 is_stmt 1 view .LVU228
+ 280:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       ndummy = h_samp_factor - ndummy;
+ 708              		.loc 1 280 8 is_stmt 0 view .LVU229
+ 709 00ea 002F     		cmp	r7, #0
+ 710 00ec 00DD     		ble	.L43
+ 281:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     forward_DCT = cinfo->fdct->forward_DCT[ci];
+ 711              		.loc 1 281 7 is_stmt 1 view .LVU230
+ 281:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     forward_DCT = cinfo->fdct->forward_DCT[ci];
+ 712              		.loc 1 281 14 is_stmt 0 view .LVU231
+ 713 00ee E71B     		subs	r7, r4, r7
+ 714              	.LVL65:
+ 715              	.L43:
+ 282:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
+ 716              		.loc 1 282 5 is_stmt 1 view .LVU232
+ 282:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
+ 717              		.loc 1 282 24 is_stmt 0 view .LVU233
+ 718 00f0 DBF8A031 		ldr	r3, [fp, #416]
+ 282:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
+ 719              		.loc 1 282 17 view .LVU234
+ 720 00f4 03EB8A03 		add	r3, r3, r10, lsl #2
+ 721 00f8 5B68     		ldr	r3, [r3, #4]
+ 722 00fa 0793     		str	r3, [sp, #28]
+ 723              	.LVL66:
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ 724              		.loc 1 286 5 is_stmt 1 view .LVU235
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ 725              		.loc 1 286 20 is_stmt 0 view .LVU236
+ 726 00fc 0025     		movs	r5, #0
+ 727 00fe 0A96     		str	r6, [sp, #40]
+ 728 0100 0591     		str	r1, [sp, #20]
+ 729 0102 0B94     		str	r4, [sp, #44]
+ 286:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       thisblockrow = buffer[block_row];
+ 730              		.loc 1 286 5 view .LVU237
+ 731 0104 9FE7     		b	.L44
+ 732              	.LVL67:
+ 733              	.L59:
+ 307:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       MCUs_across = blocks_across / h_samp_factor;
+ 734              		.loc 1 307 7 is_stmt 1 view .LVU238
+ 307:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       MCUs_across = blocks_across / h_samp_factor;
+ 735              		.loc 1 307 21 is_stmt 0 view .LVU239
+ 736 0106 7A18     		adds	r2, r7, r1
+ 737              	.LVL68:
+ 308:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (block_row = block_rows; block_row < compptr->v_samp_factor;
+ 738              		.loc 1 308 7 is_stmt 1 view .LVU240
+ 308:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (block_row = block_rows; block_row < compptr->v_samp_factor;
+ 739              		.loc 1 308 19 is_stmt 0 view .LVU241
+ 740 0108 B2FBF4F7 		udiv	r7, r2, r4
+ 741              	.LVL69:
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 742              		.loc 1 309 7 is_stmt 1 view .LVU242
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 743              		.loc 1 309 7 is_stmt 0 view .LVU243
+ 744 010c CDF814A0 		str	r10, [sp, #20]
+ 745 0110 0796     		str	r6, [sp, #28]
+ 746              	.LVL70:
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 24
+
+
+ 747              		.loc 1 309 7 view .LVU244
+ 748 0112 DDF818A0 		ldr	r10, [sp, #24]
+ 749              	.LVL71:
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 750              		.loc 1 309 7 view .LVU245
+ 751 0116 CDF818B0 		str	fp, [sp, #24]
+ 752              	.LVL72:
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 753              		.loc 1 309 7 view .LVU246
+ 754 011a 9346     		mov	fp, r2
+ 755 011c 14E0     		b	.L50
+ 756              	.LVL73:
+ 757              	.L53:
+ 318:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 758              		.loc 1 318 6 is_stmt 1 view .LVU247
+ 318:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 759              		.loc 1 318 18 is_stmt 0 view .LVU248
+ 760 011e DA01     		lsls	r2, r3, #7
+ 318:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  }
+ 761              		.loc 1 318 26 view .LVU249
+ 762 0120 A952     		strh	r1, [r5, r2]	@ movhi
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 763              		.loc 1 317 39 is_stmt 1 discriminator 3 view .LVU250
+ 764 0122 0133     		adds	r3, r3, #1
+ 765              	.LVL74:
+ 766              	.L52:
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 767              		.loc 1 317 20 discriminator 1 view .LVU251
+ 768 0124 A342     		cmp	r3, r4
+ 769 0126 FADB     		blt	.L53
+ 320:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastblockrow += h_samp_factor;
+ 770              		.loc 1 320 4 view .LVU252
+ 320:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastblockrow += h_samp_factor;
+ 771              		.loc 1 320 17 is_stmt 0 view .LVU253
+ 772 0128 05EBC415 		add	r5, r5, r4, lsl #7
+ 773              	.LVL75:
+ 321:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 774              		.loc 1 321 4 is_stmt 1 view .LVU254
+ 321:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 775              		.loc 1 321 17 is_stmt 0 view .LVU255
+ 776 012c 06EBC416 		add	r6, r6, r4, lsl #7
+ 777              	.LVL76:
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 778              		.loc 1 315 53 is_stmt 1 discriminator 2 view .LVU256
+ 779 0130 0130     		adds	r0, r0, #1
+ 780              	.LVL77:
+ 781              	.L51:
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 782              		.loc 1 315 30 discriminator 1 view .LVU257
+ 783 0132 B842     		cmp	r0, r7
+ 784 0134 06D2     		bcs	.L61
+ 316:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (bi = 0; bi < h_samp_factor; bi++) {
+ 785              		.loc 1 316 4 view .LVU258
+ 316:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (bi = 0; bi < h_samp_factor; bi++) {
+ 786              		.loc 1 316 25 is_stmt 0 view .LVU259
+ 787 0136 6FF07E43 		mvn	r3, #-33554432
+ 788 013a 2344     		add	r3, r3, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 25
+
+
+ 789 013c DB01     		lsls	r3, r3, #7
+ 316:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  for (bi = 0; bi < h_samp_factor; bi++) {
+ 790              		.loc 1 316 11 view .LVU260
+ 791 013e F15E     		ldrsh	r1, [r6, r3]
+ 792              	.LVL78:
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 793              		.loc 1 317 4 is_stmt 1 view .LVU261
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 794              		.loc 1 317 12 is_stmt 0 view .LVU262
+ 795 0140 0023     		movs	r3, #0
+ 317:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    thisblockrow[bi][0] = lastDC;
+ 796              		.loc 1 317 4 view .LVU263
+ 797 0142 EFE7     		b	.L52
+ 798              	.LVL79:
+ 799              	.L61:
+ 310:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	thisblockrow = buffer[block_row];
+ 800              		.loc 1 310 14 is_stmt 1 view .LVU264
+ 801 0144 09F10109 		add	r9, r9, #1
+ 802              	.LVL80:
+ 803              	.L50:
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 804              		.loc 1 309 46 discriminator 1 view .LVU265
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 805              		.loc 1 309 55 is_stmt 0 discriminator 1 view .LVU266
+ 806 0148 D8F80C30 		ldr	r3, [r8, #12]
+ 309:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	   block_row++) {
+ 807              		.loc 1 309 46 discriminator 1 view .LVU267
+ 808 014c 4B45     		cmp	r3, r9
+ 809 014e 0EDD     		ble	.L62
+ 311:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	lastblockrow = buffer[block_row-1];
+ 810              		.loc 1 311 2 is_stmt 1 view .LVU268
+ 311:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	lastblockrow = buffer[block_row-1];
+ 811              		.loc 1 311 15 is_stmt 0 view .LVU269
+ 812 0150 5AF82950 		ldr	r5, [r10, r9, lsl #2]
+ 813              	.LVL81:
+ 312:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow,
+ 814              		.loc 1 312 2 is_stmt 1 view .LVU270
+ 312:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow,
+ 815              		.loc 1 312 23 is_stmt 0 view .LVU271
+ 816 0154 6FF04043 		mvn	r3, #-1073741824
+ 817 0158 4B44     		add	r3, r3, r9
+ 312:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	FMEMZERO((void FAR *) thisblockrow,
+ 818              		.loc 1 312 15 view .LVU272
+ 819 015a 5AF82360 		ldr	r6, [r10, r3, lsl #2]
+ 820              	.LVL82:
+ 313:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		 (size_t) (blocks_across * SIZEOF(JBLOCK)));
+ 821              		.loc 1 313 2 is_stmt 1 view .LVU273
+ 822 015e 4FEACB12 		lsl	r2, fp, #7
+ 823 0162 0021     		movs	r1, #0
+ 824 0164 2846     		mov	r0, r5
+ 825 0166 FFF7FEFF 		bl	memset
+ 826              	.LVL83:
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 827              		.loc 1 315 2 view .LVU274
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 828              		.loc 1 315 16 is_stmt 0 view .LVU275
+ 829 016a 0020     		movs	r0, #0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 26
+
+
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 830              		.loc 1 315 2 view .LVU276
+ 831 016c E1E7     		b	.L51
+ 832              	.LVL84:
+ 833              	.L62:
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 834              		.loc 1 315 2 view .LVU277
+ 835 016e DDF814A0 		ldr	r10, [sp, #20]
+ 836 0172 079E     		ldr	r6, [sp, #28]
+ 837 0174 DDF818B0 		ldr	fp, [sp, #24]
+ 838              	.LVL85:
+ 315:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  lastDC = lastblockrow[h_samp_factor-1][0];
+ 839              		.loc 1 315 2 view .LVU278
+ 840 0178 90E7     		b	.L49
+ 841              	.LVL86:
+ 842              	.L60:
+ 331:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 843              		.loc 1 331 3 is_stmt 1 view .LVU279
+ 331:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 844              		.loc 1 331 10 is_stmt 0 view .LVU280
+ 845 017a 0899     		ldr	r1, [sp, #32]
+ 846 017c 5846     		mov	r0, fp
+ 847 017e FFF7FEFF 		bl	compress_output
+ 848              	.LVL87:
+ 332:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 849              		.loc 1 332 1 view .LVU281
+ 850 0182 0DB0     		add	sp, sp, #52
+ 851              	.LCFI7:
+ 852              		.cfi_def_cfa_offset 36
+ 853              		@ sp needed
+ 854 0184 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 332:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 855              		.loc 1 332 1 view .LVU282
+ 856              		.cfi_endproc
+ 857              	.LFE150:
+ 859              		.section	.text.compress_data,"ax",%progbits
+ 860              		.align	1
+ 861              		.syntax unified
+ 862              		.thumb
+ 863              		.thumb_func
+ 865              	compress_data:
+ 866              	.LVL88:
+ 867              	.LFB149:
+ 145:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 868              		.loc 1 145 1 is_stmt 1 view -0
+ 869              		.cfi_startproc
+ 870              		@ args = 0, pretend = 0, frame = 32
+ 871              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
+ 872              		.loc 1 145 1 is_stmt 0 view .LVU284
+ 873 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 874              	.LCFI8:
+ 875              		.cfi_def_cfa_offset 36
+ 876              		.cfi_offset 4, -36
+ 877              		.cfi_offset 5, -32
+ 878              		.cfi_offset 6, -28
+ 879              		.cfi_offset 7, -24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 27
+
+
+ 880              		.cfi_offset 8, -20
+ 881              		.cfi_offset 9, -16
+ 882              		.cfi_offset 10, -12
+ 883              		.cfi_offset 11, -8
+ 884              		.cfi_offset 14, -4
+ 885 0004 8DB0     		sub	sp, sp, #52
+ 886              	.LCFI9:
+ 887              		.cfi_def_cfa_offset 88
+ 888 0006 8246     		mov	r10, r0
+ 889 0008 0791     		str	r1, [sp, #28]
+ 146:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION MCU_col_num;	/* index of current MCU within row */
+ 890              		.loc 1 146 3 is_stmt 1 view .LVU285
+ 146:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION MCU_col_num;	/* index of current MCU within row */
+ 891              		.loc 1 146 15 is_stmt 0 view .LVU286
+ 892 000a D0F89051 		ldr	r5, [r0, #400]
+ 893              	.LVL89:
+ 147:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
+ 894              		.loc 1 147 3 is_stmt 1 view .LVU287
+ 148:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 895              		.loc 1 148 3 view .LVU288
+ 148:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 896              		.loc 1 148 34 is_stmt 0 view .LVU289
+ 897 000e D0F83431 		ldr	r3, [r0, #308]
+ 148:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+ 898              		.loc 1 148 14 view .LVU290
+ 899 0012 013B     		subs	r3, r3, #1
+ 900 0014 0B93     		str	r3, [sp, #44]
+ 901              	.LVL90:
+ 149:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int blkn, bi, ci, yindex, yoffset, blockcnt;
+ 902              		.loc 1 149 3 is_stmt 1 view .LVU291
+ 149:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int blkn, bi, ci, yindex, yoffset, blockcnt;
+ 903              		.loc 1 149 35 is_stmt 0 view .LVU292
+ 904 0016 D0F81C31 		ldr	r3, [r0, #284]
+ 905              	.LVL91:
+ 149:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   int blkn, bi, ci, yindex, yoffset, blockcnt;
+ 906              		.loc 1 149 14 view .LVU293
+ 907 001a 013B     		subs	r3, r3, #1
+ 908 001c 0693     		str	r3, [sp, #24]
+ 909              	.LVL92:
+ 150:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   JDIMENSION ypos, xpos;
+ 910              		.loc 1 150 3 is_stmt 1 view .LVU294
+ 151:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   jpeg_component_info *compptr;
+ 911              		.loc 1 151 3 view .LVU295
+ 152:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   forward_DCT_ptr forward_DCT;
+ 912              		.loc 1 152 3 view .LVU296
+ 153:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 913              		.loc 1 153 3 view .LVU297
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 914              		.loc 1 156 3 view .LVU298
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 915              		.loc 1 156 16 is_stmt 0 view .LVU299
+ 916 001e 2B69     		ldr	r3, [r5, #16]
+ 917              	.LVL93:
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 918              		.loc 1 156 16 view .LVU300
+ 919 0020 0893     		str	r3, [sp, #32]
+ 920              	.LVL94:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 28
+
+
+ 921              	.L64:
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 922              		.loc 1 156 49 is_stmt 1 discriminator 1 view .LVU301
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 923              		.loc 1 156 55 is_stmt 0 discriminator 1 view .LVU302
+ 924 0022 6B69     		ldr	r3, [r5, #20]
+ 156:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****        yoffset++) {
+ 925              		.loc 1 156 49 discriminator 1 view .LVU303
+ 926 0024 089A     		ldr	r2, [sp, #32]
+ 927 0026 9342     		cmp	r3, r2
+ 928 0028 40F3A680 		ble	.L84
+ 158:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 929              		.loc 1 158 5 is_stmt 1 view .LVU304
+ 158:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 930              		.loc 1 158 22 is_stmt 0 view .LVU305
+ 931 002c EB68     		ldr	r3, [r5, #12]
+ 932 002e 0993     		str	r3, [sp, #36]
+ 933              	.LVL95:
+ 158:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 934              		.loc 1 158 5 view .LVU306
+ 935 0030 8CE0     		b	.L65
+ 936              	.LVL96:
+ 937              	.L66:
+ 174:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	xpos = MCU_col_num * compptr->MCU_sample_width;
+ 938              		.loc 1 174 7 discriminator 2 view .LVU307
+ 939 0032 D4F84890 		ldr	r9, [r4, #72]
+ 940 0036 70E0     		b	.L67
+ 941              	.LVL97:
+ 942              	.L69:
+ 181:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    input_buf[compptr->component_index],
+ 943              		.loc 1 181 6 is_stmt 1 view .LVU308
+ 182:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    coef->MCU_buffer[blkn],
+ 944              		.loc 1 182 25 is_stmt 0 view .LVU309
+ 945 0038 6268     		ldr	r2, [r4, #4]
+ 181:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 			    input_buf[compptr->component_index],
+ 946              		.loc 1 181 7 view .LVU310
+ 947 003a B31D     		adds	r3, r6, #6
+ 948 003c 55F82330 		ldr	r3, [r5, r3, lsl #2]
+ 949 0040 CDF80890 		str	r9, [sp, #8]
+ 950 0044 0599     		ldr	r1, [sp, #20]
+ 951 0046 0191     		str	r1, [sp, #4]
+ 952 0048 CDF80080 		str	r8, [sp]
+ 953 004c 0799     		ldr	r1, [sp, #28]
+ 954 004e 51F82220 		ldr	r2, [r1, r2, lsl #2]
+ 955 0052 2146     		mov	r1, r4
+ 956 0054 5846     		mov	r0, fp
+ 957 0056 D047     		blx	r10
+ 958              	.LVL98:
+ 185:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      /* Create some dummy blocks at the right edge of the image. */
+ 959              		.loc 1 185 6 is_stmt 1 view .LVU311
+ 185:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      /* Create some dummy blocks at the right edge of the image. */
+ 960              		.loc 1 185 28 is_stmt 0 view .LVU312
+ 961 0058 A26B     		ldr	r2, [r4, #56]
+ 185:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      /* Create some dummy blocks at the right edge of the image. */
+ 962              		.loc 1 185 9 view .LVU313
+ 963 005a 4A45     		cmp	r2, r9
+ 964 005c 1ADC     		bgt	.L85
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 29
+
+
+ 965              	.L71:
+ 201:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  ypos += compptr->DCT_v_scaled_size;
+ 966              		.loc 1 201 4 is_stmt 1 view .LVU314
+ 201:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  ypos += compptr->DCT_v_scaled_size;
+ 967              		.loc 1 201 19 is_stmt 0 view .LVU315
+ 968 005e A36B     		ldr	r3, [r4, #56]
+ 201:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  ypos += compptr->DCT_v_scaled_size;
+ 969              		.loc 1 201 9 view .LVU316
+ 970 0060 1E44     		add	r6, r6, r3
+ 971              	.LVL99:
+ 202:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 972              		.loc 1 202 4 is_stmt 1 view .LVU317
+ 202:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 973              		.loc 1 202 19 is_stmt 0 view .LVU318
+ 974 0062 A36A     		ldr	r3, [r4, #40]
+ 202:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	}
+ 975              		.loc 1 202 9 view .LVU319
+ 976 0064 9844     		add	r8, r8, r3
+ 977              	.LVL100:
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 978              		.loc 1 178 55 is_stmt 1 discriminator 2 view .LVU320
+ 979 0066 0137     		adds	r7, r7, #1
+ 980              	.LVL101:
+ 981              	.L68:
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 982              		.loc 1 178 26 discriminator 1 view .LVU321
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 983              		.loc 1 178 35 is_stmt 0 discriminator 1 view .LVU322
+ 984 0068 E36B     		ldr	r3, [r4, #60]
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 985              		.loc 1 178 26 discriminator 1 view .LVU323
+ 986 006a BB42     		cmp	r3, r7
+ 987 006c 3DDD     		ble	.L86
+ 179:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      yoffset+yindex < compptr->last_row_height) {
+ 988              		.loc 1 179 4 is_stmt 1 view .LVU324
+ 179:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      yoffset+yindex < compptr->last_row_height) {
+ 989              		.loc 1 179 12 is_stmt 0 view .LVU325
+ 990 006e AB68     		ldr	r3, [r5, #8]
+ 179:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      yoffset+yindex < compptr->last_row_height) {
+ 991              		.loc 1 179 7 view .LVU326
+ 992 0070 069A     		ldr	r2, [sp, #24]
+ 993 0072 9342     		cmp	r3, r2
+ 994 0074 E0D3     		bcc	.L69
+ 180:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    (*forward_DCT) (cinfo, compptr,
+ 995              		.loc 1 180 15 view .LVU327
+ 996 0076 089B     		ldr	r3, [sp, #32]
+ 997 0078 FB18     		adds	r3, r7, r3
+ 180:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    (*forward_DCT) (cinfo, compptr,
+ 998              		.loc 1 180 32 view .LVU328
+ 999 007a E26C     		ldr	r2, [r4, #76]
+ 179:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      yoffset+yindex < compptr->last_row_height) {
+ 1000              		.loc 1 179 43 discriminator 1 view .LVU329
+ 1001 007c 9342     		cmp	r3, r2
+ 1002 007e DBDB     		blt	.L69
+ 195:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		     compptr->MCU_width * SIZEOF(JBLOCK));
+ 1003              		.loc 1 195 6 is_stmt 1 view .LVU330
+ 1004 0080 B31D     		adds	r3, r6, #6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 30
+
+
+ 1005 0082 A26B     		ldr	r2, [r4, #56]
+ 1006 0084 D201     		lsls	r2, r2, #7
+ 1007 0086 0021     		movs	r1, #0
+ 1008 0088 55F82300 		ldr	r0, [r5, r3, lsl #2]
+ 1009 008c FFF7FEFF 		bl	memset
+ 1010              	.LVL102:
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1011              		.loc 1 197 6 view .LVU331
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1012              		.loc 1 197 14 is_stmt 0 view .LVU332
+ 1013 0090 0023     		movs	r3, #0
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1014              		.loc 1 197 6 view .LVU333
+ 1015 0092 26E0     		b	.L74
+ 1016              	.LVL103:
+ 1017              	.L85:
+ 187:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		       (compptr->MCU_width - blockcnt) * SIZEOF(JBLOCK));
+ 1018              		.loc 1 187 8 is_stmt 1 view .LVU334
+ 1019 0094 06EB0903 		add	r3, r6, r9
+ 1020 0098 0633     		adds	r3, r3, #6
+ 1021 009a A2EB0902 		sub	r2, r2, r9
+ 1022 009e D201     		lsls	r2, r2, #7
+ 1023 00a0 0021     		movs	r1, #0
+ 1024 00a2 55F82300 		ldr	r0, [r5, r3, lsl #2]
+ 1025 00a6 FFF7FEFF 		bl	memset
+ 1026              	.LVL104:
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1027              		.loc 1 189 8 view .LVU335
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1028              		.loc 1 189 16 is_stmt 0 view .LVU336
+ 1029 00aa 4A46     		mov	r2, r9
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1030              		.loc 1 189 8 view .LVU337
+ 1031 00ac 0AE0     		b	.L72
+ 1032              	.LVL105:
+ 1033              	.L73:
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1034              		.loc 1 190 3 is_stmt 1 view .LVU338
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1035              		.loc 1 190 58 is_stmt 0 view .LVU339
+ 1036 00ae B318     		adds	r3, r6, r2
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1037              		.loc 1 190 53 view .LVU340
+ 1038 00b0 591D     		adds	r1, r3, #5
+ 1039 00b2 55F82110 		ldr	r1, [r5, r1, lsl #2]
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1040              		.loc 1 190 19 view .LVU341
+ 1041 00b6 0633     		adds	r3, r3, #6
+ 1042 00b8 55F82330 		ldr	r3, [r5, r3, lsl #2]
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1043              		.loc 1 190 67 view .LVU342
+ 1044 00bc B1F90010 		ldrsh	r1, [r1]
+ 190:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      }
+ 1045              		.loc 1 190 35 view .LVU343
+ 1046 00c0 1980     		strh	r1, [r3]	@ movhi
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1047              		.loc 1 189 55 is_stmt 1 discriminator 3 view .LVU344
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 31
+
+
+ 1048 00c2 0132     		adds	r2, r2, #1
+ 1049              	.LVL106:
+ 1050              	.L72:
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1051              		.loc 1 189 31 discriminator 1 view .LVU345
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1052              		.loc 1 189 40 is_stmt 0 discriminator 1 view .LVU346
+ 1053 00c4 A36B     		ldr	r3, [r4, #56]
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1054              		.loc 1 189 31 discriminator 1 view .LVU347
+ 1055 00c6 9342     		cmp	r3, r2
+ 1056 00c8 F1DC     		bgt	.L73
+ 189:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 		coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
+ 1057              		.loc 1 189 31 discriminator 1 view .LVU348
+ 1058 00ca C8E7     		b	.L71
+ 1059              	.LVL107:
+ 1060              	.L75:
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1061              		.loc 1 198 8 is_stmt 1 view .LVU349
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1062              		.loc 1 198 58 is_stmt 0 view .LVU350
+ 1063 00cc 721D     		adds	r2, r6, #5
+ 1064 00ce 55F82210 		ldr	r1, [r5, r2, lsl #2]
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1065              		.loc 1 198 29 view .LVU351
+ 1066 00d2 F218     		adds	r2, r6, r3
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1067              		.loc 1 198 24 view .LVU352
+ 1068 00d4 0632     		adds	r2, r2, #6
+ 1069 00d6 55F82220 		ldr	r2, [r5, r2, lsl #2]
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1070              		.loc 1 198 69 view .LVU353
+ 1071 00da B1F90010 		ldrsh	r1, [r1]
+ 198:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	    }
+ 1072              		.loc 1 198 40 view .LVU354
+ 1073 00de 1180     		strh	r1, [r2]	@ movhi
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1074              		.loc 1 197 46 is_stmt 1 discriminator 3 view .LVU355
+ 1075 00e0 0133     		adds	r3, r3, #1
+ 1076              	.LVL108:
+ 1077              	.L74:
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1078              		.loc 1 197 22 discriminator 1 view .LVU356
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1079              		.loc 1 197 31 is_stmt 0 discriminator 1 view .LVU357
+ 1080 00e2 A26B     		ldr	r2, [r4, #56]
+ 197:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	      coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
+ 1081              		.loc 1 197 22 discriminator 1 view .LVU358
+ 1082 00e4 9A42     		cmp	r2, r3
+ 1083 00e6 F1DC     		bgt	.L75
+ 1084 00e8 B9E7     		b	.L71
+ 1085              	.LVL109:
+ 1086              	.L86:
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 1087              		.loc 1 170 49 discriminator 2 view .LVU359
+ 1088 00ea 0A99     		ldr	r1, [sp, #40]
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 32
+
+
+ 1089              		.loc 1 170 49 is_stmt 1 discriminator 2 view .LVU360
+ 1090 00ec 0131     		adds	r1, r1, #1
+ 1091              	.LVL110:
+ 1092              	.L80:
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 1093              		.loc 1 170 23 discriminator 1 view .LVU361
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 1094              		.loc 1 170 30 is_stmt 0 discriminator 1 view .LVU362
+ 1095 00ee DBF82031 		ldr	r3, [fp, #288]
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 1096              		.loc 1 170 23 discriminator 1 view .LVU363
+ 1097 00f2 8B42     		cmp	r3, r1
+ 1098 00f4 1DDD     		ble	.L87
+ 171:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
+ 1099              		.loc 1 171 2 is_stmt 1 view .LVU364
+ 171:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
+ 1100              		.loc 1 171 10 is_stmt 0 view .LVU365
+ 1101 00f6 01F14803 		add	r3, r1, #72
+ 1102 00fa 0BEB8303 		add	r3, fp, r3, lsl #2
+ 1103 00fe 5C68     		ldr	r4, [r3, #4]
+ 1104              	.LVL111:
+ 172:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
+ 1105              		.loc 1 172 2 is_stmt 1 view .LVU366
+ 172:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
+ 1106              		.loc 1 172 21 is_stmt 0 view .LVU367
+ 1107 0100 DBF8A031 		ldr	r3, [fp, #416]
+ 172:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
+ 1108              		.loc 1 172 48 view .LVU368
+ 1109 0104 6268     		ldr	r2, [r4, #4]
+ 172:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
+ 1110              		.loc 1 172 14 view .LVU369
+ 1111 0106 03EB8203 		add	r3, r3, r2, lsl #2
+ 1112 010a D3F804A0 		ldr	r10, [r3, #4]
+ 1113              	.LVL112:
+ 173:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 						: compptr->last_col_width;
+ 1114              		.loc 1 173 2 is_stmt 1 view .LVU370
+ 174:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	xpos = MCU_col_num * compptr->MCU_sample_width;
+ 1115              		.loc 1 174 7 is_stmt 0 view .LVU371
+ 1116 010e 099B     		ldr	r3, [sp, #36]
+ 1117 0110 0B9A     		ldr	r2, [sp, #44]
+ 1118 0112 9342     		cmp	r3, r2
+ 1119 0114 8DD2     		bcs	.L66
+ 174:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	xpos = MCU_col_num * compptr->MCU_sample_width;
+ 1120              		.loc 1 174 7 discriminator 1 view .LVU372
+ 1121 0116 D4F83890 		ldr	r9, [r4, #56]
+ 1122              	.L67:
+ 1123              	.LVL113:
+ 175:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	ypos = yoffset * compptr->DCT_v_scaled_size;
+ 1124              		.loc 1 175 2 is_stmt 1 view .LVU373
+ 175:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	ypos = yoffset * compptr->DCT_v_scaled_size;
+ 1125              		.loc 1 175 30 is_stmt 0 view .LVU374
+ 1126 011a 636C     		ldr	r3, [r4, #68]
+ 175:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	ypos = yoffset * compptr->DCT_v_scaled_size;
+ 1127              		.loc 1 175 7 view .LVU375
+ 1128 011c 099A     		ldr	r2, [sp, #36]
+ 1129 011e 02FB03F3 		mul	r3, r2, r3
+ 1130 0122 0593     		str	r3, [sp, #20]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 33
+
+
+ 1131              	.LVL114:
+ 176:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* ypos == (yoffset+yindex) * DCTSIZE */
+ 1132              		.loc 1 176 2 is_stmt 1 view .LVU376
+ 176:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* ypos == (yoffset+yindex) * DCTSIZE */
+ 1133              		.loc 1 176 26 is_stmt 0 view .LVU377
+ 1134 0124 A36A     		ldr	r3, [r4, #40]
+ 1135              	.LVL115:
+ 176:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* ypos == (yoffset+yindex) * DCTSIZE */
+ 1136              		.loc 1 176 17 view .LVU378
+ 1137 0126 089A     		ldr	r2, [sp, #32]
+ 1138 0128 02FB03F8 		mul	r8, r2, r3
+ 1139              	.LVL116:
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 1140              		.loc 1 178 2 is_stmt 1 view .LVU379
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 1141              		.loc 1 178 14 is_stmt 0 view .LVU380
+ 1142 012c 0027     		movs	r7, #0
+ 1143 012e 0A91     		str	r1, [sp, #40]
+ 178:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	  if (coef->iMCU_row_num < last_iMCU_row ||
+ 1144              		.loc 1 178 2 view .LVU381
+ 1145 0130 9AE7     		b	.L68
+ 1146              	.LVL117:
+ 1147              	.L87:
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1148              		.loc 1 208 20 view .LVU382
+ 1149 0132 DA46     		mov	r10, fp
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1150              		.loc 1 208 7 is_stmt 1 view .LVU383
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1151              		.loc 1 208 20 is_stmt 0 view .LVU384
+ 1152 0134 DBF8A431 		ldr	r3, [fp, #420]
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1153              		.loc 1 208 14 view .LVU385
+ 1154 0138 5B68     		ldr	r3, [r3, #4]
+ 1155 013a 05F11801 		add	r1, r5, #24
+ 1156              	.LVL118:
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1157              		.loc 1 208 14 view .LVU386
+ 1158 013e 5846     		mov	r0, fp
+ 1159 0140 9847     		blx	r3
+ 1160              	.LVL119:
+ 208:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	/* Suspension forced; update state counters and exit */
+ 1161              		.loc 1 208 10 discriminator 1 view .LVU387
+ 1162 0142 0346     		mov	r3, r0
+ 1163 0144 50B1     		cbz	r0, .L88
+ 1164              	.LVL120:
+ 159:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       /* Determine where data comes from in input_buf and do the DCT thing.
+ 1165              		.loc 1 159 14 is_stmt 1 view .LVU388
+ 1166 0146 099B     		ldr	r3, [sp, #36]
+ 1167 0148 0133     		adds	r3, r3, #1
+ 1168 014a 0993     		str	r3, [sp, #36]
+ 1169              	.LVL121:
+ 1170              	.L65:
+ 158:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 MCU_col_num++) {
+ 1171              		.loc 1 158 51 discriminator 1 view .LVU389
+ 1172 014c 099B     		ldr	r3, [sp, #36]
+ 1173 014e 0B9A     		ldr	r2, [sp, #44]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 34
+
+
+ 1174 0150 9342     		cmp	r3, r2
+ 1175 0152 0BD8     		bhi	.L89
+ 170:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	compptr = cinfo->cur_comp_info[ci];
+ 1176              		.loc 1 170 15 is_stmt 0 view .LVU390
+ 1177 0154 0021     		movs	r1, #0
+ 169:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+ 1178              		.loc 1 169 12 view .LVU391
+ 1179 0156 0E46     		mov	r6, r1
+ 1180 0158 D346     		mov	fp, r10
+ 1181 015a C8E7     		b	.L80
+ 1182              	.LVL122:
+ 1183              	.L88:
+ 210:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->mcu_ctr = MCU_col_num;
+ 1184              		.loc 1 210 2 is_stmt 1 view .LVU392
+ 210:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	coef->mcu_ctr = MCU_col_num;
+ 1185              		.loc 1 210 24 is_stmt 0 view .LVU393
+ 1186 015c 089A     		ldr	r2, [sp, #32]
+ 1187 015e 2A61     		str	r2, [r5, #16]
+ 211:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	return FALSE;
+ 1188              		.loc 1 211 2 is_stmt 1 view .LVU394
+ 211:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	return FALSE;
+ 1189              		.loc 1 211 16 is_stmt 0 view .LVU395
+ 1190 0160 099A     		ldr	r2, [sp, #36]
+ 1191 0162 EA60     		str	r2, [r5, #12]
+ 212:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       }
+ 1192              		.loc 1 212 2 is_stmt 1 view .LVU396
+ 1193              	.LVL123:
+ 1194              	.L63:
+ 222:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 1195              		.loc 1 222 1 is_stmt 0 view .LVU397
+ 1196 0164 1846     		mov	r0, r3
+ 1197 0166 0DB0     		add	sp, sp, #52
+ 1198              	.LCFI10:
+ 1199              		.cfi_remember_state
+ 1200              		.cfi_def_cfa_offset 36
+ 1201              		@ sp needed
+ 1202 0168 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1203              	.LVL124:
+ 1204              	.L89:
+ 1205              	.LCFI11:
+ 1206              		.cfi_restore_state
+ 216:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 1207              		.loc 1 216 5 is_stmt 1 view .LVU398
+ 216:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 1208              		.loc 1 216 19 is_stmt 0 view .LVU399
+ 1209 016c 0023     		movs	r3, #0
+ 1210              	.LVL125:
+ 216:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 1211              		.loc 1 216 19 view .LVU400
+ 1212 016e EB60     		str	r3, [r5, #12]
+ 157:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num <= last_MCU_col;
+ 1213              		.loc 1 157 15 is_stmt 1 view .LVU401
+ 1214 0170 089B     		ldr	r3, [sp, #32]
+ 1215 0172 0133     		adds	r3, r3, #1
+ 1216 0174 0893     		str	r3, [sp, #32]
+ 1217              	.LVL126:
+ 157:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (MCU_col_num = coef->mcu_ctr; MCU_col_num <= last_MCU_col;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 35
+
+
+ 1218              		.loc 1 157 15 is_stmt 0 view .LVU402
+ 1219 0176 54E7     		b	.L64
+ 1220              	.LVL127:
+ 1221              	.L84:
+ 219:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 1222              		.loc 1 219 3 is_stmt 1 view .LVU403
+ 219:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 1223              		.loc 1 219 7 is_stmt 0 view .LVU404
+ 1224 0178 AB68     		ldr	r3, [r5, #8]
+ 219:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   start_iMCU_row(cinfo);
+ 1225              		.loc 1 219 21 view .LVU405
+ 1226 017a 0133     		adds	r3, r3, #1
+ 1227 017c AB60     		str	r3, [r5, #8]
+ 220:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   return TRUE;
+ 1228              		.loc 1 220 3 is_stmt 1 view .LVU406
+ 1229 017e 5046     		mov	r0, r10
+ 1230 0180 FFF7FEFF 		bl	start_iMCU_row
+ 1231              	.LVL128:
+ 221:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 1232              		.loc 1 221 3 view .LVU407
+ 221:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 1233              		.loc 1 221 10 is_stmt 0 view .LVU408
+ 1234 0184 0123     		movs	r3, #1
+ 1235 0186 EDE7     		b	.L63
+ 1236              		.cfi_endproc
+ 1237              	.LFE149:
+ 1239              		.section	.text.jinit_c_coef_controller,"ax",%progbits
+ 1240              		.align	1
+ 1241              		.global	jinit_c_coef_controller
+ 1242              		.syntax unified
+ 1243              		.thumb
+ 1244              		.thumb_func
+ 1246              	jinit_c_coef_controller:
+ 1247              	.LVL129:
+ 1248              	.LFB152:
+ 401:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 402:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif /* FULL_COEF_BUFFER_SUPPORTED */
+ 403:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 404:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 405:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** /*
+ 406:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  * Initialize coefficient buffer controller.
+ 407:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****  */
+ 408:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 409:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** GLOBAL(void)
+ 410:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** jinit_c_coef_controller (j_compress_ptr cinfo, boolean need_full_buffer)
+ 411:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** {
+ 1249              		.loc 1 411 1 is_stmt 1 view -0
+ 1250              		.cfi_startproc
+ 1251              		@ args = 0, pretend = 0, frame = 0
+ 1252              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1253              		.loc 1 411 1 is_stmt 0 view .LVU410
+ 1254 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 1255              	.LCFI12:
+ 1256              		.cfi_def_cfa_offset 28
+ 1257              		.cfi_offset 4, -28
+ 1258              		.cfi_offset 5, -24
+ 1259              		.cfi_offset 6, -20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 36
+
+
+ 1260              		.cfi_offset 7, -16
+ 1261              		.cfi_offset 8, -12
+ 1262              		.cfi_offset 9, -8
+ 1263              		.cfi_offset 14, -4
+ 1264 0004 83B0     		sub	sp, sp, #12
+ 1265              	.LCFI13:
+ 1266              		.cfi_def_cfa_offset 40
+ 1267 0006 0546     		mov	r5, r0
+ 1268 0008 0C46     		mov	r4, r1
+ 412:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   my_coef_ptr coef;
+ 1269              		.loc 1 412 3 is_stmt 1 view .LVU411
+ 413:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 414:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef = (my_coef_ptr)
+ 1270              		.loc 1 414 3 view .LVU412
+ 415:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1271              		.loc 1 415 12 is_stmt 0 view .LVU413
+ 1272 000a 4368     		ldr	r3, [r0, #4]
+ 1273              		.loc 1 415 6 view .LVU414
+ 1274 000c 1B68     		ldr	r3, [r3]
+ 1275 000e 6822     		movs	r2, #104
+ 1276 0010 0121     		movs	r1, #1
+ 1277              	.LVL130:
+ 1278              		.loc 1 415 6 view .LVU415
+ 1279 0012 9847     		blx	r3
+ 1280              	.LVL131:
+ 1281              		.loc 1 415 6 view .LVU416
+ 1282 0014 8046     		mov	r8, r0
+ 1283              	.LVL132:
+ 416:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				SIZEOF(my_coef_controller));
+ 417:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   cinfo->coef = (struct jpeg_c_coef_controller *) coef;
+ 1284              		.loc 1 417 3 is_stmt 1 view .LVU417
+ 1285              		.loc 1 417 15 is_stmt 0 view .LVU418
+ 1286 0016 C5F89001 		str	r0, [r5, #400]
+ 418:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   coef->pub.start_pass = start_pass_coef;
+ 1287              		.loc 1 418 3 is_stmt 1 view .LVU419
+ 1288              		.loc 1 418 24 is_stmt 0 view .LVU420
+ 1289 001a 1D4B     		ldr	r3, .L98
+ 1290 001c 0360     		str	r3, [r0]
+ 419:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 420:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   /* Create the coefficient buffer. */
+ 421:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   if (need_full_buffer) {
+ 1291              		.loc 1 421 3 is_stmt 1 view .LVU421
+ 1292              		.loc 1 421 6 is_stmt 0 view .LVU422
+ 1293 001e 14B3     		cbz	r4, .L91
+ 1294              	.LBB2:
+ 422:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #ifdef FULL_COEF_BUFFER_SUPPORTED
+ 423:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* Allocate a full-image virtual array for each component, */
+ 424:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* padded to a multiple of samp_factor DCT blocks in each direction. */
+ 425:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     int ci;
+ 1295              		.loc 1 425 5 is_stmt 1 view .LVU423
+ 426:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     jpeg_component_info *compptr;
+ 1296              		.loc 1 426 5 view .LVU424
+ 427:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 428:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 1297              		.loc 1 428 5 view .LVU425
+ 1298              	.LVL133:
+ 1299              		.loc 1 428 26 is_stmt 0 view .LVU426
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 37
+
+
+ 1300 0020 6C6D     		ldr	r4, [r5, #84]
+ 1301              	.LVL134:
+ 1302              		.loc 1 428 13 view .LVU427
+ 1303 0022 0026     		movs	r6, #0
+ 1304              		.loc 1 428 5 view .LVU428
+ 1305 0024 19E0     		b	.L92
+ 1306              	.LVL135:
+ 1307              	.L93:
+ 429:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 ci++, compptr++) {
+ 430:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->whole_image[ci] = (*cinfo->mem->request_virt_barray)
+ 1308              		.loc 1 430 7 is_stmt 1 view .LVU429
+ 1309              		.loc 1 430 38 is_stmt 0 view .LVU430
+ 1310 0026 6B68     		ldr	r3, [r5, #4]
+ 1311              		.loc 1 430 32 view .LVU431
+ 1312 0028 D3F81490 		ldr	r9, [r3, #20]
+ 431:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 432:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 (JDIMENSION) jround_up((long) compptr->width_in_blocks,
+ 1313              		.loc 1 432 16 view .LVU432
+ 1314 002c A168     		ldr	r1, [r4, #8]
+ 1315 002e E069     		ldr	r0, [r4, #28]
+ 1316 0030 FFF7FEFF 		bl	jround_up
+ 1317              	.LVL136:
+ 1318 0034 0746     		mov	r7, r0
+ 433:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				(long) compptr->h_samp_factor),
+ 434:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 (JDIMENSION) jround_up((long) compptr->height_in_blocks,
+ 1319              		.loc 1 434 16 view .LVU433
+ 1320 0036 E168     		ldr	r1, [r4, #12]
+ 1321 0038 206A     		ldr	r0, [r4, #32]
+ 1322 003a FFF7FEFF 		bl	jround_up
+ 1323              	.LVL137:
+ 435:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				(long) compptr->v_samp_factor),
+ 436:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 (JDIMENSION) compptr->v_samp_factor);
+ 1324              		.loc 1 436 23 view .LVU434
+ 1325 003e E368     		ldr	r3, [r4, #12]
+ 430:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 1326              		.loc 1 430 32 view .LVU435
+ 1327 0040 0193     		str	r3, [sp, #4]
+ 1328 0042 0090     		str	r0, [sp]
+ 1329 0044 3B46     		mov	r3, r7
+ 1330 0046 0022     		movs	r2, #0
+ 1331 0048 0121     		movs	r1, #1
+ 1332 004a 2846     		mov	r0, r5
+ 1333 004c C847     		blx	r9
+ 1334              	.LVL138:
+ 430:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 1335              		.loc 1 430 29 discriminator 1 view .LVU436
+ 1336 004e 06F11003 		add	r3, r6, #16
+ 1337 0052 48F82300 		str	r0, [r8, r3, lsl #2]
+ 429:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->whole_image[ci] = (*cinfo->mem->request_virt_barray)
+ 1338              		.loc 1 429 7 is_stmt 1 view .LVU437
+ 429:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->whole_image[ci] = (*cinfo->mem->request_virt_barray)
+ 1339              		.loc 1 429 5 is_stmt 0 view .LVU438
+ 1340 0056 0136     		adds	r6, r6, #1
+ 1341              	.LVL139:
+ 429:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->whole_image[ci] = (*cinfo->mem->request_virt_barray)
+ 1342              		.loc 1 429 16 view .LVU439
+ 1343 0058 5834     		adds	r4, r4, #88
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 38
+
+
+ 1344              	.LVL140:
+ 1345              	.L92:
+ 428:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 ci++, compptr++) {
+ 1346              		.loc 1 428 49 is_stmt 1 discriminator 1 view .LVU440
+ 428:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 ci++, compptr++) {
+ 1347              		.loc 1 428 56 is_stmt 0 discriminator 1 view .LVU441
+ 1348 005a EB6C     		ldr	r3, [r5, #76]
+ 428:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 ci++, compptr++) {
+ 1349              		.loc 1 428 49 discriminator 1 view .LVU442
+ 1350 005c B342     		cmp	r3, r6
+ 1351 005e E2DC     		bgt	.L93
+ 1352              	.LVL141:
+ 1353              	.L90:
+ 428:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 	 ci++, compptr++) {
+ 1354              		.loc 1 428 49 discriminator 1 view .LVU443
+ 1355              	.LBE2:
+ 437:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 438:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #else
+ 439:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 440:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** #endif
+ 441:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   } else {
+ 442:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     /* We only need a single-MCU buffer. */
+ 443:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     JBLOCKROW buffer;
+ 444:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     int i;
+ 445:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 446:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     buffer = (JBLOCKROW)
+ 447:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       (*cinfo->mem->alloc_large) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 448:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				  C_MAX_BLOCKS_IN_MCU * SIZEOF(JBLOCK));
+ 449:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     for (i = 0; i < C_MAX_BLOCKS_IN_MCU; i++) {
+ 450:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_buffer[i] = buffer + i;
+ 451:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 452:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     coef->whole_image[0] = NULL; /* flag for no virtual arrays */
+ 453:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 454:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** }
+ 1356              		.loc 1 454 1 view .LVU444
+ 1357 0060 03B0     		add	sp, sp, #12
+ 1358              	.LCFI14:
+ 1359              		.cfi_remember_state
+ 1360              		.cfi_def_cfa_offset 28
+ 1361              		@ sp needed
+ 1362 0062 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 1363              	.LVL142:
+ 1364              	.L91:
+ 1365              	.LCFI15:
+ 1366              		.cfi_restore_state
+ 1367              	.LBB3:
+ 443:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     int i;
+ 1368              		.loc 1 443 5 is_stmt 1 view .LVU445
+ 444:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 
+ 1369              		.loc 1 444 5 view .LVU446
+ 446:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       (*cinfo->mem->alloc_large) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1370              		.loc 1 446 5 view .LVU447
+ 447:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				  C_MAX_BLOCKS_IN_MCU * SIZEOF(JBLOCK));
+ 1371              		.loc 1 447 14 is_stmt 0 view .LVU448
+ 1372 0066 6B68     		ldr	r3, [r5, #4]
+ 447:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				  C_MAX_BLOCKS_IN_MCU * SIZEOF(JBLOCK));
+ 1373              		.loc 1 447 8 view .LVU449
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 39
+
+
+ 1374 0068 5B68     		ldr	r3, [r3, #4]
+ 1375 006a 4FF4A062 		mov	r2, #1280
+ 1376 006e 0121     		movs	r1, #1
+ 1377 0070 2846     		mov	r0, r5
+ 1378              	.LVL143:
+ 447:Middlewares/Third_Party/LibJPEG/source/jccoefct.c **** 				  C_MAX_BLOCKS_IN_MCU * SIZEOF(JBLOCK));
+ 1379              		.loc 1 447 8 view .LVU450
+ 1380 0072 9847     		blx	r3
+ 1381              	.LVL144:
+ 449:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_buffer[i] = buffer + i;
+ 1382              		.loc 1 449 5 is_stmt 1 view .LVU451
+ 449:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_buffer[i] = buffer + i;
+ 1383              		.loc 1 449 5 is_stmt 0 view .LVU452
+ 1384 0074 05E0     		b	.L95
+ 1385              	.LVL145:
+ 1386              	.L96:
+ 450:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 1387              		.loc 1 450 7 is_stmt 1 view .LVU453
+ 450:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 1388              		.loc 1 450 36 is_stmt 0 view .LVU454
+ 1389 0076 00EBC412 		add	r2, r0, r4, lsl #7
+ 450:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****     }
+ 1390              		.loc 1 450 27 view .LVU455
+ 1391 007a A31D     		adds	r3, r4, #6
+ 1392 007c 48F82320 		str	r2, [r8, r3, lsl #2]
+ 449:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_buffer[i] = buffer + i;
+ 1393              		.loc 1 449 43 is_stmt 1 discriminator 3 view .LVU456
+ 1394 0080 0134     		adds	r4, r4, #1
+ 1395              	.LVL146:
+ 1396              	.L95:
+ 449:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****       coef->MCU_buffer[i] = buffer + i;
+ 1397              		.loc 1 449 19 discriminator 1 view .LVU457
+ 1398 0082 092C     		cmp	r4, #9
+ 1399 0084 F7DD     		ble	.L96
+ 452:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 1400              		.loc 1 452 5 view .LVU458
+ 452:Middlewares/Third_Party/LibJPEG/source/jccoefct.c ****   }
+ 1401              		.loc 1 452 26 is_stmt 0 view .LVU459
+ 1402 0086 0023     		movs	r3, #0
+ 1403 0088 C8F84030 		str	r3, [r8, #64]
+ 1404              	.LBE3:
+ 1405              		.loc 1 454 1 view .LVU460
+ 1406 008c E8E7     		b	.L90
+ 1407              	.L99:
+ 1408 008e 00BF     		.align	2
+ 1409              	.L98:
+ 1410 0090 00000000 		.word	start_pass_coef
+ 1411              		.cfi_endproc
+ 1412              	.LFE152:
+ 1414              		.text
+ 1415              	.Letext0:
+ 1416              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 1417              		.file 3 "Inc/jmorecfg.h"
+ 1418              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 1419              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 1420              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 1421              		.file 7 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/string.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 40
+
+
+ 1422              		.file 8 "<built-in>"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s 			page 41
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jccoefct.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:20     .text.start_iMCU_row:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:25     .text.start_iMCU_row:00000000 start_iMCU_row
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:89     .text.start_pass_coef:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:94     .text.start_pass_coef:00000000 start_pass_coef
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:216    .text.start_pass_coef:00000078 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:865    .text.compress_data:00000000 compress_data
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:492    .text.compress_first_pass:00000000 compress_first_pass
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:228    .text.compress_output:00000000 compress_output
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:223    .text.compress_output:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:487    .text.compress_first_pass:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:860    .text.compress_data:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:1240   .text.jinit_c_coef_controller:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:1246   .text.jinit_c_coef_controller:00000000 jinit_c_coef_controller
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNSvuuL.s:1410   .text.jinit_c_coef_controller:00000090 $d
+
+UNDEFINED SYMBOLS
+memset
+jround_up

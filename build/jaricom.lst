@@ -1,0 +1,160 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jaricom.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jaricom.c"
+  19              		.global	jpeg_aritab
+  20              		.section	.rodata.jpeg_aritab,"a"
+  21              		.align	2
+  24              	jpeg_aritab:
+  25 0000 81011D5A 		.word	1511850369
+  26 0004 0E028625 		.word	629539342
+  27 0008 10031411 		.word	286524176
+  28 000c 12040B08 		.word	134939666
+  29 0010 1405D803 		.word	64488724
+  30 0014 1706DA01 		.word	31065623
+  31 0018 1907E500 		.word	15009561
+  32 001c 1C086F00 		.word	7276572
+  33 0020 1E093600 		.word	3541278
+  34 0024 210A1A00 		.word	1706529
+  35 0028 230B0D00 		.word	854819
+  36 002c 090C0600 		.word	396297
+  37 0030 0A0D0300 		.word	199946
+  38 0034 0C0D0100 		.word	68876
+  39 0038 8F0F7F5A 		.word	1518276495
+  40 003c 2410253F 		.word	1059393572
+  41 0040 2611F22C 		.word	754061606
+  42 0044 27127C20 		.word	545002023
+  43 0048 2813B917 		.word	398005032
+  44 004c 2A148211 		.word	293737514
+  45 0050 2B15EF0C 		.word	216995115
+  46 0054 2D16A109 		.word	161551917
+  47 0058 2E172F07 		.word	120526638
+  48 005c 30185C05 		.word	89921584
+  49 0060 31190604 		.word	67508529
+  50 0064 331A0303 		.word	50534963
+  51 0068 341B4002 		.word	37755700
+  52 006c 361CB101 		.word	28384310
+  53 0070 381D4401 		.word	21241144
+  54 0074 391EF500 		.word	16064057
+  55 0078 3B1FB700 		.word	12001083
+  56 007c 3C208A00 		.word	9052220
+  57 0080 3E216800 		.word	6824254
+  58 0084 3F224E00 		.word	5120575
+  59 0088 20233B00 		.word	3875616
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s 			page 2
+
+
+  60 008c 21092C00 		.word	2885921
+  61 0090 A525E15A 		.word	1524704677
+  62 0094 40264C48 		.word	1212950080
+  63 0098 41270D3A 		.word	973940545
+  64 009c 4328F12E 		.word	787556419
+  65 00a0 44291F26 		.word	639576388
+  66 00a4 452A331F 		.word	523446853
+  67 00a8 462BA819 		.word	430451526
+  68 00ac 482C1815 		.word	353905736
+  69 00b0 492D7711 		.word	293023049
+  70 00b4 4A2E740E 		.word	242495050
+  71 00b8 4B2FFB0B 		.word	201011019
+  72 00bc 4D30F809 		.word	167260237
+  73 00c0 4E316108 		.word	140587342
+  74 00c4 4F320607 		.word	117846607
+  75 00c8 3033CD05 		.word	97334064
+  76 00cc 3234DE04 		.word	81671218
+  77 00d0 32350F04 		.word	68105522
+  78 00d4 33366303 		.word	56833587
+  79 00d8 3437D402 		.word	47462196
+  80 00dc 35385C02 		.word	39598133
+  81 00e0 3639F801 		.word	33044790
+  82 00e4 373AA401 		.word	27540023
+  83 00e8 383B6001 		.word	23083832
+  84 00ec 393C2501 		.word	19217465
+  85 00f0 3A3DF600 		.word	16137530
+  86 00f4 3B3ECB00 		.word	13319739
+  87 00f8 3D3FAB00 		.word	11222845
+  88 00fc 3D208F00 		.word	9379901
+  89 0100 C141125B 		.word	1527923137
+  90 0104 5042044D 		.word	1292124752
+  91 0108 51432C41 		.word	1093419857
+  92 010c 5244D837 		.word	936920146
+  93 0110 5345E82F 		.word	803751251
+  94 0114 54463C29 		.word	691816020
+  95 0118 56477923 		.word	595150678
+  96 011c 5748DF1E 		.word	517949527
+  97 0120 5749A91A 		.word	447301975
+  98 0124 484A4E17 		.word	391006792
+  99 0128 484B2414 		.word	337922888
+ 100 012c 4A4C9C11 		.word	295455818
+ 101 0130 4A4D6B0F 		.word	258690378
+ 102 0134 4B4E510D 		.word	223432267
+ 103 0138 4D4FB60B 		.word	196497229
+ 104 013c 4D30400A 		.word	171978829
+ 105 0140 D0513258 		.word	1479692752
+ 106 0144 58521C4D 		.word	1293701720
+ 107 0148 59538E43 		.word	1133400921
+ 108 014c 5A54DD3B 		.word	1004360794
+ 109 0150 5B55EE34 		.word	888034651
+ 110 0154 5C56AE2E 		.word	783177308
+ 111 0158 5D579A29 		.word	697980765
+ 112 015c 56471625 		.word	622217046
+ 113 0160 D8597055 		.word	1433426392
+ 114 0164 5F5AA94C 		.word	1286167135
+ 115 0168 605BD944 		.word	1155095392
+ 116 016c 615C223E 		.word	1042439265
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s 			page 3
+
+
+ 117 0170 635D2438 		.word	941907299
+ 118 0174 635EB432 		.word	850681443
+ 119 0178 5D56172E 		.word	773281373
+ 120 017c DF60A856 		.word	1453875423
+ 121 0180 6561464F 		.word	1330012517
+ 122 0184 6662E547 		.word	1206215270
+ 123 0188 6763CF41 		.word	1104110439
+ 124 018c 68643D3C 		.word	1010656360
+ 125 0190 635D5E37 		.word	928931171
+ 126 0194 69663152 		.word	1378969193
+ 127 0198 6A670F4C 		.word	1276077930
+ 128 019c 6B683946 		.word	1178167403
+ 129 01a0 67635E41 		.word	1096704871
+ 130 01a4 E96A2756 		.word	1445423849
+ 131 01a8 6C6BE750 		.word	1357343596
+ 132 01ac 6D67854B 		.word	1267033965
+ 133 01b0 6E6D9755 		.word	1435987310
+ 134 01b4 6F6B4F50 		.word	1347382127
+ 135 01b8 EE6F105A 		.word	1511026670
+ 136 01bc 706D2255 		.word	1428319600
+ 137 01c0 F06FEB59 		.word	1508601840
+ 138 01c4 71711D5A 		.word	1511879025
+ 139              		.text
+ 140              	.Letext0:
+ 141              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 142              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 143              		.file 4 "Inc/jmorecfg.h"
+ 144              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jaricom.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s:24     .rodata.jpeg_aritab:00000000 jpeg_aritab
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccaFLdx1.s:21     .rodata.jpeg_aritab:00000000 $d
+
+NO UNDEFINED SYMBOLS

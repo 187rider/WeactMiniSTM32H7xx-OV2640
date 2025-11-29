@@ -1,0 +1,943 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jdatasrc.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdatasrc.c"
+  19              		.section	.text.init_source,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	init_source:
+  26              	.LVL0:
+  27              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * jdatasrc.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Copyright (C) 1994-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Modified 2009-2011 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * This file contains decompression data source routines for the case of
+  10:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * reading JPEG data from memory or from a file (or any stdio stream).
+  11:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * While these routines are sufficient for most applications,
+  12:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * some will want to use a different source manager.
+  13:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * IMPORTANT: we assume that fread() will correctly transcribe an array of
+  14:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * JOCTETs from 8-bit-wide elements on external storage.  If char is wider
+  15:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * than 8 bits on your machine, you may need to do some tweaking.
+  16:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+  17:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  18:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
+  19:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #include "jinclude.h"
+  20:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #include "jpeglib.h"
+  21:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #include "jerror.h"
+  22:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  23:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  24:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /* Expanded data source object for stdio input */
+  25:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #ifdef JFILE 
+  26:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** typedef struct {
+  27:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   struct jpeg_source_mgr pub;	/* public fields */
+  28:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  29:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   JFILE * infile;		/* source stream */
+  30:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   JOCTET * buffer;		/* start of buffer */
+  31:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   boolean start_of_file;	/* have we gotten any data yet? */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 2
+
+
+  32:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** } my_source_mgr;
+  33:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  34:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** typedef my_source_mgr * my_src_ptr;
+  35:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* 0 */
+  36:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  37:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #define INPUT_BUF_SIZE  4096	/* choose an efficiently fread'able size */
+  38:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  39:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  40:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+  41:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Initialize source --- called by jpeg_read_header
+  42:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * before any data is actually read.
+  43:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+  44:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #ifdef JFILE 
+  45:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(void)
+  46:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** init_source (j_decompress_ptr cinfo)
+  47:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+  28              		.loc 1 47 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  48:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   my_src_ptr src = (my_src_ptr) cinfo->src;
+  33              		.loc 1 48 3 view .LVU1
+  34              		.loc 1 48 14 is_stmt 0 view .LVU2
+  35 0000 8369     		ldr	r3, [r0, #24]
+  36              	.LVL1:
+  49:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  50:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* We reset the empty-input-file flag for each image,
+  51:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * but we don't clear the input buffer.
+  52:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * This is correct behavior for reading a series of images from one source.
+  53:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    */
+  54:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->start_of_file = TRUE;
+  37              		.loc 1 54 3 is_stmt 1 view .LVU3
+  38              		.loc 1 54 22 is_stmt 0 view .LVU4
+  39 0002 0122     		movs	r2, #1
+  40 0004 5A62     		str	r2, [r3, #36]
+  55:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+  41              		.loc 1 55 1 view .LVU5
+  42 0006 7047     		bx	lr
+  43              		.cfi_endproc
+  44              	.LFE147:
+  46              		.section	.text.init_mem_source,"ax",%progbits
+  47              		.align	1
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+  52              	init_mem_source:
+  53              	.LVL2:
+  54              	.LFB148:
+  56:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* 0 */
+  57:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  58:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(void)
+  59:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** init_mem_source (j_decompress_ptr cinfo)
+  60:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+  55              		.loc 1 60 1 is_stmt 1 view -0
+  56              		.cfi_startproc
+  57              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 3
+
+
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  61:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* no work necessary here */
+  62:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+  60              		.loc 1 62 1 view .LVU7
+  61 0000 7047     		bx	lr
+  62              		.cfi_endproc
+  63              	.LFE148:
+  65              		.section	.text.fill_mem_input_buffer,"ax",%progbits
+  66              		.align	1
+  67              		.syntax unified
+  68              		.thumb
+  69              		.thumb_func
+  71              	fill_mem_input_buffer:
+  72              	.LVL3:
+  73              	.LFB150:
+  63:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  64:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+  65:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+  66:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Fill the input buffer --- called whenever buffer is emptied.
+  67:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+  68:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * In typical applications, this should read fresh data into the buffer
+  69:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * (ignoring the current state of next_input_byte & bytes_in_buffer),
+  70:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * reset the pointer & count to the start of the buffer, and return TRUE
+  71:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * indicating that the buffer has been reloaded.  It is not necessary to
+  72:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * fill the buffer entirely, only to obtain at least one more byte.
+  73:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+  74:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * There is no such thing as an EOF return.  If the end of the file has been
+  75:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * reached, the routine has a choice of ERREXIT() or inserting fake data into
+  76:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * the buffer.  In most cases, generating a warning message and inserting a
+  77:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * fake EOI marker is the best course of action --- this will allow the
+  78:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * decompressor to output however much of the image is there.  However,
+  79:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * the resulting error message is misleading if the real problem is an empty
+  80:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * input file, so we handle that case specially.
+  81:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+  82:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * In applications that need to be able to suspend compression due to input
+  83:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * not being available yet, a FALSE return indicates that no more data can be
+  84:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * obtained right now, but more may be forthcoming later.  In this situation,
+  85:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * the decompressor will return to its caller (with an indication of the
+  86:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * number of scanlines it has read, if any).  The application should resume
+  87:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * decompression after it has loaded more data into the input buffer.  Note
+  88:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * that there are substantial restrictions on the use of suspension --- see
+  89:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * the documentation.
+  90:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+  91:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * When suspending, the decompressor will back up to a convenient restart point
+  92:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * (typically the start of the current MCU). next_input_byte & bytes_in_buffer
+  93:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * indicate where the restart point will be if the current call returns FALSE.
+  94:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Data beyond this point must be rescanned after resumption, so move it to
+  95:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * the front of the buffer rather than discarding it.
+  96:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+  97:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #ifdef JFILE 
+  98:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(boolean)
+  99:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** fill_input_buffer (j_decompress_ptr cinfo)
+ 100:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+ 101:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   my_src_ptr src = (my_src_ptr) cinfo->src;
+ 102:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   size_t nbytes;
+ 103:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 4
+
+
+ 104:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   nbytes = JFREAD(src->infile, src->buffer, INPUT_BUF_SIZE);
+ 105:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   
+ 106:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   if (nbytes <= 0) {
+ 107:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     if (src->start_of_file)	/* Treat empty input file as fatal error */
+ 108:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       ERREXIT(cinfo, JERR_INPUT_EMPTY);
+ 109:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     WARNMS(cinfo, JWRN_JPEG_EOF);
+ 110:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     /* Insert a fake EOI marker */
+ 111:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer[0] = (JOCTET) 0xFF;
+ 112:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer[1] = (JOCTET) JPEG_EOI;
+ 113:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     nbytes = 2;
+ 114:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 115:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 116:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.next_input_byte = src->buffer;
+ 117:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.bytes_in_buffer = nbytes;
+ 118:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->start_of_file = FALSE;
+ 119:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 120:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   return TRUE;
+ 121:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 122:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* JFILE */
+ 123:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 124:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(boolean)
+ 125:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** fill_mem_input_buffer (j_decompress_ptr cinfo)
+ 126:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+  74              		.loc 1 126 1 view -0
+  75              		.cfi_startproc
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78              		.loc 1 126 1 is_stmt 0 view .LVU9
+  79 0000 10B5     		push	{r4, lr}
+  80              	.LCFI0:
+  81              		.cfi_def_cfa_offset 8
+  82              		.cfi_offset 4, -8
+  83              		.cfi_offset 14, -4
+  84 0002 0446     		mov	r4, r0
+ 127:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   static const JOCTET mybuffer[4] = {
+  85              		.loc 1 127 3 is_stmt 1 view .LVU10
+ 128:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     (JOCTET) 0xFF, (JOCTET) JPEG_EOI, 0, 0
+ 129:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   };
+ 130:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 131:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* The whole JPEG data is expected to reside in the supplied memory
+ 132:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * buffer, so any request for more data beyond the given buffer size
+ 133:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * is treated as an error.
+ 134:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    */
+ 135:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   WARNMS(cinfo, JWRN_JPEG_EOF);
+  86              		.loc 1 135 3 view .LVU11
+  87 0004 0368     		ldr	r3, [r0]
+  88 0006 7B22     		movs	r2, #123
+  89 0008 5A61     		str	r2, [r3, #20]
+  90 000a 0368     		ldr	r3, [r0]
+  91 000c 5B68     		ldr	r3, [r3, #4]
+  92 000e 4FF0FF31 		mov	r1, #-1
+  93 0012 9847     		blx	r3
+  94              	.LVL4:
+ 136:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 137:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* Insert a fake EOI marker */
+ 138:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 139:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   cinfo->src->next_input_byte = mybuffer;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 5
+
+
+  95              		.loc 1 139 3 view .LVU12
+  96              		.loc 1 139 8 is_stmt 0 view .LVU13
+  97 0014 A369     		ldr	r3, [r4, #24]
+  98              		.loc 1 139 31 view .LVU14
+  99 0016 034A     		ldr	r2, .L5
+ 100 0018 1A60     		str	r2, [r3]
+ 140:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   cinfo->src->bytes_in_buffer = 2;
+ 101              		.loc 1 140 3 is_stmt 1 view .LVU15
+ 102              		.loc 1 140 8 is_stmt 0 view .LVU16
+ 103 001a A369     		ldr	r3, [r4, #24]
+ 104              		.loc 1 140 31 view .LVU17
+ 105 001c 0222     		movs	r2, #2
+ 106 001e 5A60     		str	r2, [r3, #4]
+ 141:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 142:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   return TRUE;
+ 107              		.loc 1 142 3 is_stmt 1 view .LVU18
+ 143:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 108              		.loc 1 143 1 is_stmt 0 view .LVU19
+ 109 0020 0120     		movs	r0, #1
+ 110 0022 10BD     		pop	{r4, pc}
+ 111              	.LVL5:
+ 112              	.L6:
+ 113              		.loc 1 143 1 view .LVU20
+ 114              		.align	2
+ 115              	.L5:
+ 116 0024 00000000 		.word	mybuffer.0
+ 117              		.cfi_endproc
+ 118              	.LFE150:
+ 120              		.section	.text.skip_input_data,"ax",%progbits
+ 121              		.align	1
+ 122              		.syntax unified
+ 123              		.thumb
+ 124              		.thumb_func
+ 126              	skip_input_data:
+ 127              	.LVL6:
+ 128              	.LFB151:
+ 144:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 145:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 146:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+ 147:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Skip data --- used to skip over a potentially large amount of
+ 148:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * uninteresting data (such as an APPn marker).
+ 149:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+ 150:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Writers of suspendable-input applications must note that skip_input_data
+ 151:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * is not granted the right to give a suspension return.  If the skip extends
+ 152:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * beyond the data currently in the buffer, the buffer can be marked empty so
+ 153:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * that the next read will cause a fill_input_buffer call that can suspend.
+ 154:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Arranging for additional bytes to be discarded before reloading the input
+ 155:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * buffer is the application writer's problem.
+ 156:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+ 157:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 158:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(void)
+ 159:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** skip_input_data (j_decompress_ptr cinfo, long num_bytes)
+ 160:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+ 129              		.loc 1 160 1 is_stmt 1 view -0
+ 130              		.cfi_startproc
+ 131              		@ args = 0, pretend = 0, frame = 0
+ 132              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 6
+
+
+ 133              		.loc 1 160 1 is_stmt 0 view .LVU22
+ 134 0000 70B5     		push	{r4, r5, r6, lr}
+ 135              	.LCFI1:
+ 136              		.cfi_def_cfa_offset 16
+ 137              		.cfi_offset 4, -16
+ 138              		.cfi_offset 5, -12
+ 139              		.cfi_offset 6, -8
+ 140              		.cfi_offset 14, -4
+ 141 0002 0646     		mov	r6, r0
+ 161:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   struct jpeg_source_mgr * src = cinfo->src;
+ 142              		.loc 1 161 3 is_stmt 1 view .LVU23
+ 143              		.loc 1 161 28 is_stmt 0 view .LVU24
+ 144 0004 8569     		ldr	r5, [r0, #24]
+ 145              	.LVL7:
+ 162:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 163:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* Just a dumb implementation for now.  Could use fseek() except
+ 164:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * it doesn't work on pipes.  Not clear that being smart is worth
+ 165:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * any trouble anyway --- large skips are infrequent.
+ 166:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    */
+ 167:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   if (num_bytes > 0) {
+ 146              		.loc 1 167 3 is_stmt 1 view .LVU25
+ 147              		.loc 1 167 6 is_stmt 0 view .LVU26
+ 148 0006 0C1E     		subs	r4, r1, #0
+ 149 0008 04DC     		bgt	.L8
+ 150 000a 0BE0     		b	.L7
+ 151              	.LVL8:
+ 152              	.L10:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     while (num_bytes > (long) src->bytes_in_buffer) {
+ 169:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       num_bytes -= (long) src->bytes_in_buffer;
+ 153              		.loc 1 169 7 is_stmt 1 view .LVU27
+ 154              		.loc 1 169 17 is_stmt 0 view .LVU28
+ 155 000c E41A     		subs	r4, r4, r3
+ 156              	.LVL9:
+ 170:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (void) (*src->fill_input_buffer) (cinfo);
+ 157              		.loc 1 170 7 is_stmt 1 view .LVU29
+ 158              		.loc 1 170 15 is_stmt 0 view .LVU30
+ 159 000e EB68     		ldr	r3, [r5, #12]
+ 160 0010 3046     		mov	r0, r6
+ 161 0012 9847     		blx	r3
+ 162              	.LVL10:
+ 163              	.L8:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     while (num_bytes > (long) src->bytes_in_buffer) {
+ 164              		.loc 1 168 22 is_stmt 1 view .LVU31
+ 168:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     while (num_bytes > (long) src->bytes_in_buffer) {
+ 165              		.loc 1 168 34 is_stmt 0 view .LVU32
+ 166 0014 6B68     		ldr	r3, [r5, #4]
+ 168:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     while (num_bytes > (long) src->bytes_in_buffer) {
+ 167              		.loc 1 168 22 view .LVU33
+ 168 0016 A342     		cmp	r3, r4
+ 169 0018 F8DB     		blt	.L10
+ 171:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       /* note we assume that fill_input_buffer will never return FALSE,
+ 172:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****        * so suspension need not be handled.
+ 173:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****        */
+ 174:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     }
+ 175:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->next_input_byte += (size_t) num_bytes;
+ 170              		.loc 1 175 5 is_stmt 1 view .LVU34
+ 171              		.loc 1 175 8 is_stmt 0 view .LVU35
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 7
+
+
+ 172 001a 2A68     		ldr	r2, [r5]
+ 173              		.loc 1 175 26 view .LVU36
+ 174 001c 2244     		add	r2, r2, r4
+ 175 001e 2A60     		str	r2, [r5]
+ 176:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->bytes_in_buffer -= (size_t) num_bytes;
+ 176              		.loc 1 176 5 is_stmt 1 view .LVU37
+ 177              		.loc 1 176 26 is_stmt 0 view .LVU38
+ 178 0020 1B1B     		subs	r3, r3, r4
+ 179 0022 6B60     		str	r3, [r5, #4]
+ 180              	.L7:
+ 177:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 178:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 181              		.loc 1 178 1 view .LVU39
+ 182 0024 70BD     		pop	{r4, r5, r6, pc}
+ 183              		.loc 1 178 1 view .LVU40
+ 184              		.cfi_endproc
+ 185              	.LFE151:
+ 187              		.section	.text.term_source,"ax",%progbits
+ 188              		.align	1
+ 189              		.syntax unified
+ 190              		.thumb
+ 191              		.thumb_func
+ 193              	term_source:
+ 194              	.LVL11:
+ 195              	.LFB152:
+ 179:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 180:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 181:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+ 182:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * An additional method that can be provided by data source modules is the
+ 183:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * resync_to_restart method for error recovery in the presence of RST markers.
+ 184:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * For the moment, this source module just uses the default resync method
+ 185:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * provided by the JPEG library.  That method assumes that no backtracking
+ 186:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * is possible.
+ 187:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+ 188:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 189:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 190:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+ 191:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Terminate source --- called by jpeg_finish_decompress
+ 192:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * after all data has been read.  Often a no-op.
+ 193:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  *
+ 194:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * NB: *not* called by jpeg_abort or jpeg_destroy; surrounding
+ 195:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * application must deal with any cleanup that should happen even
+ 196:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * for error exit.
+ 197:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+ 198:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 199:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** METHODDEF(void)
+ 200:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** term_source (j_decompress_ptr cinfo)
+ 201:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+ 196              		.loc 1 201 1 is_stmt 1 view -0
+ 197              		.cfi_startproc
+ 198              		@ args = 0, pretend = 0, frame = 0
+ 199              		@ frame_needed = 0, uses_anonymous_args = 0
+ 200              		@ link register save eliminated.
+ 202:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* no work necessary here */
+ 203:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 201              		.loc 1 203 1 view .LVU42
+ 202 0000 7047     		bx	lr
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 8
+
+
+ 203              		.cfi_endproc
+ 204              	.LFE152:
+ 206              		.section	.text.fill_input_buffer,"ax",%progbits
+ 207              		.align	1
+ 208              		.syntax unified
+ 209              		.thumb
+ 210              		.thumb_func
+ 212              	fill_input_buffer:
+ 213              	.LVL12:
+ 214              	.LFB149:
+ 100:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   my_src_ptr src = (my_src_ptr) cinfo->src;
+ 215              		.loc 1 100 1 view -0
+ 216              		.cfi_startproc
+ 217              		@ args = 0, pretend = 0, frame = 0
+ 218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   my_src_ptr src = (my_src_ptr) cinfo->src;
+ 219              		.loc 1 100 1 is_stmt 0 view .LVU44
+ 220 0000 38B5     		push	{r3, r4, r5, lr}
+ 221              	.LCFI2:
+ 222              		.cfi_def_cfa_offset 16
+ 223              		.cfi_offset 3, -16
+ 224              		.cfi_offset 4, -12
+ 225              		.cfi_offset 5, -8
+ 226              		.cfi_offset 14, -4
+ 227 0002 0546     		mov	r5, r0
+ 101:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   size_t nbytes;
+ 228              		.loc 1 101 3 is_stmt 1 view .LVU45
+ 101:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   size_t nbytes;
+ 229              		.loc 1 101 14 is_stmt 0 view .LVU46
+ 230 0004 8469     		ldr	r4, [r0, #24]
+ 231              	.LVL13:
+ 102:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 232              		.loc 1 102 3 is_stmt 1 view .LVU47
+ 104:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   
+ 233              		.loc 1 104 3 view .LVU48
+ 104:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   
+ 234              		.loc 1 104 12 is_stmt 0 view .LVU49
+ 235 0006 4FF48052 		mov	r2, #4096
+ 236 000a 216A     		ldr	r1, [r4, #32]
+ 237 000c E069     		ldr	r0, [r4, #28]
+ 238              	.LVL14:
+ 104:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   
+ 239              		.loc 1 104 12 view .LVU50
+ 240 000e FFF7FEFF 		bl	read_file
+ 241              	.LVL15:
+ 106:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     if (src->start_of_file)	/* Treat empty input file as fatal error */
+ 242              		.loc 1 106 3 is_stmt 1 view .LVU51
+ 106:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     if (src->start_of_file)	/* Treat empty input file as fatal error */
+ 243              		.loc 1 106 6 is_stmt 0 view .LVU52
+ 244 0012 0346     		mov	r3, r0
+ 245 0014 C0B9     		cbnz	r0, .L14
+ 107:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       ERREXIT(cinfo, JERR_INPUT_EMPTY);
+ 246              		.loc 1 107 5 is_stmt 1 view .LVU53
+ 107:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       ERREXIT(cinfo, JERR_INPUT_EMPTY);
+ 247              		.loc 1 107 12 is_stmt 0 view .LVU54
+ 248 0016 636A     		ldr	r3, [r4, #36]
+ 107:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       ERREXIT(cinfo, JERR_INPUT_EMPTY);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 9
+
+
+ 249              		.loc 1 107 8 view .LVU55
+ 250 0018 33B1     		cbz	r3, .L15
+ 108:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     WARNMS(cinfo, JWRN_JPEG_EOF);
+ 251              		.loc 1 108 7 is_stmt 1 view .LVU56
+ 252 001a 2B68     		ldr	r3, [r5]
+ 253 001c 2B22     		movs	r2, #43
+ 254 001e 5A61     		str	r2, [r3, #20]
+ 255 0020 2B68     		ldr	r3, [r5]
+ 256 0022 1B68     		ldr	r3, [r3]
+ 257 0024 2846     		mov	r0, r5
+ 258              	.LVL16:
+ 108:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     WARNMS(cinfo, JWRN_JPEG_EOF);
+ 259              		.loc 1 108 7 is_stmt 0 view .LVU57
+ 260 0026 9847     		blx	r3
+ 261              	.LVL17:
+ 262              	.L15:
+ 109:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     /* Insert a fake EOI marker */
+ 263              		.loc 1 109 5 is_stmt 1 view .LVU58
+ 264 0028 2B68     		ldr	r3, [r5]
+ 265 002a 7B22     		movs	r2, #123
+ 266 002c 5A61     		str	r2, [r3, #20]
+ 267 002e 2B68     		ldr	r3, [r5]
+ 268 0030 5B68     		ldr	r3, [r3, #4]
+ 269 0032 4FF0FF31 		mov	r1, #-1
+ 270 0036 2846     		mov	r0, r5
+ 271 0038 9847     		blx	r3
+ 272              	.LVL18:
+ 111:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer[1] = (JOCTET) JPEG_EOI;
+ 273              		.loc 1 111 5 view .LVU59
+ 111:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer[1] = (JOCTET) JPEG_EOI;
+ 274              		.loc 1 111 8 is_stmt 0 view .LVU60
+ 275 003a 236A     		ldr	r3, [r4, #32]
+ 111:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer[1] = (JOCTET) JPEG_EOI;
+ 276              		.loc 1 111 20 view .LVU61
+ 277 003c FF22     		movs	r2, #255
+ 278 003e 1A70     		strb	r2, [r3]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     nbytes = 2;
+ 279              		.loc 1 112 5 is_stmt 1 view .LVU62
+ 112:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     nbytes = 2;
+ 280              		.loc 1 112 8 is_stmt 0 view .LVU63
+ 281 0040 236A     		ldr	r3, [r4, #32]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     nbytes = 2;
+ 282              		.loc 1 112 20 view .LVU64
+ 283 0042 D922     		movs	r2, #217
+ 284 0044 5A70     		strb	r2, [r3, #1]
+ 113:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 285              		.loc 1 113 5 is_stmt 1 view .LVU65
+ 286              	.LVL19:
+ 113:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 287              		.loc 1 113 12 is_stmt 0 view .LVU66
+ 288 0046 0223     		movs	r3, #2
+ 289              	.LVL20:
+ 290              	.L14:
+ 116:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.bytes_in_buffer = nbytes;
+ 291              		.loc 1 116 3 is_stmt 1 view .LVU67
+ 116:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.bytes_in_buffer = nbytes;
+ 292              		.loc 1 116 33 is_stmt 0 view .LVU68
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 10
+
+
+ 293 0048 226A     		ldr	r2, [r4, #32]
+ 116:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.bytes_in_buffer = nbytes;
+ 294              		.loc 1 116 28 view .LVU69
+ 295 004a 2260     		str	r2, [r4]
+ 117:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->start_of_file = FALSE;
+ 296              		.loc 1 117 3 is_stmt 1 view .LVU70
+ 117:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->start_of_file = FALSE;
+ 297              		.loc 1 117 28 is_stmt 0 view .LVU71
+ 298 004c 6360     		str	r3, [r4, #4]
+ 118:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 299              		.loc 1 118 3 is_stmt 1 view .LVU72
+ 118:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 300              		.loc 1 118 22 is_stmt 0 view .LVU73
+ 301 004e 0023     		movs	r3, #0
+ 302              	.LVL21:
+ 118:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 303              		.loc 1 118 22 view .LVU74
+ 304 0050 6362     		str	r3, [r4, #36]
+ 120:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 305              		.loc 1 120 3 is_stmt 1 view .LVU75
+ 121:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* JFILE */
+ 306              		.loc 1 121 1 is_stmt 0 view .LVU76
+ 307 0052 0120     		movs	r0, #1
+ 308 0054 38BD     		pop	{r3, r4, r5, pc}
+ 121:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* JFILE */
+ 309              		.loc 1 121 1 view .LVU77
+ 310              		.cfi_endproc
+ 311              	.LFE149:
+ 313              		.section	.text.jpeg_stdio_src,"ax",%progbits
+ 314              		.align	1
+ 315              		.global	jpeg_stdio_src
+ 316              		.syntax unified
+ 317              		.thumb
+ 318              		.thumb_func
+ 320              	jpeg_stdio_src:
+ 321              	.LVL22:
+ 322              	.LFB153:
+ 204:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 205:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 206:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+ 207:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Prepare for input from a stdio stream.
+ 208:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * The caller must have already opened the stream, and is responsible
+ 209:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * for closing it after finishing decompression.
+ 210:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+ 211:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #ifdef JFILE
+ 212:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** GLOBAL(void)
+ 213:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** jpeg_stdio_src (j_decompress_ptr cinfo, JFILE * infile)
+ 214:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+ 323              		.loc 1 214 1 is_stmt 1 view -0
+ 324              		.cfi_startproc
+ 325              		@ args = 0, pretend = 0, frame = 0
+ 326              		@ frame_needed = 0, uses_anonymous_args = 0
+ 327              		.loc 1 214 1 is_stmt 0 view .LVU79
+ 328 0000 70B5     		push	{r4, r5, r6, lr}
+ 329              	.LCFI3:
+ 330              		.cfi_def_cfa_offset 16
+ 331              		.cfi_offset 4, -16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 11
+
+
+ 332              		.cfi_offset 5, -12
+ 333              		.cfi_offset 6, -8
+ 334              		.cfi_offset 14, -4
+ 335 0002 0446     		mov	r4, r0
+ 336 0004 0D46     		mov	r5, r1
+ 215:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   my_src_ptr src;
+ 337              		.loc 1 215 3 is_stmt 1 view .LVU80
+ 216:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 217:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* The source object and input buffer are made permanent so that a series
+ 218:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * of JPEG images can be read from the same file by calling jpeg_stdio_src
+ 219:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * only before the first one.  (If we discarded the buffer at the end of
+ 220:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * one image, we'd likely lose the start of the next one.)
+ 221:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * This makes it unsafe to use this manager and a different source
+ 222:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * manager serially with the same JPEG object.  Caveat programmer.
+ 223:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    */
+ 224:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   if (cinfo->src == NULL) {	/* first time for this JPEG object? */
+ 338              		.loc 1 224 3 view .LVU81
+ 339              		.loc 1 224 12 is_stmt 0 view .LVU82
+ 340 0006 8369     		ldr	r3, [r0, #24]
+ 341              		.loc 1 224 6 view .LVU83
+ 342 0008 7BB1     		cbz	r3, .L20
+ 343              	.LVL23:
+ 344              	.L18:
+ 225:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     cinfo->src = (struct jpeg_source_mgr *)
+ 226:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 227:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(my_source_mgr));
+ 228:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src = (my_src_ptr) cinfo->src;
+ 229:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer = (JOCTET *)
+ 230:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 231:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  INPUT_BUF_SIZE * SIZEOF(JOCTET));
+ 232:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 233:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 234:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src = (my_src_ptr) cinfo->src;
+ 345              		.loc 1 234 3 is_stmt 1 view .LVU84
+ 346              		.loc 1 234 7 is_stmt 0 view .LVU85
+ 347 000a A369     		ldr	r3, [r4, #24]
+ 348              	.LVL24:
+ 235:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.init_source = init_source;
+ 349              		.loc 1 235 3 is_stmt 1 view .LVU86
+ 350              		.loc 1 235 24 is_stmt 0 view .LVU87
+ 351 000c 0F4A     		ldr	r2, .L21
+ 352 000e 9A60     		str	r2, [r3, #8]
+ 236:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.fill_input_buffer = fill_input_buffer;
+ 353              		.loc 1 236 3 is_stmt 1 view .LVU88
+ 354              		.loc 1 236 30 is_stmt 0 view .LVU89
+ 355 0010 0F4A     		ldr	r2, .L21+4
+ 356 0012 DA60     		str	r2, [r3, #12]
+ 237:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.skip_input_data = skip_input_data;
+ 357              		.loc 1 237 3 is_stmt 1 view .LVU90
+ 358              		.loc 1 237 28 is_stmt 0 view .LVU91
+ 359 0014 0F4A     		ldr	r2, .L21+8
+ 360 0016 1A61     		str	r2, [r3, #16]
+ 238:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
+ 361              		.loc 1 238 3 is_stmt 1 view .LVU92
+ 362              		.loc 1 238 30 is_stmt 0 view .LVU93
+ 363 0018 0F4A     		ldr	r2, .L21+12
+ 364 001a 5A61     		str	r2, [r3, #20]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 12
+
+
+ 239:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.term_source = term_source;
+ 365              		.loc 1 239 3 is_stmt 1 view .LVU94
+ 366              		.loc 1 239 24 is_stmt 0 view .LVU95
+ 367 001c 0F4A     		ldr	r2, .L21+16
+ 368 001e 9A61     		str	r2, [r3, #24]
+ 240:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->infile = infile;
+ 369              		.loc 1 240 3 is_stmt 1 view .LVU96
+ 370              		.loc 1 240 15 is_stmt 0 view .LVU97
+ 371 0020 DD61     		str	r5, [r3, #28]
+ 241:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.bytes_in_buffer = 0; /* forces fill_input_buffer on first read */
+ 372              		.loc 1 241 3 is_stmt 1 view .LVU98
+ 373              		.loc 1 241 28 is_stmt 0 view .LVU99
+ 374 0022 0022     		movs	r2, #0
+ 375 0024 5A60     		str	r2, [r3, #4]
+ 242:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->pub.next_input_byte = NULL; /* until buffer loaded */
+ 376              		.loc 1 242 3 is_stmt 1 view .LVU100
+ 377              		.loc 1 242 28 is_stmt 0 view .LVU101
+ 378 0026 1A60     		str	r2, [r3]
+ 243:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 379              		.loc 1 243 1 view .LVU102
+ 380 0028 70BD     		pop	{r4, r5, r6, pc}
+ 381              	.LVL25:
+ 382              	.L20:
+ 225:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 383              		.loc 1 225 5 is_stmt 1 view .LVU103
+ 226:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(my_source_mgr));
+ 384              		.loc 1 226 14 is_stmt 0 view .LVU104
+ 385 002a 4368     		ldr	r3, [r0, #4]
+ 226:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(my_source_mgr));
+ 386              		.loc 1 226 8 view .LVU105
+ 387 002c 1B68     		ldr	r3, [r3]
+ 388 002e 2822     		movs	r2, #40
+ 389 0030 0021     		movs	r1, #0
+ 390              	.LVL26:
+ 226:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(my_source_mgr));
+ 391              		.loc 1 226 8 view .LVU106
+ 392 0032 9847     		blx	r3
+ 393              	.LVL27:
+ 226:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(my_source_mgr));
+ 394              		.loc 1 226 8 view .LVU107
+ 395 0034 0646     		mov	r6, r0
+ 225:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 396              		.loc 1 225 16 view .LVU108
+ 397 0036 A061     		str	r0, [r4, #24]
+ 228:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     src->buffer = (JOCTET *)
+ 398              		.loc 1 228 5 is_stmt 1 view .LVU109
+ 399              	.LVL28:
+ 229:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 400              		.loc 1 229 5 view .LVU110
+ 230:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  INPUT_BUF_SIZE * SIZEOF(JOCTET));
+ 401              		.loc 1 230 14 is_stmt 0 view .LVU111
+ 402 0038 6368     		ldr	r3, [r4, #4]
+ 230:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  INPUT_BUF_SIZE * SIZEOF(JOCTET));
+ 403              		.loc 1 230 8 view .LVU112
+ 404 003a 1B68     		ldr	r3, [r3]
+ 405 003c 4FF48052 		mov	r2, #4096
+ 406 0040 0021     		movs	r1, #0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 13
+
+
+ 407 0042 2046     		mov	r0, r4
+ 408              	.LVL29:
+ 230:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  INPUT_BUF_SIZE * SIZEOF(JOCTET));
+ 409              		.loc 1 230 8 view .LVU113
+ 410 0044 9847     		blx	r3
+ 411              	.LVL30:
+ 229:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 412              		.loc 1 229 17 view .LVU114
+ 413 0046 3062     		str	r0, [r6, #32]
+ 414 0048 DFE7     		b	.L18
+ 415              	.L22:
+ 416 004a 00BF     		.align	2
+ 417              	.L21:
+ 418 004c 00000000 		.word	init_source
+ 419 0050 00000000 		.word	fill_input_buffer
+ 420 0054 00000000 		.word	skip_input_data
+ 421 0058 00000000 		.word	jpeg_resync_to_restart
+ 422 005c 00000000 		.word	term_source
+ 423              		.cfi_endproc
+ 424              	.LFE153:
+ 426              		.section	.text.jpeg_mem_src,"ax",%progbits
+ 427              		.align	1
+ 428              		.global	jpeg_mem_src
+ 429              		.syntax unified
+ 430              		.thumb
+ 431              		.thumb_func
+ 433              	jpeg_mem_src:
+ 434              	.LVL31:
+ 435              	.LFB154:
+ 244:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** #endif /* JFILE */
+ 245:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 246:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** /*
+ 247:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * Prepare for input from a supplied memory buffer.
+ 248:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  * The buffer must contain the whole JPEG data.
+ 249:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****  */
+ 250:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 251:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** GLOBAL(void)
+ 252:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** jpeg_mem_src (j_decompress_ptr cinfo,
+ 253:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 	      unsigned char * inbuffer, unsigned long insize)
+ 254:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** {
+ 436              		.loc 1 254 1 is_stmt 1 view -0
+ 437              		.cfi_startproc
+ 438              		@ args = 0, pretend = 0, frame = 0
+ 439              		@ frame_needed = 0, uses_anonymous_args = 0
+ 440              		.loc 1 254 1 is_stmt 0 view .LVU116
+ 441 0000 70B5     		push	{r4, r5, r6, lr}
+ 442              	.LCFI4:
+ 443              		.cfi_def_cfa_offset 16
+ 444              		.cfi_offset 4, -16
+ 445              		.cfi_offset 5, -12
+ 446              		.cfi_offset 6, -8
+ 447              		.cfi_offset 14, -4
+ 448 0002 0446     		mov	r4, r0
+ 255:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   struct jpeg_source_mgr * src;
+ 449              		.loc 1 255 3 is_stmt 1 view .LVU117
+ 256:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 257:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   if (inbuffer == NULL || insize == 0)	/* Treat empty input as fatal error */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 14
+
+
+ 450              		.loc 1 257 3 view .LVU118
+ 451              		.loc 1 257 16 is_stmt 0 view .LVU119
+ 452 0004 0D46     		mov	r5, r1
+ 453              		.loc 1 257 34 view .LVU120
+ 454 0006 1646     		mov	r6, r2
+ 455              		.loc 1 257 6 view .LVU121
+ 456 0008 002A     		cmp	r2, #0
+ 457 000a 18BF     		it	ne
+ 458 000c 0029     		cmpne	r1, #0
+ 459 000e 05D1     		bne	.L24
+ 258:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     ERREXIT(cinfo, JERR_INPUT_EMPTY);
+ 460              		.loc 1 258 5 is_stmt 1 view .LVU122
+ 461 0010 0368     		ldr	r3, [r0]
+ 462 0012 2B22     		movs	r2, #43
+ 463              	.LVL32:
+ 464              		.loc 1 258 5 is_stmt 0 view .LVU123
+ 465 0014 5A61     		str	r2, [r3, #20]
+ 466 0016 0368     		ldr	r3, [r0]
+ 467 0018 1B68     		ldr	r3, [r3]
+ 468 001a 9847     		blx	r3
+ 469              	.LVL33:
+ 470              	.L24:
+ 259:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 260:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   /* The source object is made permanent so that a series of JPEG images
+ 261:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * can be read from the same buffer by calling jpeg_mem_src only before
+ 262:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    * the first one.
+ 263:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****    */
+ 264:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   if (cinfo->src == NULL) {	/* first time for this JPEG object? */
+ 471              		.loc 1 264 3 is_stmt 1 view .LVU124
+ 472              		.loc 1 264 12 is_stmt 0 view .LVU125
+ 473 001c A369     		ldr	r3, [r4, #24]
+ 474              		.loc 1 264 6 view .LVU126
+ 475 001e 6BB1     		cbz	r3, .L27
+ 476              	.L25:
+ 265:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****     cinfo->src = (struct jpeg_source_mgr *)
+ 266:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 267:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(struct jpeg_source_mgr));
+ 268:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   }
+ 269:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 
+ 270:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src = cinfo->src;
+ 477              		.loc 1 270 3 is_stmt 1 view .LVU127
+ 478              		.loc 1 270 7 is_stmt 0 view .LVU128
+ 479 0020 A369     		ldr	r3, [r4, #24]
+ 480              	.LVL34:
+ 271:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->init_source = init_mem_source;
+ 481              		.loc 1 271 3 is_stmt 1 view .LVU129
+ 482              		.loc 1 271 20 is_stmt 0 view .LVU130
+ 483 0022 0A4A     		ldr	r2, .L28
+ 484 0024 9A60     		str	r2, [r3, #8]
+ 272:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->fill_input_buffer = fill_mem_input_buffer;
+ 485              		.loc 1 272 3 is_stmt 1 view .LVU131
+ 486              		.loc 1 272 26 is_stmt 0 view .LVU132
+ 487 0026 0A4A     		ldr	r2, .L28+4
+ 488 0028 DA60     		str	r2, [r3, #12]
+ 273:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->skip_input_data = skip_input_data;
+ 489              		.loc 1 273 3 is_stmt 1 view .LVU133
+ 490              		.loc 1 273 24 is_stmt 0 view .LVU134
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 15
+
+
+ 491 002a 0A4A     		ldr	r2, .L28+8
+ 492 002c 1A61     		str	r2, [r3, #16]
+ 274:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->resync_to_restart = jpeg_resync_to_restart; /* use default method */
+ 493              		.loc 1 274 3 is_stmt 1 view .LVU135
+ 494              		.loc 1 274 26 is_stmt 0 view .LVU136
+ 495 002e 0A4A     		ldr	r2, .L28+12
+ 496 0030 5A61     		str	r2, [r3, #20]
+ 275:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->term_source = term_source;
+ 497              		.loc 1 275 3 is_stmt 1 view .LVU137
+ 498              		.loc 1 275 20 is_stmt 0 view .LVU138
+ 499 0032 0A4A     		ldr	r2, .L28+16
+ 500 0034 9A61     		str	r2, [r3, #24]
+ 276:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->bytes_in_buffer = (size_t) insize;
+ 501              		.loc 1 276 3 is_stmt 1 view .LVU139
+ 502              		.loc 1 276 24 is_stmt 0 view .LVU140
+ 503 0036 5E60     		str	r6, [r3, #4]
+ 277:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****   src->next_input_byte = (JOCTET *) inbuffer;
+ 504              		.loc 1 277 3 is_stmt 1 view .LVU141
+ 505              		.loc 1 277 24 is_stmt 0 view .LVU142
+ 506 0038 1D60     		str	r5, [r3]
+ 278:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** }
+ 507              		.loc 1 278 1 view .LVU143
+ 508 003a 70BD     		pop	{r4, r5, r6, pc}
+ 509              	.LVL35:
+ 510              	.L27:
+ 265:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 511              		.loc 1 265 5 is_stmt 1 view .LVU144
+ 266:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(struct jpeg_source_mgr));
+ 512              		.loc 1 266 14 is_stmt 0 view .LVU145
+ 513 003c 6368     		ldr	r3, [r4, #4]
+ 266:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c **** 				  SIZEOF(struct jpeg_source_mgr));
+ 514              		.loc 1 266 8 view .LVU146
+ 515 003e 1B68     		ldr	r3, [r3]
+ 516 0040 1C22     		movs	r2, #28
+ 517 0042 0021     		movs	r1, #0
+ 518 0044 2046     		mov	r0, r4
+ 519 0046 9847     		blx	r3
+ 520              	.LVL36:
+ 265:Middlewares/Third_Party/LibJPEG/source/jdatasrc.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+ 521              		.loc 1 265 16 view .LVU147
+ 522 0048 A061     		str	r0, [r4, #24]
+ 523 004a E9E7     		b	.L25
+ 524              	.L29:
+ 525              		.align	2
+ 526              	.L28:
+ 527 004c 00000000 		.word	init_mem_source
+ 528 0050 00000000 		.word	fill_mem_input_buffer
+ 529 0054 00000000 		.word	skip_input_data
+ 530 0058 00000000 		.word	jpeg_resync_to_restart
+ 531 005c 00000000 		.word	term_source
+ 532              		.cfi_endproc
+ 533              	.LFE154:
+ 535              		.section	.rodata.mybuffer.0,"a"
+ 536              		.align	2
+ 539              	mybuffer.0:
+ 540 0000 FFD90000 		.ascii	"\377\331\000\000"
+ 541              		.text
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 16
+
+
+ 542              	.Letext0:
+ 543              		.file 2 "Middlewares/Third_Party/FatFs/src/integer.h"
+ 544              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 545              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 546              		.file 5 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 547              		.file 6 "Middlewares/Third_Party/FatFs/src/ff.h"
+ 548              		.file 7 "Inc/jmorecfg.h"
+ 549              		.file 8 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 550              		.file 9 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 551              		.file 10 "Inc/jdata_conf.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jdatasrc.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:20     .text.init_source:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:25     .text.init_source:00000000 init_source
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:47     .text.init_mem_source:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:52     .text.init_mem_source:00000000 init_mem_source
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:66     .text.fill_mem_input_buffer:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:71     .text.fill_mem_input_buffer:00000000 fill_mem_input_buffer
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:116    .text.fill_mem_input_buffer:00000024 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:539    .rodata.mybuffer.0:00000000 mybuffer.0
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:121    .text.skip_input_data:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:126    .text.skip_input_data:00000000 skip_input_data
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:188    .text.term_source:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:193    .text.term_source:00000000 term_source
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:207    .text.fill_input_buffer:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:212    .text.fill_input_buffer:00000000 fill_input_buffer
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:314    .text.jpeg_stdio_src:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:320    .text.jpeg_stdio_src:00000000 jpeg_stdio_src
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:418    .text.jpeg_stdio_src:0000004c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:427    .text.jpeg_mem_src:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:433    .text.jpeg_mem_src:00000000 jpeg_mem_src
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:527    .text.jpeg_mem_src:0000004c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8RL2Kv.s:536    .rodata.mybuffer.0:00000000 $d
+
+UNDEFINED SYMBOLS
+read_file
+jpeg_resync_to_restart

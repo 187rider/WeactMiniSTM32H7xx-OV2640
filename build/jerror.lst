@@ -1,0 +1,1953 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jerror.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jerror.c"
+  19              		.section	.text.output_message,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	output_message:
+  26              	.LVL0:
+  27              	.LFB148:
+   1:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * jerror.c
+   3:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Copyright (C) 1991-1998, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * This file contains simple error-reporting and trace-message routines.
+   9:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * These are suitable for Unix-like systems and others where writing to
+  10:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * stderr is the right thing to do.  Many applications will want to replace
+  11:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * some or all of these routines.
+  12:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+  13:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * If you define USE_WINDOWS_MESSAGEBOX in jconfig.h or in the makefile,
+  14:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * you get a Windows-specific hack to display error messages in a dialog box.
+  15:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * It ain't much, but it beats dropping error messages into the bit bucket,
+  16:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * which is what happens to output to stderr under most Windows C compilers.
+  17:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+  18:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * These routines are used by both the compression and decompression code.
+  19:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+  20:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  21:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
+  22:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include "jinclude.h"
+  23:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include "jpeglib.h"
+  24:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include "jversion.h"
+  25:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include "jerror.h"
+  26:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  27:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #ifdef USE_WINDOWS_MESSAGEBOX
+  28:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include <windows.h>
+  29:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #endif
+  30:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  31:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #ifndef EXIT_FAILURE		/* define exit() codes if not provided */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 2
+
+
+  32:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #define EXIT_FAILURE  1
+  33:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #endif
+  34:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  35:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  36:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+  37:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Create the message string table.
+  38:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * We do this from the master message list in jerror.h by re-reading
+  39:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * jerror.h with a suitable definition for macro JMESSAGE.
+  40:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * The message table is made an external symbol just in case any applications
+  41:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * want to refer to it directly.
+  42:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+  43:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  44:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #ifdef NEED_SHORT_EXTERNAL_NAMES
+  45:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #define jpeg_std_message_table	jMsgTable
+  46:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #endif
+  47:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  48:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #define JMESSAGE(code,string)	string ,
+  49:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  50:Middlewares/Third_Party/LibJPEG/source/jerror.c **** const char * const jpeg_std_message_table[] = {
+  51:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #include "jerror.h"
+  52:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   NULL
+  53:Middlewares/Third_Party/LibJPEG/source/jerror.c **** };
+  54:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  55:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  56:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+  57:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Error exit handler: must not return to caller.
+  58:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+  59:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Applications may override this if they want to get control back after
+  60:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * an error.  Typically one would longjmp somewhere instead of exiting.
+  61:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * The setjmp buffer can be made a private field within an expanded error
+  62:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * handler object.  Note that the info needed to generate an error message
+  63:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * is stored in the error object, so you can generate the message now or
+  64:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * later, at your convenience.
+  65:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * You should make sure that the JPEG object is cleaned up (with jpeg_abort
+  66:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * or jpeg_destroy) at some point.
+  67:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+  68:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  69:Middlewares/Third_Party/LibJPEG/source/jerror.c **** METHODDEF(void)
+  70:Middlewares/Third_Party/LibJPEG/source/jerror.c **** error_exit (j_common_ptr cinfo)
+  71:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+  72:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Always display the message */
+  73:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   (*cinfo->err->output_message) (cinfo);
+  74:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  75:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Let the memory manager delete any temp files before we die */
+  76:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   jpeg_destroy(cinfo);
+  77:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  78:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   //exit(EXIT_FAILURE);
+  79:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+  80:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  81:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  82:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+  83:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Actual output of an error or trace message.
+  84:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Applications may override this method to send JPEG messages somewhere
+  85:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * other than stderr.
+  86:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+  87:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * On Windows, printing to stderr is generally completely useless,
+  88:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * so we provide optional code to produce an error-dialog popup.
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 3
+
+
+  89:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Most Windows applications will still prefer to override this routine,
+  90:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * but if they don't, it'll do something at least marginally useful.
+  91:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+  92:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * NOTE: to use the library in an environment that doesn't support the
+  93:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * C stdio library, you may have to delete the call to fprintf() entirely,
+  94:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * not just not use this routine.
+  95:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+  96:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+  97:Middlewares/Third_Party/LibJPEG/source/jerror.c **** METHODDEF(void)
+  98:Middlewares/Third_Party/LibJPEG/source/jerror.c **** output_message (j_common_ptr cinfo)
+  99:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+  28              		.loc 1 99 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 200
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 99 1 is_stmt 0 view .LVU1
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 B3B0     		sub	sp, sp, #204
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 208
+ 100:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   char buffer[JMSG_LENGTH_MAX];
+  40              		.loc 1 100 3 is_stmt 1 view .LVU2
+ 101:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 102:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Create the message */
+ 103:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   (*cinfo->err->format_message) (cinfo, buffer);
+  41              		.loc 1 103 3 view .LVU3
+  42              		.loc 1 103 10 is_stmt 0 view .LVU4
+  43 0004 0368     		ldr	r3, [r0]
+  44              		.loc 1 103 4 view .LVU5
+  45 0006 DB68     		ldr	r3, [r3, #12]
+  46 0008 6946     		mov	r1, sp
+  47 000a 9847     		blx	r3
+  48              	.LVL1:
+ 104:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 105:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #ifdef USE_WINDOWS_MESSAGEBOX
+ 106:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Display it in a message dialog box */
+ 107:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   MessageBox(GetActiveWindow(), buffer, "JPEG Library Error",
+ 108:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     MB_OK | MB_ICONERROR);
+ 109:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #else
+ 110:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Send it to stderr, adding a newline */
+ 111:Middlewares/Third_Party/LibJPEG/source/jerror.c **** //  fprintf(stderr, "%s\n", buffer);
+ 112:Middlewares/Third_Party/LibJPEG/source/jerror.c **** //  printf( "%s\n", buffer);
+ 113:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #endif
+ 114:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+  49              		.loc 1 114 1 view .LVU6
+  50 000c 33B0     		add	sp, sp, #204
+  51              	.LCFI2:
+  52              		.cfi_def_cfa_offset 4
+  53              		@ sp needed
+  54 000e 5DF804FB 		ldr	pc, [sp], #4
+  55              		.cfi_endproc
+  56              	.LFE148:
+  58              		.section	.text.emit_message,"ax",%progbits
+  59              		.align	1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 4
+
+
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  64              	emit_message:
+  65              	.LVL2:
+  66              	.LFB149:
+ 115:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 116:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 117:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+ 118:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Decide whether to emit a trace or warning message.
+ 119:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * msg_level is one of:
+ 120:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *   -1: recoverable corrupt-data warning, may want to abort.
+ 121:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *    0: important advisory messages (always display to user).
+ 122:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *    1: first level of tracing detail.
+ 123:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *    2,3,...: successively more detailed tracing messages.
+ 124:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * An application might override this method if it wanted to abort on warnings
+ 125:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * or change the policy about which messages to display.
+ 126:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+ 127:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 128:Middlewares/Third_Party/LibJPEG/source/jerror.c **** METHODDEF(void)
+ 129:Middlewares/Third_Party/LibJPEG/source/jerror.c **** emit_message (j_common_ptr cinfo, int msg_level)
+ 130:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+  67              		.loc 1 130 1 is_stmt 1 view -0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71              		.loc 1 130 1 is_stmt 0 view .LVU8
+  72 0000 10B5     		push	{r4, lr}
+  73              	.LCFI3:
+  74              		.cfi_def_cfa_offset 8
+  75              		.cfi_offset 4, -8
+  76              		.cfi_offset 14, -4
+ 131:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   struct jpeg_error_mgr * err = cinfo->err;
+  77              		.loc 1 131 3 is_stmt 1 view .LVU9
+  78              		.loc 1 131 27 is_stmt 0 view .LVU10
+  79 0002 0468     		ldr	r4, [r0]
+  80              	.LVL3:
+ 132:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 133:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   if (msg_level < 0) {
+  81              		.loc 1 133 3 is_stmt 1 view .LVU11
+  82              		.loc 1 133 6 is_stmt 0 view .LVU12
+  83 0004 0029     		cmp	r1, #0
+  84              		.loc 1 133 6 view .LVU13
+  85 0006 05DB     		blt	.L9
+ 134:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     /* It's a warning message.  Since corrupt files may generate many warnings,
+ 135:Middlewares/Third_Party/LibJPEG/source/jerror.c ****      * the policy implemented here is to show only the first warning,
+ 136:Middlewares/Third_Party/LibJPEG/source/jerror.c ****      * unless trace_level >= 3.
+ 137:Middlewares/Third_Party/LibJPEG/source/jerror.c ****      */
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (err->num_warnings == 0 || err->trace_level >= 3)
+ 139:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 140:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     /* Always count warnings in num_warnings. */
+ 141:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     err->num_warnings++;
+ 142:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else {
+ 143:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     /* It's a trace message.  Show it if trace_level >= msg_level. */
+ 144:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (err->trace_level >= msg_level)
+  86              		.loc 1 144 5 is_stmt 1 view .LVU14
+  87              		.loc 1 144 12 is_stmt 0 view .LVU15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 5
+
+
+  88 0008 A36E     		ldr	r3, [r4, #104]
+  89              		.loc 1 144 8 view .LVU16
+  90 000a 8B42     		cmp	r3, r1
+  91 000c 0CDB     		blt	.L3
+ 145:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+  92              		.loc 1 145 7 is_stmt 1 view .LVU17
+  93              		.loc 1 145 8 is_stmt 0 view .LVU18
+  94 000e A368     		ldr	r3, [r4, #8]
+  95 0010 9847     		blx	r3
+  96              	.LVL4:
+ 146:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 147:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+  97              		.loc 1 147 1 view .LVU19
+  98 0012 09E0     		b	.L3
+  99              	.LVL5:
+ 100              	.L9:
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 101              		.loc 1 138 5 is_stmt 1 view .LVU20
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 102              		.loc 1 138 12 is_stmt 0 view .LVU21
+ 103 0014 E36E     		ldr	r3, [r4, #108]
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 104              		.loc 1 138 8 view .LVU22
+ 105 0016 13B1     		cbz	r3, .L5
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 106              		.loc 1 138 38 discriminator 1 view .LVU23
+ 107 0018 A36E     		ldr	r3, [r4, #104]
+ 138:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       (*err->output_message) (cinfo);
+ 108              		.loc 1 138 32 discriminator 1 view .LVU24
+ 109 001a 022B     		cmp	r3, #2
+ 110 001c 01DD     		ble	.L6
+ 111              	.L5:
+ 139:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     /* Always count warnings in num_warnings. */
+ 112              		.loc 1 139 7 is_stmt 1 view .LVU25
+ 139:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     /* Always count warnings in num_warnings. */
+ 113              		.loc 1 139 8 is_stmt 0 view .LVU26
+ 114 001e A368     		ldr	r3, [r4, #8]
+ 115 0020 9847     		blx	r3
+ 116              	.LVL6:
+ 117              	.L6:
+ 141:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else {
+ 118              		.loc 1 141 5 is_stmt 1 view .LVU27
+ 141:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else {
+ 119              		.loc 1 141 8 is_stmt 0 view .LVU28
+ 120 0022 E36E     		ldr	r3, [r4, #108]
+ 141:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else {
+ 121              		.loc 1 141 22 view .LVU29
+ 122 0024 0133     		adds	r3, r3, #1
+ 123 0026 E366     		str	r3, [r4, #108]
+ 124              	.L3:
+ 125              		.loc 1 147 1 view .LVU30
+ 126 0028 10BD     		pop	{r4, pc}
+ 127              		.loc 1 147 1 view .LVU31
+ 128              		.cfi_endproc
+ 129              	.LFE149:
+ 131              		.section	.text.reset_error_mgr,"ax",%progbits
+ 132              		.align	1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 6
+
+
+ 133              		.syntax unified
+ 134              		.thumb
+ 135              		.thumb_func
+ 137              	reset_error_mgr:
+ 138              	.LVL7:
+ 139              	.LFB151:
+ 148:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 149:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 150:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+ 151:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Format a message string for the most recent JPEG error or message.
+ 152:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * The message is stored into buffer, which should be at least JMSG_LENGTH_MAX
+ 153:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * characters.  Note that no '\n' character is added to the string.
+ 154:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Few applications should need to override this method.
+ 155:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+ 156:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 157:Middlewares/Third_Party/LibJPEG/source/jerror.c **** METHODDEF(void)
+ 158:Middlewares/Third_Party/LibJPEG/source/jerror.c **** format_message (j_common_ptr cinfo, char * buffer)
+ 159:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+ 160:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   struct jpeg_error_mgr * err = cinfo->err;
+ 161:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   int msg_code = err->msg_code;
+ 162:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   const char * msgtext = NULL;
+ 163:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   const char * msgptr;
+ 164:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   char ch;
+ 165:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   boolean isstring;
+ 166:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 167:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Look up message string in proper table */
+ 168:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   if (msg_code > 0 && msg_code <= err->last_jpeg_message) {
+ 169:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[msg_code];
+ 170:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else if (err->addon_message_table != NULL &&
+ 171:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code >= err->first_addon_message &&
+ 172:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code <= err->last_addon_message) {
+ 173:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->addon_message_table[msg_code - err->first_addon_message];
+ 174:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 175:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 176:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Defend against bogus message number */
+ 177:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   if (msgtext == NULL) {
+ 178:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     err->msg_parm.i[0] = msg_code;
+ 179:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[0];
+ 180:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 181:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 182:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Check for string parameter, as indicated by %s in the message text */
+ 183:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   isstring = FALSE;
+ 184:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   msgptr = msgtext;
+ 185:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   while ((ch = *msgptr++) != '\0') {
+ 186:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (ch == '%') {
+ 187:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       if (*msgptr == 's') isstring = TRUE;
+ 188:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       break;
+ 189:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     }
+ 190:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 191:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 192:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Format the message into the passed buffer */
+ 193:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   if (isstring)
+ 194:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     sprintf(buffer, msgtext, err->msg_parm.s);
+ 195:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   else
+ 196:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     sprintf(buffer, msgtext,
+ 197:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[0], err->msg_parm.i[1],
+ 198:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[2], err->msg_parm.i[3],
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 7
+
+
+ 199:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[4], err->msg_parm.i[5],
+ 200:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[6], err->msg_parm.i[7]);
+ 201:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+ 202:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 203:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 204:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+ 205:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Reset error state variables at start of a new image.
+ 206:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * This is called during compression startup to reset trace/error
+ 207:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * processing to default state, without losing any application-specific
+ 208:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * method pointers.  An application might possibly want to override
+ 209:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * this method if it has additional error processing state.
+ 210:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+ 211:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 212:Middlewares/Third_Party/LibJPEG/source/jerror.c **** METHODDEF(void)
+ 213:Middlewares/Third_Party/LibJPEG/source/jerror.c **** reset_error_mgr (j_common_ptr cinfo)
+ 214:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+ 140              		.loc 1 214 1 is_stmt 1 view -0
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144              		@ link register save eliminated.
+ 215:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   cinfo->err->num_warnings = 0;
+ 145              		.loc 1 215 3 view .LVU33
+ 146              		.loc 1 215 8 is_stmt 0 view .LVU34
+ 147 0000 0268     		ldr	r2, [r0]
+ 148              		.loc 1 215 28 view .LVU35
+ 149 0002 0023     		movs	r3, #0
+ 150 0004 D366     		str	r3, [r2, #108]
+ 216:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* trace_level is not reset since it is an application-supplied parameter */
+ 217:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   cinfo->err->msg_code = 0;	/* may be useful as a flag for "no error" */
+ 151              		.loc 1 217 3 is_stmt 1 view .LVU36
+ 152              		.loc 1 217 8 is_stmt 0 view .LVU37
+ 153 0006 0268     		ldr	r2, [r0]
+ 154              		.loc 1 217 24 view .LVU38
+ 155 0008 5361     		str	r3, [r2, #20]
+ 218:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+ 156              		.loc 1 218 1 view .LVU39
+ 157 000a 7047     		bx	lr
+ 158              		.cfi_endproc
+ 159              	.LFE151:
+ 161              		.section	.text.format_message,"ax",%progbits
+ 162              		.align	1
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	format_message:
+ 168              	.LVL8:
+ 169              	.LFB150:
+ 159:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   struct jpeg_error_mgr * err = cinfo->err;
+ 170              		.loc 1 159 1 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   struct jpeg_error_mgr * err = cinfo->err;
+ 174              		.loc 1 159 1 is_stmt 0 view .LVU41
+ 175 0000 30B5     		push	{r4, r5, lr}
+ 176              	.LCFI4:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 8
+
+
+ 177              		.cfi_def_cfa_offset 12
+ 178              		.cfi_offset 4, -12
+ 179              		.cfi_offset 5, -8
+ 180              		.cfi_offset 14, -4
+ 181 0002 87B0     		sub	sp, sp, #28
+ 182              	.LCFI5:
+ 183              		.cfi_def_cfa_offset 40
+ 184 0004 0346     		mov	r3, r0
+ 185 0006 0846     		mov	r0, r1
+ 186              	.LVL9:
+ 160:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   int msg_code = err->msg_code;
+ 187              		.loc 1 160 3 is_stmt 1 view .LVU42
+ 160:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   int msg_code = err->msg_code;
+ 188              		.loc 1 160 27 is_stmt 0 view .LVU43
+ 189 0008 1C68     		ldr	r4, [r3]
+ 190              	.LVL10:
+ 161:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   const char * msgtext = NULL;
+ 191              		.loc 1 161 3 is_stmt 1 view .LVU44
+ 161:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   const char * msgtext = NULL;
+ 192              		.loc 1 161 7 is_stmt 0 view .LVU45
+ 193 000a 6369     		ldr	r3, [r4, #20]
+ 194              	.LVL11:
+ 162:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   const char * msgptr;
+ 195              		.loc 1 162 3 is_stmt 1 view .LVU46
+ 163:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   char ch;
+ 196              		.loc 1 163 3 view .LVU47
+ 164:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   boolean isstring;
+ 197              		.loc 1 164 3 view .LVU48
+ 165:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 198              		.loc 1 165 3 view .LVU49
+ 168:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[msg_code];
+ 199              		.loc 1 168 3 view .LVU50
+ 168:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[msg_code];
+ 200              		.loc 1 168 6 is_stmt 0 view .LVU51
+ 201 000c 002B     		cmp	r3, #0
+ 202 000e 27DD     		ble	.L12
+ 168:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[msg_code];
+ 203              		.loc 1 168 38 discriminator 1 view .LVU52
+ 204 0010 626F     		ldr	r2, [r4, #116]
+ 168:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[msg_code];
+ 205              		.loc 1 168 20 discriminator 1 view .LVU53
+ 206 0012 9A42     		cmp	r2, r3
+ 207 0014 24DB     		blt	.L12
+ 169:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else if (err->addon_message_table != NULL &&
+ 208              		.loc 1 169 5 is_stmt 1 view .LVU54
+ 169:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else if (err->addon_message_table != NULL &&
+ 209              		.loc 1 169 18 is_stmt 0 view .LVU55
+ 210 0016 226F     		ldr	r2, [r4, #112]
+ 169:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   } else if (err->addon_message_table != NULL &&
+ 211              		.loc 1 169 13 view .LVU56
+ 212 0018 52F82310 		ldr	r1, [r2, r3, lsl #2]
+ 213              	.LVL12:
+ 214              	.L13:
+ 177:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     err->msg_parm.i[0] = msg_code;
+ 215              		.loc 1 177 3 is_stmt 1 view .LVU57
+ 177:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     err->msg_parm.i[0] = msg_code;
+ 216              		.loc 1 177 6 is_stmt 0 view .LVU58
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 9
+
+
+ 217 001c 11B9     		cbnz	r1, .L15
+ 218              	.LVL13:
+ 219              	.L14:
+ 178:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[0];
+ 220              		.loc 1 178 5 is_stmt 1 view .LVU59
+ 178:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     msgtext = err->jpeg_message_table[0];
+ 221              		.loc 1 178 24 is_stmt 0 view .LVU60
+ 222 001e A361     		str	r3, [r4, #24]
+ 179:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 223              		.loc 1 179 5 is_stmt 1 view .LVU61
+ 179:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 224              		.loc 1 179 18 is_stmt 0 view .LVU62
+ 225 0020 236F     		ldr	r3, [r4, #112]
+ 226              	.LVL14:
+ 179:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 227              		.loc 1 179 13 view .LVU63
+ 228 0022 1968     		ldr	r1, [r3]
+ 229              	.LVL15:
+ 230              	.L15:
+ 183:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   msgptr = msgtext;
+ 231              		.loc 1 183 3 is_stmt 1 view .LVU64
+ 184:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   while ((ch = *msgptr++) != '\0') {
+ 232              		.loc 1 184 3 view .LVU65
+ 185:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (ch == '%') {
+ 233              		.loc 1 185 3 view .LVU66
+ 184:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   while ((ch = *msgptr++) != '\0') {
+ 234              		.loc 1 184 10 is_stmt 0 view .LVU67
+ 235 0024 8C46     		mov	ip, r1
+ 236              	.LVL16:
+ 237              	.L16:
+ 185:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (ch == '%') {
+ 238              		.loc 1 185 27 is_stmt 1 view .LVU68
+ 185:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (ch == '%') {
+ 239              		.loc 1 185 14 is_stmt 0 view .LVU69
+ 240 0026 9CF80030 		ldrb	r3, [ip]	@ zero_extendqisi2
+ 241 002a 0CF1010C 		add	ip, ip, #1
+ 242              	.LVL17:
+ 185:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (ch == '%') {
+ 243              		.loc 1 185 27 view .LVU70
+ 244 002e 2BB1     		cbz	r3, .L18
+ 186:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       if (*msgptr == 's') isstring = TRUE;
+ 245              		.loc 1 186 5 is_stmt 1 view .LVU71
+ 186:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       if (*msgptr == 's') isstring = TRUE;
+ 246              		.loc 1 186 8 is_stmt 0 view .LVU72
+ 247 0030 252B     		cmp	r3, #37
+ 248 0032 F8D1     		bne	.L16
+ 187:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       break;
+ 249              		.loc 1 187 7 is_stmt 1 view .LVU73
+ 187:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       break;
+ 250              		.loc 1 187 11 is_stmt 0 view .LVU74
+ 251 0034 9CF80030 		ldrb	r3, [ip]	@ zero_extendqisi2
+ 252              	.LVL18:
+ 187:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       break;
+ 253              		.loc 1 187 10 view .LVU75
+ 254 0038 732B     		cmp	r3, #115
+ 255 003a 1FD0     		beq	.L22
+ 256              	.L18:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 10
+
+
+ 257              	.LVL19:
+ 196:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[0], err->msg_parm.i[1],
+ 258              		.loc 1 196 5 is_stmt 1 view .LVU76
+ 259 003c E369     		ldr	r3, [r4, #28]
+ 260 003e A269     		ldr	r2, [r4, #24]
+ 261 0040 656B     		ldr	r5, [r4, #52]
+ 262 0042 0595     		str	r5, [sp, #20]
+ 263              	.LVL20:
+ 196:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[0], err->msg_parm.i[1],
+ 264              		.loc 1 196 5 is_stmt 0 view .LVU77
+ 265 0044 256B     		ldr	r5, [r4, #48]
+ 266 0046 0495     		str	r5, [sp, #16]
+ 267 0048 E56A     		ldr	r5, [r4, #44]
+ 268 004a 0395     		str	r5, [sp, #12]
+ 269 004c A56A     		ldr	r5, [r4, #40]
+ 270 004e 0295     		str	r5, [sp, #8]
+ 271 0050 656A     		ldr	r5, [r4, #36]
+ 272 0052 0195     		str	r5, [sp, #4]
+ 273 0054 246A     		ldr	r4, [r4, #32]
+ 274              	.LVL21:
+ 196:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[0], err->msg_parm.i[1],
+ 275              		.loc 1 196 5 view .LVU78
+ 276 0056 0094     		str	r4, [sp]
+ 277 0058 FFF7FEFF 		bl	sprintf
+ 278              	.LVL22:
+ 279              	.L11:
+ 201:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 280              		.loc 1 201 1 view .LVU79
+ 281 005c 07B0     		add	sp, sp, #28
+ 282              	.LCFI6:
+ 283              		.cfi_remember_state
+ 284              		.cfi_def_cfa_offset 12
+ 285              		@ sp needed
+ 286 005e 30BD     		pop	{r4, r5, pc}
+ 287              	.LVL23:
+ 288              	.L12:
+ 289              	.LCFI7:
+ 290              		.cfi_restore_state
+ 170:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code >= err->first_addon_message &&
+ 291              		.loc 1 170 10 is_stmt 1 view .LVU80
+ 170:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code >= err->first_addon_message &&
+ 292              		.loc 1 170 17 is_stmt 0 view .LVU81
+ 293 0060 A26F     		ldr	r2, [r4, #120]
+ 170:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code >= err->first_addon_message &&
+ 294              		.loc 1 170 13 view .LVU82
+ 295 0062 002A     		cmp	r2, #0
+ 296 0064 DBD0     		beq	.L14
+ 171:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code <= err->last_addon_message) {
+ 297              		.loc 1 171 22 view .LVU83
+ 298 0066 E16F     		ldr	r1, [r4, #124]
+ 170:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code >= err->first_addon_message &&
+ 299              		.loc 1 170 47 discriminator 1 view .LVU84
+ 300 0068 9942     		cmp	r1, r3
+ 301 006a D8DC     		bgt	.L14
+ 171:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code <= err->last_addon_message) {
+ 302              		.loc 1 171 44 view .LVU85
+ 303 006c D4F88050 		ldr	r5, [r4, #128]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 11
+
+
+ 304 0070 9D42     		cmp	r5, r3
+ 305 0072 D4DB     		blt	.L14
+ 173:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 306              		.loc 1 173 5 is_stmt 1 view .LVU86
+ 173:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 307              		.loc 1 173 49 is_stmt 0 view .LVU87
+ 308 0074 591A     		subs	r1, r3, r1
+ 173:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 309              		.loc 1 173 13 view .LVU88
+ 310 0076 52F82110 		ldr	r1, [r2, r1, lsl #2]
+ 311              	.LVL24:
+ 173:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   }
+ 312              		.loc 1 173 13 view .LVU89
+ 313 007a CFE7     		b	.L13
+ 314              	.LVL25:
+ 315              	.L22:
+ 187:Middlewares/Third_Party/LibJPEG/source/jerror.c ****       break;
+ 316              		.loc 1 187 27 is_stmt 1 discriminator 1 view .LVU90
+ 193:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     sprintf(buffer, msgtext, err->msg_parm.s);
+ 317              		.loc 1 193 3 view .LVU91
+ 194:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   else
+ 318              		.loc 1 194 5 view .LVU92
+ 319 007c 04F11802 		add	r2, r4, #24
+ 320 0080 FFF7FEFF 		bl	sprintf
+ 321              	.LVL26:
+ 194:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   else
+ 322              		.loc 1 194 5 is_stmt 0 view .LVU93
+ 323 0084 EAE7     		b	.L11
+ 324              		.cfi_endproc
+ 325              	.LFE150:
+ 327              		.section	.text.error_exit,"ax",%progbits
+ 328              		.align	1
+ 329              		.syntax unified
+ 330              		.thumb
+ 331              		.thumb_func
+ 333              	error_exit:
+ 334              	.LVL27:
+ 335              	.LFB147:
+  71:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Always display the message */
+ 336              		.loc 1 71 1 is_stmt 1 view -0
+ 337              		.cfi_startproc
+ 338              		@ args = 0, pretend = 0, frame = 0
+ 339              		@ frame_needed = 0, uses_anonymous_args = 0
+  71:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Always display the message */
+ 340              		.loc 1 71 1 is_stmt 0 view .LVU95
+ 341 0000 10B5     		push	{r4, lr}
+ 342              	.LCFI8:
+ 343              		.cfi_def_cfa_offset 8
+ 344              		.cfi_offset 4, -8
+ 345              		.cfi_offset 14, -4
+ 346 0002 0446     		mov	r4, r0
+  73:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 347              		.loc 1 73 3 is_stmt 1 view .LVU96
+  73:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 348              		.loc 1 73 10 is_stmt 0 view .LVU97
+ 349 0004 0368     		ldr	r3, [r0]
+  73:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 12
+
+
+ 350              		.loc 1 73 4 view .LVU98
+ 351 0006 9B68     		ldr	r3, [r3, #8]
+ 352 0008 9847     		blx	r3
+ 353              	.LVL28:
+  76:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 354              		.loc 1 76 3 is_stmt 1 view .LVU99
+ 355 000a 2046     		mov	r0, r4
+ 356 000c FFF7FEFF 		bl	jpeg_destroy
+ 357              	.LVL29:
+  79:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 358              		.loc 1 79 1 is_stmt 0 view .LVU100
+ 359 0010 10BD     		pop	{r4, pc}
+  79:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 360              		.loc 1 79 1 view .LVU101
+ 361              		.cfi_endproc
+ 362              	.LFE147:
+ 364              		.section	.text.jpeg_std_error,"ax",%progbits
+ 365              		.align	1
+ 366              		.global	jpeg_std_error
+ 367              		.syntax unified
+ 368              		.thumb
+ 369              		.thumb_func
+ 371              	jpeg_std_error:
+ 372              	.LVL30:
+ 373              	.LFB152:
+ 219:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 220:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 221:Middlewares/Third_Party/LibJPEG/source/jerror.c **** /*
+ 222:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Fill in the standard error-handling methods in a jpeg_error_mgr object.
+ 223:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Typical call is:
+ 224:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *	struct jpeg_compress_struct cinfo;
+ 225:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *	struct jpeg_error_mgr err;
+ 226:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
+ 227:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *	cinfo.err = jpeg_std_error(&err);
+ 228:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * after which the application may override some of the methods.
+ 229:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  */
+ 230:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 231:Middlewares/Third_Party/LibJPEG/source/jerror.c **** GLOBAL(struct jpeg_error_mgr *)
+ 232:Middlewares/Third_Party/LibJPEG/source/jerror.c **** jpeg_std_error (struct jpeg_error_mgr * err)
+ 233:Middlewares/Third_Party/LibJPEG/source/jerror.c **** {
+ 374              		.loc 1 233 1 is_stmt 1 view -0
+ 375              		.cfi_startproc
+ 376              		@ args = 0, pretend = 0, frame = 0
+ 377              		@ frame_needed = 0, uses_anonymous_args = 0
+ 378              		@ link register save eliminated.
+ 234:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->error_exit = error_exit;
+ 379              		.loc 1 234 3 view .LVU103
+ 380              		.loc 1 234 19 is_stmt 0 view .LVU104
+ 381 0000 0B4A     		ldr	r2, .L26
+ 382 0002 0260     		str	r2, [r0]
+ 235:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->emit_message = emit_message;
+ 383              		.loc 1 235 3 is_stmt 1 view .LVU105
+ 384              		.loc 1 235 21 is_stmt 0 view .LVU106
+ 385 0004 0B4A     		ldr	r2, .L26+4
+ 386 0006 4260     		str	r2, [r0, #4]
+ 236:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->output_message = output_message;
+ 387              		.loc 1 236 3 is_stmt 1 view .LVU107
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 13
+
+
+ 388              		.loc 1 236 23 is_stmt 0 view .LVU108
+ 389 0008 0B4A     		ldr	r2, .L26+8
+ 390 000a 8260     		str	r2, [r0, #8]
+ 237:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->format_message = format_message;
+ 391              		.loc 1 237 3 is_stmt 1 view .LVU109
+ 392              		.loc 1 237 23 is_stmt 0 view .LVU110
+ 393 000c 0B4A     		ldr	r2, .L26+12
+ 394 000e C260     		str	r2, [r0, #12]
+ 238:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->reset_error_mgr = reset_error_mgr;
+ 395              		.loc 1 238 3 is_stmt 1 view .LVU111
+ 396              		.loc 1 238 24 is_stmt 0 view .LVU112
+ 397 0010 0B4A     		ldr	r2, .L26+16
+ 398 0012 0261     		str	r2, [r0, #16]
+ 239:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 240:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->trace_level = 0;		/* default = no tracing */
+ 399              		.loc 1 240 3 is_stmt 1 view .LVU113
+ 400              		.loc 1 240 20 is_stmt 0 view .LVU114
+ 401 0014 0022     		movs	r2, #0
+ 402 0016 8266     		str	r2, [r0, #104]
+ 241:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->num_warnings = 0;	/* no warnings emitted yet */
+ 403              		.loc 1 241 3 is_stmt 1 view .LVU115
+ 404              		.loc 1 241 21 is_stmt 0 view .LVU116
+ 405 0018 C266     		str	r2, [r0, #108]
+ 242:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->msg_code = 0;		/* may be useful as a flag for "no error" */
+ 406              		.loc 1 242 3 is_stmt 1 view .LVU117
+ 407              		.loc 1 242 17 is_stmt 0 view .LVU118
+ 408 001a 4261     		str	r2, [r0, #20]
+ 243:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 244:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   /* Initialize message table pointers */
+ 245:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->jpeg_message_table = jpeg_std_message_table;
+ 409              		.loc 1 245 3 is_stmt 1 view .LVU119
+ 410              		.loc 1 245 27 is_stmt 0 view .LVU120
+ 411 001c 0949     		ldr	r1, .L26+20
+ 412 001e 0167     		str	r1, [r0, #112]
+ 246:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->last_jpeg_message = (int) JMSG_LASTMSGCODE - 1;
+ 413              		.loc 1 246 3 is_stmt 1 view .LVU121
+ 414              		.loc 1 246 26 is_stmt 0 view .LVU122
+ 415 0020 7E21     		movs	r1, #126
+ 416 0022 4167     		str	r1, [r0, #116]
+ 247:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 248:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->addon_message_table = NULL;
+ 417              		.loc 1 248 3 is_stmt 1 view .LVU123
+ 418              		.loc 1 248 28 is_stmt 0 view .LVU124
+ 419 0024 8267     		str	r2, [r0, #120]
+ 249:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->first_addon_message = 0;	/* for safety */
+ 420              		.loc 1 249 3 is_stmt 1 view .LVU125
+ 421              		.loc 1 249 28 is_stmt 0 view .LVU126
+ 422 0026 C267     		str	r2, [r0, #124]
+ 250:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->last_addon_message = 0;
+ 423              		.loc 1 250 3 is_stmt 1 view .LVU127
+ 424              		.loc 1 250 27 is_stmt 0 view .LVU128
+ 425 0028 C0F88020 		str	r2, [r0, #128]
+ 251:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
+ 252:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   return err;
+ 426              		.loc 1 252 3 is_stmt 1 view .LVU129
+ 253:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
+ 427              		.loc 1 253 1 is_stmt 0 view .LVU130
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 14
+
+
+ 428 002c 7047     		bx	lr
+ 429              	.L27:
+ 430 002e 00BF     		.align	2
+ 431              	.L26:
+ 432 0030 00000000 		.word	error_exit
+ 433 0034 00000000 		.word	emit_message
+ 434 0038 00000000 		.word	output_message
+ 435 003c 00000000 		.word	format_message
+ 436 0040 00000000 		.word	reset_error_mgr
+ 437 0044 00000000 		.word	jpeg_std_message_table
+ 438              		.cfi_endproc
+ 439              	.LFE152:
+ 441              		.global	jpeg_std_message_table
+ 442              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 443              		.align	2
+ 444              	.LC0:
+ 445 0000 426F6775 		.ascii	"Bogus message code %d\000"
+ 445      73206D65 
+ 445      73736167 
+ 445      6520636F 
+ 445      64652025 
+ 446 0016 0000     		.align	2
+ 447              	.LC1:
+ 448 0018 414C4947 		.ascii	"ALIGN_TYPE is wrong, please fix\000"
+ 448      4E5F5459 
+ 448      50452069 
+ 448      73207772 
+ 448      6F6E672C 
+ 449              		.align	2
+ 450              	.LC2:
+ 451 0038 4D41585F 		.ascii	"MAX_ALLOC_CHUNK is wrong, please fix\000"
+ 451      414C4C4F 
+ 451      435F4348 
+ 451      554E4B20 
+ 451      69732077 
+ 452 005d 000000   		.align	2
+ 453              	.LC3:
+ 454 0060 426F6775 		.ascii	"Bogus buffer control mode\000"
+ 454      73206275 
+ 454      66666572 
+ 454      20636F6E 
+ 454      74726F6C 
+ 455 007a 0000     		.align	2
+ 456              	.LC4:
+ 457 007c 496E7661 		.ascii	"Invalid component ID %d in SOS\000"
+ 457      6C696420 
+ 457      636F6D70 
+ 457      6F6E656E 
+ 457      74204944 
+ 458 009b 00       		.align	2
+ 459              	.LC5:
+ 460 009c 496E7661 		.ascii	"Invalid crop request\000"
+ 460      6C696420 
+ 460      63726F70 
+ 460      20726571 
+ 460      75657374 
+ 461 00b1 000000   		.align	2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 15
+
+
+ 462              	.LC6:
+ 463 00b4 44435420 		.ascii	"DCT coefficient out of range\000"
+ 463      636F6566 
+ 463      66696369 
+ 463      656E7420 
+ 463      6F757420 
+ 464 00d1 000000   		.align	2
+ 465              	.LC7:
+ 466 00d4 44435420 		.ascii	"DCT scaled block size %dx%d not supported\000"
+ 466      7363616C 
+ 466      65642062 
+ 466      6C6F636B 
+ 466      2073697A 
+ 467 00fe 0000     		.align	2
+ 468              	.LC8:
+ 469 0100 436F6D70 		.ascii	"Component index %d: mismatching sampling ratio %d:%"
+ 469      6F6E656E 
+ 469      7420696E 
+ 469      64657820 
+ 469      25643A20 
+ 470 0133 642C2025 		.ascii	"d, %d:%d, %c\000"
+ 470      643A2564 
+ 470      2C202563 
+ 470      00
+ 471              		.align	2
+ 472              	.LC9:
+ 473 0140 426F6775 		.ascii	"Bogus Huffman table definition\000"
+ 473      73204875 
+ 473      66666D61 
+ 473      6E207461 
+ 473      626C6520 
+ 474 015f 00       		.align	2
+ 475              	.LC10:
+ 476 0160 426F6775 		.ascii	"Bogus input colorspace\000"
+ 476      7320696E 
+ 476      70757420 
+ 476      636F6C6F 
+ 476      72737061 
+ 477 0177 00       		.align	2
+ 478              	.LC11:
+ 479 0178 426F6775 		.ascii	"Bogus JPEG colorspace\000"
+ 479      73204A50 
+ 479      45472063 
+ 479      6F6C6F72 
+ 479      73706163 
+ 480 018e 0000     		.align	2
+ 481              	.LC12:
+ 482 0190 426F6775 		.ascii	"Bogus marker length\000"
+ 482      73206D61 
+ 482      726B6572 
+ 482      206C656E 
+ 482      67746800 
+ 483              		.align	2
+ 484              	.LC13:
+ 485 01a4 57726F6E 		.ascii	"Wrong JPEG library version: library is %d, caller e"
+ 485      67204A50 
+ 485      4547206C 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 16
+
+
+ 485      69627261 
+ 485      72792076 
+ 486 01d7 78706563 		.ascii	"xpects %d\000"
+ 486      74732025 
+ 486      6400
+ 487 01e1 000000   		.align	2
+ 488              	.LC14:
+ 489 01e4 53616D70 		.ascii	"Sampling factors too large for interleaved scan\000"
+ 489      6C696E67 
+ 489      20666163 
+ 489      746F7273 
+ 489      20746F6F 
+ 490              		.align	2
+ 491              	.LC15:
+ 492 0214 496E7661 		.ascii	"Invalid memory pool code %d\000"
+ 492      6C696420 
+ 492      6D656D6F 
+ 492      72792070 
+ 492      6F6F6C20 
+ 493              		.align	2
+ 494              	.LC16:
+ 495 0230 556E7375 		.ascii	"Unsupported JPEG data precision %d\000"
+ 495      70706F72 
+ 495      74656420 
+ 495      4A504547 
+ 495      20646174 
+ 496 0253 00       		.align	2
+ 497              	.LC17:
+ 498 0254 496E7661 		.ascii	"Invalid progressive parameters Ss=%d Se=%d Ah=%d Al"
+ 498      6C696420 
+ 498      70726F67 
+ 498      72657373 
+ 498      69766520 
+ 499 0287 3D256400 		.ascii	"=%d\000"
+ 500 028b 00       		.align	2
+ 501              	.LC18:
+ 502 028c 496E7661 		.ascii	"Invalid progressive parameters at scan script entry"
+ 502      6C696420 
+ 502      70726F67 
+ 502      72657373 
+ 502      69766520 
+ 503 02bf 20256400 		.ascii	" %d\000"
+ 504 02c3 00       		.align	2
+ 505              	.LC19:
+ 506 02c4 426F6775 		.ascii	"Bogus sampling factors\000"
+ 506      73207361 
+ 506      6D706C69 
+ 506      6E672066 
+ 506      6163746F 
+ 507 02db 00       		.align	2
+ 508              	.LC20:
+ 509 02dc 496E7661 		.ascii	"Invalid scan script at entry %d\000"
+ 509      6C696420 
+ 509      7363616E 
+ 509      20736372 
+ 509      69707420 
+ 510              		.align	2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 17
+
+
+ 511              	.LC21:
+ 512 02fc 496D7072 		.ascii	"Improper call to JPEG library in state %d\000"
+ 512      6F706572 
+ 512      2063616C 
+ 512      6C20746F 
+ 512      204A5045 
+ 513 0326 0000     		.align	2
+ 514              	.LC22:
+ 515 0328 4A504547 		.ascii	"JPEG parameter struct mismatch: library thinks size"
+ 515      20706172 
+ 515      616D6574 
+ 515      65722073 
+ 515      74727563 
+ 516 035b 20697320 		.ascii	" is %u, caller expects %u\000"
+ 516      25752C20 
+ 516      63616C6C 
+ 516      65722065 
+ 516      78706563 
+ 517 0375 000000   		.align	2
+ 518              	.LC23:
+ 519 0378 426F6775 		.ascii	"Bogus virtual array access\000"
+ 519      73207669 
+ 519      72747561 
+ 519      6C206172 
+ 519      72617920 
+ 520 0393 00       		.align	2
+ 521              	.LC24:
+ 522 0394 42756666 		.ascii	"Buffer passed to JPEG library is too small\000"
+ 522      65722070 
+ 522      61737365 
+ 522      6420746F 
+ 522      204A5045 
+ 523 03bf 00       		.align	2
+ 524              	.LC25:
+ 525 03c0 53757370 		.ascii	"Suspension not allowed here\000"
+ 525      656E7369 
+ 525      6F6E206E 
+ 525      6F742061 
+ 525      6C6C6F77 
+ 526              		.align	2
+ 527              	.LC26:
+ 528 03dc 43434952 		.ascii	"CCIR601 sampling not implemented yet\000"
+ 528      36303120 
+ 528      73616D70 
+ 528      6C696E67 
+ 528      206E6F74 
+ 529 0401 000000   		.align	2
+ 530              	.LC27:
+ 531 0404 546F6F20 		.ascii	"Too many color components: %d, max %d\000"
+ 531      6D616E79 
+ 531      20636F6C 
+ 531      6F722063 
+ 531      6F6D706F 
+ 532 042a 0000     		.align	2
+ 533              	.LC28:
+ 534 042c 556E7375 		.ascii	"Unsupported color conversion request\000"
+ 534      70706F72 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 18
+
+
+ 534      74656420 
+ 534      636F6C6F 
+ 534      7220636F 
+ 535 0451 000000   		.align	2
+ 536              	.LC29:
+ 537 0454 426F6775 		.ascii	"Bogus DAC index %d\000"
+ 537      73204441 
+ 537      4320696E 
+ 537      64657820 
+ 537      256400
+ 538 0467 00       		.align	2
+ 539              	.LC30:
+ 540 0468 426F6775 		.ascii	"Bogus DAC value 0x%x\000"
+ 540      73204441 
+ 540      43207661 
+ 540      6C756520 
+ 540      30782578 
+ 541 047d 000000   		.align	2
+ 542              	.LC31:
+ 543 0480 426F6775 		.ascii	"Bogus DHT index %d\000"
+ 543      73204448 
+ 543      5420696E 
+ 543      64657820 
+ 543      256400
+ 544 0493 00       		.align	2
+ 545              	.LC32:
+ 546 0494 426F6775 		.ascii	"Bogus DQT index %d\000"
+ 546      73204451 
+ 546      5420696E 
+ 546      64657820 
+ 546      256400
+ 547 04a7 00       		.align	2
+ 548              	.LC33:
+ 549 04a8 456D7074 		.ascii	"Empty JPEG image (DNL not supported)\000"
+ 549      79204A50 
+ 549      45472069 
+ 549      6D616765 
+ 549      2028444E 
+ 550 04cd 000000   		.align	2
+ 551              	.LC34:
+ 552 04d0 52656164 		.ascii	"Read from EMS failed\000"
+ 552      2066726F 
+ 552      6D20454D 
+ 552      53206661 
+ 552      696C6564 
+ 553 04e5 000000   		.align	2
+ 554              	.LC35:
+ 555 04e8 57726974 		.ascii	"Write to EMS failed\000"
+ 555      6520746F 
+ 555      20454D53 
+ 555      20666169 
+ 555      6C656400 
+ 556              		.align	2
+ 557              	.LC36:
+ 558 04fc 4469646E 		.ascii	"Didn't expect more than one scan\000"
+ 558      27742065 
+ 558      78706563 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 19
+
+
+ 558      74206D6F 
+ 558      72652074 
+ 559 051d 000000   		.align	2
+ 560              	.LC37:
+ 561 0520 496E7075 		.ascii	"Input file read error\000"
+ 561      74206669 
+ 561      6C652072 
+ 561      65616420 
+ 561      6572726F 
+ 562 0536 0000     		.align	2
+ 563              	.LC38:
+ 564 0538 4F757470 		.ascii	"Output file write error --- out of disk space?\000"
+ 564      75742066 
+ 564      696C6520 
+ 564      77726974 
+ 564      65206572 
+ 565 0567 00       		.align	2
+ 566              	.LC39:
+ 567 0568 46726163 		.ascii	"Fractional sampling not implemented yet\000"
+ 567      74696F6E 
+ 567      616C2073 
+ 567      616D706C 
+ 567      696E6720 
+ 568              		.align	2
+ 569              	.LC40:
+ 570 0590 48756666 		.ascii	"Huffman code size table overflow\000"
+ 570      6D616E20 
+ 570      636F6465 
+ 570      2073697A 
+ 570      65207461 
+ 571 05b1 000000   		.align	2
+ 572              	.LC41:
+ 573 05b4 4D697373 		.ascii	"Missing Huffman code table entry\000"
+ 573      696E6720 
+ 573      48756666 
+ 573      6D616E20 
+ 573      636F6465 
+ 574 05d5 000000   		.align	2
+ 575              	.LC42:
+ 576 05d8 4D617869 		.ascii	"Maximum supported image dimension is %u pixels\000"
+ 576      6D756D20 
+ 576      73757070 
+ 576      6F727465 
+ 576      6420696D 
+ 577 0607 00       		.align	2
+ 578              	.LC43:
+ 579 0608 456D7074 		.ascii	"Empty input file\000"
+ 579      7920696E 
+ 579      70757420 
+ 579      66696C65 
+ 579      00
+ 580 0619 000000   		.align	2
+ 581              	.LC44:
+ 582 061c 5072656D 		.ascii	"Premature end of input file\000"
+ 582      61747572 
+ 582      6520656E 
+ 582      64206F66 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 20
+
+
+ 582      20696E70 
+ 583              		.align	2
+ 584              	.LC45:
+ 585 0638 43616E6E 		.ascii	"Cannot transcode due to multiple use of quantizatio"
+ 585      6F742074 
+ 585      72616E73 
+ 585      636F6465 
+ 585      20647565 
+ 586 066b 6E207461 		.ascii	"n table %d\000"
+ 586      626C6520 
+ 586      256400
+ 587 0676 0000     		.align	2
+ 588              	.LC46:
+ 589 0678 5363616E 		.ascii	"Scan script does not transmit all data\000"
+ 589      20736372 
+ 589      69707420 
+ 589      646F6573 
+ 589      206E6F74 
+ 590 069f 00       		.align	2
+ 591              	.LC47:
+ 592 06a0 496E7661 		.ascii	"Invalid color quantization mode change\000"
+ 592      6C696420 
+ 592      636F6C6F 
+ 592      72207175 
+ 592      616E7469 
+ 593 06c7 00       		.align	2
+ 594              	.LC48:
+ 595 06c8 4E6F7420 		.ascii	"Not implemented yet\000"
+ 595      696D706C 
+ 595      656D656E 
+ 595      74656420 
+ 595      79657400 
+ 596              		.align	2
+ 597              	.LC49:
+ 598 06dc 52657175 		.ascii	"Requested feature was omitted at compile time\000"
+ 598      65737465 
+ 598      64206665 
+ 598      61747572 
+ 598      65207761 
+ 599 070a 0000     		.align	2
+ 600              	.LC50:
+ 601 070c 41726974 		.ascii	"Arithmetic table 0x%02x was not defined\000"
+ 601      686D6574 
+ 601      69632074 
+ 601      61626C65 
+ 601      20307825 
+ 602              		.align	2
+ 603              	.LC51:
+ 604 0734 4261636B 		.ascii	"Backing store not supported\000"
+ 604      696E6720 
+ 604      73746F72 
+ 604      65206E6F 
+ 604      74207375 
+ 605              		.align	2
+ 606              	.LC52:
+ 607 0750 48756666 		.ascii	"Huffman table 0x%02x was not defined\000"
+ 607      6D616E20 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 21
+
+
+ 607      7461626C 
+ 607      65203078 
+ 607      25303278 
+ 608 0775 000000   		.align	2
+ 609              	.LC53:
+ 610 0778 4A504547 		.ascii	"JPEG datastream contains no image\000"
+ 610      20646174 
+ 610      61737472 
+ 610      65616D20 
+ 610      636F6E74 
+ 611 079a 0000     		.align	2
+ 612              	.LC54:
+ 613 079c 5175616E 		.ascii	"Quantization table 0x%02x was not defined\000"
+ 613      74697A61 
+ 613      74696F6E 
+ 613      20746162 
+ 613      6C652030 
+ 614 07c6 0000     		.align	2
+ 615              	.LC55:
+ 616 07c8 4E6F7420 		.ascii	"Not a JPEG file: starts with 0x%02x 0x%02x\000"
+ 616      61204A50 
+ 616      45472066 
+ 616      696C653A 
+ 616      20737461 
+ 617 07f3 00       		.align	2
+ 618              	.LC56:
+ 619 07f4 496E7375 		.ascii	"Insufficient memory (case %d)\000"
+ 619      66666963 
+ 619      69656E74 
+ 619      206D656D 
+ 619      6F727920 
+ 620 0812 0000     		.align	2
+ 621              	.LC57:
+ 622 0814 43616E6E 		.ascii	"Cannot quantize more than %d color components\000"
+ 622      6F742071 
+ 622      75616E74 
+ 622      697A6520 
+ 622      6D6F7265 
+ 623 0842 0000     		.align	2
+ 624              	.LC58:
+ 625 0844 43616E6E 		.ascii	"Cannot quantize to fewer than %d colors\000"
+ 625      6F742071 
+ 625      75616E74 
+ 625      697A6520 
+ 625      746F2066 
+ 626              		.align	2
+ 627              	.LC59:
+ 628 086c 43616E6E 		.ascii	"Cannot quantize to more than %d colors\000"
+ 628      6F742071 
+ 628      75616E74 
+ 628      697A6520 
+ 628      746F206D 
+ 629 0893 00       		.align	2
+ 630              	.LC60:
+ 631 0894 496E7661 		.ascii	"Invalid JPEG file structure: two SOF markers\000"
+ 631      6C696420 
+ 631      4A504547 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 22
+
+
+ 631      2066696C 
+ 631      65207374 
+ 632 08c1 000000   		.align	2
+ 633              	.LC61:
+ 634 08c4 496E7661 		.ascii	"Invalid JPEG file structure: missing SOS marker\000"
+ 634      6C696420 
+ 634      4A504547 
+ 634      2066696C 
+ 634      65207374 
+ 635              		.align	2
+ 636              	.LC62:
+ 637 08f4 556E7375 		.ascii	"Unsupported JPEG process: SOF type 0x%02x\000"
+ 637      70706F72 
+ 637      74656420 
+ 637      4A504547 
+ 637      2070726F 
+ 638 091e 0000     		.align	2
+ 639              	.LC63:
+ 640 0920 496E7661 		.ascii	"Invalid JPEG file structure: two SOI markers\000"
+ 640      6C696420 
+ 640      4A504547 
+ 640      2066696C 
+ 640      65207374 
+ 641 094d 000000   		.align	2
+ 642              	.LC64:
+ 643 0950 496E7661 		.ascii	"Invalid JPEG file structure: SOS before SOF\000"
+ 643      6C696420 
+ 643      4A504547 
+ 643      2066696C 
+ 643      65207374 
+ 644              		.align	2
+ 645              	.LC65:
+ 646 097c 4661696C 		.ascii	"Failed to create temporary file %s\000"
+ 646      65642074 
+ 646      6F206372 
+ 646      65617465 
+ 646      2074656D 
+ 647 099f 00       		.align	2
+ 648              	.LC66:
+ 649 09a0 52656164 		.ascii	"Read failed on temporary file\000"
+ 649      20666169 
+ 649      6C656420 
+ 649      6F6E2074 
+ 649      656D706F 
+ 650 09be 0000     		.align	2
+ 651              	.LC67:
+ 652 09c0 5365656B 		.ascii	"Seek failed on temporary file\000"
+ 652      20666169 
+ 652      6C656420 
+ 652      6F6E2074 
+ 652      656D706F 
+ 653 09de 0000     		.align	2
+ 654              	.LC68:
+ 655 09e0 57726974 		.ascii	"Write failed on temporary file --- out of disk spac"
+ 655      65206661 
+ 655      696C6564 
+ 655      206F6E20 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 23
+
+
+ 655      74656D70 
+ 656 0a13 653F00   		.ascii	"e?\000"
+ 657 0a16 0000     		.align	2
+ 658              	.LC69:
+ 659 0a18 4170706C 		.ascii	"Application transferred too few scanlines\000"
+ 659      69636174 
+ 659      696F6E20 
+ 659      7472616E 
+ 659      73666572 
+ 660 0a42 0000     		.align	2
+ 661              	.LC70:
+ 662 0a44 556E7375 		.ascii	"Unsupported marker type 0x%02x\000"
+ 662      70706F72 
+ 662      74656420 
+ 662      6D61726B 
+ 662      65722074 
+ 663 0a63 00       		.align	2
+ 664              	.LC71:
+ 665 0a64 56697274 		.ascii	"Virtual array controller messed up\000"
+ 665      75616C20 
+ 665      61727261 
+ 665      7920636F 
+ 665      6E74726F 
+ 666 0a87 00       		.align	2
+ 667              	.LC72:
+ 668 0a88 496D6167 		.ascii	"Image too wide for this implementation\000"
+ 668      6520746F 
+ 668      6F207769 
+ 668      64652066 
+ 668      6F722074 
+ 669 0aaf 00       		.align	2
+ 670              	.LC73:
+ 671 0ab0 52656164 		.ascii	"Read from XMS failed\000"
+ 671      2066726F 
+ 671      6D20584D 
+ 671      53206661 
+ 671      696C6564 
+ 672 0ac5 000000   		.align	2
+ 673              	.LC74:
+ 674 0ac8 57726974 		.ascii	"Write to XMS failed\000"
+ 674      6520746F 
+ 674      20584D53 
+ 674      20666169 
+ 674      6C656400 
+ 675              		.align	2
+ 676              	.LC75:
+ 677 0adc 436F7079 		.ascii	"Copyright (C) 2012, Thomas G. Lane, Guido Vollbedin"
+ 677      72696768 
+ 677      74202843 
+ 677      29203230 
+ 677      31322C20 
+ 678 0b0f 6700     		.ascii	"g\000"
+ 679 0b11 000000   		.align	2
+ 680              	.LC76:
+ 681 0b14 38642020 		.ascii	"8d  15-Jan-2012\000"
+ 681      31352D4A 
+ 681      616E2D32 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 24
+
+
+ 681      30313200 
+ 682              		.align	2
+ 683              	.LC77:
+ 684 0b24 43617574 		.ascii	"Caution: quantization tables are too coarse for bas"
+ 684      696F6E3A 
+ 684      20717561 
+ 684      6E74697A 
+ 684      6174696F 
+ 685 0b57 656C696E 		.ascii	"eline JPEG\000"
+ 685      65204A50 
+ 685      454700
+ 686 0b62 0000     		.align	2
+ 687              	.LC78:
+ 688 0b64 41646F62 		.ascii	"Adobe APP14 marker: version %d, flags 0x%04x 0x%04x"
+ 688      65204150 
+ 688      50313420 
+ 688      6D61726B 
+ 688      65723A20 
+ 689 0b97 2C207472 		.ascii	", transform %d\000"
+ 689      616E7366 
+ 689      6F726D20 
+ 689      256400
+ 690 0ba6 0000     		.align	2
+ 691              	.LC79:
+ 692 0ba8 556E6B6E 		.ascii	"Unknown APP0 marker (not JFIF), length %u\000"
+ 692      6F776E20 
+ 692      41505030 
+ 692      206D6172 
+ 692      6B657220 
+ 693 0bd2 0000     		.align	2
+ 694              	.LC80:
+ 695 0bd4 556E6B6E 		.ascii	"Unknown APP14 marker (not Adobe), length %u\000"
+ 695      6F776E20 
+ 695      41505031 
+ 695      34206D61 
+ 695      726B6572 
+ 696              		.align	2
+ 697              	.LC81:
+ 698 0c00 44656669 		.ascii	"Define Arithmetic Table 0x%02x: 0x%02x\000"
+ 698      6E652041 
+ 698      72697468 
+ 698      6D657469 
+ 698      63205461 
+ 699 0c27 00       		.align	2
+ 700              	.LC82:
+ 701 0c28 44656669 		.ascii	"Define Huffman Table 0x%02x\000"
+ 701      6E652048 
+ 701      7566666D 
+ 701      616E2054 
+ 701      61626C65 
+ 702              		.align	2
+ 703              	.LC83:
+ 704 0c44 44656669 		.ascii	"Define Quantization Table %d  precision %d\000"
+ 704      6E652051 
+ 704      75616E74 
+ 704      697A6174 
+ 704      696F6E20 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 25
+
+
+ 705 0c6f 00       		.align	2
+ 706              	.LC84:
+ 707 0c70 44656669 		.ascii	"Define Restart Interval %u\000"
+ 707      6E652052 
+ 707      65737461 
+ 707      72742049 
+ 707      6E746572 
+ 708 0c8b 00       		.align	2
+ 709              	.LC85:
+ 710 0c8c 46726565 		.ascii	"Freed EMS handle %u\000"
+ 710      6420454D 
+ 710      53206861 
+ 710      6E646C65 
+ 710      20257500 
+ 711              		.align	2
+ 712              	.LC86:
+ 713 0ca0 4F627461 		.ascii	"Obtained EMS handle %u\000"
+ 713      696E6564 
+ 713      20454D53 
+ 713      2068616E 
+ 713      646C6520 
+ 714 0cb7 00       		.align	2
+ 715              	.LC87:
+ 716 0cb8 456E6420 		.ascii	"End Of Image\000"
+ 716      4F662049 
+ 716      6D616765 
+ 716      00
+ 717 0cc5 000000   		.align	2
+ 718              	.LC88:
+ 719 0cc8 20202020 		.ascii	"        %3d %3d %3d %3d %3d %3d %3d %3d\000"
+ 719      20202020 
+ 719      25336420 
+ 719      25336420 
+ 719      25336420 
+ 720              		.align	2
+ 721              	.LC89:
+ 722 0cf0 4A464946 		.ascii	"JFIF APP0 marker: version %d.%02d, density %dx%d  %"
+ 722      20415050 
+ 722      30206D61 
+ 722      726B6572 
+ 722      3A207665 
+ 723 0d23 6400     		.ascii	"d\000"
+ 724 0d25 000000   		.align	2
+ 725              	.LC90:
+ 726 0d28 5761726E 		.ascii	"Warning: thumbnail image size does not match data l"
+ 726      696E673A 
+ 726      20746875 
+ 726      6D626E61 
+ 726      696C2069 
+ 727 0d5b 656E6774 		.ascii	"ength %u\000"
+ 727      68202575 
+ 727      00
+ 728              		.align	2
+ 729              	.LC91:
+ 730 0d64 4A464946 		.ascii	"JFIF extension marker: type 0x%02x, length %u\000"
+ 730      20657874 
+ 730      656E7369 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 26
+
+
+ 730      6F6E206D 
+ 730      61726B65 
+ 731 0d92 0000     		.align	2
+ 732              	.LC92:
+ 733 0d94 20202020 		.ascii	"    with %d x %d thumbnail image\000"
+ 733      77697468 
+ 733      20256420 
+ 733      78202564 
+ 733      20746875 
+ 734 0db5 000000   		.align	2
+ 735              	.LC93:
+ 736 0db8 4D697363 		.ascii	"Miscellaneous marker 0x%02x, length %u\000"
+ 736      656C6C61 
+ 736      6E656F75 
+ 736      73206D61 
+ 736      726B6572 
+ 737 0ddf 00       		.align	2
+ 738              	.LC94:
+ 739 0de0 556E6578 		.ascii	"Unexpected marker 0x%02x\000"
+ 739      70656374 
+ 739      6564206D 
+ 739      61726B65 
+ 739      72203078 
+ 740 0df9 000000   		.align	2
+ 741              	.LC95:
+ 742 0dfc 20202020 		.ascii	"        %4u %4u %4u %4u %4u %4u %4u %4u\000"
+ 742      20202020 
+ 742      25347520 
+ 742      25347520 
+ 742      25347520 
+ 743              		.align	2
+ 744              	.LC96:
+ 745 0e24 5175616E 		.ascii	"Quantizing to %d = %d*%d*%d colors\000"
+ 745      74697A69 
+ 745      6E672074 
+ 745      6F202564 
+ 745      203D2025 
+ 746 0e47 00       		.align	2
+ 747              	.LC97:
+ 748 0e48 5175616E 		.ascii	"Quantizing to %d colors\000"
+ 748      74697A69 
+ 748      6E672074 
+ 748      6F202564 
+ 748      20636F6C 
+ 749              		.align	2
+ 750              	.LC98:
+ 751 0e60 53656C65 		.ascii	"Selected %d colors for quantization\000"
+ 751      63746564 
+ 751      20256420 
+ 751      636F6C6F 
+ 751      72732066 
+ 752              		.align	2
+ 753              	.LC99:
+ 754 0e84 4174206D 		.ascii	"At marker 0x%02x, recovery action %d\000"
+ 754      61726B65 
+ 754      72203078 
+ 754      25303278 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 27
+
+
+ 754      2C207265 
+ 755 0ea9 000000   		.align	2
+ 756              	.LC100:
+ 757 0eac 52535425 		.ascii	"RST%d\000"
+ 757      6400
+ 758 0eb2 0000     		.align	2
+ 759              	.LC101:
+ 760 0eb4 536D6F6F 		.ascii	"Smoothing not supported with nonstandard sampling r"
+ 760      7468696E 
+ 760      67206E6F 
+ 760      74207375 
+ 760      70706F72 
+ 761 0ee7 6174696F 		.ascii	"atios\000"
+ 761      7300
+ 762 0eed 000000   		.align	2
+ 763              	.LC102:
+ 764 0ef0 53746172 		.ascii	"Start Of Frame 0x%02x: width=%u, height=%u, compone"
+ 764      74204F66 
+ 764      20467261 
+ 764      6D652030 
+ 764      78253032 
+ 765 0f23 6E74733D 		.ascii	"nts=%d\000"
+ 765      256400
+ 766 0f2a 0000     		.align	2
+ 767              	.LC103:
+ 768 0f2c 20202020 		.ascii	"    Component %d: %dhx%dv q=%d\000"
+ 768      436F6D70 
+ 768      6F6E656E 
+ 768      74202564 
+ 768      3A202564 
+ 769 0f4b 00       		.align	2
+ 770              	.LC104:
+ 771 0f4c 53746172 		.ascii	"Start of Image\000"
+ 771      74206F66 
+ 771      20496D61 
+ 771      676500
+ 772 0f5b 00       		.align	2
+ 773              	.LC105:
+ 774 0f5c 53746172 		.ascii	"Start Of Scan: %d components\000"
+ 774      74204F66 
+ 774      20536361 
+ 774      6E3A2025 
+ 774      6420636F 
+ 775 0f79 000000   		.align	2
+ 776              	.LC106:
+ 777 0f7c 20202020 		.ascii	"    Component %d: dc=%d ac=%d\000"
+ 777      436F6D70 
+ 777      6F6E656E 
+ 777      74202564 
+ 777      3A206463 
+ 778 0f9a 0000     		.align	2
+ 779              	.LC107:
+ 780 0f9c 20205373 		.ascii	"  Ss=%d, Se=%d, Ah=%d, Al=%d\000"
+ 780      3D25642C 
+ 780      2053653D 
+ 780      25642C20 
+ 780      41683D25 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 28
+
+
+ 781 0fb9 000000   		.align	2
+ 782              	.LC108:
+ 783 0fbc 436C6F73 		.ascii	"Closed temporary file %s\000"
+ 783      65642074 
+ 783      656D706F 
+ 783      72617279 
+ 783      2066696C 
+ 784 0fd5 000000   		.align	2
+ 785              	.LC109:
+ 786 0fd8 4F70656E 		.ascii	"Opened temporary file %s\000"
+ 786      65642074 
+ 786      656D706F 
+ 786      72617279 
+ 786      2066696C 
+ 787 0ff1 000000   		.align	2
+ 788              	.LC110:
+ 789 0ff4 4A464946 		.ascii	"JFIF extension marker: JPEG-compressed thumbnail im"
+ 789      20657874 
+ 789      656E7369 
+ 789      6F6E206D 
+ 789      61726B65 
+ 790 1027 6167652C 		.ascii	"age, length %u\000"
+ 790      206C656E 
+ 790      67746820 
+ 790      257500
+ 791 1036 0000     		.align	2
+ 792              	.LC111:
+ 793 1038 4A464946 		.ascii	"JFIF extension marker: palette thumbnail image, len"
+ 793      20657874 
+ 793      656E7369 
+ 793      6F6E206D 
+ 793      61726B65 
+ 794 106b 67746820 		.ascii	"gth %u\000"
+ 794      257500
+ 795 1072 0000     		.align	2
+ 796              	.LC112:
+ 797 1074 4A464946 		.ascii	"JFIF extension marker: RGB thumbnail image, length "
+ 797      20657874 
+ 797      656E7369 
+ 797      6F6E206D 
+ 797      61726B65 
+ 798 10a7 257500   		.ascii	"%u\000"
+ 799 10aa 0000     		.align	2
+ 800              	.LC113:
+ 801 10ac 556E7265 		.ascii	"Unrecognized component IDs %d %d %d, assuming YCbCr"
+ 801      636F676E 
+ 801      697A6564 
+ 801      20636F6D 
+ 801      706F6E65 
+ 802 10df 00       		.ascii	"\000"
+ 803              		.align	2
+ 804              	.LC114:
+ 805 10e0 46726565 		.ascii	"Freed XMS handle %u\000"
+ 805      6420584D 
+ 805      53206861 
+ 805      6E646C65 
+ 805      20257500 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 29
+
+
+ 806              		.align	2
+ 807              	.LC115:
+ 808 10f4 4F627461 		.ascii	"Obtained XMS handle %u\000"
+ 808      696E6564 
+ 808      20584D53 
+ 808      2068616E 
+ 808      646C6520 
+ 809 110b 00       		.align	2
+ 810              	.LC116:
+ 811 110c 556E6B6E 		.ascii	"Unknown Adobe color transform code %d\000"
+ 811      6F776E20 
+ 811      41646F62 
+ 811      6520636F 
+ 811      6C6F7220 
+ 812 1132 0000     		.align	2
+ 813              	.LC117:
+ 814 1134 436F7272 		.ascii	"Corrupt JPEG data: bad arithmetic code\000"
+ 814      75707420 
+ 814      4A504547 
+ 814      20646174 
+ 814      613A2062 
+ 815 115b 00       		.align	2
+ 816              	.LC118:
+ 817 115c 496E636F 		.ascii	"Inconsistent progression sequence for component %d "
+ 817      6E736973 
+ 817      74656E74 
+ 817      2070726F 
+ 817      67726573 
+ 818 118f 636F6566 		.ascii	"coefficient %d\000"
+ 818      66696369 
+ 818      656E7420 
+ 818      256400
+ 819 119e 0000     		.align	2
+ 820              	.LC119:
+ 821 11a0 436F7272 		.ascii	"Corrupt JPEG data: %u extraneous bytes before marke"
+ 821      75707420 
+ 821      4A504547 
+ 821      20646174 
+ 821      613A2025 
+ 822 11d3 72203078 		.ascii	"r 0x%02x\000"
+ 822      25303278 
+ 822      00
+ 823              		.align	2
+ 824              	.LC120:
+ 825 11dc 436F7272 		.ascii	"Corrupt JPEG data: premature end of data segment\000"
+ 825      75707420 
+ 825      4A504547 
+ 825      20646174 
+ 825      613A2070 
+ 826 120d 000000   		.align	2
+ 827              	.LC121:
+ 828 1210 436F7272 		.ascii	"Corrupt JPEG data: bad Huffman code\000"
+ 828      75707420 
+ 828      4A504547 
+ 828      20646174 
+ 828      613A2062 
+ 829              		.align	2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 30
+
+
+ 830              	.LC122:
+ 831 1234 5761726E 		.ascii	"Warning: unknown JFIF revision number %d.%02d\000"
+ 831      696E673A 
+ 831      20756E6B 
+ 831      6E6F776E 
+ 831      204A4649 
+ 832 1262 0000     		.align	2
+ 833              	.LC123:
+ 834 1264 5072656D 		.ascii	"Premature end of JPEG file\000"
+ 834      61747572 
+ 834      6520656E 
+ 834      64206F66 
+ 834      204A5045 
+ 835 127f 00       		.align	2
+ 836              	.LC124:
+ 837 1280 436F7272 		.ascii	"Corrupt JPEG data: found marker 0x%02x instead of R"
+ 837      75707420 
+ 837      4A504547 
+ 837      20646174 
+ 837      613A2066 
+ 838 12b3 53542564 		.ascii	"ST%d\000"
+ 838      00
+ 839              		.align	2
+ 840              	.LC125:
+ 841 12b8 496E7661 		.ascii	"Invalid SOS parameters for sequential JPEG\000"
+ 841      6C696420 
+ 841      534F5320 
+ 841      70617261 
+ 841      6D657465 
+ 842 12e3 00       		.align	2
+ 843              	.LC126:
+ 844 12e4 4170706C 		.ascii	"Application transferred too many scanlines\000"
+ 844      69636174 
+ 844      696F6E20 
+ 844      7472616E 
+ 844      73666572 
+ 845              		.section	.rodata.jpeg_std_message_table,"a"
+ 846              		.align	2
+ 849              	jpeg_std_message_table:
+ 850 0000 00000000 		.word	.LC0
+ 851 0004 18000000 		.word	.LC1
+ 852 0008 38000000 		.word	.LC2
+ 853 000c 60000000 		.word	.LC3
+ 854 0010 7C000000 		.word	.LC4
+ 855 0014 9C000000 		.word	.LC5
+ 856 0018 B4000000 		.word	.LC6
+ 857 001c D4000000 		.word	.LC7
+ 858 0020 00010000 		.word	.LC8
+ 859 0024 40010000 		.word	.LC9
+ 860 0028 60010000 		.word	.LC10
+ 861 002c 78010000 		.word	.LC11
+ 862 0030 90010000 		.word	.LC12
+ 863 0034 A4010000 		.word	.LC13
+ 864 0038 E4010000 		.word	.LC14
+ 865 003c 14020000 		.word	.LC15
+ 866 0040 30020000 		.word	.LC16
+ 867 0044 54020000 		.word	.LC17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 31
+
+
+ 868 0048 8C020000 		.word	.LC18
+ 869 004c C4020000 		.word	.LC19
+ 870 0050 DC020000 		.word	.LC20
+ 871 0054 FC020000 		.word	.LC21
+ 872 0058 28030000 		.word	.LC22
+ 873 005c 78030000 		.word	.LC23
+ 874 0060 94030000 		.word	.LC24
+ 875 0064 C0030000 		.word	.LC25
+ 876 0068 DC030000 		.word	.LC26
+ 877 006c 04040000 		.word	.LC27
+ 878 0070 2C040000 		.word	.LC28
+ 879 0074 54040000 		.word	.LC29
+ 880 0078 68040000 		.word	.LC30
+ 881 007c 80040000 		.word	.LC31
+ 882 0080 94040000 		.word	.LC32
+ 883 0084 A8040000 		.word	.LC33
+ 884 0088 D0040000 		.word	.LC34
+ 885 008c E8040000 		.word	.LC35
+ 886 0090 FC040000 		.word	.LC36
+ 887 0094 20050000 		.word	.LC37
+ 888 0098 38050000 		.word	.LC38
+ 889 009c 68050000 		.word	.LC39
+ 890 00a0 90050000 		.word	.LC40
+ 891 00a4 B4050000 		.word	.LC41
+ 892 00a8 D8050000 		.word	.LC42
+ 893 00ac 08060000 		.word	.LC43
+ 894 00b0 1C060000 		.word	.LC44
+ 895 00b4 38060000 		.word	.LC45
+ 896 00b8 78060000 		.word	.LC46
+ 897 00bc A0060000 		.word	.LC47
+ 898 00c0 C8060000 		.word	.LC48
+ 899 00c4 DC060000 		.word	.LC49
+ 900 00c8 0C070000 		.word	.LC50
+ 901 00cc 34070000 		.word	.LC51
+ 902 00d0 50070000 		.word	.LC52
+ 903 00d4 78070000 		.word	.LC53
+ 904 00d8 9C070000 		.word	.LC54
+ 905 00dc C8070000 		.word	.LC55
+ 906 00e0 F4070000 		.word	.LC56
+ 907 00e4 14080000 		.word	.LC57
+ 908 00e8 44080000 		.word	.LC58
+ 909 00ec 6C080000 		.word	.LC59
+ 910 00f0 94080000 		.word	.LC60
+ 911 00f4 C4080000 		.word	.LC61
+ 912 00f8 F4080000 		.word	.LC62
+ 913 00fc 20090000 		.word	.LC63
+ 914 0100 50090000 		.word	.LC64
+ 915 0104 7C090000 		.word	.LC65
+ 916 0108 A0090000 		.word	.LC66
+ 917 010c C0090000 		.word	.LC67
+ 918 0110 E0090000 		.word	.LC68
+ 919 0114 180A0000 		.word	.LC69
+ 920 0118 440A0000 		.word	.LC70
+ 921 011c 640A0000 		.word	.LC71
+ 922 0120 880A0000 		.word	.LC72
+ 923 0124 B00A0000 		.word	.LC73
+ 924 0128 C80A0000 		.word	.LC74
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 32
+
+
+ 925 012c DC0A0000 		.word	.LC75
+ 926 0130 140B0000 		.word	.LC76
+ 927 0134 240B0000 		.word	.LC77
+ 928 0138 640B0000 		.word	.LC78
+ 929 013c A80B0000 		.word	.LC79
+ 930 0140 D40B0000 		.word	.LC80
+ 931 0144 000C0000 		.word	.LC81
+ 932 0148 280C0000 		.word	.LC82
+ 933 014c 440C0000 		.word	.LC83
+ 934 0150 700C0000 		.word	.LC84
+ 935 0154 8C0C0000 		.word	.LC85
+ 936 0158 A00C0000 		.word	.LC86
+ 937 015c B80C0000 		.word	.LC87
+ 938 0160 C80C0000 		.word	.LC88
+ 939 0164 F00C0000 		.word	.LC89
+ 940 0168 280D0000 		.word	.LC90
+ 941 016c 640D0000 		.word	.LC91
+ 942 0170 940D0000 		.word	.LC92
+ 943 0174 B80D0000 		.word	.LC93
+ 944 0178 E00D0000 		.word	.LC94
+ 945 017c FC0D0000 		.word	.LC95
+ 946 0180 240E0000 		.word	.LC96
+ 947 0184 480E0000 		.word	.LC97
+ 948 0188 600E0000 		.word	.LC98
+ 949 018c 840E0000 		.word	.LC99
+ 950 0190 AC0E0000 		.word	.LC100
+ 951 0194 B40E0000 		.word	.LC101
+ 952 0198 F00E0000 		.word	.LC102
+ 953 019c 2C0F0000 		.word	.LC103
+ 954 01a0 4C0F0000 		.word	.LC104
+ 955 01a4 5C0F0000 		.word	.LC105
+ 956 01a8 7C0F0000 		.word	.LC106
+ 957 01ac 9C0F0000 		.word	.LC107
+ 958 01b0 BC0F0000 		.word	.LC108
+ 959 01b4 D80F0000 		.word	.LC109
+ 960 01b8 F40F0000 		.word	.LC110
+ 961 01bc 38100000 		.word	.LC111
+ 962 01c0 74100000 		.word	.LC112
+ 963 01c4 AC100000 		.word	.LC113
+ 964 01c8 E0100000 		.word	.LC114
+ 965 01cc F4100000 		.word	.LC115
+ 966 01d0 0C110000 		.word	.LC116
+ 967 01d4 34110000 		.word	.LC117
+ 968 01d8 5C110000 		.word	.LC118
+ 969 01dc A0110000 		.word	.LC119
+ 970 01e0 DC110000 		.word	.LC120
+ 971 01e4 10120000 		.word	.LC121
+ 972 01e8 34120000 		.word	.LC122
+ 973 01ec 64120000 		.word	.LC123
+ 974 01f0 80120000 		.word	.LC124
+ 975 01f4 B8120000 		.word	.LC125
+ 976 01f8 E4120000 		.word	.LC126
+ 977 01fc 00000000 		.word	0
+ 978              		.text
+ 979              	.Letext0:
+ 980              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 981              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 33
+
+
+ 982              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 983              		.file 5 "Inc/jmorecfg.h"
+ 984              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 985              		.file 7 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 986              		.file 8 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/stdio.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 34
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jerror.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:20     .text.output_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:25     .text.output_message:00000000 output_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:59     .text.emit_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:64     .text.emit_message:00000000 emit_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:132    .text.reset_error_mgr:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:137    .text.reset_error_mgr:00000000 reset_error_mgr
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:162    .text.format_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:167    .text.format_message:00000000 format_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:328    .text.error_exit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:333    .text.error_exit:00000000 error_exit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:365    .text.jpeg_std_error:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:371    .text.jpeg_std_error:00000000 jpeg_std_error
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:432    .text.jpeg_std_error:00000030 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:849    .rodata.jpeg_std_message_table:00000000 jpeg_std_message_table
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:443    .rodata.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:846    .rodata.jpeg_std_message_table:00000000 $d
+
+UNDEFINED SYMBOLS
+sprintf
+jpeg_destroy

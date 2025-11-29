@@ -1,0 +1,2524 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov5640.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov5640.c"
+  19              		.section	.text.calculate_hts,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	calculate_hts:
+  26              	.LVL0:
+  27              	.LFB147:
+   1:Drivers/BSP/Camera/ov5640.c **** #include "ov5640.h"
+   2:Drivers/BSP/Camera/ov5640.c **** #include "ov5640_regs.h"
+   3:Drivers/BSP/Camera/ov5640.c **** #include <stdbool.h>
+   4:Drivers/BSP/Camera/ov5640.c **** 
+   5:Drivers/BSP/Camera/ov5640.c **** // Need GNU extensions
+   6:Drivers/BSP/Camera/ov5640.c **** #define IM_MAX(a, b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
+   7:Drivers/BSP/Camera/ov5640.c **** #define IM_MIN(a, b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a < _b ? _a : _b; })
+   8:Drivers/BSP/Camera/ov5640.c **** 
+   9:Drivers/BSP/Camera/ov5640.c **** #define BLANK_LINES 8
+  10:Drivers/BSP/Camera/ov5640.c **** #define DUMMY_LINES 6
+  11:Drivers/BSP/Camera/ov5640.c **** 
+  12:Drivers/BSP/Camera/ov5640.c **** #define BLANK_COLUMNS 0
+  13:Drivers/BSP/Camera/ov5640.c **** #define DUMMY_COLUMNS 16
+  14:Drivers/BSP/Camera/ov5640.c **** 
+  15:Drivers/BSP/Camera/ov5640.c **** #define SENSOR_WIDTH 2624
+  16:Drivers/BSP/Camera/ov5640.c **** #define SENSOR_HEIGHT 1964
+  17:Drivers/BSP/Camera/ov5640.c **** 
+  18:Drivers/BSP/Camera/ov5640.c **** #define ACTIVE_SENSOR_WIDTH (SENSOR_WIDTH - BLANK_COLUMNS - (2 * DUMMY_COLUMNS))
+  19:Drivers/BSP/Camera/ov5640.c **** #define ACTIVE_SENSOR_HEIGHT (SENSOR_HEIGHT - BLANK_LINES - (2 * DUMMY_LINES))
+  20:Drivers/BSP/Camera/ov5640.c **** 
+  21:Drivers/BSP/Camera/ov5640.c **** #define DUMMY_WIDTH_BUFFER 16
+  22:Drivers/BSP/Camera/ov5640.c **** #define DUMMY_HEIGHT_BUFFER 8
+  23:Drivers/BSP/Camera/ov5640.c **** 
+  24:Drivers/BSP/Camera/ov5640.c **** #define HSYNC_TIME 252
+  25:Drivers/BSP/Camera/ov5640.c **** #define VYSNC_TIME 24
+  26:Drivers/BSP/Camera/ov5640.c **** 
+  27:Drivers/BSP/Camera/ov5640.c **** static uint16_t hts_target = 0;
+  28:Drivers/BSP/Camera/ov5640.c **** 
+  29:Drivers/BSP/Camera/ov5640.c **** static int16_t readout_x = 0;
+  30:Drivers/BSP/Camera/ov5640.c **** static int16_t readout_y = 0;
+  31:Drivers/BSP/Camera/ov5640.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 2
+
+
+  32:Drivers/BSP/Camera/ov5640.c **** static uint16_t readout_w = ACTIVE_SENSOR_WIDTH;
+  33:Drivers/BSP/Camera/ov5640.c **** static uint16_t readout_h = ACTIVE_SENSOR_HEIGHT;
+  34:Drivers/BSP/Camera/ov5640.c **** 
+  35:Drivers/BSP/Camera/ov5640.c **** static uint8_t ov5640_WR_Reg(uint16_t reg, uint8_t data)
+  36:Drivers/BSP/Camera/ov5640.c **** {
+  37:Drivers/BSP/Camera/ov5640.c ****     Camera_WriteRegb2(&hcamera, reg, data);
+  38:Drivers/BSP/Camera/ov5640.c ****     return 0;
+  39:Drivers/BSP/Camera/ov5640.c **** }
+  40:Drivers/BSP/Camera/ov5640.c **** 
+  41:Drivers/BSP/Camera/ov5640.c **** static uint8_t ov5640_RD_Reg(uint16_t reg, uint8_t *data)
+  42:Drivers/BSP/Camera/ov5640.c **** {
+  43:Drivers/BSP/Camera/ov5640.c **** 
+  44:Drivers/BSP/Camera/ov5640.c ****     return Camera_ReadRegb2(&hcamera, reg, data);
+  45:Drivers/BSP/Camera/ov5640.c **** }
+  46:Drivers/BSP/Camera/ov5640.c **** 
+  47:Drivers/BSP/Camera/ov5640.c **** static int ov5640_reset(void)
+  48:Drivers/BSP/Camera/ov5640.c **** {
+  49:Drivers/BSP/Camera/ov5640.c ****     // Reset all registers
+  50:Drivers/BSP/Camera/ov5640.c ****     int ret = ov5640_WR_Reg(SCCB_SYSTEM_CTRL_1, 0x11);
+  51:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(SYSTEM_CTROL0, 0x82);
+  52:Drivers/BSP/Camera/ov5640.c **** 
+  53:Drivers/BSP/Camera/ov5640.c ****     // Delay 5 ms
+  54:Drivers/BSP/Camera/ov5640.c ****     Camera_delay(5);
+  55:Drivers/BSP/Camera/ov5640.c **** 
+  56:Drivers/BSP/Camera/ov5640.c ****     // Write default regsiters
+  57:Drivers/BSP/Camera/ov5640.c ****     for (int i = 0; ov5640_default_regs[i][0]; i++)
+  58:Drivers/BSP/Camera/ov5640.c ****     {
+  59:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg((ov5640_default_regs[i][0] << 8) | (ov5640_default_regs[i][1] << 0), o
+  60:Drivers/BSP/Camera/ov5640.c ****     }
+  61:Drivers/BSP/Camera/ov5640.c **** 
+  62:Drivers/BSP/Camera/ov5640.c ****     // Delay 300 ms
+  63:Drivers/BSP/Camera/ov5640.c ****     Camera_delay(300);
+  64:Drivers/BSP/Camera/ov5640.c **** 
+  65:Drivers/BSP/Camera/ov5640.c ****     return ret;
+  66:Drivers/BSP/Camera/ov5640.c **** }
+  67:Drivers/BSP/Camera/ov5640.c **** 
+  68:Drivers/BSP/Camera/ov5640.c **** // HTS (Horizontal Time) is the readout width plus the HSYNC_TIME time. However, if this value gets
+  69:Drivers/BSP/Camera/ov5640.c **** // too low the OV5640 will crash. The minimum was determined empirically with testing...
+  70:Drivers/BSP/Camera/ov5640.c **** // Additionally, when the image width gets too large we need to slow down the line transfer rate by
+  71:Drivers/BSP/Camera/ov5640.c **** // increasing HTS so that DCMI_DMAConvCpltUser() can keep up with the data rate.
+  72:Drivers/BSP/Camera/ov5640.c **** //
+  73:Drivers/BSP/Camera/ov5640.c **** // WARNING! IF YOU CHANGE ANYTHING HERE RETEST WITH **ALL** RESOLUTIONS FOR THE AFFECTED MODE!
+  74:Drivers/BSP/Camera/ov5640.c **** static int calculate_hts(uint16_t width)
+  75:Drivers/BSP/Camera/ov5640.c **** {
+  28              		.loc 1 75 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  76:Drivers/BSP/Camera/ov5640.c ****     uint16_t hts = hts_target;
+  33              		.loc 1 76 5 view .LVU1
+  34              		.loc 1 76 14 is_stmt 0 view .LVU2
+  35 0000 114B     		ldr	r3, .L4
+  36 0002 1A88     		ldrh	r2, [r3]
+  37              	.LVL1:
+  77:Drivers/BSP/Camera/ov5640.c **** 
+  78:Drivers/BSP/Camera/ov5640.c ****     if ((hcamera.pixformat == PIXFORMAT_GRAYSCALE) || (hcamera.pixformat == PIXFORMAT_BAYER) || (hc
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 3
+
+
+  38              		.loc 1 78 5 is_stmt 1 view .LVU3
+  39              		.loc 1 78 17 is_stmt 0 view .LVU4
+  40 0004 114B     		ldr	r3, .L4+4
+  41 0006 597C     		ldrb	r1, [r3, #17]	@ zero_extendqisi2
+  42              		.loc 1 78 94 view .LVU5
+  43 0008 0B1F     		subs	r3, r1, #4
+  44 000a DBB2     		uxtb	r3, r3
+  45              		.loc 1 78 8 view .LVU6
+  46 000c 0229     		cmp	r1, #2
+  47 000e 18BF     		it	ne
+  48 0010 012B     		cmpne	r3, #1
+  49 0012 0FD8     		bhi	.L2
+  79:Drivers/BSP/Camera/ov5640.c ****     {
+  80:Drivers/BSP/Camera/ov5640.c ****         if (width <= 1280)
+  50              		.loc 1 80 9 is_stmt 1 view .LVU7
+  51              		.loc 1 80 12 is_stmt 0 view .LVU8
+  52 0014 B0F5A06F 		cmp	r0, #1280
+  53 0018 05D8     		bhi	.L3
+  81:Drivers/BSP/Camera/ov5640.c ****             hts = IM_MAX((width * 2) + 8, hts_target);
+  54              		.loc 1 81 13 is_stmt 1 view .LVU9
+  55              	.LBB2:
+  56              		.loc 1 81 19 view .LVU10
+  57 001a 031D     		adds	r3, r0, #4
+  58 001c 5B00     		lsls	r3, r3, #1
+  59              	.LVL2:
+  60              		.loc 1 81 19 view .LVU11
+  61              		.loc 1 81 19 view .LVU12
+  62 001e 9A42     		cmp	r2, r3
+  63 0020 B8BF     		it	lt
+  64 0022 1A46     		movlt	r2, r3
+  65              	.LVL3:
+  66              		.loc 1 81 19 is_stmt 0 view .LVU13
+  67              	.LBE2:
+  68              		.loc 1 81 17 view .LVU14
+  69 0024 92B2     		uxth	r2, r2
+  70              	.LVL4:
+  71              	.L3:
+  82:Drivers/BSP/Camera/ov5640.c ****     }
+  83:Drivers/BSP/Camera/ov5640.c ****     else
+  84:Drivers/BSP/Camera/ov5640.c ****     {
+  85:Drivers/BSP/Camera/ov5640.c ****         if (width > 640)
+  86:Drivers/BSP/Camera/ov5640.c ****             hts = IM_MAX((width * 2) + 8, hts_target);
+  87:Drivers/BSP/Camera/ov5640.c ****     }
+  88:Drivers/BSP/Camera/ov5640.c **** 
+  89:Drivers/BSP/Camera/ov5640.c ****     return IM_MAX(hts + HSYNC_TIME, (SENSOR_WIDTH + HSYNC_TIME) / 2); // Fix to prevent crashing.
+  72              		.loc 1 89 5 is_stmt 1 view .LVU15
+  73              	.LBB3:
+  74              		.loc 1 89 12 view .LVU16
+  75 0026 FC32     		adds	r2, r2, #252
+  76              	.LVL5:
+  77              		.loc 1 89 12 view .LVU17
+  78              		.loc 1 89 12 view .LVU18
+  79              	.LBE3:
+  90:Drivers/BSP/Camera/ov5640.c **** }
+  80              		.loc 1 90 1 is_stmt 0 view .LVU19
+  81 0028 40F29E50 		movw	r0, #1438
+  82              	.LVL6:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 4
+
+
+  83              		.loc 1 90 1 view .LVU20
+  84 002c 9042     		cmp	r0, r2
+  85 002e B8BF     		it	lt
+  86 0030 1046     		movlt	r0, r2
+  87 0032 7047     		bx	lr
+  88              	.LVL7:
+  89              	.L2:
+  85:Drivers/BSP/Camera/ov5640.c ****             hts = IM_MAX((width * 2) + 8, hts_target);
+  90              		.loc 1 85 9 is_stmt 1 view .LVU21
+  85:Drivers/BSP/Camera/ov5640.c ****             hts = IM_MAX((width * 2) + 8, hts_target);
+  91              		.loc 1 85 12 is_stmt 0 view .LVU22
+  92 0034 B0F5207F 		cmp	r0, #640
+  93 0038 F5D9     		bls	.L3
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+  94              		.loc 1 86 13 is_stmt 1 view .LVU23
+  95              	.LBB4:
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+  96              		.loc 1 86 19 view .LVU24
+  97 003a 031D     		adds	r3, r0, #4
+  98 003c 5B00     		lsls	r3, r3, #1
+  99              	.LVL8:
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+ 100              		.loc 1 86 19 view .LVU25
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+ 101              		.loc 1 86 19 view .LVU26
+ 102 003e 9A42     		cmp	r2, r3
+ 103 0040 B8BF     		it	lt
+ 104 0042 1A46     		movlt	r2, r3
+ 105              	.LVL9:
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+ 106              		.loc 1 86 19 is_stmt 0 view .LVU27
+ 107              	.LBE4:
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+ 108              		.loc 1 86 17 view .LVU28
+ 109 0044 92B2     		uxth	r2, r2
+ 110              	.LVL10:
+  86:Drivers/BSP/Camera/ov5640.c ****     }
+ 111              		.loc 1 86 17 view .LVU29
+ 112 0046 EEE7     		b	.L3
+ 113              	.L5:
+ 114              		.align	2
+ 115              	.L4:
+ 116 0048 00000000 		.word	hts_target
+ 117 004c 00000000 		.word	hcamera
+ 118              		.cfi_endproc
+ 119              	.LFE147:
+ 121              		.section	.text.calculate_vts,"ax",%progbits
+ 122              		.align	1
+ 123              		.syntax unified
+ 124              		.thumb
+ 125              		.thumb_func
+ 127              	calculate_vts:
+ 128              	.LVL11:
+ 129              	.LFB148:
+  91:Drivers/BSP/Camera/ov5640.c **** 
+  92:Drivers/BSP/Camera/ov5640.c **** // VTS (Vertical Time) is the readout height plus the VYSNC_TIME time. However, if this value gets
+  93:Drivers/BSP/Camera/ov5640.c **** // too low the OV5640 will crash. The minimum was determined empirically with testing...
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 5
+
+
+  94:Drivers/BSP/Camera/ov5640.c **** //
+  95:Drivers/BSP/Camera/ov5640.c **** // WARNING! IF YOU CHANGE ANYTHING HERE RETEST WITH **ALL** RESOLUTIONS FOR THE AFFECTED MODE!
+  96:Drivers/BSP/Camera/ov5640.c **** static int calculate_vts(uint16_t readout_height)
+  97:Drivers/BSP/Camera/ov5640.c **** {
+ 130              		.loc 1 97 1 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+  98:Drivers/BSP/Camera/ov5640.c ****     return IM_MAX(readout_height + VYSNC_TIME, (SENSOR_HEIGHT + VYSNC_TIME) / 8); // Fix to prevent
+ 135              		.loc 1 98 5 view .LVU31
+ 136              	.LBB5:
+ 137              		.loc 1 98 12 view .LVU32
+ 138 0000 1830     		adds	r0, r0, #24
+ 139              	.LVL12:
+ 140              		.loc 1 98 12 view .LVU33
+ 141              		.loc 1 98 12 view .LVU34
+ 142              	.LBE5:
+  99:Drivers/BSP/Camera/ov5640.c **** }
+ 143              		.loc 1 99 1 is_stmt 0 view .LVU35
+ 144 0002 F828     		cmp	r0, #248
+ 145 0004 B8BF     		it	lt
+ 146 0006 F820     		movlt	r0, #248
+ 147              	.LVL13:
+ 148              		.loc 1 99 1 view .LVU36
+ 149 0008 7047     		bx	lr
+ 150              		.cfi_endproc
+ 151              	.LFE148:
+ 153              		.section	.text.ov5640_WR_Reg,"ax",%progbits
+ 154              		.align	1
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	ov5640_WR_Reg:
+ 160              	.LVL14:
+ 161              	.LFB144:
+  36:Drivers/BSP/Camera/ov5640.c ****     Camera_WriteRegb2(&hcamera, reg, data);
+ 162              		.loc 1 36 1 is_stmt 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 0
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+  36:Drivers/BSP/Camera/ov5640.c ****     Camera_WriteRegb2(&hcamera, reg, data);
+ 166              		.loc 1 36 1 is_stmt 0 view .LVU38
+ 167 0000 08B5     		push	{r3, lr}
+ 168              	.LCFI0:
+ 169              		.cfi_def_cfa_offset 8
+ 170              		.cfi_offset 3, -8
+ 171              		.cfi_offset 14, -4
+ 172 0002 0A46     		mov	r2, r1
+  37:Drivers/BSP/Camera/ov5640.c ****     return 0;
+ 173              		.loc 1 37 5 is_stmt 1 view .LVU39
+ 174 0004 0146     		mov	r1, r0
+ 175              	.LVL15:
+  37:Drivers/BSP/Camera/ov5640.c ****     return 0;
+ 176              		.loc 1 37 5 is_stmt 0 view .LVU40
+ 177 0006 0248     		ldr	r0, .L9
+ 178              	.LVL16:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 6
+
+
+  37:Drivers/BSP/Camera/ov5640.c ****     return 0;
+ 179              		.loc 1 37 5 view .LVU41
+ 180 0008 FFF7FEFF 		bl	Camera_WriteRegb2
+ 181              	.LVL17:
+  38:Drivers/BSP/Camera/ov5640.c **** }
+ 182              		.loc 1 38 5 is_stmt 1 view .LVU42
+  39:Drivers/BSP/Camera/ov5640.c **** 
+ 183              		.loc 1 39 1 is_stmt 0 view .LVU43
+ 184 000c 0020     		movs	r0, #0
+ 185 000e 08BD     		pop	{r3, pc}
+ 186              	.L10:
+ 187              		.align	2
+ 188              	.L9:
+ 189 0010 00000000 		.word	hcamera
+ 190              		.cfi_endproc
+ 191              	.LFE144:
+ 193              		.section	.text.ov5640_reset,"ax",%progbits
+ 194              		.align	1
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 199              	ov5640_reset:
+ 200              	.LFB146:
+  48:Drivers/BSP/Camera/ov5640.c ****     // Reset all registers
+ 201              		.loc 1 48 1 is_stmt 1 view -0
+ 202              		.cfi_startproc
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 0, uses_anonymous_args = 0
+ 205 0000 38B5     		push	{r3, r4, r5, lr}
+ 206              	.LCFI1:
+ 207              		.cfi_def_cfa_offset 16
+ 208              		.cfi_offset 3, -16
+ 209              		.cfi_offset 4, -12
+ 210              		.cfi_offset 5, -8
+ 211              		.cfi_offset 14, -4
+  50:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(SYSTEM_CTROL0, 0x82);
+ 212              		.loc 1 50 5 view .LVU45
+  50:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(SYSTEM_CTROL0, 0x82);
+ 213              		.loc 1 50 15 is_stmt 0 view .LVU46
+ 214 0002 1121     		movs	r1, #17
+ 215 0004 43F20310 		movw	r0, #12547
+ 216 0008 FFF7FEFF 		bl	ov5640_WR_Reg
+ 217              	.LVL18:
+ 218 000c 0546     		mov	r5, r0
+ 219              	.LVL19:
+  51:Drivers/BSP/Camera/ov5640.c **** 
+ 220              		.loc 1 51 5 is_stmt 1 view .LVU47
+  51:Drivers/BSP/Camera/ov5640.c **** 
+ 221              		.loc 1 51 12 is_stmt 0 view .LVU48
+ 222 000e 8221     		movs	r1, #130
+ 223 0010 43F20800 		movw	r0, #12296
+ 224 0014 FFF7FEFF 		bl	ov5640_WR_Reg
+ 225              	.LVL20:
+  51:Drivers/BSP/Camera/ov5640.c **** 
+ 226              		.loc 1 51 9 discriminator 1 view .LVU49
+ 227 0018 0543     		orrs	r5, r5, r0
+ 228              	.LVL21:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 7
+
+
+  51:Drivers/BSP/Camera/ov5640.c **** 
+ 229              		.loc 1 51 9 discriminator 1 view .LVU50
+ 230 001a EDB2     		uxtb	r5, r5
+ 231              	.LVL22:
+  54:Drivers/BSP/Camera/ov5640.c **** 
+ 232              		.loc 1 54 5 is_stmt 1 view .LVU51
+ 233 001c 0520     		movs	r0, #5
+ 234 001e FFF7FEFF 		bl	HAL_Delay
+ 235              	.LVL23:
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 236              		.loc 1 57 5 view .LVU52
+ 237              	.LBB6:
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 238              		.loc 1 57 10 view .LVU53
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 239              		.loc 1 57 14 is_stmt 0 view .LVU54
+ 240 0022 0024     		movs	r4, #0
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 241              		.loc 1 57 5 view .LVU55
+ 242 0024 0BE0     		b	.L12
+ 243              	.LVL24:
+ 244              	.L13:
+  59:Drivers/BSP/Camera/ov5640.c ****     }
+ 245              		.loc 1 59 9 is_stmt 1 view .LVU56
+  59:Drivers/BSP/Camera/ov5640.c ****     }
+ 246              		.loc 1 59 88 is_stmt 0 view .LVU57
+ 247 0026 04EB4401 		add	r1, r4, r4, lsl #1
+ 248 002a 0B4B     		ldr	r3, .L15
+ 249 002c 0B44     		add	r3, r3, r1
+ 250 002e 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+  59:Drivers/BSP/Camera/ov5640.c ****     }
+ 251              		.loc 1 59 16 view .LVU58
+ 252 0030 9978     		ldrb	r1, [r3, #2]	@ zero_extendqisi2
+ 253 0032 40EA0220 		orr	r0, r0, r2, lsl #8
+ 254 0036 FFF7FEFF 		bl	ov5640_WR_Reg
+ 255              	.LVL25:
+  59:Drivers/BSP/Camera/ov5640.c ****     }
+ 256              		.loc 1 59 13 discriminator 1 view .LVU59
+ 257 003a 0543     		orrs	r5, r5, r0
+ 258              	.LVL26:
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 259              		.loc 1 57 49 is_stmt 1 discriminator 3 view .LVU60
+ 260 003c 0134     		adds	r4, r4, #1
+ 261              	.LVL27:
+ 262              	.L12:
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 263              		.loc 1 57 21 discriminator 1 view .LVU61
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 264              		.loc 1 57 43 is_stmt 0 discriminator 1 view .LVU62
+ 265 003e 04EB4403 		add	r3, r4, r4, lsl #1
+ 266 0042 054A     		ldr	r2, .L15
+ 267 0044 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ 268              		.loc 1 57 21 discriminator 1 view .LVU63
+ 269 0046 002A     		cmp	r2, #0
+ 270 0048 EDD1     		bne	.L13
+  57:Drivers/BSP/Camera/ov5640.c ****     {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 8
+
+
+ 271              		.loc 1 57 21 discriminator 1 view .LVU64
+ 272              	.LBE6:
+  63:Drivers/BSP/Camera/ov5640.c **** 
+ 273              		.loc 1 63 5 is_stmt 1 view .LVU65
+ 274 004a 4FF49670 		mov	r0, #300
+ 275 004e FFF7FEFF 		bl	HAL_Delay
+ 276              	.LVL28:
+  65:Drivers/BSP/Camera/ov5640.c **** }
+ 277              		.loc 1 65 5 view .LVU66
+  66:Drivers/BSP/Camera/ov5640.c **** 
+ 278              		.loc 1 66 1 is_stmt 0 view .LVU67
+ 279 0052 2846     		mov	r0, r5
+ 280 0054 38BD     		pop	{r3, r4, r5, pc}
+ 281              	.LVL29:
+ 282              	.L16:
+  66:Drivers/BSP/Camera/ov5640.c **** 
+ 283              		.loc 1 66 1 view .LVU68
+ 284 0056 00BF     		.align	2
+ 285              	.L15:
+ 286 0058 00000000 		.word	ov5640_default_regs
+ 287              		.cfi_endproc
+ 288              	.LFE146:
+ 290              		.section	.text.ov5640_RD_Reg,"ax",%progbits
+ 291              		.align	1
+ 292              		.syntax unified
+ 293              		.thumb
+ 294              		.thumb_func
+ 296              	ov5640_RD_Reg:
+ 297              	.LVL30:
+ 298              	.LFB145:
+  42:Drivers/BSP/Camera/ov5640.c **** 
+ 299              		.loc 1 42 1 is_stmt 1 view -0
+ 300              		.cfi_startproc
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 0, uses_anonymous_args = 0
+  42:Drivers/BSP/Camera/ov5640.c **** 
+ 303              		.loc 1 42 1 is_stmt 0 view .LVU70
+ 304 0000 08B5     		push	{r3, lr}
+ 305              	.LCFI2:
+ 306              		.cfi_def_cfa_offset 8
+ 307              		.cfi_offset 3, -8
+ 308              		.cfi_offset 14, -4
+ 309 0002 0A46     		mov	r2, r1
+  44:Drivers/BSP/Camera/ov5640.c **** }
+ 310              		.loc 1 44 5 is_stmt 1 view .LVU71
+  44:Drivers/BSP/Camera/ov5640.c **** }
+ 311              		.loc 1 44 12 is_stmt 0 view .LVU72
+ 312 0004 0146     		mov	r1, r0
+ 313              	.LVL31:
+  44:Drivers/BSP/Camera/ov5640.c **** }
+ 314              		.loc 1 44 12 view .LVU73
+ 315 0006 0248     		ldr	r0, .L19
+ 316              	.LVL32:
+  44:Drivers/BSP/Camera/ov5640.c **** }
+ 317              		.loc 1 44 12 view .LVU74
+ 318 0008 FFF7FEFF 		bl	Camera_ReadRegb2
+ 319              	.LVL33:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 9
+
+
+  45:Drivers/BSP/Camera/ov5640.c **** 
+ 320              		.loc 1 45 1 view .LVU75
+ 321 000c C0B2     		uxtb	r0, r0
+ 322 000e 08BD     		pop	{r3, pc}
+ 323              	.L20:
+ 324              		.align	2
+ 325              	.L19:
+ 326 0010 00000000 		.word	hcamera
+ 327              		.cfi_endproc
+ 328              	.LFE145:
+ 330              		.section	.text.ov5640_set_pixformat,"ax",%progbits
+ 331              		.align	1
+ 332              		.syntax unified
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	ov5640_set_pixformat:
+ 337              	.LVL34:
+ 338              	.LFB149:
+ 100:Drivers/BSP/Camera/ov5640.c **** 
+ 101:Drivers/BSP/Camera/ov5640.c **** static int ov5640_set_pixformat(pixformat_t pixformat)
+ 102:Drivers/BSP/Camera/ov5640.c **** {
+ 339              		.loc 1 102 1 is_stmt 1 view -0
+ 340              		.cfi_startproc
+ 341              		@ args = 0, pretend = 0, frame = 8
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343              		.loc 1 102 1 is_stmt 0 view .LVU77
+ 344 0000 70B5     		push	{r4, r5, r6, lr}
+ 345              	.LCFI3:
+ 346              		.cfi_def_cfa_offset 16
+ 347              		.cfi_offset 4, -16
+ 348              		.cfi_offset 5, -12
+ 349              		.cfi_offset 6, -8
+ 350              		.cfi_offset 14, -4
+ 351 0002 82B0     		sub	sp, sp, #8
+ 352              	.LCFI4:
+ 353              		.cfi_def_cfa_offset 24
+ 354 0004 0446     		mov	r4, r0
+ 103:Drivers/BSP/Camera/ov5640.c ****     uint8_t reg;
+ 355              		.loc 1 103 5 is_stmt 1 view .LVU78
+ 104:Drivers/BSP/Camera/ov5640.c ****     int ret = 0;
+ 356              		.loc 1 104 5 view .LVU79
+ 357              	.LVL35:
+ 105:Drivers/BSP/Camera/ov5640.c **** 
+ 106:Drivers/BSP/Camera/ov5640.c ****     // Not a multiple of 8. The JPEG encoder on the OV5640 can't handle this.
+ 107:Drivers/BSP/Camera/ov5640.c ****     if ((pixformat == PIXFORMAT_JPEG) && ((dvp_cam_resolution[hcamera.framesize][0] % 8) || (dvp_ca
+ 358              		.loc 1 107 5 view .LVU80
+ 359              		.loc 1 107 8 is_stmt 0 view .LVU81
+ 360 0006 0228     		cmp	r0, #2
+ 361 0008 1AD0     		beq	.L43
+ 362              	.L22:
+ 108:Drivers/BSP/Camera/ov5640.c ****     {
+ 109:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 110:Drivers/BSP/Camera/ov5640.c ****     }
+ 111:Drivers/BSP/Camera/ov5640.c **** 
+ 112:Drivers/BSP/Camera/ov5640.c ****     // Readout speed too fast. The DCMI_DMAConvCpltUser() line callback overhead is too much to han
+ 113:Drivers/BSP/Camera/ov5640.c ****     // If we were to slow the pixclk down these resolutions would work. As of right now, the image 
+ 114:Drivers/BSP/Camera/ov5640.c ****     // the current line transfer speed. Note that there's an overhead to the DCMI_DMAConvCpltUser()
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 10
+
+
+ 115:Drivers/BSP/Camera/ov5640.c ****     // memory copy operation that's too slow. It's that there's too much overhead in the DCMI_DMACo
+ 116:Drivers/BSP/Camera/ov5640.c ****     // to even have time to start the line transfer. If it were possible to slow the line readout s
+ 117:Drivers/BSP/Camera/ov5640.c ****     // this would enable these resolutions below. However, there's nothing in the datasheet that wh
+ 118:Drivers/BSP/Camera/ov5640.c ****     if (((pixformat == PIXFORMAT_GRAYSCALE) || (pixformat == PIXFORMAT_BAYER) || (pixformat == PIXF
+ 363              		.loc 1 118 5 is_stmt 1 view .LVU82
+ 364              		.loc 1 118 45 is_stmt 0 view .LVU83
+ 365 000a 231F     		subs	r3, r4, #4
+ 366 000c DBB2     		uxtb	r3, r3
+ 367              		.loc 1 118 8 view .LVU84
+ 368 000e 022C     		cmp	r4, #2
+ 369 0010 18BF     		it	ne
+ 370 0012 012B     		cmpne	r3, #1
+ 371 0014 0BD8     		bhi	.L24
+ 372              		.loc 1 118 125 discriminator 1 view .LVU85
+ 373 0016 6B4B     		ldr	r3, .L48
+ 374 0018 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 375 001a 0D2B     		cmp	r3, #13
+ 376 001c 07D8     		bhi	.L24
+ 377 001e 43F21202 		movw	r2, #12306
+ 378 0022 22FA03F3 		lsr	r3, r2, r3
+ 379 0026 13F0010F 		tst	r3, #1
+ 380 002a 40F0C480 		bne	.L37
+ 381              	.L24:
+ 119:Drivers/BSP/Camera/ov5640.c ****     {
+ 120:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 121:Drivers/BSP/Camera/ov5640.c ****     }
+ 122:Drivers/BSP/Camera/ov5640.c **** 
+ 123:Drivers/BSP/Camera/ov5640.c ****     switch (pixformat)
+ 382              		.loc 1 123 5 is_stmt 1 view .LVU86
+ 383 002e 631E     		subs	r3, r4, #1
+ 384 0030 042B     		cmp	r3, #4
+ 385 0032 00F2C380 		bhi	.L38
+ 386 0036 DFE803F0 		tbb	[pc, r3]
+ 387              	.L26:
+ 388 003a 67       		.byte	(.L30-.L26)/2
+ 389 003b 91       		.byte	(.L29-.L26)/2
+ 390 003c 75       		.byte	(.L28-.L26)/2
+ 391 003d 16       		.byte	(.L27-.L26)/2
+ 392 003e 83       		.byte	(.L25-.L26)/2
+ 393 003f 00       		.p2align 1
+ 394              	.L43:
+ 107:Drivers/BSP/Camera/ov5640.c ****     {
+ 395              		.loc 1 107 70 is_stmt 0 discriminator 1 view .LVU87
+ 396 0040 604B     		ldr	r3, .L48
+ 397 0042 1A7C     		ldrb	r2, [r3, #16]	@ zero_extendqisi2
+ 107:Drivers/BSP/Camera/ov5640.c ****     {
+ 398              		.loc 1 107 81 discriminator 1 view .LVU88
+ 399 0044 604B     		ldr	r3, .L48+4
+ 400 0046 33F82230 		ldrh	r3, [r3, r2, lsl #2]
+ 107:Drivers/BSP/Camera/ov5640.c ****     {
+ 401              		.loc 1 107 39 discriminator 1 view .LVU89
+ 402 004a 13F0070F 		tst	r3, #7
+ 403 004e 40F0AF80 		bne	.L35
+ 107:Drivers/BSP/Camera/ov5640.c ****     {
+ 404              		.loc 1 107 131 discriminator 2 view .LVU90
+ 405 0052 5D4B     		ldr	r3, .L48+4
+ 406 0054 03EB8203 		add	r3, r3, r2, lsl #2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 11
+
+
+ 407 0058 5B88     		ldrh	r3, [r3, #2]
+ 107:Drivers/BSP/Camera/ov5640.c ****     {
+ 408              		.loc 1 107 90 discriminator 2 view .LVU91
+ 409 005a 13F0070F 		tst	r3, #7
+ 410 005e D4D0     		beq	.L22
+ 109:Drivers/BSP/Camera/ov5640.c ****     }
+ 411              		.loc 1 109 16 view .LVU92
+ 412 0060 4FF0FF36 		mov	r6, #-1
+ 413 0064 4DE0     		b	.L21
+ 414              	.L27:
+ 124:Drivers/BSP/Camera/ov5640.c ****     {
+ 125:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_GRAYSCALE:
+ 126:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL, 0x10);
+ 415              		.loc 1 126 9 is_stmt 1 view .LVU93
+ 416              		.loc 1 126 16 is_stmt 0 view .LVU94
+ 417 0066 1021     		movs	r1, #16
+ 418 0068 4FF48640 		mov	r0, #17152
+ 419              	.LVL36:
+ 420              		.loc 1 126 16 view .LVU95
+ 421 006c FFF7FEFF 		bl	ov5640_WR_Reg
+ 422              	.LVL37:
+ 423 0070 0546     		mov	r5, r0
+ 424              	.LVL38:
+ 127:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 425              		.loc 1 127 9 is_stmt 1 view .LVU96
+ 426              		.loc 1 127 16 is_stmt 0 view .LVU97
+ 427 0072 0021     		movs	r1, #0
+ 428 0074 45F21F00 		movw	r0, #20511
+ 429 0078 FFF7FEFF 		bl	ov5640_WR_Reg
+ 430              	.LVL39:
+ 431              		.loc 1 127 13 discriminator 1 view .LVU98
+ 432 007c 0543     		orrs	r5, r5, r0
+ 433              	.LVL40:
+ 434              		.loc 1 127 13 discriminator 1 view .LVU99
+ 435 007e EDB2     		uxtb	r5, r5
+ 436              	.LVL41:
+ 128:Drivers/BSP/Camera/ov5640.c ****         break;
+ 437              		.loc 1 128 9 is_stmt 1 view .LVU100
+ 438              	.L31:
+ 129:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_RGB565:
+ 130:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL, 0x61);
+ 131:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 132:Drivers/BSP/Camera/ov5640.c ****         break;
+ 133:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_YUV422:
+ 134:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL, 0x30);
+ 135:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 136:Drivers/BSP/Camera/ov5640.c ****         break;
+ 137:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_BAYER:
+ 138:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL, 0x00);
+ 139:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 140:Drivers/BSP/Camera/ov5640.c ****         break;
+ 141:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_JPEG:
+ 142:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL, 0x30);
+ 143:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 144:Drivers/BSP/Camera/ov5640.c ****         break;
+ 145:Drivers/BSP/Camera/ov5640.c ****     default:
+ 146:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 12
+
+
+ 147:Drivers/BSP/Camera/ov5640.c ****     }
+ 148:Drivers/BSP/Camera/ov5640.c **** 
+ 149:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_RD_Reg(TIMING_TC_REG_21, &reg);
+ 439              		.loc 1 149 5 view .LVU101
+ 440              		.loc 1 149 12 is_stmt 0 view .LVU102
+ 441 0080 0DF10701 		add	r1, sp, #7
+ 442 0084 43F62100 		movw	r0, #14369
+ 443 0088 FFF7FEFF 		bl	ov5640_RD_Reg
+ 444              	.LVL42:
+ 445              		.loc 1 149 9 discriminator 1 view .LVU103
+ 446 008c 0543     		orrs	r5, r5, r0
+ 447              	.LVL43:
+ 150:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_TC_REG_21, (reg & 0xDF) | ((pixformat == PIXFORMAT_JPEG) ? 0x20 : 0
+ 448              		.loc 1 150 5 is_stmt 1 view .LVU104
+ 449              		.loc 1 150 49 is_stmt 0 view .LVU105
+ 450 008e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 451 0092 03F0DF03 		and	r3, r3, #223
+ 452              		.loc 1 150 57 view .LVU106
+ 453 0096 022C     		cmp	r4, #2
+ 454 0098 6ED0     		beq	.L44
+ 455              		.loc 1 150 57 discriminator 2 view .LVU107
+ 456 009a 0021     		movs	r1, #0
+ 457              	.L32:
+ 458              		.loc 1 150 12 discriminator 4 view .LVU108
+ 459 009c 1943     		orrs	r1, r1, r3
+ 460 009e 43F62100 		movw	r0, #14369
+ 461 00a2 FFF7FEFF 		bl	ov5640_WR_Reg
+ 462              	.LVL44:
+ 463              		.loc 1 150 9 discriminator 1 view .LVU109
+ 464 00a6 0543     		orrs	r5, r5, r0
+ 465              	.LVL45:
+ 151:Drivers/BSP/Camera/ov5640.c **** 
+ 152:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_RD_Reg(SYSTEM_RESET_02, &reg);
+ 466              		.loc 1 152 5 is_stmt 1 view .LVU110
+ 467              		.loc 1 152 12 is_stmt 0 view .LVU111
+ 468 00a8 0DF10701 		add	r1, sp, #7
+ 469 00ac 43F20200 		movw	r0, #12290
+ 470 00b0 FFF7FEFF 		bl	ov5640_RD_Reg
+ 471              	.LVL46:
+ 472              		.loc 1 152 9 discriminator 1 view .LVU112
+ 473 00b4 0543     		orrs	r5, r5, r0
+ 474              	.LVL47:
+ 153:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(SYSTEM_RESET_02, (reg & 0xE3) | ((pixformat == PIXFORMAT_JPEG) ? 0x00 : 0x
+ 475              		.loc 1 153 5 is_stmt 1 view .LVU113
+ 476              		.loc 1 153 48 is_stmt 0 view .LVU114
+ 477 00b6 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 478 00ba 03F0E303 		and	r3, r3, #227
+ 479              		.loc 1 153 56 view .LVU115
+ 480 00be 022C     		cmp	r4, #2
+ 481 00c0 5CD0     		beq	.L45
+ 482              		.loc 1 153 56 discriminator 2 view .LVU116
+ 483 00c2 1C21     		movs	r1, #28
+ 484              	.L33:
+ 485              		.loc 1 153 12 discriminator 4 view .LVU117
+ 486 00c4 1943     		orrs	r1, r1, r3
+ 487 00c6 43F20200 		movw	r0, #12290
+ 488 00ca FFF7FEFF 		bl	ov5640_WR_Reg
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 13
+
+
+ 489              	.LVL48:
+ 490              		.loc 1 153 9 discriminator 1 view .LVU118
+ 491 00ce 0543     		orrs	r5, r5, r0
+ 492              	.LVL49:
+ 154:Drivers/BSP/Camera/ov5640.c **** 
+ 155:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_RD_Reg(CLOCK_ENABLE_02, &reg);
+ 493              		.loc 1 155 5 is_stmt 1 view .LVU119
+ 494              		.loc 1 155 12 is_stmt 0 view .LVU120
+ 495 00d0 0DF10701 		add	r1, sp, #7
+ 496 00d4 43F20600 		movw	r0, #12294
+ 497 00d8 FFF7FEFF 		bl	ov5640_RD_Reg
+ 498              	.LVL50:
+ 499              		.loc 1 155 9 discriminator 1 view .LVU121
+ 500 00dc 0543     		orrs	r5, r5, r0
+ 501              	.LVL51:
+ 156:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(CLOCK_ENABLE_02, (reg & 0xD7) | ((pixformat == PIXFORMAT_JPEG) ? 0x28 : 0x
+ 502              		.loc 1 156 5 is_stmt 1 view .LVU122
+ 503              		.loc 1 156 48 is_stmt 0 view .LVU123
+ 504 00de 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 505 00e2 03F0D703 		and	r3, r3, #215
+ 506              		.loc 1 156 56 view .LVU124
+ 507 00e6 022C     		cmp	r4, #2
+ 508 00e8 4AD0     		beq	.L46
+ 509              		.loc 1 156 56 discriminator 2 view .LVU125
+ 510 00ea 0021     		movs	r1, #0
+ 511              	.L34:
+ 512              		.loc 1 156 12 discriminator 4 view .LVU126
+ 513 00ec 1943     		orrs	r1, r1, r3
+ 514 00ee 43F20600 		movw	r0, #12294
+ 515 00f2 FFF7FEFF 		bl	ov5640_WR_Reg
+ 516              	.LVL52:
+ 517              		.loc 1 156 9 discriminator 1 view .LVU127
+ 518 00f6 40EA0506 		orr	r6, r0, r5
+ 519              	.LVL53:
+ 157:Drivers/BSP/Camera/ov5640.c **** 
+ 158:Drivers/BSP/Camera/ov5640.c ****     if (hts_target)
+ 520              		.loc 1 158 5 is_stmt 1 view .LVU128
+ 521              		.loc 1 158 9 is_stmt 0 view .LVU129
+ 522 00fa 344B     		ldr	r3, .L48+8
+ 523 00fc 1B88     		ldrh	r3, [r3]
+ 524              		.loc 1 158 8 view .LVU130
+ 525 00fe 002B     		cmp	r3, #0
+ 526 0100 40D1     		bne	.L47
+ 527              	.LVL54:
+ 528              	.L21:
+ 159:Drivers/BSP/Camera/ov5640.c ****     {
+ 160:Drivers/BSP/Camera/ov5640.c ****         uint16_t sensor_hts = calculate_hts(dvp_cam_resolution[hcamera.framesize][0]);
+ 161:Drivers/BSP/Camera/ov5640.c **** 
+ 162:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_H, sensor_hts >> 8);
+ 163:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 164:Drivers/BSP/Camera/ov5640.c ****     }
+ 165:Drivers/BSP/Camera/ov5640.c **** 
+ 166:Drivers/BSP/Camera/ov5640.c ****     return ret;
+ 167:Drivers/BSP/Camera/ov5640.c **** }
+ 529              		.loc 1 167 1 view .LVU131
+ 530 0102 3046     		mov	r0, r6
+ 531 0104 02B0     		add	sp, sp, #8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 14
+
+
+ 532              	.LCFI5:
+ 533              		.cfi_remember_state
+ 534              		.cfi_def_cfa_offset 16
+ 535              		@ sp needed
+ 536 0106 70BD     		pop	{r4, r5, r6, pc}
+ 537              	.LVL55:
+ 538              	.L30:
+ 539              	.LCFI6:
+ 540              		.cfi_restore_state
+ 130:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 541              		.loc 1 130 9 is_stmt 1 view .LVU132
+ 130:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 542              		.loc 1 130 16 is_stmt 0 view .LVU133
+ 543 0108 6121     		movs	r1, #97
+ 544 010a 4FF48640 		mov	r0, #17152
+ 545              	.LVL56:
+ 130:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 546              		.loc 1 130 16 view .LVU134
+ 547 010e FFF7FEFF 		bl	ov5640_WR_Reg
+ 548              	.LVL57:
+ 549 0112 0546     		mov	r5, r0
+ 550              	.LVL58:
+ 131:Drivers/BSP/Camera/ov5640.c ****         break;
+ 551              		.loc 1 131 9 is_stmt 1 view .LVU135
+ 131:Drivers/BSP/Camera/ov5640.c ****         break;
+ 552              		.loc 1 131 16 is_stmt 0 view .LVU136
+ 553 0114 0121     		movs	r1, #1
+ 554 0116 45F21F00 		movw	r0, #20511
+ 555 011a FFF7FEFF 		bl	ov5640_WR_Reg
+ 556              	.LVL59:
+ 131:Drivers/BSP/Camera/ov5640.c ****         break;
+ 557              		.loc 1 131 13 discriminator 1 view .LVU137
+ 558 011e 0543     		orrs	r5, r5, r0
+ 559              	.LVL60:
+ 131:Drivers/BSP/Camera/ov5640.c ****         break;
+ 560              		.loc 1 131 13 discriminator 1 view .LVU138
+ 561 0120 EDB2     		uxtb	r5, r5
+ 562              	.LVL61:
+ 132:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_YUV422:
+ 563              		.loc 1 132 9 is_stmt 1 view .LVU139
+ 564 0122 ADE7     		b	.L31
+ 565              	.LVL62:
+ 566              	.L28:
+ 134:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 567              		.loc 1 134 9 view .LVU140
+ 134:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 568              		.loc 1 134 16 is_stmt 0 view .LVU141
+ 569 0124 3021     		movs	r1, #48
+ 570 0126 4FF48640 		mov	r0, #17152
+ 571              	.LVL63:
+ 134:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 572              		.loc 1 134 16 view .LVU142
+ 573 012a FFF7FEFF 		bl	ov5640_WR_Reg
+ 574              	.LVL64:
+ 575 012e 0546     		mov	r5, r0
+ 576              	.LVL65:
+ 135:Drivers/BSP/Camera/ov5640.c ****         break;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 15
+
+
+ 577              		.loc 1 135 9 is_stmt 1 view .LVU143
+ 135:Drivers/BSP/Camera/ov5640.c ****         break;
+ 578              		.loc 1 135 16 is_stmt 0 view .LVU144
+ 579 0130 0021     		movs	r1, #0
+ 580 0132 45F21F00 		movw	r0, #20511
+ 581 0136 FFF7FEFF 		bl	ov5640_WR_Reg
+ 582              	.LVL66:
+ 135:Drivers/BSP/Camera/ov5640.c ****         break;
+ 583              		.loc 1 135 13 discriminator 1 view .LVU145
+ 584 013a 0543     		orrs	r5, r5, r0
+ 585              	.LVL67:
+ 135:Drivers/BSP/Camera/ov5640.c ****         break;
+ 586              		.loc 1 135 13 discriminator 1 view .LVU146
+ 587 013c EDB2     		uxtb	r5, r5
+ 588              	.LVL68:
+ 136:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_BAYER:
+ 589              		.loc 1 136 9 is_stmt 1 view .LVU147
+ 590 013e 9FE7     		b	.L31
+ 591              	.LVL69:
+ 592              	.L25:
+ 138:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 593              		.loc 1 138 9 view .LVU148
+ 138:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 594              		.loc 1 138 16 is_stmt 0 view .LVU149
+ 595 0140 0021     		movs	r1, #0
+ 596 0142 4FF48640 		mov	r0, #17152
+ 597              	.LVL70:
+ 138:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x01);
+ 598              		.loc 1 138 16 view .LVU150
+ 599 0146 FFF7FEFF 		bl	ov5640_WR_Reg
+ 600              	.LVL71:
+ 601 014a 0546     		mov	r5, r0
+ 602              	.LVL72:
+ 139:Drivers/BSP/Camera/ov5640.c ****         break;
+ 603              		.loc 1 139 9 is_stmt 1 view .LVU151
+ 139:Drivers/BSP/Camera/ov5640.c ****         break;
+ 604              		.loc 1 139 16 is_stmt 0 view .LVU152
+ 605 014c 0121     		movs	r1, #1
+ 606 014e 45F21F00 		movw	r0, #20511
+ 607 0152 FFF7FEFF 		bl	ov5640_WR_Reg
+ 608              	.LVL73:
+ 139:Drivers/BSP/Camera/ov5640.c ****         break;
+ 609              		.loc 1 139 13 discriminator 1 view .LVU153
+ 610 0156 0543     		orrs	r5, r5, r0
+ 611              	.LVL74:
+ 139:Drivers/BSP/Camera/ov5640.c ****         break;
+ 612              		.loc 1 139 13 discriminator 1 view .LVU154
+ 613 0158 EDB2     		uxtb	r5, r5
+ 614              	.LVL75:
+ 140:Drivers/BSP/Camera/ov5640.c ****     case PIXFORMAT_JPEG:
+ 615              		.loc 1 140 9 is_stmt 1 view .LVU155
+ 616 015a 91E7     		b	.L31
+ 617              	.LVL76:
+ 618              	.L29:
+ 142:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 619              		.loc 1 142 9 view .LVU156
+ 142:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 16
+
+
+ 620              		.loc 1 142 16 is_stmt 0 view .LVU157
+ 621 015c 3021     		movs	r1, #48
+ 622 015e 4FF48640 		mov	r0, #17152
+ 623              	.LVL77:
+ 142:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(FORMAT_CONTROL_MUX, 0x00);
+ 624              		.loc 1 142 16 view .LVU158
+ 625 0162 FFF7FEFF 		bl	ov5640_WR_Reg
+ 626              	.LVL78:
+ 627 0166 0546     		mov	r5, r0
+ 628              	.LVL79:
+ 143:Drivers/BSP/Camera/ov5640.c ****         break;
+ 629              		.loc 1 143 9 is_stmt 1 view .LVU159
+ 143:Drivers/BSP/Camera/ov5640.c ****         break;
+ 630              		.loc 1 143 16 is_stmt 0 view .LVU160
+ 631 0168 0021     		movs	r1, #0
+ 632 016a 45F21F00 		movw	r0, #20511
+ 633 016e FFF7FEFF 		bl	ov5640_WR_Reg
+ 634              	.LVL80:
+ 143:Drivers/BSP/Camera/ov5640.c ****         break;
+ 635              		.loc 1 143 13 discriminator 1 view .LVU161
+ 636 0172 0543     		orrs	r5, r5, r0
+ 637              	.LVL81:
+ 143:Drivers/BSP/Camera/ov5640.c ****         break;
+ 638              		.loc 1 143 13 discriminator 1 view .LVU162
+ 639 0174 EDB2     		uxtb	r5, r5
+ 640              	.LVL82:
+ 144:Drivers/BSP/Camera/ov5640.c ****     default:
+ 641              		.loc 1 144 9 is_stmt 1 view .LVU163
+ 642 0176 83E7     		b	.L31
+ 643              	.L44:
+ 150:Drivers/BSP/Camera/ov5640.c **** 
+ 644              		.loc 1 150 57 is_stmt 0 discriminator 1 view .LVU164
+ 645 0178 2021     		movs	r1, #32
+ 646 017a 8FE7     		b	.L32
+ 647              	.L45:
+ 153:Drivers/BSP/Camera/ov5640.c **** 
+ 648              		.loc 1 153 56 discriminator 1 view .LVU165
+ 649 017c 0021     		movs	r1, #0
+ 650 017e A1E7     		b	.L33
+ 651              	.L46:
+ 156:Drivers/BSP/Camera/ov5640.c **** 
+ 652              		.loc 1 156 56 discriminator 1 view .LVU166
+ 653 0180 2821     		movs	r1, #40
+ 654 0182 B3E7     		b	.L34
+ 655              	.LVL83:
+ 656              	.L47:
+ 657              	.LBB7:
+ 160:Drivers/BSP/Camera/ov5640.c **** 
+ 658              		.loc 1 160 9 is_stmt 1 view .LVU167
+ 160:Drivers/BSP/Camera/ov5640.c **** 
+ 659              		.loc 1 160 71 is_stmt 0 view .LVU168
+ 660 0184 0F4B     		ldr	r3, .L48
+ 661 0186 1A7C     		ldrb	r2, [r3, #16]	@ zero_extendqisi2
+ 160:Drivers/BSP/Camera/ov5640.c **** 
+ 662              		.loc 1 160 31 view .LVU169
+ 663 0188 0F4B     		ldr	r3, .L48+4
+ 664 018a 33F82200 		ldrh	r0, [r3, r2, lsl #2]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 17
+
+
+ 665 018e FFF7FEFF 		bl	calculate_hts
+ 666              	.LVL84:
+ 667 0192 0546     		mov	r5, r0
+ 668              	.LVL85:
+ 162:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 669              		.loc 1 162 9 is_stmt 1 view .LVU170
+ 162:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 670              		.loc 1 162 16 is_stmt 0 view .LVU171
+ 671 0194 C0F30721 		ubfx	r1, r0, #8, #8
+ 672 0198 43F60C00 		movw	r0, #14348
+ 673              	.LVL86:
+ 162:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 674              		.loc 1 162 16 view .LVU172
+ 675 019c FFF7FEFF 		bl	ov5640_WR_Reg
+ 676              	.LVL87:
+ 162:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 677              		.loc 1 162 13 discriminator 1 view .LVU173
+ 678 01a0 0643     		orrs	r6, r6, r0
+ 679              	.LVL88:
+ 163:Drivers/BSP/Camera/ov5640.c ****     }
+ 680              		.loc 1 163 9 is_stmt 1 view .LVU174
+ 163:Drivers/BSP/Camera/ov5640.c ****     }
+ 681              		.loc 1 163 16 is_stmt 0 view .LVU175
+ 682 01a2 E9B2     		uxtb	r1, r5
+ 683 01a4 43F60D00 		movw	r0, #14349
+ 684 01a8 FFF7FEFF 		bl	ov5640_WR_Reg
+ 685              	.LVL89:
+ 163:Drivers/BSP/Camera/ov5640.c ****     }
+ 686              		.loc 1 163 13 discriminator 1 view .LVU176
+ 687 01ac 0643     		orrs	r6, r6, r0
+ 688              	.LVL90:
+ 163:Drivers/BSP/Camera/ov5640.c ****     }
+ 689              		.loc 1 163 13 discriminator 1 view .LVU177
+ 690 01ae A8E7     		b	.L21
+ 691              	.LVL91:
+ 692              	.L35:
+ 163:Drivers/BSP/Camera/ov5640.c ****     }
+ 693              		.loc 1 163 13 discriminator 1 view .LVU178
+ 694              	.LBE7:
+ 109:Drivers/BSP/Camera/ov5640.c ****     }
+ 695              		.loc 1 109 16 view .LVU179
+ 696 01b0 4FF0FF36 		mov	r6, #-1
+ 697 01b4 A5E7     		b	.L21
+ 698              	.L37:
+ 118:Drivers/BSP/Camera/ov5640.c ****     {
+ 699              		.loc 1 118 125 discriminator 1 view .LVU180
+ 700 01b6 4FF0FF36 		mov	r6, #-1
+ 701 01ba A2E7     		b	.L21
+ 702              	.L38:
+ 123:Drivers/BSP/Camera/ov5640.c ****     {
+ 703              		.loc 1 123 5 view .LVU181
+ 704 01bc 4FF0FF36 		mov	r6, #-1
+ 705              	.LVL92:
+ 123:Drivers/BSP/Camera/ov5640.c ****     {
+ 706              		.loc 1 123 5 view .LVU182
+ 707 01c0 9FE7     		b	.L21
+ 708              	.L49:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 18
+
+
+ 709 01c2 00BF     		.align	2
+ 710              	.L48:
+ 711 01c4 00000000 		.word	hcamera
+ 712 01c8 00000000 		.word	dvp_cam_resolution
+ 713 01cc 00000000 		.word	hts_target
+ 714              		.cfi_endproc
+ 715              	.LFE149:
+ 717              		.section	.text.ov5640_set_framesize,"ax",%progbits
+ 718              		.align	1
+ 719              		.syntax unified
+ 720              		.thumb
+ 721              		.thumb_func
+ 723              	ov5640_set_framesize:
+ 724              	.LVL93:
+ 725              	.LFB150:
+ 168:Drivers/BSP/Camera/ov5640.c **** 
+ 169:Drivers/BSP/Camera/ov5640.c **** static int ov5640_set_framesize(framesize_t framesize)
+ 170:Drivers/BSP/Camera/ov5640.c **** {
+ 726              		.loc 1 170 1 is_stmt 1 view -0
+ 727              		.cfi_startproc
+ 728              		@ args = 0, pretend = 0, frame = 48
+ 729              		@ frame_needed = 0, uses_anonymous_args = 0
+ 730              		.loc 1 170 1 is_stmt 0 view .LVU184
+ 731 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 732              	.LCFI7:
+ 733              		.cfi_def_cfa_offset 36
+ 734              		.cfi_offset 4, -36
+ 735              		.cfi_offset 5, -32
+ 736              		.cfi_offset 6, -28
+ 737              		.cfi_offset 7, -24
+ 738              		.cfi_offset 8, -20
+ 739              		.cfi_offset 9, -16
+ 740              		.cfi_offset 10, -12
+ 741              		.cfi_offset 11, -8
+ 742              		.cfi_offset 14, -4
+ 743 0004 8DB0     		sub	sp, sp, #52
+ 744              	.LCFI8:
+ 745              		.cfi_def_cfa_offset 88
+ 171:Drivers/BSP/Camera/ov5640.c ****     uint8_t reg;
+ 746              		.loc 1 171 5 is_stmt 1 view .LVU185
+ 172:Drivers/BSP/Camera/ov5640.c ****     int ret = 0;
+ 747              		.loc 1 172 5 view .LVU186
+ 748              	.LVL94:
+ 173:Drivers/BSP/Camera/ov5640.c ****     uint16_t w = dvp_cam_resolution[framesize][0];
+ 749              		.loc 1 173 5 view .LVU187
+ 750              		.loc 1 173 14 is_stmt 0 view .LVU188
+ 751 0006 354B     		ldr	r3, .L83
+ 752 0008 33F82070 		ldrh	r7, [r3, r0, lsl #2]
+ 753              	.LVL95:
+ 174:Drivers/BSP/Camera/ov5640.c ****     uint16_t h = dvp_cam_resolution[framesize][1];
+ 754              		.loc 1 174 5 is_stmt 1 view .LVU189
+ 755              		.loc 1 174 14 is_stmt 0 view .LVU190
+ 756 000c 03EB8003 		add	r3, r3, r0, lsl #2
+ 757 0010 B3F80280 		ldrh	r8, [r3, #2]
+ 758              	.LVL96:
+ 175:Drivers/BSP/Camera/ov5640.c **** 
+ 176:Drivers/BSP/Camera/ov5640.c ****     // Not a multiple of 8. The JPEG encoder on the OV5640 can't handle this.
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 19
+
+
+ 177:Drivers/BSP/Camera/ov5640.c ****     if ((hcamera.pixformat == PIXFORMAT_JPEG) && ((w % 8) || (h % 8)))
+ 759              		.loc 1 177 5 is_stmt 1 view .LVU191
+ 760              		.loc 1 177 17 is_stmt 0 view .LVU192
+ 761 0014 324B     		ldr	r3, .L83+4
+ 762 0016 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 763              		.loc 1 177 8 view .LVU193
+ 764 0018 022B     		cmp	r3, #2
+ 765 001a 50D0     		beq	.L74
+ 766              	.L51:
+ 178:Drivers/BSP/Camera/ov5640.c ****     {
+ 179:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 180:Drivers/BSP/Camera/ov5640.c ****     }
+ 181:Drivers/BSP/Camera/ov5640.c **** 
+ 182:Drivers/BSP/Camera/ov5640.c ****     // Readout speed too fast. The DCMI_DMAConvCpltUser() line callback overhead is too much to han
+ 183:Drivers/BSP/Camera/ov5640.c ****     // If we were to slow the pixclk down these resolutions would work. As of right now, the image 
+ 184:Drivers/BSP/Camera/ov5640.c ****     // the current line transfer speed. Note that there's an overhead to the DCMI_DMAConvCpltUser()
+ 185:Drivers/BSP/Camera/ov5640.c ****     // memory copy operation that's too slow. It's that there's too much overhead in the DCMI_DMACo
+ 186:Drivers/BSP/Camera/ov5640.c ****     // to even have time to start the line transfer. If it were possible to slow the line readout s
+ 187:Drivers/BSP/Camera/ov5640.c ****     // this would enable these resolutions below. However, there's nothing in the datasheet that wh
+ 188:Drivers/BSP/Camera/ov5640.c ****     if (((hcamera.pixformat == PIXFORMAT_GRAYSCALE) || (hcamera.pixformat == PIXFORMAT_BAYER) || (h
+ 767              		.loc 1 188 5 is_stmt 1 view .LVU194
+ 768              		.loc 1 188 95 is_stmt 0 view .LVU195
+ 769 001c 1A1F     		subs	r2, r3, #4
+ 770 001e D2B2     		uxtb	r2, r2
+ 771              		.loc 1 188 8 view .LVU196
+ 772 0020 022B     		cmp	r3, #2
+ 773 0022 18BF     		it	ne
+ 774 0024 012A     		cmpne	r2, #1
+ 775 0026 08D8     		bhi	.L53
+ 776 0028 0D28     		cmp	r0, #13
+ 777 002a 06D8     		bhi	.L53
+ 778 002c 43F21203 		movw	r3, #12306
+ 779 0030 C340     		lsrs	r3, r3, r0
+ 780 0032 13F0010F 		tst	r3, #1
+ 781 0036 40F01A82 		bne	.L67
+ 782              	.L53:
+ 189:Drivers/BSP/Camera/ov5640.c ****     {
+ 190:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 191:Drivers/BSP/Camera/ov5640.c ****     }
+ 192:Drivers/BSP/Camera/ov5640.c **** 
+ 193:Drivers/BSP/Camera/ov5640.c ****     // Generally doesn't work for anything.
+ 194:Drivers/BSP/Camera/ov5640.c ****     if (framesize == FRAMESIZE_QQQQVGA)
+ 783              		.loc 1 194 5 is_stmt 1 view .LVU197
+ 784              		.loc 1 194 8 is_stmt 0 view .LVU198
+ 785 003a 0728     		cmp	r0, #7
+ 786 003c 00F01A82 		beq	.L68
+ 195:Drivers/BSP/Camera/ov5640.c ****     {
+ 196:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 197:Drivers/BSP/Camera/ov5640.c ****     }
+ 198:Drivers/BSP/Camera/ov5640.c **** 
+ 199:Drivers/BSP/Camera/ov5640.c ****     // Invalid resolution.
+ 200:Drivers/BSP/Camera/ov5640.c ****     if ((w > ACTIVE_SENSOR_WIDTH) || (h > ACTIVE_SENSOR_HEIGHT))
+ 787              		.loc 1 200 5 is_stmt 1 view .LVU199
+ 788              		.loc 1 200 8 is_stmt 0 view .LVU200
+ 789 0040 B8F5F36F 		cmp	r8, #1944
+ 790 0044 98BF     		it	ls
+ 791 0046 B7F5226F 		cmpls	r7, #2592
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 20
+
+
+ 792 004a 00F21682 		bhi	.L69
+ 201:Drivers/BSP/Camera/ov5640.c ****     {
+ 202:Drivers/BSP/Camera/ov5640.c ****         return -1;
+ 203:Drivers/BSP/Camera/ov5640.c ****     }
+ 204:Drivers/BSP/Camera/ov5640.c **** 
+ 205:Drivers/BSP/Camera/ov5640.c ****     // Step 0: Clamp readout settings.
+ 206:Drivers/BSP/Camera/ov5640.c **** 
+ 207:Drivers/BSP/Camera/ov5640.c ****     readout_w = IM_MAX(readout_w, w);
+ 793              		.loc 1 207 5 is_stmt 1 view .LVU201
+ 794              	.LBB8:
+ 795              		.loc 1 207 17 view .LVU202
+ 796 004e 254A     		ldr	r2, .L83+8
+ 797 0050 1388     		ldrh	r3, [r2]
+ 798              	.LVL97:
+ 799              		.loc 1 207 17 view .LVU203
+ 800              		.loc 1 207 17 view .LVU204
+ 801 0052 BB42     		cmp	r3, r7
+ 802 0054 38BF     		it	cc
+ 803 0056 3B46     		movcc	r3, r7
+ 804              	.LBE8:
+ 805              		.loc 1 207 15 is_stmt 0 view .LVU205
+ 806 0058 1380     		strh	r3, [r2]	@ movhi
+ 807              	.LVL98:
+ 208:Drivers/BSP/Camera/ov5640.c ****     readout_h = IM_MAX(readout_h, h);
+ 808              		.loc 1 208 5 is_stmt 1 view .LVU206
+ 809              	.LBB9:
+ 810              		.loc 1 208 17 view .LVU207
+ 811 005a 2349     		ldr	r1, .L83+12
+ 812 005c 0A88     		ldrh	r2, [r1]
+ 813              	.LVL99:
+ 814              		.loc 1 208 17 view .LVU208
+ 815              		.loc 1 208 17 view .LVU209
+ 816 005e 4245     		cmp	r2, r8
+ 817 0060 38BF     		it	cc
+ 818 0062 4246     		movcc	r2, r8
+ 819              	.LBE9:
+ 820              		.loc 1 208 15 is_stmt 0 view .LVU210
+ 821 0064 0A80     		strh	r2, [r1]	@ movhi
+ 822              	.LVL100:
+ 209:Drivers/BSP/Camera/ov5640.c **** 
+ 210:Drivers/BSP/Camera/ov5640.c ****     int readout_x_max = (ACTIVE_SENSOR_WIDTH - readout_w) / 2;
+ 823              		.loc 1 210 5 is_stmt 1 view .LVU211
+ 824              		.loc 1 210 9 is_stmt 0 view .LVU212
+ 825 0066 D3F52261 		rsbs	r1, r3, #2592
+ 826 006a 32D4     		bmi	.L75
+ 827              	.L54:
+ 828              		.loc 1 210 9 view .LVU213
+ 829 006c 4910     		asrs	r1, r1, #1
+ 830              	.LVL101:
+ 211:Drivers/BSP/Camera/ov5640.c ****     int readout_y_max = (ACTIVE_SENSOR_HEIGHT - readout_h) / 2;
+ 831              		.loc 1 211 5 is_stmt 1 view .LVU214
+ 832              		.loc 1 211 9 is_stmt 0 view .LVU215
+ 833 006e D2F5F364 		rsbs	r4, r2, #1944
+ 834 0072 30D4     		bmi	.L76
+ 835              	.L55:
+ 836 0074 6410     		asrs	r4, r4, #1
+ 837              	.LVL102:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 21
+
+
+ 212:Drivers/BSP/Camera/ov5640.c ****     readout_x = IM_MAX(IM_MIN(readout_x, readout_x_max), -readout_x_max);
+ 838              		.loc 1 212 5 is_stmt 1 view .LVU216
+ 839              	.LBB10:
+ 840              		.loc 1 212 17 view .LVU217
+ 841              	.LBB11:
+ 842              		.loc 1 212 17 view .LVU218
+ 843 0076 1D48     		ldr	r0, .L83+16
+ 844              	.LVL103:
+ 845              		.loc 1 212 17 is_stmt 0 view .LVU219
+ 846 0078 B0F900C0 		ldrsh	ip, [r0]
+ 847              	.LVL104:
+ 848              		.loc 1 212 17 is_stmt 1 view .LVU220
+ 849              		.loc 1 212 17 view .LVU221
+ 850 007c 8C45     		cmp	ip, r1
+ 851 007e A8BF     		it	ge
+ 852 0080 8C46     		movge	ip, r1
+ 853              	.LVL105:
+ 854              		.loc 1 212 17 is_stmt 0 view .LVU222
+ 855              	.LBE11:
+ 856              		.loc 1 212 17 is_stmt 1 view .LVU223
+ 857 0082 4942     		rsbs	r1, r1, #0
+ 858              	.LVL106:
+ 859              		.loc 1 212 17 view .LVU224
+ 860 0084 8C45     		cmp	ip, r1
+ 861 0086 B8BF     		it	lt
+ 862 0088 8C46     		movlt	ip, r1
+ 863              	.LVL107:
+ 864              		.loc 1 212 17 is_stmt 0 view .LVU225
+ 865              	.LBE10:
+ 866              		.loc 1 212 15 view .LVU226
+ 867 008a 0FFA8CFC 		sxth	ip, ip
+ 868 008e A0F800C0 		strh	ip, [r0]	@ movhi
+ 869              	.LVL108:
+ 213:Drivers/BSP/Camera/ov5640.c ****     readout_y = IM_MAX(IM_MIN(readout_y, readout_y_max), -readout_y_max);
+ 870              		.loc 1 213 5 is_stmt 1 view .LVU227
+ 871              	.LBB12:
+ 872              		.loc 1 213 17 view .LVU228
+ 873              	.LBB13:
+ 874              		.loc 1 213 17 view .LVU229
+ 875 0092 174D     		ldr	r5, .L83+20
+ 876 0094 B5F90000 		ldrsh	r0, [r5]
+ 877              	.LVL109:
+ 878              		.loc 1 213 17 view .LVU230
+ 879              		.loc 1 213 17 view .LVU231
+ 880 0098 A042     		cmp	r0, r4
+ 881 009a A8BF     		it	ge
+ 882 009c 2046     		movge	r0, r4
+ 883              	.LVL110:
+ 884              		.loc 1 213 17 is_stmt 0 view .LVU232
+ 885              	.LBE13:
+ 886              		.loc 1 213 17 is_stmt 1 view .LVU233
+ 887 009e 6142     		rsbs	r1, r4, #0
+ 888              	.LVL111:
+ 889              		.loc 1 213 17 view .LVU234
+ 890 00a0 8842     		cmp	r0, r1
+ 891 00a2 B8BF     		it	lt
+ 892 00a4 0846     		movlt	r0, r1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 22
+
+
+ 893              	.LVL112:
+ 894              		.loc 1 213 17 is_stmt 0 view .LVU235
+ 895              	.LBE12:
+ 896              		.loc 1 213 15 view .LVU236
+ 897 00a6 00B2     		sxth	r0, r0
+ 898 00a8 2880     		strh	r0, [r5]	@ movhi
+ 899              	.LVL113:
+ 214:Drivers/BSP/Camera/ov5640.c **** 
+ 215:Drivers/BSP/Camera/ov5640.c ****     // Step 1: Determine readout area and subsampling amount.
+ 216:Drivers/BSP/Camera/ov5640.c **** 
+ 217:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_div = 0;
+ 900              		.loc 1 217 5 is_stmt 1 view .LVU237
+ 218:Drivers/BSP/Camera/ov5640.c **** 
+ 219:Drivers/BSP/Camera/ov5640.c ****     if ((w > (readout_w / 2)) || (h > (readout_h / 2)))
+ 901              		.loc 1 219 5 view .LVU238
+ 902              		.loc 1 219 8 is_stmt 0 view .LVU239
+ 903 00aa B7EB530F 		cmp	r7, r3, lsr #1
+ 904 00ae 21D8     		bhi	.L70
+ 905              		.loc 1 219 31 discriminator 1 view .LVU240
+ 906 00b0 B8EB520F 		cmp	r8, r2, lsr #1
+ 907 00b4 40F2C681 		bls	.L71
+ 220:Drivers/BSP/Camera/ov5640.c ****     {
+ 221:Drivers/BSP/Camera/ov5640.c ****         sensor_div = 1;
+ 908              		.loc 1 221 20 view .LVU241
+ 909 00b8 4FF00109 		mov	r9, #1
+ 910 00bc 1CE0     		b	.L56
+ 911              	.LVL114:
+ 912              	.L74:
+ 177:Drivers/BSP/Camera/ov5640.c ****     {
+ 913              		.loc 1 177 47 discriminator 1 view .LVU242
+ 914 00be 17F0070F 		tst	r7, #7
+ 915 00c2 40F0D181 		bne	.L65
+ 177:Drivers/BSP/Camera/ov5640.c ****     {
+ 916              		.loc 1 177 59 discriminator 2 view .LVU243
+ 917 00c6 18F0070F 		tst	r8, #7
+ 918 00ca A7D0     		beq	.L51
+ 179:Drivers/BSP/Camera/ov5640.c ****     }
+ 919              		.loc 1 179 16 view .LVU244
+ 920 00cc 4FF0FF30 		mov	r0, #-1
+ 921              	.LVL115:
+ 179:Drivers/BSP/Camera/ov5640.c ****     }
+ 922              		.loc 1 179 16 view .LVU245
+ 923 00d0 B5E1     		b	.L50
+ 924              	.LVL116:
+ 925              	.L75:
+ 210:Drivers/BSP/Camera/ov5640.c ****     int readout_y_max = (ACTIVE_SENSOR_HEIGHT - readout_h) / 2;
+ 926              		.loc 1 210 9 view .LVU246
+ 927 00d2 0131     		adds	r1, r1, #1
+ 928 00d4 CAE7     		b	.L54
+ 929              	.LVL117:
+ 930              	.L76:
+ 211:Drivers/BSP/Camera/ov5640.c ****     readout_x = IM_MAX(IM_MIN(readout_x, readout_x_max), -readout_x_max);
+ 931              		.loc 1 211 9 view .LVU247
+ 932 00d6 0134     		adds	r4, r4, #1
+ 933 00d8 CCE7     		b	.L55
+ 934              	.L84:
+ 935 00da 00BF     		.align	2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 23
+
+
+ 936              	.L83:
+ 937 00dc 00000000 		.word	dvp_cam_resolution
+ 938 00e0 00000000 		.word	hcamera
+ 939 00e4 00000000 		.word	readout_w
+ 940 00e8 00000000 		.word	readout_h
+ 941 00ec 00000000 		.word	readout_x
+ 942 00f0 00000000 		.word	readout_y
+ 943              	.LVL118:
+ 944              	.L70:
+ 945              		.loc 1 221 20 view .LVU248
+ 946 00f4 4FF00109 		mov	r9, #1
+ 947              	.L56:
+ 948              	.LVL119:
+ 222:Drivers/BSP/Camera/ov5640.c ****     }
+ 223:Drivers/BSP/Camera/ov5640.c ****     else
+ 224:Drivers/BSP/Camera/ov5640.c ****     {
+ 225:Drivers/BSP/Camera/ov5640.c ****         sensor_div = 2;
+ 226:Drivers/BSP/Camera/ov5640.c ****     }
+ 227:Drivers/BSP/Camera/ov5640.c **** 
+ 228:Drivers/BSP/Camera/ov5640.c ****     // Step 2: Determine horizontal and vertical start and end points.
+ 229:Drivers/BSP/Camera/ov5640.c **** 
+ 230:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_w = readout_w + DUMMY_WIDTH_BUFFER;  // camera hardware needs dummy pixels to s
+ 949              		.loc 1 230 5 is_stmt 1 view .LVU249
+ 950              		.loc 1 230 14 is_stmt 0 view .LVU250
+ 951 00f8 03F11001 		add	r1, r3, #16
+ 952              	.LVL120:
+ 953              		.loc 1 230 14 view .LVU251
+ 954 00fc 89B2     		uxth	r1, r1
+ 955              	.LVL121:
+ 231:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_h = readout_h + DUMMY_HEIGHT_BUFFER; // camera hardware needs dummy lines to sy
+ 956              		.loc 1 231 5 is_stmt 1 view .LVU252
+ 957              		.loc 1 231 14 is_stmt 0 view .LVU253
+ 958 00fe 02F10804 		add	r4, r2, #8
+ 959              	.LVL122:
+ 960              		.loc 1 231 14 view .LVU254
+ 961 0102 A4B2     		uxth	r4, r4
+ 962              	.LVL123:
+ 232:Drivers/BSP/Camera/ov5640.c **** 
+ 233:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_ws = IM_MAX(IM_MIN((((ACTIVE_SENSOR_WIDTH - sensor_w) / 4) + (readout_x / 2)) *
+ 963              		.loc 1 233 5 is_stmt 1 view .LVU255
+ 964              	.LBB14:
+ 965              		.loc 1 233 26 view .LVU256
+ 966              	.LBB15:
+ 967              		.loc 1 233 26 view .LVU257
+ 968 0104 C1F52266 		rsb	r6, r1, #2592
+ 969 0108 3546     		mov	r5, r6
+ 970 010a 002E     		cmp	r6, #0
+ 971 010c C0F29D81 		blt	.L77
+ 972              	.L57:
+ 973 0110 AD10     		asrs	r5, r5, #2
+ 974 0112 E646     		mov	lr, ip
+ 975 0114 BCF1000F 		cmp	ip, #0
+ 976 0118 C0F29981 		blt	.L78
+ 977              	.L58:
+ 978 011c 05EB6E05 		add	r5, r5, lr, asr #1
+ 979 0120 6D00     		lsls	r5, r5, #1
+ 980              	.LVL124:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 24
+
+
+ 981              		.loc 1 233 26 view .LVU258
+ 982              		.loc 1 233 26 view .LVU259
+ 983 0122 AE42     		cmp	r6, r5
+ 984 0124 A8BF     		it	ge
+ 985 0126 2E46     		movge	r6, r5
+ 986              	.LVL125:
+ 987              		.loc 1 233 26 is_stmt 0 view .LVU260
+ 988              	.LBE15:
+ 989              		.loc 1 233 26 is_stmt 1 view .LVU261
+ 990              		.loc 1 233 26 view .LVU262
+ 991 0128 6FF00705 		mvn	r5, #7
+ 992              	.LVL126:
+ 993              		.loc 1 233 26 is_stmt 0 view .LVU263
+ 994 012c AE42     		cmp	r6, r5
+ 995 012e B8BF     		it	lt
+ 996 0130 2E46     		movlt	r6, r5
+ 997              	.LVL127:
+ 998              		.loc 1 233 26 view .LVU264
+ 999              	.LBE14:
+ 1000              		.loc 1 233 164 view .LVU265
+ 1001 0132 B6B2     		uxth	r6, r6
+ 1002              		.loc 1 233 14 view .LVU266
+ 1003 0134 1036     		adds	r6, r6, #16
+ 1004 0136 B6B2     		uxth	r6, r6
+ 1005              	.LVL128:
+ 234:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_we = sensor_ws + sensor_w - 1;
+ 1006              		.loc 1 234 5 is_stmt 1 view .LVU267
+ 1007              		.loc 1 234 36 is_stmt 0 view .LVU268
+ 1008 0138 01EB060B 		add	fp, r1, r6
+ 1009 013c 1FFA8BFB 		uxth	fp, fp
+ 1010              		.loc 1 234 14 view .LVU269
+ 1011 0140 0BF1FF3B 		add	fp, fp, #-1
+ 1012 0144 1FFA8BFB 		uxth	fp, fp
+ 1013              	.LVL129:
+ 235:Drivers/BSP/Camera/ov5640.c **** 
+ 236:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_hs = IM_MAX(IM_MIN((((ACTIVE_SENSOR_HEIGHT - sensor_h) / 4) - (readout_y / 2)) 
+ 1014              		.loc 1 236 5 is_stmt 1 view .LVU270
+ 1015              	.LBB17:
+ 1016              		.loc 1 236 26 view .LVU271
+ 1017              	.LBB18:
+ 1018              		.loc 1 236 26 view .LVU272
+ 1019 0148 C4F5F365 		rsb	r5, r4, #1944
+ 1020 014c AC46     		mov	ip, r5
+ 1021 014e 002D     		cmp	r5, #0
+ 1022 0150 C0F28081 		blt	.L79
+ 1023              	.L59:
+ 1024              		.loc 1 236 26 is_stmt 0 view .LVU273
+ 1025 0154 4FEAAC0C 		asr	ip, ip, #2
+ 1026 0158 8646     		mov	lr, r0
+ 1027              		.loc 1 236 26 view .LVU274
+ 1028 015a 0028     		cmp	r0, #0
+ 1029 015c C0F27D81 		blt	.L80
+ 1030              	.L60:
+ 1031 0160 ACEB6E0C 		sub	ip, ip, lr, asr #1
+ 1032 0164 4FEA4C0C 		lsl	ip, ip, #1
+ 1033              	.LVL130:
+ 1034              		.loc 1 236 26 is_stmt 1 view .LVU275
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 25
+
+
+ 1035              		.loc 1 236 26 view .LVU276
+ 1036 0168 6545     		cmp	r5, ip
+ 1037 016a A8BF     		it	ge
+ 1038 016c 6546     		movge	r5, ip
+ 1039              	.LVL131:
+ 1040              		.loc 1 236 26 is_stmt 0 view .LVU277
+ 1041              	.LBE18:
+ 1042              		.loc 1 236 26 is_stmt 1 view .LVU278
+ 1043              		.loc 1 236 26 view .LVU279
+ 1044 016e 6FF00300 		mvn	r0, #3
+ 1045 0172 8542     		cmp	r5, r0
+ 1046 0174 B8BF     		it	lt
+ 1047 0176 0546     		movlt	r5, r0
+ 1048              	.LVL132:
+ 1049              		.loc 1 236 26 is_stmt 0 view .LVU280
+ 1050              	.LBE17:
+ 1051              		.loc 1 236 167 view .LVU281
+ 1052 0178 ADB2     		uxth	r5, r5
+ 1053              		.loc 1 236 14 view .LVU282
+ 1054 017a 0635     		adds	r5, r5, #6
+ 1055 017c ADB2     		uxth	r5, r5
+ 1056              	.LVL133:
+ 237:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_he = sensor_hs + sensor_h - 1;
+ 1057              		.loc 1 237 5 is_stmt 1 view .LVU283
+ 1058              		.loc 1 237 36 is_stmt 0 view .LVU284
+ 1059 017e 04EB050A 		add	r10, r4, r5
+ 1060 0182 1FFA8AFA 		uxth	r10, r10
+ 1061              		.loc 1 237 14 view .LVU285
+ 1062 0186 0AF1FF3A 		add	r10, r10, #-1
+ 1063 018a 1FFA8AFA 		uxth	r10, r10
+ 1064              	.LVL134:
+ 238:Drivers/BSP/Camera/ov5640.c **** 
+ 239:Drivers/BSP/Camera/ov5640.c ****     // Step 3: Determine scaling window offset.
+ 240:Drivers/BSP/Camera/ov5640.c **** 
+ 241:Drivers/BSP/Camera/ov5640.c ****     float ratio = IM_MIN((readout_w / sensor_div) / ((float)w), (readout_h / sensor_div) / ((float)
+ 1065              		.loc 1 241 5 is_stmt 1 view .LVU286
+ 1066              	.LBB20:
+ 1067              		.loc 1 241 19 view .LVU287
+ 1068 018e B3FBF9F3 		udiv	r3, r3, r9
+ 1069 0192 07EE903A 		vmov	s15, r3	@ int
+ 1070 0196 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1071 019a 07EE107A 		vmov	s14, r7	@ int
+ 1072 019e B8EE477A 		vcvt.f32.u32	s14, s14
+ 1073 01a2 C7EE876A 		vdiv.f32	s13, s15, s14
+ 1074              	.LVL135:
+ 1075              		.loc 1 241 19 view .LVU288
+ 1076 01a6 B2FBF9F2 		udiv	r2, r2, r9
+ 1077 01aa 07EE902A 		vmov	s15, r2	@ int
+ 1078 01ae F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1079 01b2 07EE108A 		vmov	s14, r8	@ int
+ 1080 01b6 B8EE476A 		vcvt.f32.u32	s12, s14
+ 1081 01ba 87EE867A 		vdiv.f32	s14, s15, s12
+ 1082              	.LVL136:
+ 1083              		.loc 1 241 19 view .LVU289
+ 1084 01be F4EEC76A 		vcmpe.f32	s13, s14
+ 1085 01c2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1086 01c6 01D5     		bpl	.L61
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 26
+
+
+ 1087              		.loc 1 241 19 is_stmt 0 discriminator 1 view .LVU290
+ 1088 01c8 B0EE667A 		vmov.f32	s14, s13
+ 1089              	.LVL137:
+ 1090              	.L61:
+ 1091              		.loc 1 241 19 discriminator 1 view .LVU291
+ 1092              	.LBE20:
+ 242:Drivers/BSP/Camera/ov5640.c **** 
+ 243:Drivers/BSP/Camera/ov5640.c ****     uint16_t w_mul = w * ratio;
+ 1093              		.loc 1 243 5 is_stmt 1 view .LVU292
+ 1094              		.loc 1 243 24 is_stmt 0 view .LVU293
+ 1095 01cc 07EE907A 		vmov	s15, r7	@ int
+ 1096              	.LVL138:
+ 1097              		.loc 1 243 24 view .LVU294
+ 1098 01d0 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1099 01d4 67EE877A 		vmul.f32	s15, s15, s14
+ 1100              		.loc 1 243 14 view .LVU295
+ 1101 01d8 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 1102 01dc 17EE903A 		vmov	r3, s15	@ int
+ 1103 01e0 9AB2     		uxth	r2, r3
+ 1104              	.LVL139:
+ 244:Drivers/BSP/Camera/ov5640.c ****     uint16_t h_mul = h * ratio;
+ 1105              		.loc 1 244 5 is_stmt 1 view .LVU296
+ 1106              		.loc 1 244 24 is_stmt 0 view .LVU297
+ 1107 01e2 07EE908A 		vmov	s15, r8	@ int
+ 1108 01e6 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1109 01ea 67EE877A 		vmul.f32	s15, s15, s14
+ 1110              		.loc 1 244 14 view .LVU298
+ 1111 01ee FCEEE77A 		vcvt.u32.f32	s15, s15
+ 1112 01f2 17EE903A 		vmov	r3, s15	@ int
+ 1113 01f6 9BB2     		uxth	r3, r3
+ 1114              	.LVL140:
+ 245:Drivers/BSP/Camera/ov5640.c ****     uint16_t x_off = ((sensor_w / sensor_div) - w_mul) / 2;
+ 1115              		.loc 1 245 5 is_stmt 1 view .LVU299
+ 1116              		.loc 1 245 33 is_stmt 0 view .LVU300
+ 1117 01f8 B1FBF9F1 		udiv	r1, r1, r9
+ 1118              	.LVL141:
+ 1119              		.loc 1 245 56 view .LVU301
+ 1120 01fc 8A1A     		subs	r2, r1, r2
+ 1121              	.LVL142:
+ 1122              		.loc 1 245 56 view .LVU302
+ 1123 01fe 00F12F81 		bmi	.L81
+ 1124              	.L63:
+ 1125 0202 5010     		asrs	r0, r2, #1
+ 1126 0204 0390     		str	r0, [sp, #12]
+ 1127              		.loc 1 245 14 view .LVU303
+ 1128 0206 C2F34F02 		ubfx	r2, r2, #1, #16
+ 1129 020a 0592     		str	r2, [sp, #20]
+ 1130              	.LVL143:
+ 246:Drivers/BSP/Camera/ov5640.c ****     uint16_t y_off = ((sensor_h / sensor_div) - h_mul) / 2;
+ 1131              		.loc 1 246 5 is_stmt 1 view .LVU304
+ 1132              		.loc 1 246 33 is_stmt 0 view .LVU305
+ 1133 020c B4FBF9F4 		udiv	r4, r4, r9
+ 1134              	.LVL144:
+ 1135              		.loc 1 246 56 view .LVU306
+ 1136 0210 E31A     		subs	r3, r4, r3
+ 1137              	.LVL145:
+ 1138              		.loc 1 246 56 view .LVU307
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 27
+
+
+ 1139 0212 00F12781 		bmi	.L82
+ 1140              	.L64:
+ 1141 0216 5A10     		asrs	r2, r3, #1
+ 1142 0218 0992     		str	r2, [sp, #36]
+ 1143              		.loc 1 246 14 view .LVU308
+ 1144 021a C3F34F03 		ubfx	r3, r3, #1, #16
+ 1145 021e 0693     		str	r3, [sp, #24]
+ 1146              	.LVL146:
+ 247:Drivers/BSP/Camera/ov5640.c **** 
+ 248:Drivers/BSP/Camera/ov5640.c ****     // Step 4: Compute total frame time.
+ 249:Drivers/BSP/Camera/ov5640.c **** 
+ 250:Drivers/BSP/Camera/ov5640.c ****     hts_target = sensor_w / sensor_div;
+ 1147              		.loc 1 250 5 is_stmt 1 view .LVU309
+ 1148              		.loc 1 250 16 is_stmt 0 view .LVU310
+ 1149 0220 974B     		ldr	r3, .L85
+ 1150 0222 1980     		strh	r1, [r3]	@ movhi
+ 251:Drivers/BSP/Camera/ov5640.c **** 
+ 252:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_hts = calculate_hts(w);
+ 1151              		.loc 1 252 5 is_stmt 1 view .LVU311
+ 1152              		.loc 1 252 27 is_stmt 0 view .LVU312
+ 1153 0224 3846     		mov	r0, r7
+ 1154 0226 FFF7FEFF 		bl	calculate_hts
+ 1155              	.LVL147:
+ 1156              		.loc 1 252 14 discriminator 1 view .LVU313
+ 1157 022a 0190     		str	r0, [sp, #4]
+ 1158 022c BDF80410 		ldrh	r1, [sp, #4]
+ 1159 0230 0791     		str	r1, [sp, #28]
+ 1160              	.LVL148:
+ 253:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_vts = calculate_vts(sensor_h / sensor_div);
+ 1161              		.loc 1 253 5 is_stmt 1 view .LVU314
+ 1162              		.loc 1 253 27 is_stmt 0 view .LVU315
+ 1163 0232 2046     		mov	r0, r4
+ 1164 0234 FFF7FEFF 		bl	calculate_vts
+ 1165              	.LVL149:
+ 1166              		.loc 1 253 14 discriminator 1 view .LVU316
+ 1167 0238 0290     		str	r0, [sp, #8]
+ 1168 023a BDF80840 		ldrh	r4, [sp, #8]
+ 1169 023e 0894     		str	r4, [sp, #32]
+ 1170              	.LVL150:
+ 254:Drivers/BSP/Camera/ov5640.c **** 
+ 255:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_x_inc = (((sensor_div * 2) - 1) << 4) | (1 << 0); // odd[7:4]/even[3:0] pixel i
+ 1171              		.loc 1 255 5 is_stmt 1 view .LVU317
+ 1172              		.loc 1 255 43 is_stmt 0 view .LVU318
+ 1173 0240 4FEA4903 		lsl	r3, r9, #1
+ 1174              		.loc 1 255 48 view .LVU319
+ 1175 0244 013B     		subs	r3, r3, #1
+ 1176              		.loc 1 255 59 view .LVU320
+ 1177 0246 1B01     		lsls	r3, r3, #4
+ 1178 0248 43F00104 		orr	r4, r3, #1
+ 1179 024c 0494     		str	r4, [sp, #16]
+ 1180              	.LVL151:
+ 256:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_y_inc = (((sensor_div * 2) - 1) << 4) | (1 << 0); // odd[7:4]/even[3:0] pixel i
+ 1181              		.loc 1 256 5 is_stmt 1 view .LVU321
+ 257:Drivers/BSP/Camera/ov5640.c **** 
+ 258:Drivers/BSP/Camera/ov5640.c ****     // Step 5: Write regs.
+ 259:Drivers/BSP/Camera/ov5640.c **** 
+ 260:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HS_H, sensor_ws >> 8);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 28
+
+
+ 1182              		.loc 1 260 5 view .LVU322
+ 1183              		.loc 1 260 12 is_stmt 0 view .LVU323
+ 1184 024e 310A     		lsrs	r1, r6, #8
+ 1185 0250 4FF46050 		mov	r0, #14336
+ 1186 0254 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1187              	.LVL152:
+ 1188 0258 0446     		mov	r4, r0
+ 1189              	.LVL153:
+ 261:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HS_L, sensor_ws);
+ 1190              		.loc 1 261 5 is_stmt 1 view .LVU324
+ 1191              		.loc 1 261 12 is_stmt 0 view .LVU325
+ 1192 025a F1B2     		uxtb	r1, r6
+ 1193 025c 43F60100 		movw	r0, #14337
+ 1194 0260 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1195              	.LVL154:
+ 1196 0264 0443     		orrs	r4, r4, r0
+ 1197              	.LVL155:
+ 1198              		.loc 1 261 12 view .LVU326
+ 1199 0266 E4B2     		uxtb	r4, r4
+ 1200              	.LVL156:
+ 262:Drivers/BSP/Camera/ov5640.c **** 
+ 263:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VS_H, sensor_hs >> 8);
+ 1201              		.loc 1 263 5 is_stmt 1 view .LVU327
+ 1202              		.loc 1 263 12 is_stmt 0 view .LVU328
+ 1203 0268 290A     		lsrs	r1, r5, #8
+ 1204 026a 43F60200 		movw	r0, #14338
+ 1205 026e FFF7FEFF 		bl	ov5640_WR_Reg
+ 1206              	.LVL157:
+ 1207 0272 0443     		orrs	r4, r4, r0
+ 1208              	.LVL158:
+ 1209              		.loc 1 263 12 view .LVU329
+ 1210 0274 E4B2     		uxtb	r4, r4
+ 1211              	.LVL159:
+ 264:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VS_L, sensor_hs);
+ 1212              		.loc 1 264 5 is_stmt 1 view .LVU330
+ 1213              		.loc 1 264 12 is_stmt 0 view .LVU331
+ 1214 0276 E9B2     		uxtb	r1, r5
+ 1215 0278 43F60300 		movw	r0, #14339
+ 1216 027c FFF7FEFF 		bl	ov5640_WR_Reg
+ 1217              	.LVL160:
+ 1218 0280 0443     		orrs	r4, r4, r0
+ 1219              	.LVL161:
+ 1220              		.loc 1 264 12 view .LVU332
+ 1221 0282 E4B2     		uxtb	r4, r4
+ 1222              	.LVL162:
+ 265:Drivers/BSP/Camera/ov5640.c **** 
+ 266:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HW_H, sensor_we >> 8);
+ 1223              		.loc 1 266 5 is_stmt 1 view .LVU333
+ 1224              		.loc 1 266 12 is_stmt 0 view .LVU334
+ 1225 0284 4FEA1B21 		lsr	r1, fp, #8
+ 1226 0288 43F60400 		movw	r0, #14340
+ 1227 028c FFF7FEFF 		bl	ov5640_WR_Reg
+ 1228              	.LVL163:
+ 1229 0290 0443     		orrs	r4, r4, r0
+ 1230              	.LVL164:
+ 1231              		.loc 1 266 12 view .LVU335
+ 1232 0292 E4B2     		uxtb	r4, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 29
+
+
+ 1233              	.LVL165:
+ 267:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HW_L, sensor_we);
+ 1234              		.loc 1 267 5 is_stmt 1 view .LVU336
+ 1235              		.loc 1 267 12 is_stmt 0 view .LVU337
+ 1236 0294 5FFA8BF1 		uxtb	r1, fp
+ 1237 0298 43F60500 		movw	r0, #14341
+ 1238 029c FFF7FEFF 		bl	ov5640_WR_Reg
+ 1239              	.LVL166:
+ 1240 02a0 0443     		orrs	r4, r4, r0
+ 1241              	.LVL167:
+ 1242              		.loc 1 267 12 view .LVU338
+ 1243 02a2 E4B2     		uxtb	r4, r4
+ 1244              	.LVL168:
+ 268:Drivers/BSP/Camera/ov5640.c **** 
+ 269:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VH_H, sensor_he >> 8);
+ 1245              		.loc 1 269 5 is_stmt 1 view .LVU339
+ 1246              		.loc 1 269 12 is_stmt 0 view .LVU340
+ 1247 02a4 4FEA1A21 		lsr	r1, r10, #8
+ 1248 02a8 43F60600 		movw	r0, #14342
+ 1249 02ac FFF7FEFF 		bl	ov5640_WR_Reg
+ 1250              	.LVL169:
+ 1251 02b0 0443     		orrs	r4, r4, r0
+ 1252              	.LVL170:
+ 1253              		.loc 1 269 12 view .LVU341
+ 1254 02b2 E4B2     		uxtb	r4, r4
+ 1255              	.LVL171:
+ 270:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VH_L, sensor_he);
+ 1256              		.loc 1 270 5 is_stmt 1 view .LVU342
+ 1257              		.loc 1 270 12 is_stmt 0 view .LVU343
+ 1258 02b4 5FFA8AF1 		uxtb	r1, r10
+ 1259 02b8 43F60700 		movw	r0, #14343
+ 1260 02bc FFF7FEFF 		bl	ov5640_WR_Reg
+ 1261              	.LVL172:
+ 1262 02c0 0443     		orrs	r4, r4, r0
+ 1263              	.LVL173:
+ 1264              		.loc 1 270 12 view .LVU344
+ 1265 02c2 E4B2     		uxtb	r4, r4
+ 1266              	.LVL174:
+ 271:Drivers/BSP/Camera/ov5640.c **** 
+ 272:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_DVPHO_H, w >> 8);
+ 1267              		.loc 1 272 5 is_stmt 1 view .LVU345
+ 1268              		.loc 1 272 12 is_stmt 0 view .LVU346
+ 1269 02c4 3E0A     		lsrs	r6, r7, #8
+ 1270              	.LVL175:
+ 1271              		.loc 1 272 12 view .LVU347
+ 1272 02c6 3146     		mov	r1, r6
+ 1273 02c8 43F60800 		movw	r0, #14344
+ 1274 02cc FFF7FEFF 		bl	ov5640_WR_Reg
+ 1275              	.LVL176:
+ 1276 02d0 0443     		orrs	r4, r4, r0
+ 1277              	.LVL177:
+ 1278              		.loc 1 272 12 view .LVU348
+ 1279 02d2 E4B2     		uxtb	r4, r4
+ 1280              	.LVL178:
+ 273:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_DVPHO_L, w);
+ 1281              		.loc 1 273 5 is_stmt 1 view .LVU349
+ 1282              		.loc 1 273 12 is_stmt 0 view .LVU350
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 30
+
+
+ 1283 02d4 FFB2     		uxtb	r7, r7
+ 1284              	.LVL179:
+ 1285              		.loc 1 273 12 view .LVU351
+ 1286 02d6 3946     		mov	r1, r7
+ 1287 02d8 43F60900 		movw	r0, #14345
+ 1288 02dc FFF7FEFF 		bl	ov5640_WR_Reg
+ 1289              	.LVL180:
+ 1290 02e0 0443     		orrs	r4, r4, r0
+ 1291              	.LVL181:
+ 1292              		.loc 1 273 12 view .LVU352
+ 1293 02e2 E4B2     		uxtb	r4, r4
+ 1294              	.LVL182:
+ 274:Drivers/BSP/Camera/ov5640.c **** 
+ 275:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_DVPVO_H, h >> 8);
+ 1295              		.loc 1 275 5 is_stmt 1 view .LVU353
+ 1296              		.loc 1 275 12 is_stmt 0 view .LVU354
+ 1297 02e4 4FEA1825 		lsr	r5, r8, #8
+ 1298              	.LVL183:
+ 1299              		.loc 1 275 12 view .LVU355
+ 1300 02e8 2946     		mov	r1, r5
+ 1301 02ea 43F60A00 		movw	r0, #14346
+ 1302 02ee FFF7FEFF 		bl	ov5640_WR_Reg
+ 1303              	.LVL184:
+ 1304 02f2 0443     		orrs	r4, r4, r0
+ 1305              	.LVL185:
+ 1306              		.loc 1 275 12 view .LVU356
+ 1307 02f4 E4B2     		uxtb	r4, r4
+ 1308              	.LVL186:
+ 276:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_DVPVO_L, h);
+ 1309              		.loc 1 276 5 is_stmt 1 view .LVU357
+ 1310              		.loc 1 276 12 is_stmt 0 view .LVU358
+ 1311 02f6 5FFA88F8 		uxtb	r8, r8
+ 1312              	.LVL187:
+ 1313              		.loc 1 276 12 view .LVU359
+ 1314 02fa 4146     		mov	r1, r8
+ 1315 02fc 43F60B00 		movw	r0, #14347
+ 1316 0300 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1317              	.LVL188:
+ 1318 0304 0443     		orrs	r4, r4, r0
+ 1319              	.LVL189:
+ 1320              		.loc 1 276 12 view .LVU360
+ 1321 0306 E4B2     		uxtb	r4, r4
+ 1322              	.LVL190:
+ 277:Drivers/BSP/Camera/ov5640.c **** 
+ 278:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HTS_H, sensor_hts >> 8);
+ 1323              		.loc 1 278 5 is_stmt 1 view .LVU361
+ 1324              		.loc 1 278 12 is_stmt 0 view .LVU362
+ 1325 0308 0799     		ldr	r1, [sp, #28]
+ 1326 030a 090A     		lsrs	r1, r1, #8
+ 1327 030c 43F60C00 		movw	r0, #14348
+ 1328 0310 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1329              	.LVL191:
+ 1330 0314 0443     		orrs	r4, r4, r0
+ 1331              	.LVL192:
+ 1332              		.loc 1 278 12 view .LVU363
+ 1333 0316 E4B2     		uxtb	r4, r4
+ 1334              	.LVL193:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 31
+
+
+ 279:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HTS_L, sensor_hts);
+ 1335              		.loc 1 279 5 is_stmt 1 view .LVU364
+ 1336              		.loc 1 279 12 is_stmt 0 view .LVU365
+ 1337 0318 9DF80410 		ldrb	r1, [sp, #4]	@ zero_extendqisi2
+ 1338 031c 43F60D00 		movw	r0, #14349
+ 1339 0320 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1340              	.LVL194:
+ 1341 0324 0443     		orrs	r4, r4, r0
+ 1342              	.LVL195:
+ 1343              		.loc 1 279 12 view .LVU366
+ 1344 0326 E4B2     		uxtb	r4, r4
+ 1345              	.LVL196:
+ 280:Drivers/BSP/Camera/ov5640.c **** 
+ 281:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VTS_H, sensor_vts >> 8);
+ 1346              		.loc 1 281 5 is_stmt 1 view .LVU367
+ 1347              		.loc 1 281 12 is_stmt 0 view .LVU368
+ 1348 0328 0898     		ldr	r0, [sp, #32]
+ 1349 032a 010A     		lsrs	r1, r0, #8
+ 1350 032c 43F60E00 		movw	r0, #14350
+ 1351 0330 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1352              	.LVL197:
+ 1353 0334 0443     		orrs	r4, r4, r0
+ 1354              	.LVL198:
+ 1355              		.loc 1 281 12 view .LVU369
+ 1356 0336 E4B2     		uxtb	r4, r4
+ 1357              	.LVL199:
+ 282:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VTS_L, sensor_vts);
+ 1358              		.loc 1 282 5 is_stmt 1 view .LVU370
+ 1359              		.loc 1 282 12 is_stmt 0 view .LVU371
+ 1360 0338 9DF80810 		ldrb	r1, [sp, #8]	@ zero_extendqisi2
+ 1361 033c 43F60F00 		movw	r0, #14351
+ 1362 0340 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1363              	.LVL200:
+ 1364 0344 0443     		orrs	r4, r4, r0
+ 1365              	.LVL201:
+ 1366              		.loc 1 282 12 view .LVU372
+ 1367 0346 E4B2     		uxtb	r4, r4
+ 1368              	.LVL202:
+ 283:Drivers/BSP/Camera/ov5640.c **** 
+ 284:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HOFFSET_H, x_off >> 8);
+ 1369              		.loc 1 284 5 is_stmt 1 view .LVU373
+ 1370              		.loc 1 284 12 is_stmt 0 view .LVU374
+ 1371 0348 0599     		ldr	r1, [sp, #20]
+ 1372 034a 090A     		lsrs	r1, r1, #8
+ 1373 034c 43F61000 		movw	r0, #14352
+ 1374 0350 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1375              	.LVL203:
+ 1376 0354 0443     		orrs	r4, r4, r0
+ 1377              	.LVL204:
+ 1378              		.loc 1 284 12 view .LVU375
+ 1379 0356 E4B2     		uxtb	r4, r4
+ 1380              	.LVL205:
+ 285:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_HOFFSET_L, x_off);
+ 1381              		.loc 1 285 5 is_stmt 1 view .LVU376
+ 1382              		.loc 1 285 12 is_stmt 0 view .LVU377
+ 1383 0358 9DF80C10 		ldrb	r1, [sp, #12]	@ zero_extendqisi2
+ 1384 035c 43F61100 		movw	r0, #14353
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 32
+
+
+ 1385 0360 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1386              	.LVL206:
+ 1387 0364 0443     		orrs	r4, r4, r0
+ 1388              	.LVL207:
+ 1389              		.loc 1 285 12 view .LVU378
+ 1390 0366 E4B2     		uxtb	r4, r4
+ 1391              	.LVL208:
+ 286:Drivers/BSP/Camera/ov5640.c **** 
+ 287:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VOFFSET_H, y_off >> 8);
+ 1392              		.loc 1 287 5 is_stmt 1 view .LVU379
+ 1393              		.loc 1 287 12 is_stmt 0 view .LVU380
+ 1394 0368 069B     		ldr	r3, [sp, #24]
+ 1395 036a 190A     		lsrs	r1, r3, #8
+ 1396 036c 43F61200 		movw	r0, #14354
+ 1397 0370 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1398              	.LVL209:
+ 1399 0374 0443     		orrs	r4, r4, r0
+ 1400              	.LVL210:
+ 1401              		.loc 1 287 12 view .LVU381
+ 1402 0376 E4B2     		uxtb	r4, r4
+ 1403              	.LVL211:
+ 288:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_VOFFSET_L, y_off);
+ 1404              		.loc 1 288 5 is_stmt 1 view .LVU382
+ 1405              		.loc 1 288 12 is_stmt 0 view .LVU383
+ 1406 0378 9DF82410 		ldrb	r1, [sp, #36]	@ zero_extendqisi2
+ 1407 037c 43F61300 		movw	r0, #14355
+ 1408 0380 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1409              	.LVL212:
+ 1410 0384 0443     		orrs	r4, r4, r0
+ 1411              	.LVL213:
+ 1412              		.loc 1 288 12 view .LVU384
+ 1413 0386 E4B2     		uxtb	r4, r4
+ 1414              	.LVL214:
+ 289:Drivers/BSP/Camera/ov5640.c **** 
+ 290:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_X_INC, sensor_x_inc);
+ 1415              		.loc 1 290 5 is_stmt 1 view .LVU385
+ 1416              		.loc 1 290 12 is_stmt 0 view .LVU386
+ 1417 0388 9DF810A0 		ldrb	r10, [sp, #16]	@ zero_extendqisi2
+ 1418              	.LVL215:
+ 1419              		.loc 1 290 12 view .LVU387
+ 1420 038c 5146     		mov	r1, r10
+ 1421 038e 43F61400 		movw	r0, #14356
+ 1422 0392 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1423              	.LVL216:
+ 1424 0396 0443     		orrs	r4, r4, r0
+ 1425              	.LVL217:
+ 1426              		.loc 1 290 12 view .LVU388
+ 1427 0398 E4B2     		uxtb	r4, r4
+ 1428              	.LVL218:
+ 291:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_Y_INC, sensor_y_inc);
+ 1429              		.loc 1 291 5 is_stmt 1 view .LVU389
+ 1430              		.loc 1 291 12 is_stmt 0 view .LVU390
+ 1431 039a 5146     		mov	r1, r10
+ 1432 039c 43F61500 		movw	r0, #14357
+ 1433 03a0 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1434              	.LVL219:
+ 1435 03a4 0443     		orrs	r4, r4, r0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 33
+
+
+ 1436              	.LVL220:
+ 1437              		.loc 1 291 12 view .LVU391
+ 1438 03a6 E4B2     		uxtb	r4, r4
+ 1439              	.LVL221:
+ 292:Drivers/BSP/Camera/ov5640.c **** 
+ 293:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_RD_Reg(TIMING_TC_REG_20, &reg);
+ 1440              		.loc 1 293 5 is_stmt 1 view .LVU392
+ 1441              		.loc 1 293 12 is_stmt 0 view .LVU393
+ 1442 03a8 0DF12F01 		add	r1, sp, #47
+ 1443 03ac 43F62000 		movw	r0, #14368
+ 1444 03b0 FFF7FEFF 		bl	ov5640_RD_Reg
+ 1445              	.LVL222:
+ 1446 03b4 0443     		orrs	r4, r4, r0
+ 1447              	.LVL223:
+ 1448              		.loc 1 293 12 view .LVU394
+ 1449 03b6 E4B2     		uxtb	r4, r4
+ 1450              	.LVL224:
+ 294:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_TC_REG_20, (reg & 0xFE) | (sensor_div > 1));
+ 1451              		.loc 1 294 5 is_stmt 1 view .LVU395
+ 1452              		.loc 1 294 49 is_stmt 0 view .LVU396
+ 1453 03b8 9DF82F10 		ldrb	r1, [sp, #47]	@ zero_extendqisi2
+ 1454              		.loc 1 294 71 view .LVU397
+ 1455 03bc B9F1010F 		cmp	r9, #1
+ 1456 03c0 94BF     		ite	ls
+ 1457 03c2 4FF00009 		movls	r9, #0
+ 1458              	.LVL225:
+ 1459              		.loc 1 294 71 view .LVU398
+ 1460 03c6 4FF00109 		movhi	r9, #1
+ 1461              		.loc 1 294 12 view .LVU399
+ 1462 03ca 21F00101 		bic	r1, r1, #1
+ 1463 03ce 49EA0101 		orr	r1, r9, r1
+ 1464 03d2 43F62000 		movw	r0, #14368
+ 1465 03d6 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1466              	.LVL226:
+ 1467 03da 0443     		orrs	r4, r4, r0
+ 1468              	.LVL227:
+ 1469              		.loc 1 294 12 view .LVU400
+ 1470 03dc E4B2     		uxtb	r4, r4
+ 1471              	.LVL228:
+ 295:Drivers/BSP/Camera/ov5640.c **** 
+ 296:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_RD_Reg(TIMING_TC_REG_21, &reg);
+ 1472              		.loc 1 296 5 is_stmt 1 view .LVU401
+ 1473              		.loc 1 296 12 is_stmt 0 view .LVU402
+ 1474 03de 0DF12F01 		add	r1, sp, #47
+ 1475 03e2 43F62100 		movw	r0, #14369
+ 1476 03e6 FFF7FEFF 		bl	ov5640_RD_Reg
+ 1477              	.LVL229:
+ 1478 03ea 0443     		orrs	r4, r4, r0
+ 1479              	.LVL230:
+ 1480              		.loc 1 296 12 view .LVU403
+ 1481 03ec E4B2     		uxtb	r4, r4
+ 1482              	.LVL231:
+ 297:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(TIMING_TC_REG_21, (reg & 0xFE) | (sensor_div > 1));
+ 1483              		.loc 1 297 5 is_stmt 1 view .LVU404
+ 1484              		.loc 1 297 49 is_stmt 0 view .LVU405
+ 1485 03ee 9DF82F10 		ldrb	r1, [sp, #47]	@ zero_extendqisi2
+ 1486              		.loc 1 297 12 view .LVU406
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 34
+
+
+ 1487 03f2 21F00101 		bic	r1, r1, #1
+ 1488 03f6 49EA0101 		orr	r1, r9, r1
+ 1489 03fa 43F62100 		movw	r0, #14369
+ 1490 03fe FFF7FEFF 		bl	ov5640_WR_Reg
+ 1491              	.LVL232:
+ 1492 0402 0443     		orrs	r4, r4, r0
+ 1493              	.LVL233:
+ 1494              		.loc 1 297 12 view .LVU407
+ 1495 0404 E4B2     		uxtb	r4, r4
+ 1496              	.LVL234:
+ 298:Drivers/BSP/Camera/ov5640.c **** 
+ 299:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(VFIFO_HSIZE_H, w >> 8);
+ 1497              		.loc 1 299 5 is_stmt 1 view .LVU408
+ 1498              		.loc 1 299 12 is_stmt 0 view .LVU409
+ 1499 0406 3146     		mov	r1, r6
+ 1500 0408 44F20260 		movw	r0, #17922
+ 1501 040c FFF7FEFF 		bl	ov5640_WR_Reg
+ 1502              	.LVL235:
+ 1503 0410 0443     		orrs	r4, r4, r0
+ 1504              	.LVL236:
+ 1505              		.loc 1 299 12 view .LVU410
+ 1506 0412 E4B2     		uxtb	r4, r4
+ 1507              	.LVL237:
+ 300:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(VFIFO_HSIZE_L, w);
+ 1508              		.loc 1 300 5 is_stmt 1 view .LVU411
+ 1509              		.loc 1 300 12 is_stmt 0 view .LVU412
+ 1510 0414 3946     		mov	r1, r7
+ 1511 0416 44F20360 		movw	r0, #17923
+ 1512 041a FFF7FEFF 		bl	ov5640_WR_Reg
+ 1513              	.LVL238:
+ 1514 041e 0443     		orrs	r4, r4, r0
+ 1515              	.LVL239:
+ 1516              		.loc 1 300 12 view .LVU413
+ 1517 0420 E4B2     		uxtb	r4, r4
+ 1518              	.LVL240:
+ 301:Drivers/BSP/Camera/ov5640.c **** 
+ 302:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(VFIFO_VSIZE_H, h >> 8);
+ 1519              		.loc 1 302 5 is_stmt 1 view .LVU414
+ 1520              		.loc 1 302 12 is_stmt 0 view .LVU415
+ 1521 0422 2946     		mov	r1, r5
+ 1522 0424 44F20460 		movw	r0, #17924
+ 1523 0428 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1524              	.LVL241:
+ 1525 042c 0443     		orrs	r4, r4, r0
+ 1526              	.LVL242:
+ 1527              		.loc 1 302 12 view .LVU416
+ 1528 042e E4B2     		uxtb	r4, r4
+ 1529              	.LVL243:
+ 303:Drivers/BSP/Camera/ov5640.c ****     ret |= ov5640_WR_Reg(VFIFO_VSIZE_L, h);
+ 1530              		.loc 1 303 5 is_stmt 1 view .LVU417
+ 1531              		.loc 1 303 12 is_stmt 0 view .LVU418
+ 1532 0430 4146     		mov	r1, r8
+ 1533 0432 44F20560 		movw	r0, #17925
+ 1534 0436 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1535              	.LVL244:
+ 1536              		.loc 1 303 9 discriminator 1 view .LVU419
+ 1537 043a 2043     		orrs	r0, r0, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 35
+
+
+ 1538 043c C0B2     		uxtb	r0, r0
+ 1539              	.LVL245:
+ 304:Drivers/BSP/Camera/ov5640.c **** 
+ 305:Drivers/BSP/Camera/ov5640.c ****     return ret;
+ 1540              		.loc 1 305 5 is_stmt 1 view .LVU420
+ 1541              	.L50:
+ 306:Drivers/BSP/Camera/ov5640.c **** }
+ 1542              		.loc 1 306 1 is_stmt 0 view .LVU421
+ 1543 043e 0DB0     		add	sp, sp, #52
+ 1544              	.LCFI9:
+ 1545              		.cfi_remember_state
+ 1546              		.cfi_def_cfa_offset 36
+ 1547              		@ sp needed
+ 1548 0440 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1549              	.LVL246:
+ 1550              	.L71:
+ 1551              	.LCFI10:
+ 1552              		.cfi_restore_state
+ 225:Drivers/BSP/Camera/ov5640.c ****     }
+ 1553              		.loc 1 225 20 view .LVU422
+ 1554 0444 4FF00209 		mov	r9, #2
+ 1555 0448 56E6     		b	.L56
+ 1556              	.LVL247:
+ 1557              	.L77:
+ 1558              	.LBB21:
+ 1559              	.LBB16:
+ 233:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_we = sensor_ws + sensor_w - 1;
+ 1560              		.loc 1 233 26 view .LVU423
+ 1561 044a F51C     		adds	r5, r6, #3
+ 1562 044c 60E6     		b	.L57
+ 1563              	.L78:
+ 1564 044e 0CF1010E 		add	lr, ip, #1
+ 1565 0452 63E6     		b	.L58
+ 1566              	.LVL248:
+ 1567              	.L79:
+ 233:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_we = sensor_ws + sensor_w - 1;
+ 1568              		.loc 1 233 26 view .LVU424
+ 1569              	.LBE16:
+ 1570              	.LBE21:
+ 1571              	.LBB22:
+ 1572              	.LBB19:
+ 236:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_he = sensor_hs + sensor_h - 1;
+ 1573              		.loc 1 236 26 view .LVU425
+ 1574 0454 05F1030C 		add	ip, r5, #3
+ 1575 0458 7CE6     		b	.L59
+ 1576              	.L80:
+ 236:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_he = sensor_hs + sensor_h - 1;
+ 1577              		.loc 1 236 26 view .LVU426
+ 1578 045a 00F1010E 		add	lr, r0, #1
+ 1579 045e 7FE6     		b	.L60
+ 1580              	.LVL249:
+ 1581              	.L81:
+ 236:Drivers/BSP/Camera/ov5640.c ****     uint16_t sensor_he = sensor_hs + sensor_h - 1;
+ 1582              		.loc 1 236 26 view .LVU427
+ 1583              	.LBE19:
+ 1584              	.LBE22:
+ 245:Drivers/BSP/Camera/ov5640.c ****     uint16_t y_off = ((sensor_h / sensor_div) - h_mul) / 2;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 36
+
+
+ 1585              		.loc 1 245 56 view .LVU428
+ 1586 0460 0132     		adds	r2, r2, #1
+ 1587 0462 CEE6     		b	.L63
+ 1588              	.LVL250:
+ 1589              	.L82:
+ 246:Drivers/BSP/Camera/ov5640.c **** 
+ 1590              		.loc 1 246 56 view .LVU429
+ 1591 0464 0133     		adds	r3, r3, #1
+ 1592 0466 D6E6     		b	.L64
+ 1593              	.LVL251:
+ 1594              	.L65:
+ 179:Drivers/BSP/Camera/ov5640.c ****     }
+ 1595              		.loc 1 179 16 view .LVU430
+ 1596 0468 4FF0FF30 		mov	r0, #-1
+ 1597              	.LVL252:
+ 179:Drivers/BSP/Camera/ov5640.c ****     }
+ 1598              		.loc 1 179 16 view .LVU431
+ 1599 046c E7E7     		b	.L50
+ 1600              	.LVL253:
+ 1601              	.L67:
+ 188:Drivers/BSP/Camera/ov5640.c ****     {
+ 1602              		.loc 1 188 8 view .LVU432
+ 1603 046e 4FF0FF30 		mov	r0, #-1
+ 1604              	.LVL254:
+ 188:Drivers/BSP/Camera/ov5640.c ****     {
+ 1605              		.loc 1 188 8 view .LVU433
+ 1606 0472 E4E7     		b	.L50
+ 1607              	.LVL255:
+ 1608              	.L68:
+ 196:Drivers/BSP/Camera/ov5640.c ****     }
+ 1609              		.loc 1 196 16 view .LVU434
+ 1610 0474 4FF0FF30 		mov	r0, #-1
+ 1611              	.LVL256:
+ 196:Drivers/BSP/Camera/ov5640.c ****     }
+ 1612              		.loc 1 196 16 view .LVU435
+ 1613 0478 E1E7     		b	.L50
+ 1614              	.LVL257:
+ 1615              	.L69:
+ 202:Drivers/BSP/Camera/ov5640.c ****     }
+ 1616              		.loc 1 202 16 view .LVU436
+ 1617 047a 4FF0FF30 		mov	r0, #-1
+ 1618              	.LVL258:
+ 202:Drivers/BSP/Camera/ov5640.c ****     }
+ 1619              		.loc 1 202 16 view .LVU437
+ 1620 047e DEE7     		b	.L50
+ 1621              	.L86:
+ 1622              		.align	2
+ 1623              	.L85:
+ 1624 0480 00000000 		.word	hts_target
+ 1625              		.cfi_endproc
+ 1626              	.LFE150:
+ 1628              		.section	.text.ov5640_set_hmirror,"ax",%progbits
+ 1629              		.align	1
+ 1630              		.syntax unified
+ 1631              		.thumb
+ 1632              		.thumb_func
+ 1634              	ov5640_set_hmirror:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 37
+
+
+ 1635              	.LVL259:
+ 1636              	.LFB151:
+ 307:Drivers/BSP/Camera/ov5640.c **** 
+ 308:Drivers/BSP/Camera/ov5640.c **** static int ov5640_set_hmirror(int enable)
+ 309:Drivers/BSP/Camera/ov5640.c **** {
+ 1637              		.loc 1 309 1 is_stmt 1 view -0
+ 1638              		.cfi_startproc
+ 1639              		@ args = 0, pretend = 0, frame = 8
+ 1640              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1641              		.loc 1 309 1 is_stmt 0 view .LVU439
+ 1642 0000 30B5     		push	{r4, r5, lr}
+ 1643              	.LCFI11:
+ 1644              		.cfi_def_cfa_offset 12
+ 1645              		.cfi_offset 4, -12
+ 1646              		.cfi_offset 5, -8
+ 1647              		.cfi_offset 14, -4
+ 1648 0002 83B0     		sub	sp, sp, #12
+ 1649              	.LCFI12:
+ 1650              		.cfi_def_cfa_offset 24
+ 1651 0004 0546     		mov	r5, r0
+ 310:Drivers/BSP/Camera/ov5640.c ****     uint8_t reg;
+ 1652              		.loc 1 310 5 is_stmt 1 view .LVU440
+ 311:Drivers/BSP/Camera/ov5640.c ****     int ret = ov5640_RD_Reg(TIMING_TC_REG_21, &reg);
+ 1653              		.loc 1 311 5 view .LVU441
+ 1654              		.loc 1 311 15 is_stmt 0 view .LVU442
+ 1655 0006 0DF10701 		add	r1, sp, #7
+ 1656 000a 43F62100 		movw	r0, #14369
+ 1657              	.LVL260:
+ 1658              		.loc 1 311 15 view .LVU443
+ 1659 000e FFF7FEFF 		bl	ov5640_RD_Reg
+ 1660              	.LVL261:
+ 1661 0012 0446     		mov	r4, r0
+ 1662              	.LVL262:
+ 312:Drivers/BSP/Camera/ov5640.c ****     if (enable)
+ 1663              		.loc 1 312 5 is_stmt 1 view .LVU444
+ 1664              		.loc 1 312 8 is_stmt 0 view .LVU445
+ 1665 0014 5DB1     		cbz	r5, .L88
+ 313:Drivers/BSP/Camera/ov5640.c ****     {
+ 314:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_TC_REG_21, reg | 0x06);
+ 1666              		.loc 1 314 9 is_stmt 1 view .LVU446
+ 1667              		.loc 1 314 16 is_stmt 0 view .LVU447
+ 1668 0016 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 1669 001a 41F00601 		orr	r1, r1, #6
+ 1670 001e 43F62100 		movw	r0, #14369
+ 1671 0022 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1672              	.LVL263:
+ 1673              		.loc 1 314 13 discriminator 1 view .LVU448
+ 1674 0026 2043     		orrs	r0, r0, r4
+ 1675 0028 C0B2     		uxtb	r0, r0
+ 1676              	.LVL264:
+ 1677              	.L87:
+ 315:Drivers/BSP/Camera/ov5640.c ****     }
+ 316:Drivers/BSP/Camera/ov5640.c ****     else
+ 317:Drivers/BSP/Camera/ov5640.c ****     {
+ 318:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_TC_REG_21, reg & 0xF9);
+ 319:Drivers/BSP/Camera/ov5640.c ****     }
+ 320:Drivers/BSP/Camera/ov5640.c ****     return ret;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 38
+
+
+ 321:Drivers/BSP/Camera/ov5640.c **** }
+ 1678              		.loc 1 321 1 view .LVU449
+ 1679 002a 03B0     		add	sp, sp, #12
+ 1680              	.LCFI13:
+ 1681              		.cfi_remember_state
+ 1682              		.cfi_def_cfa_offset 12
+ 1683              		@ sp needed
+ 1684 002c 30BD     		pop	{r4, r5, pc}
+ 1685              	.LVL265:
+ 1686              	.L88:
+ 1687              	.LCFI14:
+ 1688              		.cfi_restore_state
+ 318:Drivers/BSP/Camera/ov5640.c ****     }
+ 1689              		.loc 1 318 9 is_stmt 1 view .LVU450
+ 318:Drivers/BSP/Camera/ov5640.c ****     }
+ 1690              		.loc 1 318 16 is_stmt 0 view .LVU451
+ 1691 002e 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 1692 0032 01F0F901 		and	r1, r1, #249
+ 1693 0036 43F62100 		movw	r0, #14369
+ 1694 003a FFF7FEFF 		bl	ov5640_WR_Reg
+ 1695              	.LVL266:
+ 318:Drivers/BSP/Camera/ov5640.c ****     }
+ 1696              		.loc 1 318 13 discriminator 1 view .LVU452
+ 1697 003e 2043     		orrs	r0, r0, r4
+ 1698 0040 C0B2     		uxtb	r0, r0
+ 1699              	.LVL267:
+ 320:Drivers/BSP/Camera/ov5640.c **** }
+ 1700              		.loc 1 320 5 is_stmt 1 view .LVU453
+ 320:Drivers/BSP/Camera/ov5640.c **** }
+ 1701              		.loc 1 320 12 is_stmt 0 view .LVU454
+ 1702 0042 F2E7     		b	.L87
+ 1703              		.cfi_endproc
+ 1704              	.LFE151:
+ 1706              		.section	.text.ov5640_set_vflip,"ax",%progbits
+ 1707              		.align	1
+ 1708              		.syntax unified
+ 1709              		.thumb
+ 1710              		.thumb_func
+ 1712              	ov5640_set_vflip:
+ 1713              	.LVL268:
+ 1714              	.LFB152:
+ 322:Drivers/BSP/Camera/ov5640.c **** 
+ 323:Drivers/BSP/Camera/ov5640.c **** static int ov5640_set_vflip(int enable)
+ 324:Drivers/BSP/Camera/ov5640.c **** {
+ 1715              		.loc 1 324 1 is_stmt 1 view -0
+ 1716              		.cfi_startproc
+ 1717              		@ args = 0, pretend = 0, frame = 8
+ 1718              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1719              		.loc 1 324 1 is_stmt 0 view .LVU456
+ 1720 0000 30B5     		push	{r4, r5, lr}
+ 1721              	.LCFI15:
+ 1722              		.cfi_def_cfa_offset 12
+ 1723              		.cfi_offset 4, -12
+ 1724              		.cfi_offset 5, -8
+ 1725              		.cfi_offset 14, -4
+ 1726 0002 83B0     		sub	sp, sp, #12
+ 1727              	.LCFI16:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 39
+
+
+ 1728              		.cfi_def_cfa_offset 24
+ 1729 0004 0546     		mov	r5, r0
+ 325:Drivers/BSP/Camera/ov5640.c ****     uint8_t reg;
+ 1730              		.loc 1 325 5 is_stmt 1 view .LVU457
+ 326:Drivers/BSP/Camera/ov5640.c ****     int ret = ov5640_RD_Reg(TIMING_TC_REG_20, &reg);
+ 1731              		.loc 1 326 5 view .LVU458
+ 1732              		.loc 1 326 15 is_stmt 0 view .LVU459
+ 1733 0006 0DF10701 		add	r1, sp, #7
+ 1734 000a 43F62000 		movw	r0, #14368
+ 1735              	.LVL269:
+ 1736              		.loc 1 326 15 view .LVU460
+ 1737 000e FFF7FEFF 		bl	ov5640_RD_Reg
+ 1738              	.LVL270:
+ 1739 0012 0446     		mov	r4, r0
+ 1740              	.LVL271:
+ 327:Drivers/BSP/Camera/ov5640.c ****     if (!enable)
+ 1741              		.loc 1 327 5 is_stmt 1 view .LVU461
+ 1742              		.loc 1 327 8 is_stmt 0 view .LVU462
+ 1743 0014 5DB9     		cbnz	r5, .L92
+ 328:Drivers/BSP/Camera/ov5640.c ****     {
+ 329:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_TC_REG_20, reg | 0x06);
+ 1744              		.loc 1 329 9 is_stmt 1 view .LVU463
+ 1745              		.loc 1 329 16 is_stmt 0 view .LVU464
+ 1746 0016 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 1747 001a 41F00601 		orr	r1, r1, #6
+ 1748 001e 43F62000 		movw	r0, #14368
+ 1749 0022 FFF7FEFF 		bl	ov5640_WR_Reg
+ 1750              	.LVL272:
+ 1751              		.loc 1 329 13 discriminator 1 view .LVU465
+ 1752 0026 2043     		orrs	r0, r0, r4
+ 1753 0028 C0B2     		uxtb	r0, r0
+ 1754              	.LVL273:
+ 1755              	.L91:
+ 330:Drivers/BSP/Camera/ov5640.c ****     }
+ 331:Drivers/BSP/Camera/ov5640.c ****     else
+ 332:Drivers/BSP/Camera/ov5640.c ****     {
+ 333:Drivers/BSP/Camera/ov5640.c ****         ret |= ov5640_WR_Reg(TIMING_TC_REG_20, reg & 0xF9);
+ 334:Drivers/BSP/Camera/ov5640.c ****     }
+ 335:Drivers/BSP/Camera/ov5640.c ****     return ret;
+ 336:Drivers/BSP/Camera/ov5640.c **** }
+ 1756              		.loc 1 336 1 view .LVU466
+ 1757 002a 03B0     		add	sp, sp, #12
+ 1758              	.LCFI17:
+ 1759              		.cfi_remember_state
+ 1760              		.cfi_def_cfa_offset 12
+ 1761              		@ sp needed
+ 1762 002c 30BD     		pop	{r4, r5, pc}
+ 1763              	.LVL274:
+ 1764              	.L92:
+ 1765              	.LCFI18:
+ 1766              		.cfi_restore_state
+ 333:Drivers/BSP/Camera/ov5640.c ****     }
+ 1767              		.loc 1 333 9 is_stmt 1 view .LVU467
+ 333:Drivers/BSP/Camera/ov5640.c ****     }
+ 1768              		.loc 1 333 16 is_stmt 0 view .LVU468
+ 1769 002e 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 1770 0032 01F0F901 		and	r1, r1, #249
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 40
+
+
+ 1771 0036 43F62000 		movw	r0, #14368
+ 1772 003a FFF7FEFF 		bl	ov5640_WR_Reg
+ 1773              	.LVL275:
+ 333:Drivers/BSP/Camera/ov5640.c ****     }
+ 1774              		.loc 1 333 13 discriminator 1 view .LVU469
+ 1775 003e 2043     		orrs	r0, r0, r4
+ 1776 0040 C0B2     		uxtb	r0, r0
+ 1777              	.LVL276:
+ 335:Drivers/BSP/Camera/ov5640.c **** }
+ 1778              		.loc 1 335 5 is_stmt 1 view .LVU470
+ 335:Drivers/BSP/Camera/ov5640.c **** }
+ 1779              		.loc 1 335 12 is_stmt 0 view .LVU471
+ 1780 0042 F2E7     		b	.L91
+ 1781              		.cfi_endproc
+ 1782              	.LFE152:
+ 1784              		.section	.text.ov5640_init,"ax",%progbits
+ 1785              		.align	1
+ 1786              		.global	ov5640_init
+ 1787              		.syntax unified
+ 1788              		.thumb
+ 1789              		.thumb_func
+ 1791              	ov5640_init:
+ 1792              	.LVL277:
+ 1793              	.LFB153:
+ 337:Drivers/BSP/Camera/ov5640.c **** 
+ 338:Drivers/BSP/Camera/ov5640.c **** int ov5640_init(framesize_t framesize)
+ 339:Drivers/BSP/Camera/ov5640.c **** {
+ 1794              		.loc 1 339 1 is_stmt 1 view -0
+ 1795              		.cfi_startproc
+ 1796              		@ args = 0, pretend = 0, frame = 0
+ 1797              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1798              		.loc 1 339 1 is_stmt 0 view .LVU473
+ 1799 0000 38B5     		push	{r3, r4, r5, lr}
+ 1800              	.LCFI19:
+ 1801              		.cfi_def_cfa_offset 16
+ 1802              		.cfi_offset 3, -16
+ 1803              		.cfi_offset 4, -12
+ 1804              		.cfi_offset 5, -8
+ 1805              		.cfi_offset 14, -4
+ 1806 0002 0446     		mov	r4, r0
+ 340:Drivers/BSP/Camera/ov5640.c ****     ov5640_reset();
+ 1807              		.loc 1 340 5 is_stmt 1 view .LVU474
+ 1808 0004 FFF7FEFF 		bl	ov5640_reset
+ 1809              	.LVL278:
+ 341:Drivers/BSP/Camera/ov5640.c ****     hcamera.framesize = framesize;
+ 1810              		.loc 1 341 5 view .LVU475
+ 1811              		.loc 1 341 23 is_stmt 0 view .LVU476
+ 1812 0008 084D     		ldr	r5, .L97
+ 1813 000a 2C74     		strb	r4, [r5, #16]
+ 342:Drivers/BSP/Camera/ov5640.c ****     hcamera.pixformat = PIXFORMAT_RGB565;
+ 1814              		.loc 1 342 5 is_stmt 1 view .LVU477
+ 1815              		.loc 1 342 23 is_stmt 0 view .LVU478
+ 1816 000c 0124     		movs	r4, #1
+ 1817              	.LVL279:
+ 1818              		.loc 1 342 23 view .LVU479
+ 1819 000e 6C74     		strb	r4, [r5, #17]
+ 343:Drivers/BSP/Camera/ov5640.c ****     ov5640_set_pixformat(hcamera.pixformat);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 41
+
+
+ 1820              		.loc 1 343 5 is_stmt 1 view .LVU480
+ 1821 0010 2046     		mov	r0, r4
+ 1822 0012 FFF7FEFF 		bl	ov5640_set_pixformat
+ 1823              	.LVL280:
+ 344:Drivers/BSP/Camera/ov5640.c ****     ov5640_set_framesize(hcamera.framesize);
+ 1824              		.loc 1 344 5 view .LVU481
+ 1825 0016 287C     		ldrb	r0, [r5, #16]	@ zero_extendqisi2
+ 1826 0018 FFF7FEFF 		bl	ov5640_set_framesize
+ 1827              	.LVL281:
+ 345:Drivers/BSP/Camera/ov5640.c ****     ov5640_set_hmirror(0);
+ 1828              		.loc 1 345 5 view .LVU482
+ 1829 001c 0020     		movs	r0, #0
+ 1830 001e FFF7FEFF 		bl	ov5640_set_hmirror
+ 1831              	.LVL282:
+ 346:Drivers/BSP/Camera/ov5640.c ****     ov5640_set_vflip(0);
+ 1832              		.loc 1 346 5 view .LVU483
+ 1833 0022 0020     		movs	r0, #0
+ 1834 0024 FFF7FEFF 		bl	ov5640_set_vflip
+ 1835              	.LVL283:
+ 347:Drivers/BSP/Camera/ov5640.c **** 
+ 348:Drivers/BSP/Camera/ov5640.c ****     return 1;
+ 1836              		.loc 1 348 5 view .LVU484
+ 349:Drivers/BSP/Camera/ov5640.c **** }
+ 1837              		.loc 1 349 1 is_stmt 0 view .LVU485
+ 1838 0028 2046     		mov	r0, r4
+ 1839 002a 38BD     		pop	{r3, r4, r5, pc}
+ 1840              	.L98:
+ 1841              		.align	2
+ 1842              	.L97:
+ 1843 002c 00000000 		.word	hcamera
+ 1844              		.cfi_endproc
+ 1845              	.LFE153:
+ 1847              		.section	.data.readout_h,"aw"
+ 1848              		.align	1
+ 1851              	readout_h:
+ 1852 0000 9807     		.short	1944
+ 1853              		.section	.data.readout_w,"aw"
+ 1854              		.align	1
+ 1857              	readout_w:
+ 1858 0000 200A     		.short	2592
+ 1859              		.section	.bss.readout_y,"aw",%nobits
+ 1860              		.align	1
+ 1863              	readout_y:
+ 1864 0000 0000     		.space	2
+ 1865              		.section	.bss.readout_x,"aw",%nobits
+ 1866              		.align	1
+ 1869              	readout_x:
+ 1870 0000 0000     		.space	2
+ 1871              		.section	.bss.hts_target,"aw",%nobits
+ 1872              		.align	1
+ 1875              	hts_target:
+ 1876 0000 0000     		.space	2
+ 1877              		.text
+ 1878              	.Letext0:
+ 1879              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1880              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1881              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 42
+
+
+ 1882              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 1883              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 1884              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 1885              		.file 8 "Drivers/BSP/Camera/camera.h"
+ 1886              		.file 9 "Drivers/BSP/Camera/ov5640_regs.h"
+ 1887              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s 			page 43
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov5640.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:20     .text.calculate_hts:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:25     .text.calculate_hts:00000000 calculate_hts
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:116    .text.calculate_hts:00000048 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1875   .bss.hts_target:00000000 hts_target
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:122    .text.calculate_vts:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:127    .text.calculate_vts:00000000 calculate_vts
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:154    .text.ov5640_WR_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:159    .text.ov5640_WR_Reg:00000000 ov5640_WR_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:189    .text.ov5640_WR_Reg:00000010 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:194    .text.ov5640_reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:199    .text.ov5640_reset:00000000 ov5640_reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:286    .text.ov5640_reset:00000058 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:291    .text.ov5640_RD_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:296    .text.ov5640_RD_Reg:00000000 ov5640_RD_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:326    .text.ov5640_RD_Reg:00000010 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:331    .text.ov5640_set_pixformat:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:336    .text.ov5640_set_pixformat:00000000 ov5640_set_pixformat
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:388    .text.ov5640_set_pixformat:0000003a $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:711    .text.ov5640_set_pixformat:000001c4 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:718    .text.ov5640_set_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:723    .text.ov5640_set_framesize:00000000 ov5640_set_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:937    .text.ov5640_set_framesize:000000dc $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1857   .data.readout_w:00000000 readout_w
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1851   .data.readout_h:00000000 readout_h
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1869   .bss.readout_x:00000000 readout_x
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1863   .bss.readout_y:00000000 readout_y
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:946    .text.ov5640_set_framesize:000000f4 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1624   .text.ov5640_set_framesize:00000480 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1629   .text.ov5640_set_hmirror:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1634   .text.ov5640_set_hmirror:00000000 ov5640_set_hmirror
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1707   .text.ov5640_set_vflip:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1712   .text.ov5640_set_vflip:00000000 ov5640_set_vflip
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1785   .text.ov5640_init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1791   .text.ov5640_init:00000000 ov5640_init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1843   .text.ov5640_init:0000002c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1848   .data.readout_h:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1854   .data.readout_w:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1860   .bss.readout_y:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1866   .bss.readout_x:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:1872   .bss.hts_target:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:393    .text.ov5640_set_pixformat:0000003f $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjtzt3x.s:393    .text.ov5640_set_pixformat:00000040 $t
+
+UNDEFINED SYMBOLS
+hcamera
+Camera_WriteRegb2
+HAL_Delay
+ov5640_default_regs
+Camera_ReadRegb2
+dvp_cam_resolution

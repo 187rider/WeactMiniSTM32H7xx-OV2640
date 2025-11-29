@@ -1,0 +1,577 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jdtrans.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdtrans.c"
+  19              		.section	.text.transdecode_master_selection,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	transdecode_master_selection:
+  26              	.LVL0:
+  27              	.LFB148:
+   1:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * jdtrans.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * Copyright (C) 1995-1997, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * Modified 2000-2009 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * This file contains library routines for transcoding decompression,
+  10:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * that is, reading raw DCT coefficient arrays from an input JPEG file.
+  11:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * The routines in jdapimin.c will also be needed by a transcoder.
+  12:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  */
+  13:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  14:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** #define JPEG_INTERNALS
+  15:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** #include "jinclude.h"
+  16:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** #include "jpeglib.h"
+  17:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  18:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** /* Forward declarations */
+  20:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** LOCAL(void) transdecode_master_selection JPP((j_decompress_ptr cinfo));
+  21:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  23:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** /*
+  24:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * Read the coefficient arrays from a JPEG file.
+  25:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * jpeg_read_header must be completed before calling this.
+  26:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  *
+  27:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * The entire image is read into a set of virtual coefficient-block arrays,
+  28:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * one per component.  The return value is a pointer to the array of
+  29:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * virtual-array descriptors.  These can be manipulated directly via the
+  30:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * JPEG memory manager, or handed off to jpeg_write_coefficients().
+  31:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * To release the memory occupied by the virtual arrays, call
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 2
+
+
+  32:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * jpeg_finish_decompress() when done with the data.
+  33:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  *
+  34:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * An alternative usage is to simply obtain access to the coefficient arrays
+  35:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * during a buffered-image-mode decompression operation.  This is allowed
+  36:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * after any jpeg_finish_output() call.  The arrays can be accessed until
+  37:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * jpeg_finish_decompress() is called.  (Note that any call to the library
+  38:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * may reposition the arrays, so don't rely on access_virt_barray() results
+  39:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * to stay valid across library calls.)
+  40:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  *
+  41:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * Returns NULL if suspended.  This case need be checked only if
+  42:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * a suspending data source is used.
+  43:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  */
+  44:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  45:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** GLOBAL(jvirt_barray_ptr *)
+  46:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** jpeg_read_coefficients (j_decompress_ptr cinfo)
+  47:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** {
+  48:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->global_state == DSTATE_READY) {
+  49:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* First call: initialize active modules */
+  50:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     transdecode_master_selection(cinfo);
+  51:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->global_state = DSTATE_RDCOEFS;
+  52:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+  53:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->global_state == DSTATE_RDCOEFS) {
+  54:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Absorb whole file into the coef buffer */
+  55:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     for (;;) {
+  56:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       int retcode;
+  57:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Call progress monitor hook if present */
+  58:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (cinfo->progress != NULL)
+  59:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+  60:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Absorb some more input */
+  61:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       retcode = (*cinfo->inputctl->consume_input) (cinfo);
+  62:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_SUSPENDED)
+  63:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	return NULL;
+  64:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_REACHED_EOI)
+  65:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	break;
+  66:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Advance progress counter if appropriate */
+  67:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (cinfo->progress != NULL &&
+  68:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	if (++cinfo->progress->pass_counter >= cinfo->progress->pass_limit) {
+  70:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+  71:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  cinfo->progress->pass_limit += (long) cinfo->total_iMCU_rows;
+  72:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	}
+  73:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       }
+  74:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     }
+  75:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Set state so that jpeg_finish_decompress does the right thing */
+  76:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->global_state = DSTATE_STOPPING;
+  77:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+  78:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* At this point we should be in state DSTATE_STOPPING if being used
+  79:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****    * standalone, or in state DSTATE_BUFIMAGE if being invoked to get access
+  80:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****    * to the coefficients during a full buffered-image-mode decompression.
+  81:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****    */
+  82:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if ((cinfo->global_state == DSTATE_STOPPING ||
+  83:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****        cinfo->global_state == DSTATE_BUFIMAGE) && cinfo->buffered_image) {
+  84:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     return cinfo->coef->coef_arrays;
+  85:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+  86:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Oops, improper usage */
+  87:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+  88:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   return NULL;			/* keep compiler happy */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 3
+
+
+  89:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** }
+  90:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  91:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  92:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** /*
+  93:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * Master selection of decompression modules for transcoding.
+  94:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  * This substitutes for jdmaster.c's initialization of the full decompressor.
+  95:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****  */
+  96:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+  97:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** LOCAL(void)
+  98:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** transdecode_master_selection (j_decompress_ptr cinfo)
+  99:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** {
+  28              		.loc 1 99 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 99 1 is_stmt 0 view .LVU1
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  38 0002 0446     		mov	r4, r0
+ 100:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* This is effectively a buffered-image operation. */
+ 101:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   cinfo->buffered_image = TRUE;
+  39              		.loc 1 101 3 is_stmt 1 view .LVU2
+  40              		.loc 1 101 25 is_stmt 0 view .LVU3
+  41 0004 0123     		movs	r3, #1
+  42 0006 0364     		str	r3, [r0, #64]
+ 102:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 103:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Compute output image dimensions and related values. */
+ 104:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   jpeg_core_output_dimensions(cinfo);
+  43              		.loc 1 104 3 is_stmt 1 view .LVU4
+  44 0008 FFF7FEFF 		bl	jpeg_core_output_dimensions
+  45              	.LVL1:
+ 105:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 106:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Entropy decoding: either Huffman or arithmetic coding. */
+ 107:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->arith_code)
+  46              		.loc 1 107 3 view .LVU5
+  47              		.loc 1 107 12 is_stmt 0 view .LVU6
+  48 000c D4F8E430 		ldr	r3, [r4, #228]
+  49              		.loc 1 107 6 view .LVU7
+  50 0010 33B3     		cbz	r3, .L2
+ 108:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     jinit_arith_decoder(cinfo);
+  51              		.loc 1 108 5 is_stmt 1 view .LVU8
+  52 0012 2046     		mov	r0, r4
+  53 0014 FFF7FEFF 		bl	jinit_arith_decoder
+  54              	.LVL2:
+  55              	.L3:
+ 109:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   else {
+ 110:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     jinit_huff_decoder(cinfo);
+ 111:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 112:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 113:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Always get a full-image coefficient buffer. */
+ 114:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   jinit_d_coef_controller(cinfo, TRUE);
+  56              		.loc 1 114 3 view .LVU9
+  57 0018 0121     		movs	r1, #1
+  58 001a 2046     		mov	r0, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 4
+
+
+  59 001c FFF7FEFF 		bl	jinit_d_coef_controller
+  60              	.LVL3:
+ 115:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 116:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* We can now tell the memory manager to allocate virtual arrays. */
+ 117:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   (*cinfo->mem->realize_virt_arrays) ((j_common_ptr) cinfo);
+  61              		.loc 1 117 3 view .LVU10
+  62              		.loc 1 117 10 is_stmt 0 view .LVU11
+  63 0020 6368     		ldr	r3, [r4, #4]
+  64              		.loc 1 117 4 view .LVU12
+  65 0022 9B69     		ldr	r3, [r3, #24]
+  66 0024 2046     		mov	r0, r4
+  67 0026 9847     		blx	r3
+  68              	.LVL4:
+ 118:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 119:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Initialize input side of decompressor to consume first scan. */
+ 120:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   (*cinfo->inputctl->start_input_pass) (cinfo);
+  69              		.loc 1 120 3 is_stmt 1 view .LVU13
+  70              		.loc 1 120 10 is_stmt 0 view .LVU14
+  71 0028 D4F8C831 		ldr	r3, [r4, #456]
+  72              		.loc 1 120 4 view .LVU15
+  73 002c 9B68     		ldr	r3, [r3, #8]
+  74 002e 2046     		mov	r0, r4
+  75 0030 9847     		blx	r3
+  76              	.LVL5:
+ 121:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 122:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   /* Initialize progress monitoring. */
+ 123:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->progress != NULL) {
+  77              		.loc 1 123 3 is_stmt 1 view .LVU16
+  78              		.loc 1 123 12 is_stmt 0 view .LVU17
+  79 0032 A268     		ldr	r2, [r4, #8]
+  80              		.loc 1 123 6 view .LVU18
+  81 0034 9AB1     		cbz	r2, .L1
+  82              	.LBB2:
+ 124:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     int nscans;
+  83              		.loc 1 124 5 is_stmt 1 view .LVU19
+ 125:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Estimate number of scans to set pass_limit. */
+ 126:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     if (cinfo->progressive_mode) {
+  84              		.loc 1 126 5 view .LVU20
+  85              		.loc 1 126 14 is_stmt 0 view .LVU21
+  86 0036 D4F8E030 		ldr	r3, [r4, #224]
+  87              		.loc 1 126 8 view .LVU22
+  88 003a ABB1     		cbz	r3, .L5
+ 127:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
+ 128:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       nscans = 2 + 3 * cinfo->num_components;
+  89              		.loc 1 128 7 is_stmt 1 view .LVU23
+  90              		.loc 1 128 29 is_stmt 0 view .LVU24
+  91 003c 636A     		ldr	r3, [r4, #36]
+  92              		.loc 1 128 22 view .LVU25
+  93 003e 03EB4303 		add	r3, r3, r3, lsl #1
+  94              		.loc 1 128 14 view .LVU26
+  95 0042 0233     		adds	r3, r3, #2
+  96              	.LVL6:
+  97              	.L6:
+ 129:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     } else if (cinfo->inputctl->has_multiple_scans) {
+ 130:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 131:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       nscans = cinfo->num_components;
+ 132:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     } else {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 5
+
+
+ 133:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       nscans = 1;
+ 134:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     }
+ 135:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->progress->pass_counter = 0L;
+  98              		.loc 1 135 5 is_stmt 1 view .LVU27
+  99              		.loc 1 135 35 is_stmt 0 view .LVU28
+ 100 0044 0021     		movs	r1, #0
+ 101 0046 5160     		str	r1, [r2, #4]
+ 136:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows * nscans;
+ 102              		.loc 1 136 5 is_stmt 1 view .LVU29
+ 103              		.loc 1 136 47 is_stmt 0 view .LVU30
+ 104 0048 D4F84821 		ldr	r2, [r4, #328]
+ 105              		.loc 1 136 10 view .LVU31
+ 106 004c A068     		ldr	r0, [r4, #8]
+ 107              		.loc 1 136 65 view .LVU32
+ 108 004e 03FB02F2 		mul	r2, r3, r2
+ 109              		.loc 1 136 33 view .LVU33
+ 110 0052 8260     		str	r2, [r0, #8]
+ 137:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->progress->completed_passes = 0;
+ 111              		.loc 1 137 5 is_stmt 1 view .LVU34
+ 112              		.loc 1 137 10 is_stmt 0 view .LVU35
+ 113 0054 A368     		ldr	r3, [r4, #8]
+ 114              	.LVL7:
+ 115              		.loc 1 137 39 view .LVU36
+ 116 0056 D960     		str	r1, [r3, #12]
+ 138:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->progress->total_passes = 1;
+ 117              		.loc 1 138 5 is_stmt 1 view .LVU37
+ 118              		.loc 1 138 10 is_stmt 0 view .LVU38
+ 119 0058 A368     		ldr	r3, [r4, #8]
+ 120              		.loc 1 138 35 view .LVU39
+ 121 005a 0122     		movs	r2, #1
+ 122 005c 1A61     		str	r2, [r3, #16]
+ 123              	.LVL8:
+ 124              	.L1:
+ 125              		.loc 1 138 35 view .LVU40
+ 126              	.LBE2:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 140:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** }
+ 127              		.loc 1 140 1 view .LVU41
+ 128 005e 10BD     		pop	{r4, pc}
+ 129              	.LVL9:
+ 130              	.L2:
+ 110:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 131              		.loc 1 110 5 is_stmt 1 view .LVU42
+ 132 0060 2046     		mov	r0, r4
+ 133 0062 FFF7FEFF 		bl	jinit_huff_decoder
+ 134              	.LVL10:
+ 135 0066 D7E7     		b	.L3
+ 136              	.L5:
+ 137              	.LBB3:
+ 129:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 138              		.loc 1 129 12 view .LVU43
+ 129:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 139              		.loc 1 129 21 is_stmt 0 view .LVU44
+ 140 0068 D4F8C831 		ldr	r3, [r4, #456]
+ 129:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 141              		.loc 1 129 31 view .LVU45
+ 142 006c 1B69     		ldr	r3, [r3, #16]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 6
+
+
+ 129:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 143              		.loc 1 129 15 view .LVU46
+ 144 006e 0BB1     		cbz	r3, .L7
+ 131:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     } else {
+ 145              		.loc 1 131 7 is_stmt 1 view .LVU47
+ 131:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     } else {
+ 146              		.loc 1 131 14 is_stmt 0 view .LVU48
+ 147 0070 636A     		ldr	r3, [r4, #36]
+ 148              	.LVL11:
+ 131:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     } else {
+ 149              		.loc 1 131 14 view .LVU49
+ 150 0072 E7E7     		b	.L6
+ 151              	.LVL12:
+ 152              	.L7:
+ 133:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     }
+ 153              		.loc 1 133 14 view .LVU50
+ 154 0074 0123     		movs	r3, #1
+ 155 0076 E5E7     		b	.L6
+ 156              	.LBE3:
+ 157              		.cfi_endproc
+ 158              	.LFE148:
+ 160              		.section	.text.jpeg_read_coefficients,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	jpeg_read_coefficients
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	jpeg_read_coefficients:
+ 168              	.LVL13:
+ 169              	.LFB147:
+  47:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->global_state == DSTATE_READY) {
+ 170              		.loc 1 47 1 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+  47:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   if (cinfo->global_state == DSTATE_READY) {
+ 174              		.loc 1 47 1 is_stmt 0 view .LVU52
+ 175 0000 10B5     		push	{r4, lr}
+ 176              	.LCFI1:
+ 177              		.cfi_def_cfa_offset 8
+ 178              		.cfi_offset 4, -8
+ 179              		.cfi_offset 14, -4
+ 180 0002 0446     		mov	r4, r0
+  48:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* First call: initialize active modules */
+ 181              		.loc 1 48 3 is_stmt 1 view .LVU53
+  48:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* First call: initialize active modules */
+ 182              		.loc 1 48 12 is_stmt 0 view .LVU54
+ 183 0004 4369     		ldr	r3, [r0, #20]
+  48:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* First call: initialize active modules */
+ 184              		.loc 1 48 6 view .LVU55
+ 185 0006 CA2B     		cmp	r3, #202
+ 186 0008 0DD0     		beq	.L20
+ 187              	.LVL14:
+ 188              	.L10:
+  53:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Absorb whole file into the coef buffer */
+ 189              		.loc 1 53 3 is_stmt 1 view .LVU56
+  53:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Absorb whole file into the coef buffer */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 7
+
+
+ 190              		.loc 1 53 12 is_stmt 0 view .LVU57
+ 191 000a 6369     		ldr	r3, [r4, #20]
+  53:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     /* Absorb whole file into the coef buffer */
+ 192              		.loc 1 53 6 view .LVU58
+ 193 000c D12B     		cmp	r3, #209
+ 194 000e 0FD0     		beq	.L11
+ 195              	.L12:
+  82:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****        cinfo->global_state == DSTATE_BUFIMAGE) && cinfo->buffered_image) {
+ 196              		.loc 1 82 3 is_stmt 1 view .LVU59
+  82:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****        cinfo->global_state == DSTATE_BUFIMAGE) && cinfo->buffered_image) {
+ 197              		.loc 1 82 13 is_stmt 0 view .LVU60
+ 198 0010 6369     		ldr	r3, [r4, #20]
+  82:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****        cinfo->global_state == DSTATE_BUFIMAGE) && cinfo->buffered_image) {
+ 199              		.loc 1 82 6 view .LVU61
+ 200 0012 CF2B     		cmp	r3, #207
+ 201 0014 18BF     		it	ne
+ 202 0016 D22B     		cmpne	r3, #210
+ 203 0018 2DD1     		bne	.L17
+  83:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     return cinfo->coef->coef_arrays;
+ 204              		.loc 1 83 56 view .LVU62
+ 205 001a 236C     		ldr	r3, [r4, #64]
+  83:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     return cinfo->coef->coef_arrays;
+ 206              		.loc 1 83 48 view .LVU63
+ 207 001c 5BB3     		cbz	r3, .L17
+  84:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 208              		.loc 1 84 5 is_stmt 1 view .LVU64
+  84:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 209              		.loc 1 84 17 is_stmt 0 view .LVU65
+ 210 001e D4F8C031 		ldr	r3, [r4, #448]
+  84:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 211              		.loc 1 84 23 view .LVU66
+ 212 0022 1869     		ldr	r0, [r3, #16]
+ 213 0024 32E0     		b	.L9
+ 214              	.LVL15:
+ 215              	.L20:
+  50:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****     cinfo->global_state = DSTATE_RDCOEFS;
+ 216              		.loc 1 50 5 is_stmt 1 view .LVU67
+ 217 0026 FFF7FEFF 		bl	transdecode_master_selection
+ 218              	.LVL16:
+  51:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 219              		.loc 1 51 5 view .LVU68
+  51:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 220              		.loc 1 51 25 is_stmt 0 view .LVU69
+ 221 002a D123     		movs	r3, #209
+ 222 002c 6361     		str	r3, [r4, #20]
+ 223 002e ECE7     		b	.L10
+ 224              	.L11:
+  55:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       int retcode;
+ 225              		.loc 1 55 5 is_stmt 1 view .LVU70
+ 226              	.LBB4:
+  56:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Call progress monitor hook if present */
+ 227              		.loc 1 56 7 view .LVU71
+  58:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 228              		.loc 1 58 7 view .LVU72
+  58:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 229              		.loc 1 58 16 is_stmt 0 view .LVU73
+ 230 0030 A368     		ldr	r3, [r4, #8]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 8
+
+
+  58:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 231              		.loc 1 58 10 view .LVU74
+ 232 0032 13B1     		cbz	r3, .L13
+  59:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Absorb some more input */
+ 233              		.loc 1 59 2 is_stmt 1 view .LVU75
+  59:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       /* Absorb some more input */
+ 234              		.loc 1 59 3 is_stmt 0 view .LVU76
+ 235 0034 1B68     		ldr	r3, [r3]
+ 236 0036 2046     		mov	r0, r4
+ 237 0038 9847     		blx	r3
+ 238              	.LVL17:
+ 239              	.L13:
+  61:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_SUSPENDED)
+ 240              		.loc 1 61 7 is_stmt 1 view .LVU77
+  61:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_SUSPENDED)
+ 241              		.loc 1 61 24 is_stmt 0 view .LVU78
+ 242 003a D4F8C831 		ldr	r3, [r4, #456]
+  61:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_SUSPENDED)
+ 243              		.loc 1 61 18 view .LVU79
+ 244 003e 1B68     		ldr	r3, [r3]
+ 245 0040 2046     		mov	r0, r4
+ 246 0042 9847     		blx	r3
+ 247              	.LVL18:
+  62:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	return NULL;
+ 248              		.loc 1 62 7 is_stmt 1 view .LVU80
+  62:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	return NULL;
+ 249              		.loc 1 62 10 is_stmt 0 view .LVU81
+ 250 0044 18B3     		cbz	r0, .L18
+  64:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	break;
+ 251              		.loc 1 64 7 is_stmt 1 view .LVU82
+  64:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	break;
+ 252              		.loc 1 64 10 is_stmt 0 view .LVU83
+ 253 0046 0228     		cmp	r0, #2
+ 254 0048 12D0     		beq	.L15
+  67:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 255              		.loc 1 67 7 is_stmt 1 view .LVU84
+  67:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 256              		.loc 1 67 16 is_stmt 0 view .LVU85
+ 257 004a A268     		ldr	r2, [r4, #8]
+  67:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 258              		.loc 1 67 10 view .LVU86
+ 259 004c 002A     		cmp	r2, #0
+ 260 004e EFD0     		beq	.L11
+  67:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 261              		.loc 1 67 35 discriminator 1 view .LVU87
+ 262 0050 0128     		cmp	r0, #1
+ 263 0052 18BF     		it	ne
+ 264 0054 0328     		cmpne	r0, #3
+ 265 0056 EBD1     		bne	.L11
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 266              		.loc 1 69 2 is_stmt 1 view .LVU88
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 267              		.loc 1 69 23 is_stmt 0 view .LVU89
+ 268 0058 5368     		ldr	r3, [r2, #4]
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 269              		.loc 1 69 6 view .LVU90
+ 270 005a 0133     		adds	r3, r3, #1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 9
+
+
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 271              		.loc 1 69 5 view .LVU91
+ 272 005c 5360     		str	r3, [r2, #4]
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 273              		.loc 1 69 46 view .LVU92
+ 274 005e A168     		ldr	r1, [r4, #8]
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 275              		.loc 1 69 56 view .LVU93
+ 276 0060 8A68     		ldr	r2, [r1, #8]
+  69:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	  /* startup underestimated number of scans; ratchet up one scan */
+ 277              		.loc 1 69 5 view .LVU94
+ 278 0062 9342     		cmp	r3, r2
+ 279 0064 E4DB     		blt	.L11
+  71:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	}
+ 280              		.loc 1 71 4 is_stmt 1 view .LVU95
+  71:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	}
+ 281              		.loc 1 71 47 is_stmt 0 view .LVU96
+ 282 0066 D4F84831 		ldr	r3, [r4, #328]
+  71:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 	}
+ 283              		.loc 1 71 32 view .LVU97
+ 284 006a 1A44     		add	r2, r2, r3
+ 285 006c 8A60     		str	r2, [r1, #8]
+ 286 006e DFE7     		b	.L11
+ 287              	.L15:
+ 288              	.LBE4:
+  76:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 289              		.loc 1 76 5 is_stmt 1 view .LVU98
+  76:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   }
+ 290              		.loc 1 76 25 is_stmt 0 view .LVU99
+ 291 0070 D223     		movs	r3, #210
+ 292 0072 6361     		str	r3, [r4, #20]
+ 293 0074 CCE7     		b	.L12
+ 294              	.LVL19:
+ 295              	.L17:
+  87:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****   return NULL;			/* keep compiler happy */
+ 296              		.loc 1 87 3 is_stmt 1 view .LVU100
+ 297 0076 2368     		ldr	r3, [r4]
+ 298 0078 1522     		movs	r2, #21
+ 299 007a 5A61     		str	r2, [r3, #20]
+ 300 007c 2368     		ldr	r3, [r4]
+ 301 007e 6269     		ldr	r2, [r4, #20]
+ 302 0080 9A61     		str	r2, [r3, #24]
+ 303 0082 2368     		ldr	r3, [r4]
+ 304 0084 1B68     		ldr	r3, [r3]
+ 305 0086 2046     		mov	r0, r4
+ 306 0088 9847     		blx	r3
+ 307              	.LVL20:
+  88:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** }
+ 308              		.loc 1 88 3 view .LVU101
+  88:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** }
+ 309              		.loc 1 88 10 is_stmt 0 view .LVU102
+ 310 008a 0020     		movs	r0, #0
+ 311              	.L9:
+  89:Middlewares/Third_Party/LibJPEG/source/jdtrans.c **** 
+ 312              		.loc 1 89 1 view .LVU103
+ 313 008c 10BD     		pop	{r4, pc}
+ 314              	.LVL21:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 10
+
+
+ 315              	.L18:
+ 316              	.LBB5:
+  63:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_REACHED_EOI)
+ 317              		.loc 1 63 9 view .LVU104
+ 318 008e 0020     		movs	r0, #0
+ 319              	.LVL22:
+  63:Middlewares/Third_Party/LibJPEG/source/jdtrans.c ****       if (retcode == JPEG_REACHED_EOI)
+ 320              		.loc 1 63 9 view .LVU105
+ 321 0090 FCE7     		b	.L9
+ 322              	.LBE5:
+ 323              		.cfi_endproc
+ 324              	.LFE147:
+ 326              		.text
+ 327              	.Letext0:
+ 328              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 329              		.file 3 "Inc/jmorecfg.h"
+ 330              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 331              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 332              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jdtrans.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s:20     .text.transdecode_master_selection:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s:25     .text.transdecode_master_selection:00000000 transdecode_master_selection
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s:161    .text.jpeg_read_coefficients:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccwDvqQj.s:167    .text.jpeg_read_coefficients:00000000 jpeg_read_coefficients
+
+UNDEFINED SYMBOLS
+jpeg_core_output_dimensions
+jinit_arith_decoder
+jinit_d_coef_controller
+jinit_huff_decoder

@@ -1,0 +1,365 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jcomapi.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jcomapi.c"
+  19              		.section	.text.jpeg_abort,"ax",%progbits
+  20              		.align	1
+  21              		.global	jpeg_abort
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	jpeg_abort:
+  27              	.LVL0:
+  28              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * jcomapi.c
+   3:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Copyright (C) 1994-1997, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * This file contains application interface routines that are used for both
+   9:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * compression and decompression.
+  10:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  */
+  11:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  12:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** #define JPEG_INTERNALS
+  13:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** #include "jinclude.h"
+  14:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** #include "jpeglib.h"
+  15:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  16:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  17:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** /*
+  18:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Abort processing of a JPEG compression or decompression operation,
+  19:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * but don't destroy the object itself.
+  20:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  *
+  21:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * For this, we merely clean up all the nonpermanent memory pools.
+  22:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Note that temp files (virtual arrays) are not allowed to belong to
+  23:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * the permanent pool, so we will be able to close all temp files here.
+  24:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Closing a data source or destination, if necessary, is the application's
+  25:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * responsibility.
+  26:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  */
+  27:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  28:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** GLOBAL(void)
+  29:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** jpeg_abort (j_common_ptr cinfo)
+  30:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 2
+
+
+  29              		.loc 1 30 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 30 1 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  31:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   int pool;
+  41              		.loc 1 31 3 is_stmt 1 view .LVU2
+  32:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  33:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   /* Do nothing if called on a not-initialized or destroyed JPEG object. */
+  34:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   if (cinfo->mem == NULL)
+  42              		.loc 1 34 3 view .LVU3
+  43              		.loc 1 34 12 is_stmt 0 view .LVU4
+  44 0002 4368     		ldr	r3, [r0, #4]
+  45              		.loc 1 34 6 view .LVU5
+  46 0004 53B1     		cbz	r3, .L1
+  47 0006 0446     		mov	r4, r0
+  35:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     return;
+  36:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  37:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   /* Releasing pools in reverse order might help avoid fragmentation
+  38:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****    * with some (brain-damaged) malloc libraries.
+  39:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****    */
+  40:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   for (pool = JPOOL_NUMPOOLS-1; pool > JPOOL_PERMANENT; pool--) {
+  48              		.loc 1 40 13 view .LVU6
+  49 0008 0125     		movs	r5, #1
+  50              	.LVL1:
+  51              	.L3:
+  52              		.loc 1 40 38 is_stmt 1 discriminator 1 view .LVU7
+  53 000a 002D     		cmp	r5, #0
+  54 000c 07DC     		bgt	.L4
+  41:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->free_pool) (cinfo, pool);
+  42:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  43:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  44:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   /* Reset overall state for possible reuse of object */
+  45:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   if (cinfo->is_decompressor) {
+  55              		.loc 1 45 3 view .LVU8
+  56              		.loc 1 45 12 is_stmt 0 view .LVU9
+  57 000e 2369     		ldr	r3, [r4, #16]
+  58              		.loc 1 45 6 view .LVU10
+  59 0010 63B1     		cbz	r3, .L5
+  46:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     cinfo->global_state = DSTATE_START;
+  60              		.loc 1 46 5 is_stmt 1 view .LVU11
+  61              		.loc 1 46 25 is_stmt 0 view .LVU12
+  62 0012 C823     		movs	r3, #200
+  63 0014 6361     		str	r3, [r4, #20]
+  47:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     /* Try to keep application from accessing now-deleted marker list.
+  48:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****      * A bit kludgy to do it here, but this is the most central place.
+  49:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****      */
+  50:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     ((j_decompress_ptr) cinfo)->marker_list = NULL;
+  64              		.loc 1 50 5 is_stmt 1 view .LVU13
+  65              		.loc 1 50 45 is_stmt 0 view .LVU14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 3
+
+
+  66 0016 0023     		movs	r3, #0
+  67 0018 C4F83431 		str	r3, [r4, #308]
+  68              	.LVL2:
+  69              	.L1:
+  51:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   } else {
+  52:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     cinfo->global_state = CSTATE_START;
+  53:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  54:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** }
+  70              		.loc 1 54 1 view .LVU15
+  71 001c 38BD     		pop	{r3, r4, r5, pc}
+  72              	.LVL3:
+  73              	.L4:
+  41:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  74              		.loc 1 41 5 is_stmt 1 view .LVU16
+  41:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  75              		.loc 1 41 12 is_stmt 0 view .LVU17
+  76 001e 6368     		ldr	r3, [r4, #4]
+  41:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  77              		.loc 1 41 6 view .LVU18
+  78 0020 5B6A     		ldr	r3, [r3, #36]
+  79 0022 2946     		mov	r1, r5
+  80 0024 2046     		mov	r0, r4
+  81 0026 9847     		blx	r3
+  82              	.LVL4:
+  40:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->free_pool) (cinfo, pool);
+  83              		.loc 1 40 61 is_stmt 1 discriminator 3 view .LVU19
+  84 0028 013D     		subs	r5, r5, #1
+  85              	.LVL5:
+  40:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->free_pool) (cinfo, pool);
+  86              		.loc 1 40 61 is_stmt 0 discriminator 3 view .LVU20
+  87 002a EEE7     		b	.L3
+  88              	.L5:
+  52:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  89              		.loc 1 52 5 is_stmt 1 view .LVU21
+  52:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   }
+  90              		.loc 1 52 25 is_stmt 0 view .LVU22
+  91 002c 6423     		movs	r3, #100
+  92 002e 6361     		str	r3, [r4, #20]
+  93 0030 F4E7     		b	.L1
+  94              		.cfi_endproc
+  95              	.LFE147:
+  97              		.section	.text.jpeg_destroy,"ax",%progbits
+  98              		.align	1
+  99              		.global	jpeg_destroy
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 104              	jpeg_destroy:
+ 105              	.LVL6:
+ 106              	.LFB148:
+  55:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  56:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  57:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** /*
+  58:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Destruction of a JPEG object.
+  59:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  *
+  60:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Everything gets deallocated except the master jpeg_compress_struct itself
+  61:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * and the error manager struct.  Both of these are supplied by the application
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 4
+
+
+  62:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * and must be freed, if necessary, by the application.  (Often they are on
+  63:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * the stack and so don't need to be freed anyway.)
+  64:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Closing a data source or destination, if necessary, is the application's
+  65:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * responsibility.
+  66:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  */
+  67:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  68:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** GLOBAL(void)
+  69:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** jpeg_destroy (j_common_ptr cinfo)
+  70:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** {
+ 107              		.loc 1 70 1 is_stmt 1 view -0
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111              		.loc 1 70 1 is_stmt 0 view .LVU24
+ 112 0000 10B5     		push	{r4, lr}
+ 113              	.LCFI1:
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 4, -8
+ 116              		.cfi_offset 14, -4
+ 117 0002 0446     		mov	r4, r0
+  71:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   /* We need only tell the memory manager to release everything. */
+  72:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   /* NB: mem pointer is NULL if memory mgr failed to initialize. */
+  73:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   if (cinfo->mem != NULL)
+ 118              		.loc 1 73 3 is_stmt 1 view .LVU25
+ 119              		.loc 1 73 12 is_stmt 0 view .LVU26
+ 120 0004 4368     		ldr	r3, [r0, #4]
+ 121              		.loc 1 73 6 view .LVU27
+ 122 0006 0BB1     		cbz	r3, .L8
+  74:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->self_destruct) (cinfo);
+ 123              		.loc 1 74 5 is_stmt 1 view .LVU28
+ 124              		.loc 1 74 6 is_stmt 0 view .LVU29
+ 125 0008 9B6A     		ldr	r3, [r3, #40]
+ 126 000a 9847     		blx	r3
+ 127              	.LVL7:
+ 128              	.L8:
+  75:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   cinfo->mem = NULL;		/* be safe if jpeg_destroy is called twice */
+ 129              		.loc 1 75 3 is_stmt 1 view .LVU30
+ 130              		.loc 1 75 14 is_stmt 0 view .LVU31
+ 131 000c 0023     		movs	r3, #0
+ 132 000e 6360     		str	r3, [r4, #4]
+  76:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   cinfo->global_state = 0;	/* mark it destroyed */
+ 133              		.loc 1 76 3 is_stmt 1 view .LVU32
+ 134              		.loc 1 76 23 is_stmt 0 view .LVU33
+ 135 0010 6361     		str	r3, [r4, #20]
+  77:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** }
+ 136              		.loc 1 77 1 view .LVU34
+ 137 0012 10BD     		pop	{r4, pc}
+ 138              		.loc 1 77 1 view .LVU35
+ 139              		.cfi_endproc
+ 140              	.LFE148:
+ 142              		.section	.text.jpeg_alloc_quant_table,"ax",%progbits
+ 143              		.align	1
+ 144              		.global	jpeg_alloc_quant_table
+ 145              		.syntax unified
+ 146              		.thumb
+ 147              		.thumb_func
+ 149              	jpeg_alloc_quant_table:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 5
+
+
+ 150              	.LVL8:
+ 151              	.LFB149:
+  78:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  79:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  80:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** /*
+  81:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * Convenience routines for allocating quantization and Huffman tables.
+  82:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  * (Would jutils.c be a more reasonable place to put these?)
+  83:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****  */
+  84:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  85:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** GLOBAL(JQUANT_TBL *)
+  86:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** jpeg_alloc_quant_table (j_common_ptr cinfo)
+  87:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** {
+ 152              		.loc 1 87 1 is_stmt 1 view -0
+ 153              		.cfi_startproc
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156              		.loc 1 87 1 is_stmt 0 view .LVU37
+ 157 0000 08B5     		push	{r3, lr}
+ 158              	.LCFI2:
+ 159              		.cfi_def_cfa_offset 8
+ 160              		.cfi_offset 3, -8
+ 161              		.cfi_offset 14, -4
+  88:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   JQUANT_TBL *tbl;
+ 162              		.loc 1 88 3 is_stmt 1 view .LVU38
+  89:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  90:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   tbl = (JQUANT_TBL *)
+ 163              		.loc 1 90 3 view .LVU39
+  91:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->alloc_small) (cinfo, JPOOL_PERMANENT, SIZEOF(JQUANT_TBL));
+ 164              		.loc 1 91 12 is_stmt 0 view .LVU40
+ 165 0002 4368     		ldr	r3, [r0, #4]
+ 166              		.loc 1 91 6 view .LVU41
+ 167 0004 1B68     		ldr	r3, [r3]
+ 168 0006 8422     		movs	r2, #132
+ 169 0008 0021     		movs	r1, #0
+ 170 000a 9847     		blx	r3
+ 171              	.LVL9:
+  92:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   tbl->sent_table = FALSE;	/* make sure this is false in any new table */
+ 172              		.loc 1 92 3 is_stmt 1 view .LVU42
+ 173              		.loc 1 92 19 is_stmt 0 view .LVU43
+ 174 000c 0022     		movs	r2, #0
+ 175 000e C0F88020 		str	r2, [r0, #128]
+  93:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   return tbl;
+ 176              		.loc 1 93 3 is_stmt 1 view .LVU44
+  94:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** }
+ 177              		.loc 1 94 1 is_stmt 0 view .LVU45
+ 178 0012 08BD     		pop	{r3, pc}
+ 179              		.cfi_endproc
+ 180              	.LFE149:
+ 182              		.section	.text.jpeg_alloc_huff_table,"ax",%progbits
+ 183              		.align	1
+ 184              		.global	jpeg_alloc_huff_table
+ 185              		.syntax unified
+ 186              		.thumb
+ 187              		.thumb_func
+ 189              	jpeg_alloc_huff_table:
+ 190              	.LVL10:
+ 191              	.LFB150:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 6
+
+
+  95:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  96:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+  97:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** GLOBAL(JHUFF_TBL *)
+  98:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** jpeg_alloc_huff_table (j_common_ptr cinfo)
+  99:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** {
+ 192              		.loc 1 99 1 is_stmt 1 view -0
+ 193              		.cfi_startproc
+ 194              		@ args = 0, pretend = 0, frame = 0
+ 195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 196              		.loc 1 99 1 is_stmt 0 view .LVU47
+ 197 0000 08B5     		push	{r3, lr}
+ 198              	.LCFI3:
+ 199              		.cfi_def_cfa_offset 8
+ 200              		.cfi_offset 3, -8
+ 201              		.cfi_offset 14, -4
+ 100:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   JHUFF_TBL *tbl;
+ 202              		.loc 1 100 3 is_stmt 1 view .LVU48
+ 101:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** 
+ 102:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   tbl = (JHUFF_TBL *)
+ 203              		.loc 1 102 3 view .LVU49
+ 103:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****     (*cinfo->mem->alloc_small) (cinfo, JPOOL_PERMANENT, SIZEOF(JHUFF_TBL));
+ 204              		.loc 1 103 12 is_stmt 0 view .LVU50
+ 205 0002 4368     		ldr	r3, [r0, #4]
+ 206              		.loc 1 103 6 view .LVU51
+ 207 0004 1B68     		ldr	r3, [r3]
+ 208 0006 4FF48C72 		mov	r2, #280
+ 209 000a 0021     		movs	r1, #0
+ 210 000c 9847     		blx	r3
+ 211              	.LVL11:
+ 104:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   tbl->sent_table = FALSE;	/* make sure this is false in any new table */
+ 212              		.loc 1 104 3 is_stmt 1 view .LVU52
+ 213              		.loc 1 104 19 is_stmt 0 view .LVU53
+ 214 000e 0022     		movs	r2, #0
+ 215 0010 C0F81421 		str	r2, [r0, #276]
+ 105:Middlewares/Third_Party/LibJPEG/source/jcomapi.c ****   return tbl;
+ 216              		.loc 1 105 3 is_stmt 1 view .LVU54
+ 106:Middlewares/Third_Party/LibJPEG/source/jcomapi.c **** }
+ 217              		.loc 1 106 1 is_stmt 0 view .LVU55
+ 218 0014 08BD     		pop	{r3, pc}
+ 219              		.cfi_endproc
+ 220              	.LFE150:
+ 222              		.text
+ 223              	.Letext0:
+ 224              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 225              		.file 3 "Inc/jmorecfg.h"
+ 226              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 227              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jcomapi.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:20     .text.jpeg_abort:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:26     .text.jpeg_abort:00000000 jpeg_abort
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:98     .text.jpeg_destroy:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:104    .text.jpeg_destroy:00000000 jpeg_destroy
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:143    .text.jpeg_alloc_quant_table:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:149    .text.jpeg_alloc_quant_table:00000000 jpeg_alloc_quant_table
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:183    .text.jpeg_alloc_huff_table:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT2Go4m.s:189    .text.jpeg_alloc_huff_table:00000000 jpeg_alloc_huff_table
+
+NO UNDEFINED SYMBOLS

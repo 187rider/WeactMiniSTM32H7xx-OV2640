@@ -1,0 +1,2244 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov2640.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov2640.c"
+  19              		.section	.text.wrSensorRegs,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	wrSensorRegs:
+  26              	.LVL0:
+  27              	.LFB146:
+   1:Drivers/BSP/Camera/ov2640.c **** #include "ov2640.h"
+   2:Drivers/BSP/Camera/ov2640.c **** #include "camera.h"
+   3:Drivers/BSP/Camera/ov2640.c **** #include "ov2640_regs.h"
+   4:Drivers/BSP/Camera/ov2640.c **** 
+   5:Drivers/BSP/Camera/ov2640.c **** #define OV2640_XCLK_FREQUENCY       (10000000)
+   6:Drivers/BSP/Camera/ov2640.c **** #define OV2640_NUM_ALLOWED_SIZES    (13)
+   7:Drivers/BSP/Camera/ov2640.c **** #define NUM_BRIGHTNESS_LEVELS       (5)
+   8:Drivers/BSP/Camera/ov2640.c **** #define NUM_CONTRAST_LEVELS         (5)
+   9:Drivers/BSP/Camera/ov2640.c **** #define NUM_SATURATION_LEVELS       (5)
+  10:Drivers/BSP/Camera/ov2640.c **** #define NUM_EFFECTS                 (9)
+  11:Drivers/BSP/Camera/ov2640.c **** #define REGLENGTH 8
+  12:Drivers/BSP/Camera/ov2640.c **** 
+  13:Drivers/BSP/Camera/ov2640.c **** #define ov2640_delay HAL_Delay
+  14:Drivers/BSP/Camera/ov2640.c **** 
+  15:Drivers/BSP/Camera/ov2640.c **** static const uint8_t allowed_sizes[OV2640_NUM_ALLOWED_SIZES] = {
+  16:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_CIF,      // 352x288
+  17:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_SIF,      // 352x240
+  18:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_QQVGA,    // 160x120
+  19:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_128X64,   // 128x64
+  20:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_QVGA,     // 320x240
+  21:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_VGA,      // 640x480
+  22:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_HVGA,     // 480 * 320
+  23:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_WVGA2,    // 752x480
+  24:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_SVGA,     // 800x600
+  25:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_XGA,      // 1024x768
+  26:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_SXGA,     // 1280x1024
+  27:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_UXGA,     // 1600x1200
+  28:Drivers/BSP/Camera/ov2640.c ****         FRAMESIZE_960P,     // 1280x960
+  29:Drivers/BSP/Camera/ov2640.c **** };
+  30:Drivers/BSP/Camera/ov2640.c **** 
+  31:Drivers/BSP/Camera/ov2640.c **** //---------------------------------------
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 2
+
+
+  32:Drivers/BSP/Camera/ov2640.c **** static const uint8_t rgb565_regs[][2] = {
+  33:Drivers/BSP/Camera/ov2640.c ****     { BANK_SEL, BANK_SEL_DSP },
+  34:Drivers/BSP/Camera/ov2640.c ****     { REG_RESET,   REG_RESET_DVP},
+  35:Drivers/BSP/Camera/ov2640.c ****     { IMAGE_MODE, IMAGE_MODE_RGB565 },
+  36:Drivers/BSP/Camera/ov2640.c ****     { 0xD7,     0x03 },
+  37:Drivers/BSP/Camera/ov2640.c ****     { 0xE1,     0x77 },
+  38:Drivers/BSP/Camera/ov2640.c ****     { REG_RESET,    0x00 },
+  39:Drivers/BSP/Camera/ov2640.c ****     {0, 0},
+  40:Drivers/BSP/Camera/ov2640.c **** };
+  41:Drivers/BSP/Camera/ov2640.c **** 
+  42:Drivers/BSP/Camera/ov2640.c **** //-------------------------------------
+  43:Drivers/BSP/Camera/ov2640.c **** static const uint8_t yuyv_regs[][2] = {
+  44:Drivers/BSP/Camera/ov2640.c **** 	{BANK_SEL,      BANK_SEL_DSP},
+  45:Drivers/BSP/Camera/ov2640.c ****   {REG_RESET,     REG_RESET_DVP},
+  46:Drivers/BSP/Camera/ov2640.c **** 	{ IMAGE_MODE, IMAGE_MODE_YUV422 },
+  47:Drivers/BSP/Camera/ov2640.c **** 	{ 0xd7, 0x03 },
+  48:Drivers/BSP/Camera/ov2640.c **** 	{ 0x33, 0xa0 },
+  49:Drivers/BSP/Camera/ov2640.c **** 	{ 0xe5, 0x1f },
+  50:Drivers/BSP/Camera/ov2640.c **** 	{ 0xe1, 0x67 },
+  51:Drivers/BSP/Camera/ov2640.c **** 	{ REG_RESET,  0x00 },
+  52:Drivers/BSP/Camera/ov2640.c **** 	{0,             0},
+  53:Drivers/BSP/Camera/ov2640.c **** };
+  54:Drivers/BSP/Camera/ov2640.c **** 
+  55:Drivers/BSP/Camera/ov2640.c **** //-------------------------------------
+  56:Drivers/BSP/Camera/ov2640.c **** static const uint8_t jpeg_regs[][2] = {
+  57:Drivers/BSP/Camera/ov2640.c ****     {0xFF,      0x00},
+  58:Drivers/BSP/Camera/ov2640.c ****     {0xE0,         0x04},
+  59:Drivers/BSP/Camera/ov2640.c ****     {0xDA,    0x10 | 0x00}, // | IMAGE_MODE_HREF_VSYNC
+  60:Drivers/BSP/Camera/ov2640.c ****     {0xd7,          0x03},
+  61:Drivers/BSP/Camera/ov2640.c ****     {0xe1,          0x77},
+  62:Drivers/BSP/Camera/ov2640.c ****     //{QS,            0x0c},
+  63:Drivers/BSP/Camera/ov2640.c ****     {0xE0,         0x00},
+  64:Drivers/BSP/Camera/ov2640.c ****     {0,             0},
+  65:Drivers/BSP/Camera/ov2640.c **** };
+  66:Drivers/BSP/Camera/ov2640.c **** 
+  67:Drivers/BSP/Camera/ov2640.c **** 
+  68:Drivers/BSP/Camera/ov2640.c **** //--------------------------------------------------------------------
+  69:Drivers/BSP/Camera/ov2640.c **** static const uint8_t brightness_regs[NUM_BRIGHTNESS_LEVELS + 1][5] = {
+  70:Drivers/BSP/Camera/ov2640.c ****     {BPADDR, BPDATA, BPADDR, BPDATA, BPDATA},
+  71:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x09, 0x00, 0x00}, /* -2 */
+  72:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x09, 0x10, 0x00}, /* -1 */
+  73:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x09, 0x20, 0x00}, /*  0 */
+  74:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x09, 0x30, 0x00}, /* +1 */
+  75:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x09, 0x40, 0x00}, /* +2 */
+  76:Drivers/BSP/Camera/ov2640.c **** };
+  77:Drivers/BSP/Camera/ov2640.c **** 
+  78:Drivers/BSP/Camera/ov2640.c **** //----------------------------------------------------------------
+  79:Drivers/BSP/Camera/ov2640.c **** static const uint8_t contrast_regs[NUM_CONTRAST_LEVELS + 1][7] = {
+  80:Drivers/BSP/Camera/ov2640.c ****     {BPADDR, BPDATA, BPADDR, BPDATA, BPDATA, BPDATA, BPDATA},
+  81:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x07, 0x20, 0x18, 0x34, 0x06}, /* -2 */
+  82:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x07, 0x20, 0x1c, 0x2a, 0x06}, /* -1 */
+  83:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x07, 0x20, 0x20, 0x20, 0x06}, /*  0 */
+  84:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x07, 0x20, 0x24, 0x16, 0x06}, /* +1 */
+  85:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x04, 0x07, 0x20, 0x28, 0x0c, 0x06}, /* +2 */
+  86:Drivers/BSP/Camera/ov2640.c **** };
+  87:Drivers/BSP/Camera/ov2640.c **** 
+  88:Drivers/BSP/Camera/ov2640.c **** //--------------------------------------------------------------------
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 3
+
+
+  89:Drivers/BSP/Camera/ov2640.c **** static const uint8_t saturation_regs[NUM_SATURATION_LEVELS + 1][5] = {
+  90:Drivers/BSP/Camera/ov2640.c ****     {BPADDR, BPDATA, BPADDR, BPDATA, BPDATA},
+  91:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x02, 0x03, 0x28, 0x28}, /* -2 */
+  92:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x02, 0x03, 0x38, 0x38}, /* -1 */
+  93:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x02, 0x03, 0x48, 0x48}, /*  0 */
+  94:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x02, 0x03, 0x58, 0x58}, /* +1 */
+  95:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x02, 0x03, 0x68, 0x68}, /* +2 */
+  96:Drivers/BSP/Camera/ov2640.c **** };
+  97:Drivers/BSP/Camera/ov2640.c **** 
+  98:Drivers/BSP/Camera/ov2640.c **** //--------------------------------------------------------
+  99:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_EFFECTS_TBL[NUM_EFFECTS][3]= {
+ 100:Drivers/BSP/Camera/ov2640.c ****     //00-0 05-0  05-1
+ 101:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x80, 0x80}, // Normal
+ 102:Drivers/BSP/Camera/ov2640.c ****     {0x18, 0xA0, 0x40}, // Blueish (cool light)
+ 103:Drivers/BSP/Camera/ov2640.c ****     {0x18, 0x40, 0xC0}, // Redish (warm)
+ 104:Drivers/BSP/Camera/ov2640.c ****     {0x18, 0x80, 0x80}, // Black and white
+ 105:Drivers/BSP/Camera/ov2640.c ****     {0x18, 0x40, 0xA6}, // Sepia
+ 106:Drivers/BSP/Camera/ov2640.c ****     {0x40, 0x80, 0x80}, // Negative
+ 107:Drivers/BSP/Camera/ov2640.c ****     {0x18, 0x50, 0x50}, // Greenish
+ 108:Drivers/BSP/Camera/ov2640.c ****     {0x58, 0x80, 0x80}, // Black and white negative
+ 109:Drivers/BSP/Camera/ov2640.c ****     {0x00, 0x80, 0x80}, // Normal
+ 110:Drivers/BSP/Camera/ov2640.c **** };
+ 111:Drivers/BSP/Camera/ov2640.c **** 
+ 112:Drivers/BSP/Camera/ov2640.c **** 
+ 113:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_JPEG_INIT[][2] = { 
+ 114:Drivers/BSP/Camera/ov2640.c ****    {0xff, 0x00}, //Table 12 is effective
+ 115:Drivers/BSP/Camera/ov2640.c ****   {0x2c, 0xff}, //Ò»¸ö±£ÁôµÄ¼Ä´æÆ÷£¬Ã»ÓÃ´¦
+ 116:Drivers/BSP/Camera/ov2640.c ****   {0x2e, 0xdf}, //
+ 117:Drivers/BSP/Camera/ov2640.c ****   {0xff, 0x01},
+ 118:Drivers/BSP/Camera/ov2640.c ****   {0x3c, 0x32}, //±£Áô
+ 119:Drivers/BSP/Camera/ov2640.c ****   {0x11, 0x03}, //ÄÚ²¿±¶ÆµºÍ·ÖÆµ¶¼Îª0
+ 120:Drivers/BSP/Camera/ov2640.c ****   {0x09, 0x02}, //2x capability
+ 121:Drivers/BSP/Camera/ov2640.c ****   {0x04, 0x28}, //
+ 122:Drivers/BSP/Camera/ov2640.c ****   {0x13, 0xe5},
+ 123:Drivers/BSP/Camera/ov2640.c ****   {0x14, 0x48},
+ 124:Drivers/BSP/Camera/ov2640.c ****   {0x2c, 0x0c},
+ 125:Drivers/BSP/Camera/ov2640.c ****   {0x33, 0x78},
+ 126:Drivers/BSP/Camera/ov2640.c ****   {0x3a, 0x33},
+ 127:Drivers/BSP/Camera/ov2640.c ****   {0x3b, 0xfB},
+ 128:Drivers/BSP/Camera/ov2640.c ****   {0x3e, 0x00},
+ 129:Drivers/BSP/Camera/ov2640.c ****   {0x43, 0x11},
+ 130:Drivers/BSP/Camera/ov2640.c ****   {0x16, 0x10},
+ 131:Drivers/BSP/Camera/ov2640.c ****   {0x39, 0x92},
+ 132:Drivers/BSP/Camera/ov2640.c ****   {0x35, 0xda},
+ 133:Drivers/BSP/Camera/ov2640.c ****   {0x22, 0x1a},
+ 134:Drivers/BSP/Camera/ov2640.c ****   {0x37, 0xc3},
+ 135:Drivers/BSP/Camera/ov2640.c ****   {0x23, 0x00},
+ 136:Drivers/BSP/Camera/ov2640.c ****   {0x34, 0xc0},
+ 137:Drivers/BSP/Camera/ov2640.c ****   {0x36, 0x1a},
+ 138:Drivers/BSP/Camera/ov2640.c ****   {0x06, 0x88},
+ 139:Drivers/BSP/Camera/ov2640.c ****   {0x07, 0xc0},
+ 140:Drivers/BSP/Camera/ov2640.c ****   {0x0d, 0x87},
+ 141:Drivers/BSP/Camera/ov2640.c ****   {0x0e, 0x41},
+ 142:Drivers/BSP/Camera/ov2640.c ****   {0x4c, 0x00},
+ 143:Drivers/BSP/Camera/ov2640.c ****   {0x48, 0x00},
+ 144:Drivers/BSP/Camera/ov2640.c ****   {0x5B, 0x00},
+ 145:Drivers/BSP/Camera/ov2640.c ****   {0x42, 0x03},
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 4
+
+
+ 146:Drivers/BSP/Camera/ov2640.c ****   {0x4a, 0x81},
+ 147:Drivers/BSP/Camera/ov2640.c ****   {0x21, 0x99},
+ 148:Drivers/BSP/Camera/ov2640.c ****   {0x24, 0x40},
+ 149:Drivers/BSP/Camera/ov2640.c ****   {0x25, 0x38},
+ 150:Drivers/BSP/Camera/ov2640.c ****   {0x26, 0x82},
+ 151:Drivers/BSP/Camera/ov2640.c ****   {0x5c, 0x00},
+ 152:Drivers/BSP/Camera/ov2640.c ****   {0x63, 0x00},
+ 153:Drivers/BSP/Camera/ov2640.c ****   {0x61, 0x70},
+ 154:Drivers/BSP/Camera/ov2640.c ****   {0x62, 0x80},
+ 155:Drivers/BSP/Camera/ov2640.c ****   {0x7c, 0x05},
+ 156:Drivers/BSP/Camera/ov2640.c ****   {0x20, 0x80},
+ 157:Drivers/BSP/Camera/ov2640.c ****   {0x28, 0x30},
+ 158:Drivers/BSP/Camera/ov2640.c ****   {0x6c, 0x00},
+ 159:Drivers/BSP/Camera/ov2640.c ****   {0x6d, 0x80},
+ 160:Drivers/BSP/Camera/ov2640.c ****   {0x6e, 0x00},
+ 161:Drivers/BSP/Camera/ov2640.c ****   {0x70, 0x02},
+ 162:Drivers/BSP/Camera/ov2640.c ****   {0x71, 0x94},
+ 163:Drivers/BSP/Camera/ov2640.c ****   {0x73, 0xc1},
+ 164:Drivers/BSP/Camera/ov2640.c ****   //{0x12, 0x40},//0x40
+ 165:Drivers/BSP/Camera/ov2640.c ****   {0x17, 0x11},
+ 166:Drivers/BSP/Camera/ov2640.c ****   {0x18, 0x43},
+ 167:Drivers/BSP/Camera/ov2640.c ****   {0x19, 0x00},
+ 168:Drivers/BSP/Camera/ov2640.c ****   {0x1a, 0x4b},
+ 169:Drivers/BSP/Camera/ov2640.c ****   {0x32, 0x09},
+ 170:Drivers/BSP/Camera/ov2640.c ****   {0x37, 0xc0},
+ 171:Drivers/BSP/Camera/ov2640.c ****   {0x4f, 0x60},
+ 172:Drivers/BSP/Camera/ov2640.c ****   {0x50, 0xa8},
+ 173:Drivers/BSP/Camera/ov2640.c ****   {0x6d, 0x00},
+ 174:Drivers/BSP/Camera/ov2640.c ****   {0x3d, 0x38},
+ 175:Drivers/BSP/Camera/ov2640.c ****   {0x46, 0x3f},
+ 176:Drivers/BSP/Camera/ov2640.c ****   {0x4f, 0x60},
+ 177:Drivers/BSP/Camera/ov2640.c ****   {0x0c, 0x3c},
+ 178:Drivers/BSP/Camera/ov2640.c ****   {0xff, 0x00},
+ 179:Drivers/BSP/Camera/ov2640.c ****   {0xe5, 0x7f},
+ 180:Drivers/BSP/Camera/ov2640.c ****   {0xf9, 0xc0},
+ 181:Drivers/BSP/Camera/ov2640.c ****   {0x41, 0x24},
+ 182:Drivers/BSP/Camera/ov2640.c ****   {0xe0, 0x14},
+ 183:Drivers/BSP/Camera/ov2640.c ****   {0x76, 0xff},
+ 184:Drivers/BSP/Camera/ov2640.c ****   {0x33, 0xa0},
+ 185:Drivers/BSP/Camera/ov2640.c ****   {0x42, 0x20},
+ 186:Drivers/BSP/Camera/ov2640.c ****   {0x43, 0x18},
+ 187:Drivers/BSP/Camera/ov2640.c ****   {0x4c, 0x00},
+ 188:Drivers/BSP/Camera/ov2640.c ****   {0x87, 0xd5},
+ 189:Drivers/BSP/Camera/ov2640.c ****   {0x88, 0x3f},
+ 190:Drivers/BSP/Camera/ov2640.c ****   {0xd7, 0x03},
+ 191:Drivers/BSP/Camera/ov2640.c ****   {0xd9, 0x10},
+ 192:Drivers/BSP/Camera/ov2640.c ****   {0xd3, 0x82},
+ 193:Drivers/BSP/Camera/ov2640.c ****   {0xc8, 0x08},
+ 194:Drivers/BSP/Camera/ov2640.c ****   {0xc9, 0x80},
+ 195:Drivers/BSP/Camera/ov2640.c ****   {0x7c, 0x00},
+ 196:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x00},
+ 197:Drivers/BSP/Camera/ov2640.c ****   {0x7c, 0x03},
+ 198:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x48},
+ 199:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x48},
+ 200:Drivers/BSP/Camera/ov2640.c ****   {0x7c, 0x08},
+ 201:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x20},
+ 202:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x10},
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 5
+
+
+ 203:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x0e},
+ 204:Drivers/BSP/Camera/ov2640.c ****   {0x90, 0x00},
+ 205:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x0e},
+ 206:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x1a},
+ 207:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x31},
+ 208:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x5a},
+ 209:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x69},
+ 210:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x75},
+ 211:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x7e},
+ 212:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x88},
+ 213:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x8f},
+ 214:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x96},
+ 215:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0xa3},
+ 216:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0xaf},
+ 217:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0xc4},
+ 218:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0xd7},
+ 219:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0xe8},
+ 220:Drivers/BSP/Camera/ov2640.c ****   {0x91, 0x20},
+ 221:Drivers/BSP/Camera/ov2640.c ****   {0x92, 0x00},
+ 222:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x06},
+ 223:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0xe3},
+ 224:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x05},
+ 225:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x05},
+ 226:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 227:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x04},
+ 228:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 229:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 230:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 231:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 232:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 233:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 234:Drivers/BSP/Camera/ov2640.c ****   {0x93, 0x00},
+ 235:Drivers/BSP/Camera/ov2640.c ****   {0x96, 0x00},
+ 236:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x08},
+ 237:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x19},
+ 238:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x02},
+ 239:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x0c},
+ 240:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x24},
+ 241:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x30},
+ 242:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x28},
+ 243:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x26},
+ 244:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x02},
+ 245:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x98},
+ 246:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x80},
+ 247:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x00},
+ 248:Drivers/BSP/Camera/ov2640.c ****   {0x97, 0x00},
+ 249:Drivers/BSP/Camera/ov2640.c ****   {0xc3, 0xed},
+ 250:Drivers/BSP/Camera/ov2640.c ****   {0xa4, 0x00},
+ 251:Drivers/BSP/Camera/ov2640.c ****   {0xa8, 0x00},
+ 252:Drivers/BSP/Camera/ov2640.c ****   {0xc5, 0x11},
+ 253:Drivers/BSP/Camera/ov2640.c ****   {0xc6, 0x51},
+ 254:Drivers/BSP/Camera/ov2640.c ****   {0xbf, 0x80},
+ 255:Drivers/BSP/Camera/ov2640.c ****   {0xc7, 0x10},
+ 256:Drivers/BSP/Camera/ov2640.c ****   {0xb6, 0x66},
+ 257:Drivers/BSP/Camera/ov2640.c ****   {0xb8, 0xA5},
+ 258:Drivers/BSP/Camera/ov2640.c ****   {0xb7, 0x64},
+ 259:Drivers/BSP/Camera/ov2640.c ****   {0xb9, 0x7C},
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 6
+
+
+ 260:Drivers/BSP/Camera/ov2640.c ****   {0xb3, 0xaf},
+ 261:Drivers/BSP/Camera/ov2640.c ****   {0xb4, 0x97},
+ 262:Drivers/BSP/Camera/ov2640.c ****   {0xb5, 0xFF},
+ 263:Drivers/BSP/Camera/ov2640.c ****   {0xb0, 0xC5},
+ 264:Drivers/BSP/Camera/ov2640.c ****   {0xb1, 0x94},
+ 265:Drivers/BSP/Camera/ov2640.c ****   {0xb2, 0x0f},
+ 266:Drivers/BSP/Camera/ov2640.c ****   {0xc4, 0x5c},
+ 267:Drivers/BSP/Camera/ov2640.c ****   {0xc0, 0x64},
+ 268:Drivers/BSP/Camera/ov2640.c ****   {0xc1, 0x4B},
+ 269:Drivers/BSP/Camera/ov2640.c ****   {0x8c, 0x00},
+ 270:Drivers/BSP/Camera/ov2640.c ****   {0x86, 0x3D},
+ 271:Drivers/BSP/Camera/ov2640.c ****   {0x50, 0x00},
+ 272:Drivers/BSP/Camera/ov2640.c ****   {0x51, 0xC8},
+ 273:Drivers/BSP/Camera/ov2640.c ****   {0x52, 0x96},
+ 274:Drivers/BSP/Camera/ov2640.c ****   {0x53, 0x00},
+ 275:Drivers/BSP/Camera/ov2640.c ****   {0x54, 0x00},
+ 276:Drivers/BSP/Camera/ov2640.c ****   {0x55, 0x00},
+ 277:Drivers/BSP/Camera/ov2640.c ****   {0x5a, 0xC8},
+ 278:Drivers/BSP/Camera/ov2640.c ****   {0x5b, 0x96},
+ 279:Drivers/BSP/Camera/ov2640.c ****   {0x5c, 0x00},
+ 280:Drivers/BSP/Camera/ov2640.c ****   {0xd3, 0x7f},
+ 281:Drivers/BSP/Camera/ov2640.c ****   {0xc3, 0xed},
+ 282:Drivers/BSP/Camera/ov2640.c ****   {0x7f, 0x00},
+ 283:Drivers/BSP/Camera/ov2640.c ****   {0xda, 0x00},
+ 284:Drivers/BSP/Camera/ov2640.c ****   {0xe5, 0x1f},
+ 285:Drivers/BSP/Camera/ov2640.c ****   {0xe1, 0x67},
+ 286:Drivers/BSP/Camera/ov2640.c ****   {0xe0, 0x00},
+ 287:Drivers/BSP/Camera/ov2640.c ****   {0xdd, 0x7f},
+ 288:Drivers/BSP/Camera/ov2640.c ****   {0x05, 0x00},
+ 289:Drivers/BSP/Camera/ov2640.c **** 
+ 290:Drivers/BSP/Camera/ov2640.c ****   {0x12, 0x40},//0x40
+ 291:Drivers/BSP/Camera/ov2640.c ****   {0xd3, 0x7f},
+ 292:Drivers/BSP/Camera/ov2640.c ****   {0xc0, 0x16},
+ 293:Drivers/BSP/Camera/ov2640.c ****   {0xc1, 0x12},
+ 294:Drivers/BSP/Camera/ov2640.c ****   {0x8c, 0x00},
+ 295:Drivers/BSP/Camera/ov2640.c ****   {0x86, 0x3d},
+ 296:Drivers/BSP/Camera/ov2640.c ****   {0x50, 0x00},
+ 297:Drivers/BSP/Camera/ov2640.c ****   {0x51, 0x2C},
+ 298:Drivers/BSP/Camera/ov2640.c ****   {0x52, 0x24},
+ 299:Drivers/BSP/Camera/ov2640.c ****   {0x53, 0x00},
+ 300:Drivers/BSP/Camera/ov2640.c ****   {0x54, 0x00},
+ 301:Drivers/BSP/Camera/ov2640.c ****   {0x55, 0x00},
+ 302:Drivers/BSP/Camera/ov2640.c ****   {0x5A, 0x2c},
+ 303:Drivers/BSP/Camera/ov2640.c ****   {0x5b, 0x24},
+ 304:Drivers/BSP/Camera/ov2640.c ****   {0x5c, 0x00},
+ 305:Drivers/BSP/Camera/ov2640.c ****   };
+ 306:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_YUV422[][2] = {
+ 307:Drivers/BSP/Camera/ov2640.c ****   { 0xFF, 0x00 },
+ 308:Drivers/BSP/Camera/ov2640.c ****   { 0x05, 0x00 },
+ 309:Drivers/BSP/Camera/ov2640.c ****   { 0xDA, 0x10 },
+ 310:Drivers/BSP/Camera/ov2640.c ****   { 0xD7, 0x03 },
+ 311:Drivers/BSP/Camera/ov2640.c ****   { 0xDF, 0x00 },
+ 312:Drivers/BSP/Camera/ov2640.c ****   { 0x33, 0x80 },
+ 313:Drivers/BSP/Camera/ov2640.c ****   { 0x3C, 0x40 },
+ 314:Drivers/BSP/Camera/ov2640.c ****   { 0xe1, 0x77 },
+ 315:Drivers/BSP/Camera/ov2640.c ****   { 0x00, 0x00 },
+ 316:Drivers/BSP/Camera/ov2640.c **** };
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 7
+
+
+ 317:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_JPEG[][2] = {
+ 318:Drivers/BSP/Camera/ov2640.c ****   { 0xe0, 0x14 },
+ 319:Drivers/BSP/Camera/ov2640.c ****   { 0xe1, 0x77 },
+ 320:Drivers/BSP/Camera/ov2640.c ****   { 0xe5, 0x1f },
+ 321:Drivers/BSP/Camera/ov2640.c ****   { 0xd7, 0x03 },
+ 322:Drivers/BSP/Camera/ov2640.c ****   { 0xda, 0x10 },
+ 323:Drivers/BSP/Camera/ov2640.c ****   { 0xe0, 0x00 },
+ 324:Drivers/BSP/Camera/ov2640.c ****   { 0xFF, 0x01 },
+ 325:Drivers/BSP/Camera/ov2640.c ****   { 0x04, 0x08 },
+ 326:Drivers/BSP/Camera/ov2640.c **** };
+ 327:Drivers/BSP/Camera/ov2640.c **** 
+ 328:Drivers/BSP/Camera/ov2640.c **** 
+ 329:Drivers/BSP/Camera/ov2640.c **** static const uint8_t  OV2640_1280x960_JPEG[][2] = {
+ 330:Drivers/BSP/Camera/ov2640.c ****     { 0xFF, 0x01 },
+ 331:Drivers/BSP/Camera/ov2640.c ****     { 0x11, 0x04 },
+ 332:Drivers/BSP/Camera/ov2640.c ****     { 0x12, 0x00 },
+ 333:Drivers/BSP/Camera/ov2640.c ****     {0x13, 0x87},   // Enable AGC, AEC, AWB
+ 334:Drivers/BSP/Camera/ov2640.c ****     { 0x17, 0x11 },
+ 335:Drivers/BSP/Camera/ov2640.c ****     { 0x18, 0x75 },
+ 336:Drivers/BSP/Camera/ov2640.c ****     {0x24, 0x40},   // AEC: stable upper limit
+ 337:Drivers/BSP/Camera/ov2640.c ****     {0x25, 0x30},   // AEC: stable lower limit
+ 338:Drivers/BSP/Camera/ov2640.c ****     {0x26, 0xA1},   // AEC: fast mode + banding filter
+ 339:Drivers/BSP/Camera/ov2640.c ****     {0x14, 0x3A},  // increase gain ceiling
+ 340:Drivers/BSP/Camera/ov2640.c ****     { 0x32, 0x36 },
+ 341:Drivers/BSP/Camera/ov2640.c ****     { 0x19, 0x01 },
+ 342:Drivers/BSP/Camera/ov2640.c ****     { 0x1a, 0x97 },
+ 343:Drivers/BSP/Camera/ov2640.c ****     { 0x03, 0x0f },
+ 344:Drivers/BSP/Camera/ov2640.c ****     { 0x37, 0x40 },
+ 345:Drivers/BSP/Camera/ov2640.c ****     { 0x4f, 0xbb },
+ 346:Drivers/BSP/Camera/ov2640.c ****     { 0x50, 0x9c },
+ 347:Drivers/BSP/Camera/ov2640.c ****     { 0x5a, 0x5f },
+ 348:Drivers/BSP/Camera/ov2640.c ****     { 0x6d, 0x80 },
+ 349:Drivers/BSP/Camera/ov2640.c ****     { 0x3d, 0x34 },
+ 350:Drivers/BSP/Camera/ov2640.c ****     { 0x39, 0x02 },
+ 351:Drivers/BSP/Camera/ov2640.c ****     { 0x35, 0x88 },
+ 352:Drivers/BSP/Camera/ov2640.c ****     { 0x22, 0x0a },
+ 353:Drivers/BSP/Camera/ov2640.c ****     { 0x37, 0x40 },
+ 354:Drivers/BSP/Camera/ov2640.c ****     { 0x34, 0xa0 },
+ 355:Drivers/BSP/Camera/ov2640.c ****     { 0x06, 0x02 },
+ 356:Drivers/BSP/Camera/ov2640.c ****     { 0x0d, 0xb7 },
+ 357:Drivers/BSP/Camera/ov2640.c ****     { 0x0e, 0x01 },
+ 358:Drivers/BSP/Camera/ov2640.c ****     { 0xFF, 0x00 },
+ 359:Drivers/BSP/Camera/ov2640.c ****     { 0xe0, 0x04 },
+ 360:Drivers/BSP/Camera/ov2640.c ****     { 0xc0, 0xA0 },
+ 361:Drivers/BSP/Camera/ov2640.c ****     { 0xc1, 0x5A },
+ 362:Drivers/BSP/Camera/ov2640.c ****     { 0x86, 0x01 },
+ 363:Drivers/BSP/Camera/ov2640.c ****     { 0x50, 0x00 },
+ 364:Drivers/BSP/Camera/ov2640.c ****     { 0x51, 0x90 },
+ 365:Drivers/BSP/Camera/ov2640.c ****     { 0x52, 0x2c },
+ 366:Drivers/BSP/Camera/ov2640.c ****     { 0x53, 0x00 },
+ 367:Drivers/BSP/Camera/ov2640.c ****     { 0x54, 0x02 },
+ 368:Drivers/BSP/Camera/ov2640.c ****     { 0x55, 0x88 },
+ 369:Drivers/BSP/Camera/ov2640.c ****     { 0x57, 0x00 },
+ 370:Drivers/BSP/Camera/ov2640.c ****     { 0x5a, 0xa0 },
+ 371:Drivers/BSP/Camera/ov2640.c ****     { 0x5b, 0x5a },
+ 372:Drivers/BSP/Camera/ov2640.c ****     { 0x5c, 0x00 },
+ 373:Drivers/BSP/Camera/ov2640.c ****     {0x7C, 0x00},
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 8
+
+
+ 374:Drivers/BSP/Camera/ov2640.c ****     {0x7D, 0x02},   // +2x digital gain
+ 375:Drivers/BSP/Camera/ov2640.c ****     { 0xd3, 0x02 },
+ 376:Drivers/BSP/Camera/ov2640.c ****     { 0xe0, 0x00 },
+ 377:Drivers/BSP/Camera/ov2640.c ****     { 0xFF, 0x01 },
+ 378:Drivers/BSP/Camera/ov2640.c ****     { 0x04, 0x08 },   // enable JPEG output
+ 379:Drivers/BSP/Camera/ov2640.c ****     { 0xDA, 0x10 },   // output format JPEG
+ 380:Drivers/BSP/Camera/ov2640.c ****     { 0xE0, 0x00 },
+ 381:Drivers/BSP/Camera/ov2640.c ****     { 0x00, 0x00 },   // end marker
+ 382:Drivers/BSP/Camera/ov2640.c **** };
+ 383:Drivers/BSP/Camera/ov2640.c **** 
+ 384:Drivers/BSP/Camera/ov2640.c **** const unsigned char OV2640_160x120_JPEG[][2]=
+ 385:Drivers/BSP/Camera/ov2640.c **** {
+ 386:Drivers/BSP/Camera/ov2640.c ****   { 0xff, 0x01 },
+ 387:Drivers/BSP/Camera/ov2640.c ****   { 0x12, 0x40 },
+ 388:Drivers/BSP/Camera/ov2640.c ****   { 0x17, 0x11 },
+ 389:Drivers/BSP/Camera/ov2640.c ****   { 0x18, 0x43 },
+ 390:Drivers/BSP/Camera/ov2640.c ****   { 0x19, 0x00 },
+ 391:Drivers/BSP/Camera/ov2640.c ****   { 0x1a, 0x4b },
+ 392:Drivers/BSP/Camera/ov2640.c ****   { 0x32, 0x09 },
+ 393:Drivers/BSP/Camera/ov2640.c ****   { 0x4f, 0xca },
+ 394:Drivers/BSP/Camera/ov2640.c ****   { 0x50, 0xa8 },
+ 395:Drivers/BSP/Camera/ov2640.c ****   { 0x5a, 0x23 },
+ 396:Drivers/BSP/Camera/ov2640.c ****   { 0x6d, 0x00 },
+ 397:Drivers/BSP/Camera/ov2640.c ****   { 0x39, 0x12 },
+ 398:Drivers/BSP/Camera/ov2640.c ****   { 0x35, 0xda },
+ 399:Drivers/BSP/Camera/ov2640.c ****   { 0x22, 0x1a },
+ 400:Drivers/BSP/Camera/ov2640.c ****   { 0x37, 0xc3 },
+ 401:Drivers/BSP/Camera/ov2640.c ****   { 0x23, 0x00 },
+ 402:Drivers/BSP/Camera/ov2640.c ****   { 0x34, 0xc0 },
+ 403:Drivers/BSP/Camera/ov2640.c ****   { 0x36, 0x1a },
+ 404:Drivers/BSP/Camera/ov2640.c ****   { 0x06, 0x88 },
+ 405:Drivers/BSP/Camera/ov2640.c ****   { 0x07, 0xc0 },
+ 406:Drivers/BSP/Camera/ov2640.c ****   { 0x0d, 0x87 },
+ 407:Drivers/BSP/Camera/ov2640.c ****   { 0x0e, 0x41 },
+ 408:Drivers/BSP/Camera/ov2640.c ****   { 0x4c, 0x00 },
+ 409:Drivers/BSP/Camera/ov2640.c ****   { 0xff, 0x00 },
+ 410:Drivers/BSP/Camera/ov2640.c ****   { 0xe0, 0x04 },
+ 411:Drivers/BSP/Camera/ov2640.c ****   { 0xc0, 0x64 },
+ 412:Drivers/BSP/Camera/ov2640.c ****   { 0xc1, 0x4b },
+ 413:Drivers/BSP/Camera/ov2640.c ****   { 0x86, 0x35 },
+ 414:Drivers/BSP/Camera/ov2640.c ****   { 0x50, 0x92 },
+ 415:Drivers/BSP/Camera/ov2640.c ****   { 0x51, 0xc8 },
+ 416:Drivers/BSP/Camera/ov2640.c ****   { 0x52, 0x96 },
+ 417:Drivers/BSP/Camera/ov2640.c **** };
+ 418:Drivers/BSP/Camera/ov2640.c **** //-----------------------------------------------------
+ 419:Drivers/BSP/Camera/ov2640.c **** static uint8_t OV2640_WR_Reg(uint8_t reg, uint8_t data)
+ 420:Drivers/BSP/Camera/ov2640.c **** {
+ 421:Drivers/BSP/Camera/ov2640.c ****     Camera_WriteReg(&hcamera, reg, &data);
+ 422:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 423:Drivers/BSP/Camera/ov2640.c **** }
+ 424:Drivers/BSP/Camera/ov2640.c **** 
+ 425:Drivers/BSP/Camera/ov2640.c **** //---------------------------------------
+ 426:Drivers/BSP/Camera/ov2640.c **** static uint8_t OV2640_RD_Reg(uint8_t reg)
+ 427:Drivers/BSP/Camera/ov2640.c **** {
+ 428:Drivers/BSP/Camera/ov2640.c **** 	uint8_t data;
+ 429:Drivers/BSP/Camera/ov2640.c ****   Camera_ReadReg(&hcamera,reg,&data);
+ 430:Drivers/BSP/Camera/ov2640.c ****     return data;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 9
+
+
+ 431:Drivers/BSP/Camera/ov2640.c **** }
+ 432:Drivers/BSP/Camera/ov2640.c **** 
+ 433:Drivers/BSP/Camera/ov2640.c **** //------------------------------------------------
+ 434:Drivers/BSP/Camera/ov2640.c **** static void wrSensorRegs(const uint8_t (*regs)[2])
+ 435:Drivers/BSP/Camera/ov2640.c **** {
+  28              		.loc 1 435 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 435 1 is_stmt 0 view .LVU1
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0546     		mov	r5, r0
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  41              		.loc 1 436 5 is_stmt 1 view .LVU2
+  42              	.LBB2:
+  43              		.loc 1 436 10 view .LVU3
+  44              	.LVL1:
+  45              		.loc 1 436 14 is_stmt 0 view .LVU4
+  46 0004 0024     		movs	r4, #0
+  47              		.loc 1 436 5 view .LVU5
+  48 0006 04E0     		b	.L2
+  49              	.LVL2:
+  50              	.L3:
+ 437:Drivers/BSP/Camera/ov2640.c ****         Camera_WriteReg(&hcamera, regs[i][0], &regs[i][1]);
+  51              		.loc 1 437 9 is_stmt 1 view .LVU6
+  52 0008 0132     		adds	r2, r2, #1
+  53 000a 0548     		ldr	r0, .L5
+  54 000c FFF7FEFF 		bl	Camera_WriteReg
+  55              	.LVL3:
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  56              		.loc 1 436 34 discriminator 3 view .LVU7
+  57 0010 0134     		adds	r4, r4, #1
+  58              	.LVL4:
+  59              	.L2:
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  60              		.loc 1 436 21 discriminator 1 view .LVU8
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  61              		.loc 1 436 25 is_stmt 0 discriminator 1 view .LVU9
+  62 0012 05EB4402 		add	r2, r5, r4, lsl #1
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  63              		.loc 1 436 28 discriminator 1 view .LVU10
+  64 0016 15F81410 		ldrb	r1, [r5, r4, lsl #1]	@ zero_extendqisi2
+ 436:Drivers/BSP/Camera/ov2640.c ****     for (int i = 0; regs[i][0]; i++) {
+  65              		.loc 1 436 21 discriminator 1 view .LVU11
+  66 001a 0029     		cmp	r1, #0
+  67 001c F4D1     		bne	.L3
+  68              	.LBE2:
+ 438:Drivers/BSP/Camera/ov2640.c ****     }
+ 439:Drivers/BSP/Camera/ov2640.c **** }
+  69              		.loc 1 439 1 view .LVU12
+  70 001e 38BD     		pop	{r3, r4, r5, pc}
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 10
+
+
+  71              	.LVL5:
+  72              	.L6:
+  73              		.loc 1 439 1 view .LVU13
+  74              		.align	2
+  75              	.L5:
+  76 0020 00000000 		.word	hcamera
+  77              		.cfi_endproc
+  78              	.LFE146:
+  80              		.section	.text.OV2640_WR_Reg,"ax",%progbits
+  81              		.align	1
+  82              		.syntax unified
+  83              		.thumb
+  84              		.thumb_func
+  86              	OV2640_WR_Reg:
+  87              	.LVL6:
+  88              	.LFB144:
+ 420:Drivers/BSP/Camera/ov2640.c ****     Camera_WriteReg(&hcamera, reg, &data);
+  89              		.loc 1 420 1 is_stmt 1 view -0
+  90              		.cfi_startproc
+  91              		@ args = 0, pretend = 0, frame = 8
+  92              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420:Drivers/BSP/Camera/ov2640.c ****     Camera_WriteReg(&hcamera, reg, &data);
+  93              		.loc 1 420 1 is_stmt 0 view .LVU15
+  94 0000 00B5     		push	{lr}
+  95              	.LCFI1:
+  96              		.cfi_def_cfa_offset 4
+  97              		.cfi_offset 14, -4
+  98 0002 83B0     		sub	sp, sp, #12
+  99              	.LCFI2:
+ 100              		.cfi_def_cfa_offset 16
+ 101 0004 8DF80710 		strb	r1, [sp, #7]
+ 421:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 102              		.loc 1 421 5 is_stmt 1 view .LVU16
+ 103 0008 0DF10702 		add	r2, sp, #7
+ 104 000c 0146     		mov	r1, r0
+ 105              	.LVL7:
+ 421:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 106              		.loc 1 421 5 is_stmt 0 view .LVU17
+ 107 000e 0348     		ldr	r0, .L9
+ 108              	.LVL8:
+ 421:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 109              		.loc 1 421 5 view .LVU18
+ 110 0010 FFF7FEFF 		bl	Camera_WriteReg
+ 111              	.LVL9:
+ 422:Drivers/BSP/Camera/ov2640.c **** }
+ 112              		.loc 1 422 5 is_stmt 1 view .LVU19
+ 423:Drivers/BSP/Camera/ov2640.c **** 
+ 113              		.loc 1 423 1 is_stmt 0 view .LVU20
+ 114 0014 0020     		movs	r0, #0
+ 115 0016 03B0     		add	sp, sp, #12
+ 116              	.LCFI3:
+ 117              		.cfi_def_cfa_offset 4
+ 118              		@ sp needed
+ 119 0018 5DF804FB 		ldr	pc, [sp], #4
+ 120              	.L10:
+ 121              		.align	2
+ 122              	.L9:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 11
+
+
+ 123 001c 00000000 		.word	hcamera
+ 124              		.cfi_endproc
+ 125              	.LFE144:
+ 127              		.section	.text.reset,"ax",%progbits
+ 128              		.align	1
+ 129              		.syntax unified
+ 130              		.thumb
+ 131              		.thumb_func
+ 133              	reset:
+ 134              	.LFB147:
+ 440:Drivers/BSP/Camera/ov2640.c **** 
+ 441:Drivers/BSP/Camera/ov2640.c **** //----------------
+ 442:Drivers/BSP/Camera/ov2640.c **** static int reset()
+ 443:Drivers/BSP/Camera/ov2640.c **** {
+ 135              		.loc 1 443 1 is_stmt 1 view -0
+ 136              		.cfi_startproc
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139 0000 08B5     		push	{r3, lr}
+ 140              	.LCFI4:
+ 141              		.cfi_def_cfa_offset 8
+ 142              		.cfi_offset 3, -8
+ 143              		.cfi_offset 14, -4
+ 444:Drivers/BSP/Camera/ov2640.c **** 	  ov2640_delay(100);
+ 144              		.loc 1 444 4 view .LVU22
+ 145 0002 6420     		movs	r0, #100
+ 146 0004 FFF7FEFF 		bl	HAL_Delay
+ 147              	.LVL10:
+ 445:Drivers/BSP/Camera/ov2640.c ****     // Reset all registers
+ 446:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 148              		.loc 1 446 5 view .LVU23
+ 149 0008 0121     		movs	r1, #1
+ 150 000a FF20     		movs	r0, #255
+ 151 000c FFF7FEFF 		bl	OV2640_WR_Reg
+ 152              	.LVL11:
+ 447:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(COM7, COM7_SRST);
+ 153              		.loc 1 447 5 view .LVU24
+ 154 0010 8021     		movs	r1, #128
+ 155 0012 1220     		movs	r0, #18
+ 156 0014 FFF7FEFF 		bl	OV2640_WR_Reg
+ 157              	.LVL12:
+ 448:Drivers/BSP/Camera/ov2640.c ****     // Delay 5 ms
+ 449:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(5);
+ 158              		.loc 1 449 5 view .LVU25
+ 159 0018 0520     		movs	r0, #5
+ 160 001a FFF7FEFF 		bl	HAL_Delay
+ 161              	.LVL13:
+ 450:Drivers/BSP/Camera/ov2640.c ****     wrSensorRegs(ov2640_Slow_regs);
+ 162              		.loc 1 450 5 view .LVU26
+ 163 001e 0448     		ldr	r0, .L13
+ 164 0020 FFF7FEFF 		bl	wrSensorRegs
+ 165              	.LVL14:
+ 451:Drivers/BSP/Camera/ov2640.c ****     // 30 ms
+ 452:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(30);
+ 166              		.loc 1 452 5 view .LVU27
+ 167 0024 1E20     		movs	r0, #30
+ 168 0026 FFF7FEFF 		bl	HAL_Delay
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 12
+
+
+ 169              	.LVL15:
+ 453:Drivers/BSP/Camera/ov2640.c **** 
+ 454:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 170              		.loc 1 454 5 view .LVU28
+ 455:Drivers/BSP/Camera/ov2640.c **** }
+ 171              		.loc 1 455 1 is_stmt 0 view .LVU29
+ 172 002a 0020     		movs	r0, #0
+ 173 002c 08BD     		pop	{r3, pc}
+ 174              	.L14:
+ 175 002e 00BF     		.align	2
+ 176              	.L13:
+ 177 0030 00000000 		.word	ov2640_Slow_regs
+ 178              		.cfi_endproc
+ 179              	.LFE147:
+ 181              		.section	.text.OV2640_RD_Reg,"ax",%progbits
+ 182              		.align	1
+ 183              		.syntax unified
+ 184              		.thumb
+ 185              		.thumb_func
+ 187              	OV2640_RD_Reg:
+ 188              	.LVL16:
+ 189              	.LFB145:
+ 427:Drivers/BSP/Camera/ov2640.c **** 	uint8_t data;
+ 190              		.loc 1 427 1 is_stmt 1 view -0
+ 191              		.cfi_startproc
+ 192              		@ args = 0, pretend = 0, frame = 8
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 427:Drivers/BSP/Camera/ov2640.c **** 	uint8_t data;
+ 194              		.loc 1 427 1 is_stmt 0 view .LVU31
+ 195 0000 00B5     		push	{lr}
+ 196              	.LCFI5:
+ 197              		.cfi_def_cfa_offset 4
+ 198              		.cfi_offset 14, -4
+ 199 0002 83B0     		sub	sp, sp, #12
+ 200              	.LCFI6:
+ 201              		.cfi_def_cfa_offset 16
+ 202 0004 0146     		mov	r1, r0
+ 428:Drivers/BSP/Camera/ov2640.c ****   Camera_ReadReg(&hcamera,reg,&data);
+ 203              		.loc 1 428 2 is_stmt 1 view .LVU32
+ 429:Drivers/BSP/Camera/ov2640.c ****     return data;
+ 204              		.loc 1 429 3 view .LVU33
+ 205 0006 0DF10702 		add	r2, sp, #7
+ 206 000a 0448     		ldr	r0, .L17
+ 207              	.LVL17:
+ 429:Drivers/BSP/Camera/ov2640.c ****     return data;
+ 208              		.loc 1 429 3 is_stmt 0 view .LVU34
+ 209 000c FFF7FEFF 		bl	Camera_ReadReg
+ 210              	.LVL18:
+ 430:Drivers/BSP/Camera/ov2640.c **** }
+ 211              		.loc 1 430 5 is_stmt 1 view .LVU35
+ 431:Drivers/BSP/Camera/ov2640.c **** 
+ 212              		.loc 1 431 1 is_stmt 0 view .LVU36
+ 213 0010 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 214 0014 03B0     		add	sp, sp, #12
+ 215              	.LCFI7:
+ 216              		.cfi_def_cfa_offset 4
+ 217              		@ sp needed
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 13
+
+
+ 218 0016 5DF804FB 		ldr	pc, [sp], #4
+ 219              	.L18:
+ 220 001a 00BF     		.align	2
+ 221              	.L17:
+ 222 001c 00000000 		.word	hcamera
+ 223              		.cfi_endproc
+ 224              	.LFE145:
+ 226              		.section	.text._set_framesize,"ax",%progbits
+ 227              		.align	1
+ 228              		.syntax unified
+ 229              		.thumb
+ 230              		.thumb_func
+ 232              	_set_framesize:
+ 233              	.LVL19:
+ 234              	.LFB150:
+ 456:Drivers/BSP/Camera/ov2640.c **** 
+ 457:Drivers/BSP/Camera/ov2640.c **** //----------------------------------------
+ 458:Drivers/BSP/Camera/ov2640.c **** static int set_special_effect(uint8_t sde)
+ 459:Drivers/BSP/Camera/ov2640.c **** {
+ 460:Drivers/BSP/Camera/ov2640.c ****     if (sde >= NUM_EFFECTS) return -1;
+ 461:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 462:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BPADDR, 0x00);
+ 463:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BPDATA, OV2640_EFFECTS_TBL[sde][0]);
+ 464:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BPADDR, 0x05);
+ 465:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BPDATA, OV2640_EFFECTS_TBL[sde][1]);
+ 466:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BPDATA, OV2640_EFFECTS_TBL[sde][2]);
+ 467:Drivers/BSP/Camera/ov2640.c **** 
+ 468:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 469:Drivers/BSP/Camera/ov2640.c **** }
+ 470:Drivers/BSP/Camera/ov2640.c **** 
+ 471:Drivers/BSP/Camera/ov2640.c **** //-----------------------------------
+ 472:Drivers/BSP/Camera/ov2640.c **** static int set_exposure(int exposure)
+ 473:Drivers/BSP/Camera/ov2640.c **** {
+ 474:Drivers/BSP/Camera/ov2640.c ****     int ret = 0;
+ 475:Drivers/BSP/Camera/ov2640.c ****     // Disable DSP
+ 476:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 477:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 478:Drivers/BSP/Camera/ov2640.c **** 
+ 479:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 480:Drivers/BSP/Camera/ov2640.c ****     if (exposure == -1) {
+ 481:Drivers/BSP/Camera/ov2640.c ****         // get exposure
+ 482:Drivers/BSP/Camera/ov2640.c ****         uint16_t exp = (uint16_t)(OV2640_RD_Reg(REG45) & 0x3f) << 10;
+ 483:Drivers/BSP/Camera/ov2640.c ****         exp |= (uint16_t)OV2640_RD_Reg(AEC) << 2;
+ 484:Drivers/BSP/Camera/ov2640.c ****         exp |= (uint16_t)OV2640_RD_Reg(REG04) & 0x03;
+ 485:Drivers/BSP/Camera/ov2640.c ****         ret = (int)exp;
+ 486:Drivers/BSP/Camera/ov2640.c ****     }
+ 487:Drivers/BSP/Camera/ov2640.c ****     else if (exposure == -2) {
+ 488:Drivers/BSP/Camera/ov2640.c ****         // disable auto exposure and gain
+ 489:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(COM8, COM8_SET(0));
+ 490:Drivers/BSP/Camera/ov2640.c ****     }
+ 491:Drivers/BSP/Camera/ov2640.c ****     else if (exposure > 0) {
+ 492:Drivers/BSP/Camera/ov2640.c ****         // set manual exposure
+ 493:Drivers/BSP/Camera/ov2640.c ****         int max_exp = (dvp_cam_resolution[hcamera.framesize][0] <= 800) ? 672 : 1248;
+ 494:Drivers/BSP/Camera/ov2640.c ****         if (exposure > max_exp) exposure = max_exp;
+ 495:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(COM8, COM8_SET(0));
+ 496:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(REG45, (uint8_t)((exposure >> 10) & 0x3f));
+ 497:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(AEC, (uint8_t)((exposure >> 2) & 0xff));
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 14
+
+
+ 498:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(REG04, (uint8_t)(exposure & 3));
+ 499:Drivers/BSP/Camera/ov2640.c ****     }
+ 500:Drivers/BSP/Camera/ov2640.c ****     else {
+ 501:Drivers/BSP/Camera/ov2640.c ****         // enable auto exposure and gain
+ 502:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN | COM8_AGC_EN | COM8_AEC_EN));
+ 503:Drivers/BSP/Camera/ov2640.c ****     }
+ 504:Drivers/BSP/Camera/ov2640.c **** 
+ 505:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP
+ 506:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 507:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 508:Drivers/BSP/Camera/ov2640.c ****     return ret;
+ 509:Drivers/BSP/Camera/ov2640.c **** }
+ 510:Drivers/BSP/Camera/ov2640.c **** 
+ 511:Drivers/BSP/Camera/ov2640.c **** //-------------------------------------------
+ 512:Drivers/BSP/Camera/ov2640.c **** static void _set_framesize(uint8_t framesize)
+ 513:Drivers/BSP/Camera/ov2640.c **** {
+ 235              		.loc 1 513 1 is_stmt 1 view -0
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 0
+ 238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 239              		.loc 1 513 1 is_stmt 0 view .LVU38
+ 240 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 241              	.LCFI8:
+ 242              		.cfi_def_cfa_offset 24
+ 243              		.cfi_offset 4, -24
+ 244              		.cfi_offset 5, -20
+ 245              		.cfi_offset 6, -16
+ 246              		.cfi_offset 7, -12
+ 247              		.cfi_offset 8, -8
+ 248              		.cfi_offset 14, -4
+ 249 0004 0446     		mov	r4, r0
+ 514:Drivers/BSP/Camera/ov2640.c ****     uint8_t cbar, qsreg, com7;
+ 250              		.loc 1 514 5 is_stmt 1 view .LVU39
+ 515:Drivers/BSP/Camera/ov2640.c **** 
+ 516:Drivers/BSP/Camera/ov2640.c ****     // save color bar status and qs register
+ 517:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 251              		.loc 1 517 5 view .LVU40
+ 252 0006 0121     		movs	r1, #1
+ 253 0008 FF20     		movs	r0, #255
+ 254              	.LVL20:
+ 255              		.loc 1 517 5 is_stmt 0 view .LVU41
+ 256 000a FFF7FEFF 		bl	OV2640_WR_Reg
+ 257              	.LVL21:
+ 518:Drivers/BSP/Camera/ov2640.c ****     cbar = OV2640_RD_Reg(COM7) & COM7_COLOR_BAR;
+ 258              		.loc 1 518 5 is_stmt 1 view .LVU42
+ 259              		.loc 1 518 12 is_stmt 0 view .LVU43
+ 260 000e 1220     		movs	r0, #18
+ 261 0010 FFF7FEFF 		bl	OV2640_RD_Reg
+ 262              	.LVL22:
+ 263              		.loc 1 518 10 discriminator 1 view .LVU44
+ 264 0014 00F00207 		and	r7, r0, #2
+ 265              	.LVL23:
+ 519:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 266              		.loc 1 519 5 is_stmt 1 view .LVU45
+ 267 0018 0021     		movs	r1, #0
+ 268 001a FF20     		movs	r0, #255
+ 269 001c FFF7FEFF 		bl	OV2640_WR_Reg
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 15
+
+
+ 270              	.LVL24:
+ 520:Drivers/BSP/Camera/ov2640.c ****     qsreg = OV2640_RD_Reg(QS);
+ 271              		.loc 1 520 5 view .LVU46
+ 272              		.loc 1 520 13 is_stmt 0 view .LVU47
+ 273 0020 4420     		movs	r0, #68
+ 274 0022 FFF7FEFF 		bl	OV2640_RD_Reg
+ 275              	.LVL25:
+ 276 0026 0646     		mov	r6, r0
+ 277              	.LVL26:
+ 521:Drivers/BSP/Camera/ov2640.c **** 
+ 522:Drivers/BSP/Camera/ov2640.c ****     uint16_t w = dvp_cam_resolution[framesize][0];
+ 278              		.loc 1 522 5 is_stmt 1 view .LVU48
+ 279              		.loc 1 522 14 is_stmt 0 view .LVU49
+ 280 0028 254B     		ldr	r3, .L23
+ 281 002a 33F82450 		ldrh	r5, [r3, r4, lsl #2]
+ 282              	.LVL27:
+ 523:Drivers/BSP/Camera/ov2640.c ****     uint16_t h = dvp_cam_resolution[framesize][1];
+ 283              		.loc 1 523 5 is_stmt 1 view .LVU50
+ 284              		.loc 1 523 14 is_stmt 0 view .LVU51
+ 285 002e 03EB8404 		add	r4, r3, r4, lsl #2
+ 286              	.LVL28:
+ 287              		.loc 1 523 14 view .LVU52
+ 288 0032 6488     		ldrh	r4, [r4, #2]
+ 289              	.LVL29:
+ 524:Drivers/BSP/Camera/ov2640.c ****     const uint8_t (*regs)[2];
+ 290              		.loc 1 524 5 is_stmt 1 view .LVU53
+ 525:Drivers/BSP/Camera/ov2640.c **** 
+ 526:Drivers/BSP/Camera/ov2640.c ****     if (w <= dvp_cam_resolution[FRAMESIZE_SVGA][0]) regs = OV2640_svga_regs;
+ 291              		.loc 1 526 5 view .LVU54
+ 292              		.loc 1 526 48 is_stmt 0 view .LVU55
+ 293 0034 B3F86030 		ldrh	r3, [r3, #96]
+ 294              		.loc 1 526 8 view .LVU56
+ 295 0038 AB42     		cmp	r3, r5
+ 296 003a 3ED3     		bcc	.L21
+ 297              		.loc 1 526 58 discriminator 1 view .LVU57
+ 298 003c DFF88480 		ldr	r8, .L23+4
+ 299              	.L20:
+ 300              	.LVL30:
+ 527:Drivers/BSP/Camera/ov2640.c ****     else regs = OV2640_uxga_regs;
+ 528:Drivers/BSP/Camera/ov2640.c **** 
+ 529:Drivers/BSP/Camera/ov2640.c ****     // Disable DSP
+ 530:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 301              		.loc 1 530 5 is_stmt 1 view .LVU58
+ 302 0040 0021     		movs	r1, #0
+ 303 0042 FF20     		movs	r0, #255
+ 304 0044 FFF7FEFF 		bl	OV2640_WR_Reg
+ 305              	.LVL31:
+ 531:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 306              		.loc 1 531 5 view .LVU59
+ 307 0048 0121     		movs	r1, #1
+ 308 004a 0520     		movs	r0, #5
+ 309 004c FFF7FEFF 		bl	OV2640_WR_Reg
+ 310              	.LVL32:
+ 532:Drivers/BSP/Camera/ov2640.c **** 
+ 533:Drivers/BSP/Camera/ov2640.c ****     // Write output width
+ 534:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(ZMOW, (w>>2)&0xFF); // OUTW[7:0] (real/4)
+ 311              		.loc 1 534 5 view .LVU60
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 16
+
+
+ 312 0050 C5F38701 		ubfx	r1, r5, #2, #8
+ 313 0054 5A20     		movs	r0, #90
+ 314 0056 FFF7FEFF 		bl	OV2640_WR_Reg
+ 315              	.LVL33:
+ 535:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(ZMOH, (h>>2)&0xFF); // OUTH[7:0] (real/4)
+ 316              		.loc 1 535 5 view .LVU61
+ 317 005a C4F38701 		ubfx	r1, r4, #2, #8
+ 318 005e 5B20     		movs	r0, #91
+ 319 0060 FFF7FEFF 		bl	OV2640_WR_Reg
+ 320              	.LVL34:
+ 536:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(ZMHH, ((h>>8)&0x04)|((w>>10)&0x03)); // OUTH[8]/OUTW[9:8]
+ 321              		.loc 1 536 5 view .LVU62
+ 322              		.loc 1 536 32 is_stmt 0 view .LVU63
+ 323 0064 240A     		lsrs	r4, r4, #8
+ 324              	.LVL35:
+ 325              		.loc 1 536 32 view .LVU64
+ 326 0066 04F00404 		and	r4, r4, #4
+ 327              		.loc 1 536 47 view .LVU65
+ 328 006a C5F38121 		ubfx	r1, r5, #10, #2
+ 329              		.loc 1 536 5 view .LVU66
+ 330 006e 2143     		orrs	r1, r1, r4
+ 331 0070 5C20     		movs	r0, #92
+ 332 0072 FFF7FEFF 		bl	OV2640_WR_Reg
+ 333              	.LVL36:
+ 537:Drivers/BSP/Camera/ov2640.c **** 
+ 538:Drivers/BSP/Camera/ov2640.c ****     // Set CLKRC
+ 539:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 334              		.loc 1 539 5 is_stmt 1 view .LVU67
+ 335 0076 0121     		movs	r1, #1
+ 336 0078 FF20     		movs	r0, #255
+ 337 007a FFF7FEFF 		bl	OV2640_WR_Reg
+ 338              	.LVL37:
+ 540:Drivers/BSP/Camera/ov2640.c ****     //OV2640_WR_Reg(CLKRC, ov2640_sensor->night_mode);
+ 541:Drivers/BSP/Camera/ov2640.c **** 
+ 542:Drivers/BSP/Camera/ov2640.c ****     // Write DSP input regsiters
+ 543:Drivers/BSP/Camera/ov2640.c ****     wrSensorRegs(regs);
+ 339              		.loc 1 543 5 view .LVU68
+ 340 007e 4046     		mov	r0, r8
+ 341 0080 FFF7FEFF 		bl	wrSensorRegs
+ 342              	.LVL38:
+ 544:Drivers/BSP/Camera/ov2640.c **** 
+ 545:Drivers/BSP/Camera/ov2640.c ****     // restore color bar status
+ 546:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 343              		.loc 1 546 5 view .LVU69
+ 344 0084 0121     		movs	r1, #1
+ 345 0086 FF20     		movs	r0, #255
+ 346 0088 FFF7FEFF 		bl	OV2640_WR_Reg
+ 347              	.LVL39:
+ 547:Drivers/BSP/Camera/ov2640.c ****     com7 = OV2640_RD_Reg(COM7) | cbar;
+ 348              		.loc 1 547 5 view .LVU70
+ 349              		.loc 1 547 12 is_stmt 0 view .LVU71
+ 350 008c 1220     		movs	r0, #18
+ 351 008e FFF7FEFF 		bl	OV2640_RD_Reg
+ 352              	.LVL40:
+ 353              		.loc 1 547 10 discriminator 1 view .LVU72
+ 354 0092 40EA0701 		orr	r1, r0, r7
+ 355              	.LVL41:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 17
+
+
+ 548:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(COM7, com7);
+ 356              		.loc 1 548 5 is_stmt 1 view .LVU73
+ 357 0096 C9B2     		uxtb	r1, r1
+ 358              		.loc 1 548 5 is_stmt 0 view .LVU74
+ 359 0098 1220     		movs	r0, #18
+ 360 009a FFF7FEFF 		bl	OV2640_WR_Reg
+ 361              	.LVL42:
+ 549:Drivers/BSP/Camera/ov2640.c **** 
+ 550:Drivers/BSP/Camera/ov2640.c ****     // restore qs register
+ 551:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 362              		.loc 1 551 5 is_stmt 1 view .LVU75
+ 363 009e 0021     		movs	r1, #0
+ 364 00a0 FF20     		movs	r0, #255
+ 365 00a2 FFF7FEFF 		bl	OV2640_WR_Reg
+ 366              	.LVL43:
+ 552:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(QS, qsreg);
+ 367              		.loc 1 552 5 view .LVU76
+ 368 00a6 3146     		mov	r1, r6
+ 369 00a8 4420     		movs	r0, #68
+ 370 00aa FFF7FEFF 		bl	OV2640_WR_Reg
+ 371              	.LVL44:
+ 553:Drivers/BSP/Camera/ov2640.c **** 
+ 554:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP
+ 555:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 372              		.loc 1 555 5 view .LVU77
+ 373 00ae 0021     		movs	r1, #0
+ 374 00b0 0520     		movs	r0, #5
+ 375 00b2 FFF7FEFF 		bl	OV2640_WR_Reg
+ 376              	.LVL45:
+ 556:Drivers/BSP/Camera/ov2640.c **** }
+ 377              		.loc 1 556 1 is_stmt 0 view .LVU78
+ 378 00b6 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 379              	.LVL46:
+ 380              	.L21:
+ 527:Drivers/BSP/Camera/ov2640.c **** 
+ 381              		.loc 1 527 15 view .LVU79
+ 382 00ba DFF80C80 		ldr	r8, .L23+8
+ 383 00be BFE7     		b	.L20
+ 384              	.L24:
+ 385              		.align	2
+ 386              	.L23:
+ 387 00c0 00000000 		.word	dvp_cam_resolution
+ 388 00c4 00000000 		.word	OV2640_svga_regs
+ 389 00c8 00000000 		.word	OV2640_uxga_regs
+ 390              		.cfi_endproc
+ 391              	.LFE150:
+ 393              		.section	.text.set_hmirror,"ax",%progbits
+ 394              		.align	1
+ 395              		.syntax unified
+ 396              		.thumb
+ 397              		.thumb_func
+ 399              	set_hmirror:
+ 400              	.LVL47:
+ 401              	.LFB159:
+ 557:Drivers/BSP/Camera/ov2640.c **** 
+ 558:Drivers/BSP/Camera/ov2640.c **** //---------------------------------------------
+ 559:Drivers/BSP/Camera/ov2640.c ****  int set_pixformat(pixformat_t pixformat)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 18
+
+
+ 560:Drivers/BSP/Camera/ov2640.c **** {
+ 561:Drivers/BSP/Camera/ov2640.c ****     // Check if DCMI DMA is running and stop it if necessary
+ 562:Drivers/BSP/Camera/ov2640.c **** #ifdef __DCMI_PRESENT
+ 563:Drivers/BSP/Camera/ov2640.c ****     if (HAL_DCMI_GetState(&hdcmi) == HAL_DCMI_STATE_BUSY) {
+ 564:Drivers/BSP/Camera/ov2640.c ****         HAL_DCMI_Stop(&hdcmi);
+ 565:Drivers/BSP/Camera/ov2640.c ****     }
+ 566:Drivers/BSP/Camera/ov2640.c **** #endif
+ 567:Drivers/BSP/Camera/ov2640.c ****     // Disable DSP bypass for safe register update
+ 568:Drivers/BSP/Camera/ov2640.c ****     // Disable DSP
+ 569:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 570:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 571:Drivers/BSP/Camera/ov2640.c ****     // Switch to sensor bank to ensure correct state before format switch
+ 572:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 573:Drivers/BSP/Camera/ov2640.c ****     // Optionally reset color bar or other settings here if needed
+ 574:Drivers/BSP/Camera/ov2640.c **** 
+ 575:Drivers/BSP/Camera/ov2640.c ****     // Switch back to DSP bank for format configuration
+ 576:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 577:Drivers/BSP/Camera/ov2640.c ****     int ret = 0;
+ 578:Drivers/BSP/Camera/ov2640.c ****     switch (pixformat) {
+ 579:Drivers/BSP/Camera/ov2640.c ****         case PIXFORMAT_RGB565:
+ 580:Drivers/BSP/Camera/ov2640.c ****             // Enable auto exposure/gain and program RGB565 path
+ 581:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 582:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN | COM8_AGC_EN | COM8_AEC_EN));
+ 583:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(rgb565_regs);
+ 584:Drivers/BSP/Camera/ov2640.c ****             break;
+ 585:Drivers/BSP/Camera/ov2640.c ****         case PIXFORMAT_JPEG:
+ 586:Drivers/BSP/Camera/ov2640.c ****             //OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 587:Drivers/BSP/Camera/ov2640.c ****           //  OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN));
+ 588:Drivers/BSP/Camera/ov2640.c ****                       // For JPEG, switch to YUV first to prevent tearing/artifacts,
+ 589:Drivers/BSP/Camera/ov2640.c ****             // then apply JPEG registers
+ 590:Drivers/BSP/Camera/ov2640.c ****             // Enable auto exposure/gain for still capture
+ 591:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 592:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN | COM8_AGC_EN | COM8_AEC_EN));
+ 593:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 594:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(OV2640_JPEG_INIT);
+ 595:Drivers/BSP/Camera/ov2640.c ****             ov2640_delay(20);
+ 596:Drivers/BSP/Camera/ov2640.c ****             // Short delay to settle
+ 597:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(OV2640_YUV422);
+ 598:Drivers/BSP/Camera/ov2640.c ****             //wrSensorRegs(OV2640_JPEG_INIT);
+ 599:Drivers/BSP/Camera/ov2640.c ****             ov2640_delay(20);
+ 600:Drivers/BSP/Camera/ov2640.c ****           // wrSensorRegs(OV2640_uxga_regs);
+ 601:Drivers/BSP/Camera/ov2640.c ****            //wrSensorRegs(OV2640_YUV422);
+ 602:Drivers/BSP/Camera/ov2640.c ****            //wrSensorRegs(OV2640_JPEG);
+ 603:Drivers/BSP/Camera/ov2640.c ****            wrSensorRegs(OV2640_JPEG);
+ 604:Drivers/BSP/Camera/ov2640.c ****             ov2640_delay(20);
+ 605:Drivers/BSP/Camera/ov2640.c ****             //wrSensorRegs(OV2640_160x120_JPEG);
+ 606:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(OV2640_1280x960_JPEG);
+ 607:Drivers/BSP/Camera/ov2640.c ****          ov2640_delay(20);
+ 608:Drivers/BSP/Camera/ov2640.c ****             // Enable DSP
+ 609:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 610:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 611:Drivers/BSP/Camera/ov2640.c ****             break;
+ 612:Drivers/BSP/Camera/ov2640.c ****     }
+ 613:Drivers/BSP/Camera/ov2640.c ****     _set_framesize(hcamera.framesize);
+ 614:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP (enabled in '_set_framesize'
+ 615:Drivers/BSP/Camera/ov2640.c ****    //OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 616:Drivers/BSP/Camera/ov2640.c ****    // OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 19
+
+
+ 617:Drivers/BSP/Camera/ov2640.c ****     // Delay 30 ms
+ 618:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(30);
+ 619:Drivers/BSP/Camera/ov2640.c **** 
+ 620:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 621:Drivers/BSP/Camera/ov2640.c **** }
+ 622:Drivers/BSP/Camera/ov2640.c **** 
+ 623:Drivers/BSP/Camera/ov2640.c **** //-----------------------------------------
+ 624:Drivers/BSP/Camera/ov2640.c **** static int set_framesize(framesize_t framesize)
+ 625:Drivers/BSP/Camera/ov2640.c **** {
+ 626:Drivers/BSP/Camera/ov2640.c ****     int i = OV2640_NUM_ALLOWED_SIZES;
+ 627:Drivers/BSP/Camera/ov2640.c ****     for (i=0; i<OV2640_NUM_ALLOWED_SIZES; i++) {
+ 628:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 629:Drivers/BSP/Camera/ov2640.c ****     }
+ 630:Drivers/BSP/Camera/ov2640.c ****     if (i >= OV2640_NUM_ALLOWED_SIZES) {
+ 631:Drivers/BSP/Camera/ov2640.c ****         //LOGW(TAG, "Frame size %d not allowed", framesize);
+ 632:Drivers/BSP/Camera/ov2640.c ****         return -1;
+ 633:Drivers/BSP/Camera/ov2640.c ****     }
+ 634:Drivers/BSP/Camera/ov2640.c **** 
+ 635:Drivers/BSP/Camera/ov2640.c ****     hcamera.framesize = framesize;
+ 636:Drivers/BSP/Camera/ov2640.c ****     _set_framesize(framesize);
+ 637:Drivers/BSP/Camera/ov2640.c **** 
+ 638:Drivers/BSP/Camera/ov2640.c ****     //delay 30 ms
+ 639:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(30);
+ 640:Drivers/BSP/Camera/ov2640.c **** 
+ 641:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 642:Drivers/BSP/Camera/ov2640.c **** }
+ 643:Drivers/BSP/Camera/ov2640.c **** 
+ 644:Drivers/BSP/Camera/ov2640.c **** //-------------------------------------------
+ 645:Drivers/BSP/Camera/ov2640.c **** int ov2640_check_framesize(uint8_t framesize)
+ 646:Drivers/BSP/Camera/ov2640.c **** {
+ 647:Drivers/BSP/Camera/ov2640.c ****     int i = OV2640_NUM_ALLOWED_SIZES;
+ 648:Drivers/BSP/Camera/ov2640.c ****     for (i=0; i<OV2640_NUM_ALLOWED_SIZES; i++) {
+ 649:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 650:Drivers/BSP/Camera/ov2640.c ****     }
+ 651:Drivers/BSP/Camera/ov2640.c ****     if (i >= OV2640_NUM_ALLOWED_SIZES) return -1;
+ 652:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 653:Drivers/BSP/Camera/ov2640.c **** }
+ 654:Drivers/BSP/Camera/ov2640.c **** 
+ 655:Drivers/BSP/Camera/ov2640.c **** //--------------------------------
+ 656:Drivers/BSP/Camera/ov2640.c **** static int set_contrast(int level)
+ 657:Drivers/BSP/Camera/ov2640.c **** {
+ 658:Drivers/BSP/Camera/ov2640.c ****     level += (NUM_CONTRAST_LEVELS / 2) + 1;
+ 659:Drivers/BSP/Camera/ov2640.c ****     if (level < 0 || level > NUM_CONTRAST_LEVELS) {
+ 660:Drivers/BSP/Camera/ov2640.c ****         return -1;
+ 661:Drivers/BSP/Camera/ov2640.c ****     }
+ 662:Drivers/BSP/Camera/ov2640.c **** 
+ 663:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 664:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 665:Drivers/BSP/Camera/ov2640.c ****     // Write contrast registers
+ 666:Drivers/BSP/Camera/ov2640.c ****     for (int i=0; i<sizeof(contrast_regs[0])/sizeof(contrast_regs[0][0]); i++) {
+ 667:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(contrast_regs[0][i], contrast_regs[level][i]);
+ 668:Drivers/BSP/Camera/ov2640.c ****     }
+ 669:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 670:Drivers/BSP/Camera/ov2640.c **** 
+ 671:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 672:Drivers/BSP/Camera/ov2640.c **** }
+ 673:Drivers/BSP/Camera/ov2640.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 20
+
+
+ 674:Drivers/BSP/Camera/ov2640.c **** //----------------------------------
+ 675:Drivers/BSP/Camera/ov2640.c **** static int set_brightness(int level)
+ 676:Drivers/BSP/Camera/ov2640.c **** {
+ 677:Drivers/BSP/Camera/ov2640.c ****     level += (NUM_BRIGHTNESS_LEVELS / 2) + 1;
+ 678:Drivers/BSP/Camera/ov2640.c ****     if ((level < 0) || (level > NUM_BRIGHTNESS_LEVELS)) return -1;
+ 679:Drivers/BSP/Camera/ov2640.c **** 
+ 680:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 681:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 682:Drivers/BSP/Camera/ov2640.c ****     // Write brightness registers
+ 683:Drivers/BSP/Camera/ov2640.c ****     for (int i=0; i<sizeof(brightness_regs[0])/sizeof(brightness_regs[0][0]); i++) {
+ 684:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(brightness_regs[0][i], brightness_regs[level][i]);
+ 685:Drivers/BSP/Camera/ov2640.c ****     }
+ 686:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 687:Drivers/BSP/Camera/ov2640.c **** 
+ 688:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 689:Drivers/BSP/Camera/ov2640.c **** }
+ 690:Drivers/BSP/Camera/ov2640.c **** 
+ 691:Drivers/BSP/Camera/ov2640.c **** //----------------------------------
+ 692:Drivers/BSP/Camera/ov2640.c **** static int set_saturation(int level)
+ 693:Drivers/BSP/Camera/ov2640.c **** {
+ 694:Drivers/BSP/Camera/ov2640.c ****     level += (NUM_SATURATION_LEVELS / 2) + 1;
+ 695:Drivers/BSP/Camera/ov2640.c ****     if ((level < 0) || (level > NUM_SATURATION_LEVELS)) return -1;
+ 696:Drivers/BSP/Camera/ov2640.c **** 
+ 697:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 698:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 699:Drivers/BSP/Camera/ov2640.c ****     // Write saturation registers
+ 700:Drivers/BSP/Camera/ov2640.c ****     for (int i=0; i<sizeof(saturation_regs[0])/sizeof(saturation_regs[0][0]); i++) {
+ 701:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(saturation_regs[0][i], saturation_regs[level][i]);
+ 702:Drivers/BSP/Camera/ov2640.c ****     }
+ 703:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 704:Drivers/BSP/Camera/ov2640.c **** 
+ 705:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 706:Drivers/BSP/Camera/ov2640.c **** }
+ 707:Drivers/BSP/Camera/ov2640.c **** 
+ 708:Drivers/BSP/Camera/ov2640.c **** //----------------------------
+ 709:Drivers/BSP/Camera/ov2640.c **** static int set_quality(int qs)
+ 710:Drivers/BSP/Camera/ov2640.c **** {
+ 711:Drivers/BSP/Camera/ov2640.c ****     if ((qs < 2) || (qs > 60)) return -1;
+ 712:Drivers/BSP/Camera/ov2640.c **** 
+ 713:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 714:Drivers/BSP/Camera/ov2640.c ****     // Write QS register
+ 715:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(QS, qs);
+ 716:Drivers/BSP/Camera/ov2640.c **** 
+ 717:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 718:Drivers/BSP/Camera/ov2640.c **** }
+ 719:Drivers/BSP/Camera/ov2640.c **** 
+ 720:Drivers/BSP/Camera/ov2640.c **** //---------------------------------
+ 721:Drivers/BSP/Camera/ov2640.c **** static int set_colorbar(int enable)
+ 722:Drivers/BSP/Camera/ov2640.c **** {
+ 723:Drivers/BSP/Camera/ov2640.c ****     uint8_t reg;
+ 724:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 725:Drivers/BSP/Camera/ov2640.c ****     reg = OV2640_RD_Reg(COM7);
+ 726:Drivers/BSP/Camera/ov2640.c **** 
+ 727:Drivers/BSP/Camera/ov2640.c ****     if (enable) reg |= COM7_COLOR_BAR;
+ 728:Drivers/BSP/Camera/ov2640.c ****     else reg &= ~COM7_COLOR_BAR;
+ 729:Drivers/BSP/Camera/ov2640.c **** 
+ 730:Drivers/BSP/Camera/ov2640.c ****     return OV2640_WR_Reg(COM7, reg);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 21
+
+
+ 731:Drivers/BSP/Camera/ov2640.c **** }
+ 732:Drivers/BSP/Camera/ov2640.c **** 
+ 733:Drivers/BSP/Camera/ov2640.c **** //--------------------------------
+ 734:Drivers/BSP/Camera/ov2640.c **** static int set_hmirror(int enable)
+ 735:Drivers/BSP/Camera/ov2640.c **** {
+ 402              		.loc 1 735 1 is_stmt 1 view -0
+ 403              		.cfi_startproc
+ 404              		@ args = 0, pretend = 0, frame = 0
+ 405              		@ frame_needed = 0, uses_anonymous_args = 0
+ 406              		.loc 1 735 1 is_stmt 0 view .LVU81
+ 407 0000 10B5     		push	{r4, lr}
+ 408              	.LCFI9:
+ 409              		.cfi_def_cfa_offset 8
+ 410              		.cfi_offset 4, -8
+ 411              		.cfi_offset 14, -4
+ 412 0002 0446     		mov	r4, r0
+ 736:Drivers/BSP/Camera/ov2640.c ****     uint8_t reg;
+ 413              		.loc 1 736 5 is_stmt 1 view .LVU82
+ 737:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 414              		.loc 1 737 5 view .LVU83
+ 415 0004 0121     		movs	r1, #1
+ 416 0006 FF20     		movs	r0, #255
+ 417              	.LVL48:
+ 418              		.loc 1 737 5 is_stmt 0 view .LVU84
+ 419 0008 FFF7FEFF 		bl	OV2640_WR_Reg
+ 420              	.LVL49:
+ 738:Drivers/BSP/Camera/ov2640.c ****     reg = OV2640_RD_Reg(REG04);
+ 421              		.loc 1 738 5 is_stmt 1 view .LVU85
+ 422              		.loc 1 738 11 is_stmt 0 view .LVU86
+ 423 000c 0420     		movs	r0, #4
+ 424 000e FFF7FEFF 		bl	OV2640_RD_Reg
+ 425              	.LVL50:
+ 739:Drivers/BSP/Camera/ov2640.c **** 
+ 740:Drivers/BSP/Camera/ov2640.c ****     if (!enable) { // Already mirrored.
+ 426              		.loc 1 740 5 is_stmt 1 view .LVU87
+ 427              		.loc 1 740 8 is_stmt 0 view .LVU88
+ 428 0012 34B9     		cbnz	r4, .L26
+ 741:Drivers/BSP/Camera/ov2640.c ****         reg |= REG04_HFLIP_IMG;
+ 429              		.loc 1 741 9 is_stmt 1 view .LVU89
+ 430              		.loc 1 741 13 is_stmt 0 view .LVU90
+ 431 0014 60F07F01 		orn	r1, r0, #127
+ 432 0018 C9B2     		uxtb	r1, r1
+ 433              	.LVL51:
+ 434              	.L27:
+ 742:Drivers/BSP/Camera/ov2640.c ****     }
+ 743:Drivers/BSP/Camera/ov2640.c ****     else {
+ 744:Drivers/BSP/Camera/ov2640.c ****         reg &= ~REG04_HFLIP_IMG;
+ 745:Drivers/BSP/Camera/ov2640.c ****     }
+ 746:Drivers/BSP/Camera/ov2640.c **** 
+ 747:Drivers/BSP/Camera/ov2640.c ****     return OV2640_WR_Reg(REG04, reg);
+ 435              		.loc 1 747 5 is_stmt 1 view .LVU91
+ 436              		.loc 1 747 12 is_stmt 0 view .LVU92
+ 437 001a 0420     		movs	r0, #4
+ 438 001c FFF7FEFF 		bl	OV2640_WR_Reg
+ 439              	.LVL52:
+ 748:Drivers/BSP/Camera/ov2640.c **** }
+ 440              		.loc 1 748 1 view .LVU93
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 22
+
+
+ 441 0020 10BD     		pop	{r4, pc}
+ 442              	.LVL53:
+ 443              	.L26:
+ 744:Drivers/BSP/Camera/ov2640.c ****     }
+ 444              		.loc 1 744 9 is_stmt 1 view .LVU94
+ 744:Drivers/BSP/Camera/ov2640.c ****     }
+ 445              		.loc 1 744 13 is_stmt 0 view .LVU95
+ 446 0022 00F07F01 		and	r1, r0, #127
+ 447              	.LVL54:
+ 744:Drivers/BSP/Camera/ov2640.c ****     }
+ 448              		.loc 1 744 13 view .LVU96
+ 449 0026 F8E7     		b	.L27
+ 450              		.cfi_endproc
+ 451              	.LFE159:
+ 453              		.section	.text.set_vflip,"ax",%progbits
+ 454              		.align	1
+ 455              		.syntax unified
+ 456              		.thumb
+ 457              		.thumb_func
+ 459              	set_vflip:
+ 460              	.LVL55:
+ 461              	.LFB160:
+ 749:Drivers/BSP/Camera/ov2640.c **** 
+ 750:Drivers/BSP/Camera/ov2640.c **** //------------------------------
+ 751:Drivers/BSP/Camera/ov2640.c **** static int set_vflip(int enable)
+ 752:Drivers/BSP/Camera/ov2640.c **** {
+ 462              		.loc 1 752 1 is_stmt 1 view -0
+ 463              		.cfi_startproc
+ 464              		@ args = 0, pretend = 0, frame = 0
+ 465              		@ frame_needed = 0, uses_anonymous_args = 0
+ 466              		.loc 1 752 1 is_stmt 0 view .LVU98
+ 467 0000 10B5     		push	{r4, lr}
+ 468              	.LCFI10:
+ 469              		.cfi_def_cfa_offset 8
+ 470              		.cfi_offset 4, -8
+ 471              		.cfi_offset 14, -4
+ 472 0002 0446     		mov	r4, r0
+ 753:Drivers/BSP/Camera/ov2640.c ****     uint8_t reg;
+ 473              		.loc 1 753 5 is_stmt 1 view .LVU99
+ 754:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 474              		.loc 1 754 5 view .LVU100
+ 475 0004 0121     		movs	r1, #1
+ 476 0006 FF20     		movs	r0, #255
+ 477              	.LVL56:
+ 478              		.loc 1 754 5 is_stmt 0 view .LVU101
+ 479 0008 FFF7FEFF 		bl	OV2640_WR_Reg
+ 480              	.LVL57:
+ 755:Drivers/BSP/Camera/ov2640.c ****     reg = OV2640_RD_Reg(REG04);
+ 481              		.loc 1 755 5 is_stmt 1 view .LVU102
+ 482              		.loc 1 755 11 is_stmt 0 view .LVU103
+ 483 000c 0420     		movs	r0, #4
+ 484 000e FFF7FEFF 		bl	OV2640_RD_Reg
+ 485              	.LVL58:
+ 756:Drivers/BSP/Camera/ov2640.c **** 
+ 757:Drivers/BSP/Camera/ov2640.c ****     if (!enable) { // Already flipped.
+ 486              		.loc 1 757 5 is_stmt 1 view .LVU104
+ 487              		.loc 1 757 8 is_stmt 0 view .LVU105
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 23
+
+
+ 488 0012 34B9     		cbnz	r4, .L30
+ 758:Drivers/BSP/Camera/ov2640.c ****         reg |= REG04_VFLIP_IMG | REG04_VREF_EN;
+ 489              		.loc 1 758 9 is_stmt 1 view .LVU106
+ 490              		.loc 1 758 13 is_stmt 0 view .LVU107
+ 491 0014 40F05001 		orr	r1, r0, #80
+ 492 0018 C9B2     		uxtb	r1, r1
+ 493              	.LVL59:
+ 494              	.L31:
+ 759:Drivers/BSP/Camera/ov2640.c ****     }
+ 760:Drivers/BSP/Camera/ov2640.c ****     else {
+ 761:Drivers/BSP/Camera/ov2640.c ****         reg &= ~(REG04_VFLIP_IMG | REG04_VREF_EN);
+ 762:Drivers/BSP/Camera/ov2640.c ****     }
+ 763:Drivers/BSP/Camera/ov2640.c **** 
+ 764:Drivers/BSP/Camera/ov2640.c ****     return OV2640_WR_Reg(REG04, reg);
+ 495              		.loc 1 764 5 is_stmt 1 view .LVU108
+ 496              		.loc 1 764 12 is_stmt 0 view .LVU109
+ 497 001a 0420     		movs	r0, #4
+ 498 001c FFF7FEFF 		bl	OV2640_WR_Reg
+ 499              	.LVL60:
+ 765:Drivers/BSP/Camera/ov2640.c **** }
+ 500              		.loc 1 765 1 view .LVU110
+ 501 0020 10BD     		pop	{r4, pc}
+ 502              	.LVL61:
+ 503              	.L30:
+ 761:Drivers/BSP/Camera/ov2640.c ****     }
+ 504              		.loc 1 761 9 is_stmt 1 view .LVU111
+ 761:Drivers/BSP/Camera/ov2640.c ****     }
+ 505              		.loc 1 761 13 is_stmt 0 view .LVU112
+ 506 0022 00F0AF01 		and	r1, r0, #175
+ 507              	.LVL62:
+ 761:Drivers/BSP/Camera/ov2640.c ****     }
+ 508              		.loc 1 761 13 view .LVU113
+ 509 0026 F8E7     		b	.L31
+ 510              		.cfi_endproc
+ 511              	.LFE160:
+ 513              		.section	.text.set_pixformat,"ax",%progbits
+ 514              		.align	1
+ 515              		.global	set_pixformat
+ 516              		.syntax unified
+ 517              		.thumb
+ 518              		.thumb_func
+ 520              	set_pixformat:
+ 521              	.LVL63:
+ 522              	.LFB151:
+ 560:Drivers/BSP/Camera/ov2640.c ****     // Check if DCMI DMA is running and stop it if necessary
+ 523              		.loc 1 560 1 is_stmt 1 view -0
+ 524              		.cfi_startproc
+ 525              		@ args = 0, pretend = 0, frame = 0
+ 526              		@ frame_needed = 0, uses_anonymous_args = 0
+ 560:Drivers/BSP/Camera/ov2640.c ****     // Check if DCMI DMA is running and stop it if necessary
+ 527              		.loc 1 560 1 is_stmt 0 view .LVU115
+ 528 0000 10B5     		push	{r4, lr}
+ 529              	.LCFI11:
+ 530              		.cfi_def_cfa_offset 8
+ 531              		.cfi_offset 4, -8
+ 532              		.cfi_offset 14, -4
+ 533 0002 0446     		mov	r4, r0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 24
+
+
+ 569:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 534              		.loc 1 569 5 is_stmt 1 view .LVU116
+ 535 0004 0021     		movs	r1, #0
+ 536 0006 FF20     		movs	r0, #255
+ 537              	.LVL64:
+ 569:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 538              		.loc 1 569 5 is_stmt 0 view .LVU117
+ 539 0008 FFF7FEFF 		bl	OV2640_WR_Reg
+ 540              	.LVL65:
+ 570:Drivers/BSP/Camera/ov2640.c ****     // Switch to sensor bank to ensure correct state before format switch
+ 541              		.loc 1 570 5 is_stmt 1 view .LVU118
+ 542 000c 0121     		movs	r1, #1
+ 543 000e 0520     		movs	r0, #5
+ 544 0010 FFF7FEFF 		bl	OV2640_WR_Reg
+ 545              	.LVL66:
+ 572:Drivers/BSP/Camera/ov2640.c ****     // Optionally reset color bar or other settings here if needed
+ 546              		.loc 1 572 5 view .LVU119
+ 547 0014 0121     		movs	r1, #1
+ 548 0016 FF20     		movs	r0, #255
+ 549 0018 FFF7FEFF 		bl	OV2640_WR_Reg
+ 550              	.LVL67:
+ 576:Drivers/BSP/Camera/ov2640.c ****     int ret = 0;
+ 551              		.loc 1 576 5 view .LVU120
+ 552 001c 0021     		movs	r1, #0
+ 553 001e FF20     		movs	r0, #255
+ 554 0020 FFF7FEFF 		bl	OV2640_WR_Reg
+ 555              	.LVL68:
+ 577:Drivers/BSP/Camera/ov2640.c ****     switch (pixformat) {
+ 556              		.loc 1 577 5 view .LVU121
+ 578:Drivers/BSP/Camera/ov2640.c ****         case PIXFORMAT_RGB565:
+ 557              		.loc 1 578 5 view .LVU122
+ 558 0024 012C     		cmp	r4, #1
+ 559 0026 2ED0     		beq	.L34
+ 560 0028 022C     		cmp	r4, #2
+ 561 002a 37D1     		bne	.L36
+ 591:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN | COM8_AGC_EN | COM8_AEC_EN));
+ 562              		.loc 1 591 13 view .LVU123
+ 563 002c 0121     		movs	r1, #1
+ 564 002e FF20     		movs	r0, #255
+ 565 0030 FFF7FEFF 		bl	OV2640_WR_Reg
+ 566              	.LVL69:
+ 592:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 567              		.loc 1 592 13 view .LVU124
+ 568 0034 E521     		movs	r1, #229
+ 569 0036 1320     		movs	r0, #19
+ 570 0038 FFF7FEFF 		bl	OV2640_WR_Reg
+ 571              	.LVL70:
+ 593:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(OV2640_JPEG_INIT);
+ 572              		.loc 1 593 13 view .LVU125
+ 573 003c 0021     		movs	r1, #0
+ 574 003e FF20     		movs	r0, #255
+ 575 0040 FFF7FEFF 		bl	OV2640_WR_Reg
+ 576              	.LVL71:
+ 594:Drivers/BSP/Camera/ov2640.c ****             ov2640_delay(20);
+ 577              		.loc 1 594 13 view .LVU126
+ 578 0044 1A48     		ldr	r0, .L38
+ 579 0046 FFF7FEFF 		bl	wrSensorRegs
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 25
+
+
+ 580              	.LVL72:
+ 595:Drivers/BSP/Camera/ov2640.c ****             // Short delay to settle
+ 581              		.loc 1 595 13 view .LVU127
+ 582 004a 1420     		movs	r0, #20
+ 583 004c FFF7FEFF 		bl	HAL_Delay
+ 584              	.LVL73:
+ 597:Drivers/BSP/Camera/ov2640.c ****             //wrSensorRegs(OV2640_JPEG_INIT);
+ 585              		.loc 1 597 13 view .LVU128
+ 586 0050 1848     		ldr	r0, .L38+4
+ 587 0052 FFF7FEFF 		bl	wrSensorRegs
+ 588              	.LVL74:
+ 599:Drivers/BSP/Camera/ov2640.c ****           // wrSensorRegs(OV2640_uxga_regs);
+ 589              		.loc 1 599 13 view .LVU129
+ 590 0056 1420     		movs	r0, #20
+ 591 0058 FFF7FEFF 		bl	HAL_Delay
+ 592              	.LVL75:
+ 603:Drivers/BSP/Camera/ov2640.c ****             ov2640_delay(20);
+ 593              		.loc 1 603 12 view .LVU130
+ 594 005c 1648     		ldr	r0, .L38+8
+ 595 005e FFF7FEFF 		bl	wrSensorRegs
+ 596              	.LVL76:
+ 604:Drivers/BSP/Camera/ov2640.c ****             //wrSensorRegs(OV2640_160x120_JPEG);
+ 597              		.loc 1 604 13 view .LVU131
+ 598 0062 1420     		movs	r0, #20
+ 599 0064 FFF7FEFF 		bl	HAL_Delay
+ 600              	.LVL77:
+ 606:Drivers/BSP/Camera/ov2640.c ****          ov2640_delay(20);
+ 601              		.loc 1 606 13 view .LVU132
+ 602 0068 1448     		ldr	r0, .L38+12
+ 603 006a FFF7FEFF 		bl	wrSensorRegs
+ 604              	.LVL78:
+ 607:Drivers/BSP/Camera/ov2640.c ****             // Enable DSP
+ 605              		.loc 1 607 10 view .LVU133
+ 606 006e 1420     		movs	r0, #20
+ 607 0070 FFF7FEFF 		bl	HAL_Delay
+ 608              	.LVL79:
+ 609:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 609              		.loc 1 609 13 view .LVU134
+ 610 0074 0021     		movs	r1, #0
+ 611 0076 FF20     		movs	r0, #255
+ 612 0078 FFF7FEFF 		bl	OV2640_WR_Reg
+ 613              	.LVL80:
+ 610:Drivers/BSP/Camera/ov2640.c ****             break;
+ 614              		.loc 1 610 13 view .LVU135
+ 615 007c 0021     		movs	r1, #0
+ 616 007e 0520     		movs	r0, #5
+ 617 0080 FFF7FEFF 		bl	OV2640_WR_Reg
+ 618              	.LVL81:
+ 611:Drivers/BSP/Camera/ov2640.c ****     }
+ 619              		.loc 1 611 13 view .LVU136
+ 620 0084 0AE0     		b	.L36
+ 621              	.L34:
+ 581:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(COM8, COM8_SET(COM8_BNDF_EN | COM8_AGC_EN | COM8_AEC_EN));
+ 622              		.loc 1 581 13 view .LVU137
+ 623 0086 0121     		movs	r1, #1
+ 624 0088 FF20     		movs	r0, #255
+ 625 008a FFF7FEFF 		bl	OV2640_WR_Reg
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 26
+
+
+ 626              	.LVL82:
+ 582:Drivers/BSP/Camera/ov2640.c ****             wrSensorRegs(rgb565_regs);
+ 627              		.loc 1 582 13 view .LVU138
+ 628 008e E521     		movs	r1, #229
+ 629 0090 1320     		movs	r0, #19
+ 630 0092 FFF7FEFF 		bl	OV2640_WR_Reg
+ 631              	.LVL83:
+ 583:Drivers/BSP/Camera/ov2640.c ****             break;
+ 632              		.loc 1 583 13 view .LVU139
+ 633 0096 0A48     		ldr	r0, .L38+16
+ 634 0098 FFF7FEFF 		bl	wrSensorRegs
+ 635              	.LVL84:
+ 584:Drivers/BSP/Camera/ov2640.c ****         case PIXFORMAT_JPEG:
+ 636              		.loc 1 584 13 view .LVU140
+ 637              	.L36:
+ 613:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP (enabled in '_set_framesize'
+ 638              		.loc 1 613 5 view .LVU141
+ 639 009c 094B     		ldr	r3, .L38+20
+ 640 009e 187C     		ldrb	r0, [r3, #16]	@ zero_extendqisi2
+ 641 00a0 FFF7FEFF 		bl	_set_framesize
+ 642              	.LVL85:
+ 618:Drivers/BSP/Camera/ov2640.c **** 
+ 643              		.loc 1 618 5 view .LVU142
+ 644 00a4 1E20     		movs	r0, #30
+ 645 00a6 FFF7FEFF 		bl	HAL_Delay
+ 646              	.LVL86:
+ 620:Drivers/BSP/Camera/ov2640.c **** }
+ 647              		.loc 1 620 5 view .LVU143
+ 621:Drivers/BSP/Camera/ov2640.c **** 
+ 648              		.loc 1 621 1 is_stmt 0 view .LVU144
+ 649 00aa 0020     		movs	r0, #0
+ 650 00ac 10BD     		pop	{r4, pc}
+ 651              	.LVL87:
+ 652              	.L39:
+ 621:Drivers/BSP/Camera/ov2640.c **** 
+ 653              		.loc 1 621 1 view .LVU145
+ 654 00ae 00BF     		.align	2
+ 655              	.L38:
+ 656 00b0 00000000 		.word	OV2640_JPEG_INIT
+ 657 00b4 00000000 		.word	OV2640_YUV422
+ 658 00b8 00000000 		.word	OV2640_JPEG
+ 659 00bc 00000000 		.word	OV2640_1280x960_JPEG
+ 660 00c0 00000000 		.word	rgb565_regs
+ 661 00c4 00000000 		.word	hcamera
+ 662              		.cfi_endproc
+ 663              	.LFE151:
+ 665              		.section	.text.ov2640_check_framesize,"ax",%progbits
+ 666              		.align	1
+ 667              		.global	ov2640_check_framesize
+ 668              		.syntax unified
+ 669              		.thumb
+ 670              		.thumb_func
+ 672              	ov2640_check_framesize:
+ 673              	.LVL88:
+ 674              	.LFB153:
+ 646:Drivers/BSP/Camera/ov2640.c ****     int i = OV2640_NUM_ALLOWED_SIZES;
+ 675              		.loc 1 646 1 is_stmt 1 view -0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 27
+
+
+ 676              		.cfi_startproc
+ 677              		@ args = 0, pretend = 0, frame = 0
+ 678              		@ frame_needed = 0, uses_anonymous_args = 0
+ 679              		@ link register save eliminated.
+ 647:Drivers/BSP/Camera/ov2640.c ****     for (i=0; i<OV2640_NUM_ALLOWED_SIZES; i++) {
+ 680              		.loc 1 647 5 view .LVU147
+ 648:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 681              		.loc 1 648 5 view .LVU148
+ 648:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 682              		.loc 1 648 11 is_stmt 0 view .LVU149
+ 683 0000 0023     		movs	r3, #0
+ 684              	.LVL89:
+ 685              	.L41:
+ 648:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 686              		.loc 1 648 16 is_stmt 1 discriminator 1 view .LVU150
+ 687 0002 0C2B     		cmp	r3, #12
+ 688 0004 05DC     		bgt	.L42
+ 649:Drivers/BSP/Camera/ov2640.c ****     }
+ 689              		.loc 1 649 9 view .LVU151
+ 649:Drivers/BSP/Camera/ov2640.c ****     }
+ 690              		.loc 1 649 26 is_stmt 0 view .LVU152
+ 691 0006 064A     		ldr	r2, .L46
+ 692 0008 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 649:Drivers/BSP/Camera/ov2640.c ****     }
+ 693              		.loc 1 649 12 view .LVU153
+ 694 000a 8242     		cmp	r2, r0
+ 695 000c 01D0     		beq	.L42
+ 648:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 696              		.loc 1 648 44 is_stmt 1 discriminator 2 view .LVU154
+ 697 000e 0133     		adds	r3, r3, #1
+ 698              	.LVL90:
+ 648:Drivers/BSP/Camera/ov2640.c ****         if (allowed_sizes[i] == framesize) break;
+ 699              		.loc 1 648 44 is_stmt 0 discriminator 2 view .LVU155
+ 700 0010 F7E7     		b	.L41
+ 701              	.L42:
+ 651:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 702              		.loc 1 651 5 is_stmt 1 view .LVU156
+ 651:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 703              		.loc 1 651 8 is_stmt 0 view .LVU157
+ 704 0012 0C2B     		cmp	r3, #12
+ 705 0014 01DC     		bgt	.L45
+ 652:Drivers/BSP/Camera/ov2640.c **** }
+ 706              		.loc 1 652 12 view .LVU158
+ 707 0016 0020     		movs	r0, #0
+ 708              	.LVL91:
+ 652:Drivers/BSP/Camera/ov2640.c **** }
+ 709              		.loc 1 652 12 view .LVU159
+ 710 0018 7047     		bx	lr
+ 711              	.LVL92:
+ 712              	.L45:
+ 651:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 713              		.loc 1 651 47 discriminator 1 view .LVU160
+ 714 001a 4FF0FF30 		mov	r0, #-1
+ 715              	.LVL93:
+ 653:Drivers/BSP/Camera/ov2640.c **** 
+ 716              		.loc 1 653 1 view .LVU161
+ 717 001e 7047     		bx	lr
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 28
+
+
+ 718              	.L47:
+ 719              		.align	2
+ 720              	.L46:
+ 721 0020 00000000 		.word	allowed_sizes
+ 722              		.cfi_endproc
+ 723              	.LFE153:
+ 725              		.section	.text.ov2640_init,"ax",%progbits
+ 726              		.align	1
+ 727              		.global	ov2640_init
+ 728              		.syntax unified
+ 729              		.thumb
+ 730              		.thumb_func
+ 732              	ov2640_init:
+ 733              	.LVL94:
+ 734              	.LFB166:
+ 766:Drivers/BSP/Camera/ov2640.c **** 
+ 767:Drivers/BSP/Camera/ov2640.c **** //---------------------------------------------------------
+ 768:Drivers/BSP/Camera/ov2640.c **** static int read_id(uint16_t *manuf_id, uint16_t *device_id)
+ 769:Drivers/BSP/Camera/ov2640.c **** {
+ 770:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 771:Drivers/BSP/Camera/ov2640.c ****     *manuf_id = ((uint16_t)OV2640_RD_Reg(0x1C) << 8) | OV2640_RD_Reg(0x1D);
+ 772:Drivers/BSP/Camera/ov2640.c ****     *device_id = ((uint16_t)OV2640_RD_Reg(0x0A) << 8) | OV2640_RD_Reg(0x0B);
+ 773:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 774:Drivers/BSP/Camera/ov2640.c **** }
+ 775:Drivers/BSP/Camera/ov2640.c **** 
+ 776:Drivers/BSP/Camera/ov2640.c **** //------------------------------------
+ 777:Drivers/BSP/Camera/ov2640.c **** static int read_reg(uint16_t reg_addr)
+ 778:Drivers/BSP/Camera/ov2640.c **** {
+ 779:Drivers/BSP/Camera/ov2640.c ****     return (int)OV2640_RD_Reg((uint8_t) reg_addr);
+ 780:Drivers/BSP/Camera/ov2640.c **** }
+ 781:Drivers/BSP/Camera/ov2640.c **** 
+ 782:Drivers/BSP/Camera/ov2640.c **** //--------------------------------------------------------
+ 783:Drivers/BSP/Camera/ov2640.c **** static int write_reg(uint16_t reg_addr, uint16_t reg_data)
+ 784:Drivers/BSP/Camera/ov2640.c **** {
+ 785:Drivers/BSP/Camera/ov2640.c ****     return (int)OV2640_WR_Reg((uint8_t)reg_addr, (uint8_t)reg_data);
+ 786:Drivers/BSP/Camera/ov2640.c **** }
+ 787:Drivers/BSP/Camera/ov2640.c **** 
+ 788:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_LIGHTMODE_TBL[5][3]=
+ 789:Drivers/BSP/Camera/ov2640.c **** {
+ 790:Drivers/BSP/Camera/ov2640.c ****     {0x5e, 0x41, 0x54}, //Auto, NOT used
+ 791:Drivers/BSP/Camera/ov2640.c ****     {0x5e, 0x41, 0x54}, //Sunny
+ 792:Drivers/BSP/Camera/ov2640.c ****     {0x52, 0x41, 0x66}, //Office
+ 793:Drivers/BSP/Camera/ov2640.c ****     {0x65, 0x41, 0x4f}, //Cloudy
+ 794:Drivers/BSP/Camera/ov2640.c ****     {0x42, 0x3f, 0x71}, //Home
+ 795:Drivers/BSP/Camera/ov2640.c **** };
+ 796:Drivers/BSP/Camera/ov2640.c **** 
+ 797:Drivers/BSP/Camera/ov2640.c **** 
+ 798:Drivers/BSP/Camera/ov2640.c **** //-------------------------------------
+ 799:Drivers/BSP/Camera/ov2640.c **** static int set_light_mode(uint8_t mode)
+ 800:Drivers/BSP/Camera/ov2640.c **** {
+ 801:Drivers/BSP/Camera/ov2640.c ****     if (mode > 4) return -1;
+ 802:Drivers/BSP/Camera/ov2640.c **** 
+ 803:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 804:Drivers/BSP/Camera/ov2640.c ****     if (mode == 0) {
+ 805:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(0xc7, 0x00); // AWB on
+ 806:Drivers/BSP/Camera/ov2640.c ****     }
+ 807:Drivers/BSP/Camera/ov2640.c ****     else {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 29
+
+
+ 808:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(0xc7, 0x40); // AWB off
+ 809:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(0xcc, OV2640_LIGHTMODE_TBL[mode][0]);
+ 810:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(0xcd, OV2640_LIGHTMODE_TBL[mode][1]);
+ 811:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(0xce, OV2640_LIGHTMODE_TBL[mode][2]);
+ 812:Drivers/BSP/Camera/ov2640.c ****     }
+ 813:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 814:Drivers/BSP/Camera/ov2640.c **** }
+ 815:Drivers/BSP/Camera/ov2640.c **** 
+ 816:Drivers/BSP/Camera/ov2640.c **** //-----------------------------------
+ 817:Drivers/BSP/Camera/ov2640.c **** static int set_night_mode(int enable)
+ 818:Drivers/BSP/Camera/ov2640.c **** {
+ 819:Drivers/BSP/Camera/ov2640.c ****     // Disable DSP
+ 820:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 821:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_BYPAS);
+ 822:Drivers/BSP/Camera/ov2640.c ****     // Set CLKRC
+ 823:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_SENSOR);
+ 824:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(CLKRC, (enable) ? 0 : CLKRC_DOUBLE);
+ 825:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP
+ 826:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
+ 827:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
+ 828:Drivers/BSP/Camera/ov2640.c ****     //delay 30 ms
+ 829:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(30);
+ 830:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 831:Drivers/BSP/Camera/ov2640.c **** }
+ 832:Drivers/BSP/Camera/ov2640.c **** 
+ 833:Drivers/BSP/Camera/ov2640.c **** //===============================
+ 834:Drivers/BSP/Camera/ov2640.c **** int ov2640_init(framesize_t framesize)
+ 835:Drivers/BSP/Camera/ov2640.c **** {
+ 735              		.loc 1 835 1 is_stmt 1 view -0
+ 736              		.cfi_startproc
+ 737              		@ args = 0, pretend = 0, frame = 0
+ 738              		@ frame_needed = 0, uses_anonymous_args = 0
+ 739              		.loc 1 835 1 is_stmt 0 view .LVU163
+ 740 0000 10B5     		push	{r4, lr}
+ 741              	.LCFI12:
+ 742              		.cfi_def_cfa_offset 8
+ 743              		.cfi_offset 4, -8
+ 744              		.cfi_offset 14, -4
+ 745 0002 0446     		mov	r4, r0
+ 836:Drivers/BSP/Camera/ov2640.c **** 	reset();
+ 746              		.loc 1 836 2 is_stmt 1 view .LVU164
+ 747 0004 FFF7FEFF 		bl	reset
+ 748              	.LVL95:
+ 837:Drivers/BSP/Camera/ov2640.c **** 	hcamera.framesize = framesize;
+ 749              		.loc 1 837 2 view .LVU165
+ 750              		.loc 1 837 20 is_stmt 0 view .LVU166
+ 751 0008 074B     		ldr	r3, .L50
+ 752 000a 1C74     		strb	r4, [r3, #16]
+ 838:Drivers/BSP/Camera/ov2640.c **** 	hcamera.pixformat = PIXFORMAT_RGB565;
+ 753              		.loc 1 838 2 is_stmt 1 view .LVU167
+ 754              		.loc 1 838 20 is_stmt 0 view .LVU168
+ 755 000c 0124     		movs	r4, #1
+ 756              	.LVL96:
+ 757              		.loc 1 838 20 view .LVU169
+ 758 000e 5C74     		strb	r4, [r3, #17]
+ 839:Drivers/BSP/Camera/ov2640.c **** 	//set_framesize(framesize);
+ 840:Drivers/BSP/Camera/ov2640.c **** 	set_pixformat(hcamera.pixformat);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 30
+
+
+ 759              		.loc 1 840 2 is_stmt 1 view .LVU170
+ 760 0010 2046     		mov	r0, r4
+ 761 0012 FFF7FEFF 		bl	set_pixformat
+ 762              	.LVL97:
+ 841:Drivers/BSP/Camera/ov2640.c **** 	set_hmirror(1);
+ 763              		.loc 1 841 2 view .LVU171
+ 764 0016 2046     		mov	r0, r4
+ 765 0018 FFF7FEFF 		bl	set_hmirror
+ 766              	.LVL98:
+ 842:Drivers/BSP/Camera/ov2640.c **** 	set_vflip(1);
+ 767              		.loc 1 842 2 view .LVU172
+ 768 001c 2046     		mov	r0, r4
+ 769 001e FFF7FEFF 		bl	set_vflip
+ 770              	.LVL99:
+ 843:Drivers/BSP/Camera/ov2640.c ****   return 0;
+ 771              		.loc 1 843 3 view .LVU173
+ 844:Drivers/BSP/Camera/ov2640.c **** }
+ 772              		.loc 1 844 1 is_stmt 0 view .LVU174
+ 773 0022 0020     		movs	r0, #0
+ 774 0024 10BD     		pop	{r4, pc}
+ 775              	.L51:
+ 776 0026 00BF     		.align	2
+ 777              	.L50:
+ 778 0028 00000000 		.word	hcamera
+ 779              		.cfi_endproc
+ 780              	.LFE166:
+ 782              		.section	.text.ov2640_init_pic,"ax",%progbits
+ 783              		.align	1
+ 784              		.global	ov2640_init_pic
+ 785              		.syntax unified
+ 786              		.thumb
+ 787              		.thumb_func
+ 789              	ov2640_init_pic:
+ 790              	.LFB167:
+ 845:Drivers/BSP/Camera/ov2640.c **** int ov2640_init_pic()
+ 846:Drivers/BSP/Camera/ov2640.c **** {
+ 791              		.loc 1 846 1 is_stmt 1 view -0
+ 792              		.cfi_startproc
+ 793              		@ args = 0, pretend = 0, frame = 0
+ 794              		@ frame_needed = 0, uses_anonymous_args = 0
+ 795 0000 08B5     		push	{r3, lr}
+ 796              	.LCFI13:
+ 797              		.cfi_def_cfa_offset 8
+ 798              		.cfi_offset 3, -8
+ 799              		.cfi_offset 14, -4
+ 847:Drivers/BSP/Camera/ov2640.c **** 	//reset();
+ 848:Drivers/BSP/Camera/ov2640.c **** 	//hcamera.framesize = framesize;
+ 849:Drivers/BSP/Camera/ov2640.c **** 	hcamera.framesize = FRAMESIZE_UXGA;
+ 800              		.loc 1 849 2 view .LVU176
+ 801              		.loc 1 849 20 is_stmt 0 view .LVU177
+ 802 0002 074B     		ldr	r3, .L54
+ 803 0004 1B22     		movs	r2, #27
+ 804 0006 1A74     		strb	r2, [r3, #16]
+ 850:Drivers/BSP/Camera/ov2640.c **** 	hcamera.pixformat = PIXFORMAT_JPEG;
+ 805              		.loc 1 850 2 is_stmt 1 view .LVU178
+ 806              		.loc 1 850 20 is_stmt 0 view .LVU179
+ 807 0008 0220     		movs	r0, #2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 31
+
+
+ 808 000a 5874     		strb	r0, [r3, #17]
+ 851:Drivers/BSP/Camera/ov2640.c **** 	set_pixformat(hcamera.pixformat);
+ 809              		.loc 1 851 2 is_stmt 1 view .LVU180
+ 810 000c FFF7FEFF 		bl	set_pixformat
+ 811              	.LVL100:
+ 852:Drivers/BSP/Camera/ov2640.c **** 	set_hmirror(1);
+ 812              		.loc 1 852 2 view .LVU181
+ 813 0010 0120     		movs	r0, #1
+ 814 0012 FFF7FEFF 		bl	set_hmirror
+ 815              	.LVL101:
+ 853:Drivers/BSP/Camera/ov2640.c **** 	set_vflip(1);
+ 816              		.loc 1 853 2 view .LVU182
+ 817 0016 0120     		movs	r0, #1
+ 818 0018 FFF7FEFF 		bl	set_vflip
+ 819              	.LVL102:
+ 854:Drivers/BSP/Camera/ov2640.c ****   return 0;
+ 820              		.loc 1 854 3 view .LVU183
+ 855:Drivers/BSP/Camera/ov2640.c **** }
+ 821              		.loc 1 855 1 is_stmt 0 view .LVU184
+ 822 001c 0020     		movs	r0, #0
+ 823 001e 08BD     		pop	{r3, pc}
+ 824              	.L55:
+ 825              		.align	2
+ 826              	.L54:
+ 827 0020 00000000 		.word	hcamera
+ 828              		.cfi_endproc
+ 829              	.LFE167:
+ 831              		.global	OV2640_160x120_JPEG
+ 832              		.section	.rodata.OV2640_160x120_JPEG,"a"
+ 833              		.align	2
+ 836              	OV2640_160x120_JPEG:
+ 837 0000 FF01     		.ascii	"\377\001"
+ 838 0002 1240     		.ascii	"\022@"
+ 839 0004 1711     		.ascii	"\027\021"
+ 840 0006 1843     		.ascii	"\030C"
+ 841 0008 1900     		.ascii	"\031\000"
+ 842 000a 1A4B     		.ascii	"\032K"
+ 843 000c 3209     		.ascii	"2\011"
+ 844 000e 4FCA     		.ascii	"O\312"
+ 845 0010 50A8     		.ascii	"P\250"
+ 846 0012 5A23     		.ascii	"Z#"
+ 847 0014 6D00     		.ascii	"m\000"
+ 848 0016 3912     		.ascii	"9\022"
+ 849 0018 35DA     		.ascii	"5\332"
+ 850 001a 221A     		.ascii	"\"\032"
+ 851 001c 37C3     		.ascii	"7\303"
+ 852 001e 2300     		.ascii	"#\000"
+ 853 0020 34C0     		.ascii	"4\300"
+ 854 0022 361A     		.ascii	"6\032"
+ 855 0024 0688     		.ascii	"\006\210"
+ 856 0026 07C0     		.ascii	"\007\300"
+ 857 0028 0D87     		.ascii	"\015\207"
+ 858 002a 0E41     		.ascii	"\016A"
+ 859 002c 4C00     		.ascii	"L\000"
+ 860 002e FF00     		.ascii	"\377\000"
+ 861 0030 E004     		.ascii	"\340\004"
+ 862 0032 C064     		.ascii	"\300d"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 32
+
+
+ 863 0034 C14B     		.ascii	"\301K"
+ 864 0036 8635     		.ascii	"\2065"
+ 865 0038 5092     		.ascii	"P\222"
+ 866 003a 51C8     		.ascii	"Q\310"
+ 867 003c 5296     		.ascii	"R\226"
+ 868              		.section	.rodata.OV2640_1280x960_JPEG,"a"
+ 869              		.align	2
+ 872              	OV2640_1280x960_JPEG:
+ 873 0000 FF01     		.ascii	"\377\001"
+ 874 0002 1104     		.ascii	"\021\004"
+ 875 0004 1200     		.ascii	"\022\000"
+ 876 0006 1387     		.ascii	"\023\207"
+ 877 0008 1711     		.ascii	"\027\021"
+ 878 000a 1875     		.ascii	"\030u"
+ 879 000c 2440     		.ascii	"$@"
+ 880 000e 2530     		.ascii	"%0"
+ 881 0010 26A1     		.ascii	"&\241"
+ 882 0012 143A     		.ascii	"\024:"
+ 883 0014 3236     		.ascii	"26"
+ 884 0016 1901     		.ascii	"\031\001"
+ 885 0018 1A97     		.ascii	"\032\227"
+ 886 001a 030F     		.ascii	"\003\017"
+ 887 001c 3740     		.ascii	"7@"
+ 888 001e 4FBB     		.ascii	"O\273"
+ 889 0020 509C     		.ascii	"P\234"
+ 890 0022 5A5F     		.ascii	"Z_"
+ 891 0024 6D80     		.ascii	"m\200"
+ 892 0026 3D34     		.ascii	"=4"
+ 893 0028 3902     		.ascii	"9\002"
+ 894 002a 3588     		.ascii	"5\210"
+ 895 002c 220A     		.ascii	"\"\012"
+ 896 002e 3740     		.ascii	"7@"
+ 897 0030 34A0     		.ascii	"4\240"
+ 898 0032 0602     		.ascii	"\006\002"
+ 899 0034 0DB7     		.ascii	"\015\267"
+ 900 0036 0E01     		.ascii	"\016\001"
+ 901 0038 FF00     		.ascii	"\377\000"
+ 902 003a E004     		.ascii	"\340\004"
+ 903 003c C0A0     		.ascii	"\300\240"
+ 904 003e C15A     		.ascii	"\301Z"
+ 905 0040 8601     		.ascii	"\206\001"
+ 906 0042 5000     		.ascii	"P\000"
+ 907 0044 5190     		.ascii	"Q\220"
+ 908 0046 522C     		.ascii	"R,"
+ 909 0048 5300     		.ascii	"S\000"
+ 910 004a 5402     		.ascii	"T\002"
+ 911 004c 5588     		.ascii	"U\210"
+ 912 004e 5700     		.ascii	"W\000"
+ 913 0050 5AA0     		.ascii	"Z\240"
+ 914 0052 5B5A     		.ascii	"[Z"
+ 915 0054 5C00     		.ascii	"\\\000"
+ 916 0056 7C00     		.ascii	"|\000"
+ 917 0058 7D02     		.ascii	"}\002"
+ 918 005a D302     		.ascii	"\323\002"
+ 919 005c E000     		.ascii	"\340\000"
+ 920 005e FF01     		.ascii	"\377\001"
+ 921 0060 0408     		.ascii	"\004\010"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 33
+
+
+ 922 0062 DA10     		.ascii	"\332\020"
+ 923 0064 E000     		.ascii	"\340\000"
+ 924 0066 0000     		.ascii	"\000\000"
+ 925              		.section	.rodata.OV2640_JPEG,"a"
+ 926              		.align	2
+ 929              	OV2640_JPEG:
+ 930 0000 E014     		.ascii	"\340\024"
+ 931 0002 E177     		.ascii	"\341w"
+ 932 0004 E51F     		.ascii	"\345\037"
+ 933 0006 D703     		.ascii	"\327\003"
+ 934 0008 DA10     		.ascii	"\332\020"
+ 935 000a E000     		.ascii	"\340\000"
+ 936 000c FF01     		.ascii	"\377\001"
+ 937 000e 0408     		.ascii	"\004\010"
+ 938              		.section	.rodata.OV2640_YUV422,"a"
+ 939              		.align	2
+ 942              	OV2640_YUV422:
+ 943 0000 FF00     		.ascii	"\377\000"
+ 944 0002 0500     		.ascii	"\005\000"
+ 945 0004 DA10     		.ascii	"\332\020"
+ 946 0006 D703     		.ascii	"\327\003"
+ 947 0008 DF00     		.ascii	"\337\000"
+ 948 000a 3380     		.ascii	"3\200"
+ 949 000c 3C40     		.ascii	"<@"
+ 950 000e E177     		.ascii	"\341w"
+ 951 0010 0000     		.ascii	"\000\000"
+ 952              		.section	.rodata.OV2640_JPEG_INIT,"a"
+ 953              		.align	2
+ 956              	OV2640_JPEG_INIT:
+ 957 0000 FF00     		.ascii	"\377\000"
+ 958 0002 2CFF     		.ascii	",\377"
+ 959 0004 2EDF     		.ascii	".\337"
+ 960 0006 FF01     		.ascii	"\377\001"
+ 961 0008 3C32     		.ascii	"<2"
+ 962 000a 1103     		.ascii	"\021\003"
+ 963 000c 0902     		.ascii	"\011\002"
+ 964 000e 0428     		.ascii	"\004("
+ 965 0010 13E5     		.ascii	"\023\345"
+ 966 0012 1448     		.ascii	"\024H"
+ 967 0014 2C0C     		.ascii	",\014"
+ 968 0016 3378     		.ascii	"3x"
+ 969 0018 3A33     		.ascii	":3"
+ 970 001a 3BFB     		.ascii	";\373"
+ 971 001c 3E00     		.ascii	">\000"
+ 972 001e 4311     		.ascii	"C\021"
+ 973 0020 1610     		.ascii	"\026\020"
+ 974 0022 3992     		.ascii	"9\222"
+ 975 0024 35DA     		.ascii	"5\332"
+ 976 0026 221A     		.ascii	"\"\032"
+ 977 0028 37C3     		.ascii	"7\303"
+ 978 002a 2300     		.ascii	"#\000"
+ 979 002c 34C0     		.ascii	"4\300"
+ 980 002e 361A     		.ascii	"6\032"
+ 981 0030 0688     		.ascii	"\006\210"
+ 982 0032 07C0     		.ascii	"\007\300"
+ 983 0034 0D87     		.ascii	"\015\207"
+ 984 0036 0E41     		.ascii	"\016A"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 34
+
+
+ 985 0038 4C00     		.ascii	"L\000"
+ 986 003a 4800     		.ascii	"H\000"
+ 987 003c 5B00     		.ascii	"[\000"
+ 988 003e 4203     		.ascii	"B\003"
+ 989 0040 4A81     		.ascii	"J\201"
+ 990 0042 2199     		.ascii	"!\231"
+ 991 0044 2440     		.ascii	"$@"
+ 992 0046 2538     		.ascii	"%8"
+ 993 0048 2682     		.ascii	"&\202"
+ 994 004a 5C00     		.ascii	"\\\000"
+ 995 004c 6300     		.ascii	"c\000"
+ 996 004e 6170     		.ascii	"ap"
+ 997 0050 6280     		.ascii	"b\200"
+ 998 0052 7C05     		.ascii	"|\005"
+ 999 0054 2080     		.ascii	" \200"
+ 1000 0056 2830     		.ascii	"(0"
+ 1001 0058 6C00     		.ascii	"l\000"
+ 1002 005a 6D80     		.ascii	"m\200"
+ 1003 005c 6E00     		.ascii	"n\000"
+ 1004 005e 7002     		.ascii	"p\002"
+ 1005 0060 7194     		.ascii	"q\224"
+ 1006 0062 73C1     		.ascii	"s\301"
+ 1007 0064 1711     		.ascii	"\027\021"
+ 1008 0066 1843     		.ascii	"\030C"
+ 1009 0068 1900     		.ascii	"\031\000"
+ 1010 006a 1A4B     		.ascii	"\032K"
+ 1011 006c 3209     		.ascii	"2\011"
+ 1012 006e 37C0     		.ascii	"7\300"
+ 1013 0070 4F60     		.ascii	"O`"
+ 1014 0072 50A8     		.ascii	"P\250"
+ 1015 0074 6D00     		.ascii	"m\000"
+ 1016 0076 3D38     		.ascii	"=8"
+ 1017 0078 463F     		.ascii	"F?"
+ 1018 007a 4F60     		.ascii	"O`"
+ 1019 007c 0C3C     		.ascii	"\014<"
+ 1020 007e FF00     		.ascii	"\377\000"
+ 1021 0080 E57F     		.ascii	"\345\177"
+ 1022 0082 F9C0     		.ascii	"\371\300"
+ 1023 0084 4124     		.ascii	"A$"
+ 1024 0086 E014     		.ascii	"\340\024"
+ 1025 0088 76FF     		.ascii	"v\377"
+ 1026 008a 33A0     		.ascii	"3\240"
+ 1027 008c 4220     		.ascii	"B "
+ 1028 008e 4318     		.ascii	"C\030"
+ 1029 0090 4C00     		.ascii	"L\000"
+ 1030 0092 87D5     		.ascii	"\207\325"
+ 1031 0094 883F     		.ascii	"\210?"
+ 1032 0096 D703     		.ascii	"\327\003"
+ 1033 0098 D910     		.ascii	"\331\020"
+ 1034 009a D382     		.ascii	"\323\202"
+ 1035 009c C808     		.ascii	"\310\010"
+ 1036 009e C980     		.ascii	"\311\200"
+ 1037 00a0 7C00     		.ascii	"|\000"
+ 1038 00a2 7D00     		.ascii	"}\000"
+ 1039 00a4 7C03     		.ascii	"|\003"
+ 1040 00a6 7D48     		.ascii	"}H"
+ 1041 00a8 7D48     		.ascii	"}H"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 35
+
+
+ 1042 00aa 7C08     		.ascii	"|\010"
+ 1043 00ac 7D20     		.ascii	"} "
+ 1044 00ae 7D10     		.ascii	"}\020"
+ 1045 00b0 7D0E     		.ascii	"}\016"
+ 1046 00b2 9000     		.ascii	"\220\000"
+ 1047 00b4 910E     		.ascii	"\221\016"
+ 1048 00b6 911A     		.ascii	"\221\032"
+ 1049 00b8 9131     		.ascii	"\2211"
+ 1050 00ba 915A     		.ascii	"\221Z"
+ 1051 00bc 9169     		.ascii	"\221i"
+ 1052 00be 9175     		.ascii	"\221u"
+ 1053 00c0 917E     		.ascii	"\221~"
+ 1054 00c2 9188     		.ascii	"\221\210"
+ 1055 00c4 918F     		.ascii	"\221\217"
+ 1056 00c6 9196     		.ascii	"\221\226"
+ 1057 00c8 91A3     		.ascii	"\221\243"
+ 1058 00ca 91AF     		.ascii	"\221\257"
+ 1059 00cc 91C4     		.ascii	"\221\304"
+ 1060 00ce 91D7     		.ascii	"\221\327"
+ 1061 00d0 91E8     		.ascii	"\221\350"
+ 1062 00d2 9120     		.ascii	"\221 "
+ 1063 00d4 9200     		.ascii	"\222\000"
+ 1064 00d6 9306     		.ascii	"\223\006"
+ 1065 00d8 93E3     		.ascii	"\223\343"
+ 1066 00da 9305     		.ascii	"\223\005"
+ 1067 00dc 9305     		.ascii	"\223\005"
+ 1068 00de 9300     		.ascii	"\223\000"
+ 1069 00e0 9304     		.ascii	"\223\004"
+ 1070 00e2 9300     		.ascii	"\223\000"
+ 1071 00e4 9300     		.ascii	"\223\000"
+ 1072 00e6 9300     		.ascii	"\223\000"
+ 1073 00e8 9300     		.ascii	"\223\000"
+ 1074 00ea 9300     		.ascii	"\223\000"
+ 1075 00ec 9300     		.ascii	"\223\000"
+ 1076 00ee 9300     		.ascii	"\223\000"
+ 1077 00f0 9600     		.ascii	"\226\000"
+ 1078 00f2 9708     		.ascii	"\227\010"
+ 1079 00f4 9719     		.ascii	"\227\031"
+ 1080 00f6 9702     		.ascii	"\227\002"
+ 1081 00f8 970C     		.ascii	"\227\014"
+ 1082 00fa 9724     		.ascii	"\227$"
+ 1083 00fc 9730     		.ascii	"\2270"
+ 1084 00fe 9728     		.ascii	"\227("
+ 1085 0100 9726     		.ascii	"\227&"
+ 1086 0102 9702     		.ascii	"\227\002"
+ 1087 0104 9798     		.ascii	"\227\230"
+ 1088 0106 9780     		.ascii	"\227\200"
+ 1089 0108 9700     		.ascii	"\227\000"
+ 1090 010a 9700     		.ascii	"\227\000"
+ 1091 010c C3ED     		.ascii	"\303\355"
+ 1092 010e A400     		.ascii	"\244\000"
+ 1093 0110 A800     		.ascii	"\250\000"
+ 1094 0112 C511     		.ascii	"\305\021"
+ 1095 0114 C651     		.ascii	"\306Q"
+ 1096 0116 BF80     		.ascii	"\277\200"
+ 1097 0118 C710     		.ascii	"\307\020"
+ 1098 011a B666     		.ascii	"\266f"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 36
+
+
+ 1099 011c B8A5     		.ascii	"\270\245"
+ 1100 011e B764     		.ascii	"\267d"
+ 1101 0120 B97C     		.ascii	"\271|"
+ 1102 0122 B3AF     		.ascii	"\263\257"
+ 1103 0124 B497     		.ascii	"\264\227"
+ 1104 0126 B5FF     		.ascii	"\265\377"
+ 1105 0128 B0C5     		.ascii	"\260\305"
+ 1106 012a B194     		.ascii	"\261\224"
+ 1107 012c B20F     		.ascii	"\262\017"
+ 1108 012e C45C     		.ascii	"\304\\"
+ 1109 0130 C064     		.ascii	"\300d"
+ 1110 0132 C14B     		.ascii	"\301K"
+ 1111 0134 8C00     		.ascii	"\214\000"
+ 1112 0136 863D     		.ascii	"\206="
+ 1113 0138 5000     		.ascii	"P\000"
+ 1114 013a 51C8     		.ascii	"Q\310"
+ 1115 013c 5296     		.ascii	"R\226"
+ 1116 013e 5300     		.ascii	"S\000"
+ 1117 0140 5400     		.ascii	"T\000"
+ 1118 0142 5500     		.ascii	"U\000"
+ 1119 0144 5AC8     		.ascii	"Z\310"
+ 1120 0146 5B96     		.ascii	"[\226"
+ 1121 0148 5C00     		.ascii	"\\\000"
+ 1122 014a D37F     		.ascii	"\323\177"
+ 1123 014c C3ED     		.ascii	"\303\355"
+ 1124 014e 7F00     		.ascii	"\177\000"
+ 1125 0150 DA00     		.ascii	"\332\000"
+ 1126 0152 E51F     		.ascii	"\345\037"
+ 1127 0154 E167     		.ascii	"\341g"
+ 1128 0156 E000     		.ascii	"\340\000"
+ 1129 0158 DD7F     		.ascii	"\335\177"
+ 1130 015a 0500     		.ascii	"\005\000"
+ 1131 015c 1240     		.ascii	"\022@"
+ 1132 015e D37F     		.ascii	"\323\177"
+ 1133 0160 C016     		.ascii	"\300\026"
+ 1134 0162 C112     		.ascii	"\301\022"
+ 1135 0164 8C00     		.ascii	"\214\000"
+ 1136 0166 863D     		.ascii	"\206="
+ 1137 0168 5000     		.ascii	"P\000"
+ 1138 016a 512C     		.ascii	"Q,"
+ 1139 016c 5224     		.ascii	"R$"
+ 1140 016e 5300     		.ascii	"S\000"
+ 1141 0170 5400     		.ascii	"T\000"
+ 1142 0172 5500     		.ascii	"U\000"
+ 1143 0174 5A2C     		.ascii	"Z,"
+ 1144 0176 5B24     		.ascii	"[$"
+ 1145 0178 5C00     		.ascii	"\\\000"
+ 1146              		.section	.rodata.rgb565_regs,"a"
+ 1147              		.align	2
+ 1150              	rgb565_regs:
+ 1151 0000 FF00     		.ascii	"\377\000"
+ 1152 0002 E004     		.ascii	"\340\004"
+ 1153 0004 DA08     		.ascii	"\332\010"
+ 1154 0006 D703     		.ascii	"\327\003"
+ 1155 0008 E177     		.ascii	"\341w"
+ 1156 000a E000     		.ascii	"\340\000"
+ 1157 000c 0000     		.ascii	"\000\000"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 37
+
+
+ 1158              		.section	.rodata.allowed_sizes,"a"
+ 1159              		.align	2
+ 1162              	allowed_sizes:
+ 1163 0000 03060912 		.ascii	"\003\006\011\022\012\013\017\027\030\031\032\033\036"
+ 1163      0A0B0F17 
+ 1163      18191A1B 
+ 1163      1E
+ 1164              		.text
+ 1165              	.Letext0:
+ 1166              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1167              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1168              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 1169              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 1170              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 1171              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 1172              		.file 8 "Drivers/BSP/Camera/camera.h"
+ 1173              		.file 9 "Drivers/BSP/Camera/ov2640_regs.h"
+ 1174              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 38
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov2640.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:20     .text.wrSensorRegs:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:25     .text.wrSensorRegs:00000000 wrSensorRegs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:76     .text.wrSensorRegs:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:81     .text.OV2640_WR_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:86     .text.OV2640_WR_Reg:00000000 OV2640_WR_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:123    .text.OV2640_WR_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:128    .text.reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:133    .text.reset:00000000 reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:177    .text.reset:00000030 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:182    .text.OV2640_RD_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:187    .text.OV2640_RD_Reg:00000000 OV2640_RD_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:222    .text.OV2640_RD_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:227    .text._set_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:232    .text._set_framesize:00000000 _set_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:387    .text._set_framesize:000000c0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:394    .text.set_hmirror:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:399    .text.set_hmirror:00000000 set_hmirror
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:454    .text.set_vflip:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:459    .text.set_vflip:00000000 set_vflip
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:514    .text.set_pixformat:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:520    .text.set_pixformat:00000000 set_pixformat
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:656    .text.set_pixformat:000000b0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:956    .rodata.OV2640_JPEG_INIT:00000000 OV2640_JPEG_INIT
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:942    .rodata.OV2640_YUV422:00000000 OV2640_YUV422
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:929    .rodata.OV2640_JPEG:00000000 OV2640_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:872    .rodata.OV2640_1280x960_JPEG:00000000 OV2640_1280x960_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:1150   .rodata.rgb565_regs:00000000 rgb565_regs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:666    .text.ov2640_check_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:672    .text.ov2640_check_framesize:00000000 ov2640_check_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:721    .text.ov2640_check_framesize:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:1162   .rodata.allowed_sizes:00000000 allowed_sizes
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:726    .text.ov2640_init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:732    .text.ov2640_init:00000000 ov2640_init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:778    .text.ov2640_init:00000028 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:783    .text.ov2640_init_pic:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:789    .text.ov2640_init_pic:00000000 ov2640_init_pic
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:827    .text.ov2640_init_pic:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:836    .rodata.OV2640_160x120_JPEG:00000000 OV2640_160x120_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:833    .rodata.OV2640_160x120_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:869    .rodata.OV2640_1280x960_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:926    .rodata.OV2640_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:939    .rodata.OV2640_YUV422:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:953    .rodata.OV2640_JPEG_INIT:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:1147   .rodata.rgb565_regs:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s:1159   .rodata.allowed_sizes:00000000 $d
+
+UNDEFINED SYMBOLS
+Camera_WriteReg
+hcamera
+HAL_Delay
+ov2640_Slow_regs
+Camera_ReadReg
+dvp_cam_resolution
+OV2640_svga_regs
+OV2640_uxga_regs
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccirMMfM.s 			page 39
+
+

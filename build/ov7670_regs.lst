@@ -1,0 +1,495 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov7670_regs.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov7670_regs.c"
+  19              		.global	ov7670_default_regs
+  20              		.section	.rodata.ov7670_default_regs,"a"
+  21              		.align	2
+  24              	ov7670_default_regs:
+  25 0000 3A       		.byte	58
+  26 0001 04       		.byte	4
+  27 0002 12       		.byte	18
+  28 0003 00       		.byte	0
+  29 0004 17       		.byte	23
+  30 0005 13       		.byte	19
+  31 0006 18       		.byte	24
+  32 0007 01       		.byte	1
+  33 0008 32       		.byte	50
+  34 0009 B6       		.byte	-74
+  35 000a 19       		.byte	25
+  36 000b 02       		.byte	2
+  37 000c 1A       		.byte	26
+  38 000d 7A       		.byte	122
+  39 000e 03       		.byte	3
+  40 000f 0A       		.byte	10
+  41 0010 0C       		.byte	12
+  42 0011 00       		.byte	0
+  43 0012 3E       		.byte	62
+  44 0013 00       		.byte	0
+  45 0014 15       		.byte	21
+  46 0015 02       		.byte	2
+  47 0016 7A       		.byte	122
+  48 0017 20       		.byte	32
+  49 0018 7B       		.byte	123
+  50 0019 10       		.byte	16
+  51 001a 7C       		.byte	124
+  52 001b 1E       		.byte	30
+  53 001c 7D       		.byte	125
+  54 001d 35       		.byte	53
+  55 001e 7E       		.byte	126
+  56 001f 5A       		.byte	90
+  57 0020 7F       		.byte	127
+  58 0021 69       		.byte	105
+  59 0022 80       		.byte	-128
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 2
+
+
+  60 0023 76       		.byte	118
+  61 0024 81       		.byte	-127
+  62 0025 80       		.byte	-128
+  63 0026 82       		.byte	-126
+  64 0027 88       		.byte	-120
+  65 0028 83       		.byte	-125
+  66 0029 8F       		.byte	-113
+  67 002a 84       		.byte	-124
+  68 002b 96       		.byte	-106
+  69 002c 85       		.byte	-123
+  70 002d A3       		.byte	-93
+  71 002e 86       		.byte	-122
+  72 002f AF       		.byte	-81
+  73 0030 87       		.byte	-121
+  74 0031 C4       		.byte	-60
+  75 0032 88       		.byte	-120
+  76 0033 D7       		.byte	-41
+  77 0034 89       		.byte	-119
+  78 0035 E8       		.byte	-24
+  79 0036 13       		.byte	19
+  80 0037 E0       		.byte	-32
+  81 0038 00       		.byte	0
+  82 0039 00       		.byte	0
+  83 003a 10       		.byte	16
+  84 003b 00       		.byte	0
+  85 003c 0D       		.byte	13
+  86 003d 40       		.byte	64
+  87 003e 14       		.byte	20
+  88 003f 18       		.byte	24
+  89 0040 A5       		.byte	-91
+  90 0041 05       		.byte	5
+  91 0042 AB       		.byte	-85
+  92 0043 07       		.byte	7
+  93 0044 24       		.byte	36
+  94 0045 95       		.byte	-107
+  95 0046 25       		.byte	37
+  96 0047 33       		.byte	51
+  97 0048 26       		.byte	38
+  98 0049 E3       		.byte	-29
+  99 004a 9F       		.byte	-97
+ 100 004b 78       		.byte	120
+ 101 004c A0       		.byte	-96
+ 102 004d 68       		.byte	104
+ 103 004e A1       		.byte	-95
+ 104 004f 03       		.byte	3
+ 105 0050 A6       		.byte	-90
+ 106 0051 D8       		.byte	-40
+ 107 0052 A7       		.byte	-89
+ 108 0053 D8       		.byte	-40
+ 109 0054 A8       		.byte	-88
+ 110 0055 F0       		.byte	-16
+ 111 0056 A9       		.byte	-87
+ 112 0057 90       		.byte	-112
+ 113 0058 AA       		.byte	-86
+ 114 0059 94       		.byte	-108
+ 115 005a 13       		.byte	19
+ 116 005b E5       		.byte	-27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 3
+
+
+ 117 005c 30       		.byte	48
+ 118 005d 00       		.byte	0
+ 119 005e 31       		.byte	49
+ 120 005f 00       		.byte	0
+ 121 0060 0E       		.byte	14
+ 122 0061 61       		.byte	97
+ 123 0062 0F       		.byte	15
+ 124 0063 4B       		.byte	75
+ 125 0064 16       		.byte	22
+ 126 0065 02       		.byte	2
+ 127 0066 1E       		.byte	30
+ 128 0067 30       		.byte	48
+ 129 0068 21       		.byte	33
+ 130 0069 02       		.byte	2
+ 131 006a 22       		.byte	34
+ 132 006b 91       		.byte	-111
+ 133 006c 29       		.byte	41
+ 134 006d 07       		.byte	7
+ 135 006e 33       		.byte	51
+ 136 006f 0B       		.byte	11
+ 137 0070 35       		.byte	53
+ 138 0071 0B       		.byte	11
+ 139 0072 37       		.byte	55
+ 140 0073 1D       		.byte	29
+ 141 0074 38       		.byte	56
+ 142 0075 71       		.byte	113
+ 143 0076 39       		.byte	57
+ 144 0077 2A       		.byte	42
+ 145 0078 3C       		.byte	60
+ 146 0079 78       		.byte	120
+ 147 007a 4D       		.byte	77
+ 148 007b 40       		.byte	64
+ 149 007c 4E       		.byte	78
+ 150 007d 20       		.byte	32
+ 151 007e 69       		.byte	105
+ 152 007f 00       		.byte	0
+ 153 0080 74       		.byte	116
+ 154 0081 10       		.byte	16
+ 155 0082 8D       		.byte	-115
+ 156 0083 4F       		.byte	79
+ 157 0084 8E       		.byte	-114
+ 158 0085 00       		.byte	0
+ 159 0086 8F       		.byte	-113
+ 160 0087 00       		.byte	0
+ 161 0088 90       		.byte	-112
+ 162 0089 00       		.byte	0
+ 163 008a 91       		.byte	-111
+ 164 008b 00       		.byte	0
+ 165 008c 96       		.byte	-106
+ 166 008d 00       		.byte	0
+ 167 008e 9A       		.byte	-102
+ 168 008f 00       		.byte	0
+ 169 0090 B0       		.byte	-80
+ 170 0091 84       		.byte	-124
+ 171 0092 B1       		.byte	-79
+ 172 0093 0C       		.byte	12
+ 173 0094 B2       		.byte	-78
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 4
+
+
+ 174 0095 0E       		.byte	14
+ 175 0096 B3       		.byte	-77
+ 176 0097 82       		.byte	-126
+ 177 0098 B8       		.byte	-72
+ 178 0099 0A       		.byte	10
+ 179 009a 43       		.byte	67
+ 180 009b 0A       		.byte	10
+ 181 009c 44       		.byte	68
+ 182 009d F0       		.byte	-16
+ 183 009e 45       		.byte	69
+ 184 009f 34       		.byte	52
+ 185 00a0 46       		.byte	70
+ 186 00a1 58       		.byte	88
+ 187 00a2 47       		.byte	71
+ 188 00a3 28       		.byte	40
+ 189 00a4 48       		.byte	72
+ 190 00a5 3A       		.byte	58
+ 191 00a6 59       		.byte	89
+ 192 00a7 88       		.byte	-120
+ 193 00a8 5A       		.byte	90
+ 194 00a9 88       		.byte	-120
+ 195 00aa 5B       		.byte	91
+ 196 00ab 44       		.byte	68
+ 197 00ac 5C       		.byte	92
+ 198 00ad 67       		.byte	103
+ 199 00ae 5D       		.byte	93
+ 200 00af 49       		.byte	73
+ 201 00b0 5E       		.byte	94
+ 202 00b1 0E       		.byte	14
+ 203 00b2 6C       		.byte	108
+ 204 00b3 0A       		.byte	10
+ 205 00b4 6D       		.byte	109
+ 206 00b5 55       		.byte	85
+ 207 00b6 6E       		.byte	110
+ 208 00b7 11       		.byte	17
+ 209 00b8 6F       		.byte	111
+ 210 00b9 9F       		.byte	-97
+ 211 00ba 6A       		.byte	106
+ 212 00bb 40       		.byte	64
+ 213 00bc 01       		.byte	1
+ 214 00bd 40       		.byte	64
+ 215 00be 02       		.byte	2
+ 216 00bf 40       		.byte	64
+ 217 00c0 13       		.byte	19
+ 218 00c1 E7       		.byte	-25
+ 219 00c2 4F       		.byte	79
+ 220 00c3 80       		.byte	-128
+ 221 00c4 50       		.byte	80
+ 222 00c5 80       		.byte	-128
+ 223 00c6 51       		.byte	81
+ 224 00c7 00       		.byte	0
+ 225 00c8 52       		.byte	82
+ 226 00c9 22       		.byte	34
+ 227 00ca 53       		.byte	83
+ 228 00cb 5E       		.byte	94
+ 229 00cc 54       		.byte	84
+ 230 00cd 80       		.byte	-128
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 5
+
+
+ 231 00ce 58       		.byte	88
+ 232 00cf 9E       		.byte	-98
+ 233 00d0 34       		.byte	52
+ 234 00d1 11       		.byte	17
+ 235 00d2 3B       		.byte	59
+ 236 00d3 12       		.byte	18
+ 237 00d4 A4       		.byte	-92
+ 238 00d5 82       		.byte	-126
+ 239 00d6 96       		.byte	-106
+ 240 00d7 00       		.byte	0
+ 241 00d8 97       		.byte	-105
+ 242 00d9 30       		.byte	48
+ 243 00da 98       		.byte	-104
+ 244 00db 20       		.byte	32
+ 245 00dc 99       		.byte	-103
+ 246 00dd 30       		.byte	48
+ 247 00de 9A       		.byte	-102
+ 248 00df 84       		.byte	-124
+ 249 00e0 9B       		.byte	-101
+ 250 00e1 29       		.byte	41
+ 251 00e2 9C       		.byte	-100
+ 252 00e3 03       		.byte	3
+ 253 00e4 9D       		.byte	-99
+ 254 00e5 4C       		.byte	76
+ 255 00e6 9E       		.byte	-98
+ 256 00e7 3F       		.byte	63
+ 257 00e8 78       		.byte	120
+ 258 00e9 04       		.byte	4
+ 259 00ea 79       		.byte	121
+ 260 00eb 01       		.byte	1
+ 261 00ec C8       		.byte	-56
+ 262 00ed F0       		.byte	-16
+ 263 00ee 79       		.byte	121
+ 264 00ef 0F       		.byte	15
+ 265 00f0 C8       		.byte	-56
+ 266 00f1 00       		.byte	0
+ 267 00f2 79       		.byte	121
+ 268 00f3 10       		.byte	16
+ 269 00f4 C8       		.byte	-56
+ 270 00f5 7E       		.byte	126
+ 271 00f6 79       		.byte	121
+ 272 00f7 0A       		.byte	10
+ 273 00f8 C8       		.byte	-56
+ 274 00f9 80       		.byte	-128
+ 275 00fa 79       		.byte	121
+ 276 00fb 0B       		.byte	11
+ 277 00fc C8       		.byte	-56
+ 278 00fd 01       		.byte	1
+ 279 00fe 79       		.byte	121
+ 280 00ff 0C       		.byte	12
+ 281 0100 C8       		.byte	-56
+ 282 0101 0F       		.byte	15
+ 283 0102 79       		.byte	121
+ 284 0103 0D       		.byte	13
+ 285 0104 C8       		.byte	-56
+ 286 0105 20       		.byte	32
+ 287 0106 79       		.byte	121
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 6
+
+
+ 288 0107 09       		.byte	9
+ 289 0108 C8       		.byte	-56
+ 290 0109 80       		.byte	-128
+ 291 010a 79       		.byte	121
+ 292 010b 02       		.byte	2
+ 293 010c C8       		.byte	-56
+ 294 010d C0       		.byte	-64
+ 295 010e 79       		.byte	121
+ 296 010f 03       		.byte	3
+ 297 0110 C8       		.byte	-56
+ 298 0111 40       		.byte	64
+ 299 0112 79       		.byte	121
+ 300 0113 05       		.byte	5
+ 301 0114 C8       		.byte	-56
+ 302 0115 30       		.byte	48
+ 303 0116 79       		.byte	121
+ 304 0117 26       		.byte	38
+ 305 0118 FF       		.byte	-1
+ 306 0119 FF       		.byte	-1
+ 307              		.global	bayerRGB_ov7670
+ 308              		.section	.rodata.bayerRGB_ov7670,"a"
+ 309              		.align	2
+ 312              	bayerRGB_ov7670:
+ 313 0000 12       		.byte	18
+ 314 0001 01       		.byte	1
+ 315 0002 3D       		.byte	61
+ 316 0003 08       		.byte	8
+ 317 0004 41       		.byte	65
+ 318 0005 3D       		.byte	61
+ 319 0006 76       		.byte	118
+ 320 0007 E1       		.byte	-31
+ 321 0008 FF       		.byte	-1
+ 322 0009 FF       		.byte	-1
+ 323              		.global	rgb565_ov7670
+ 324              		.section	.rodata.rgb565_ov7670,"a"
+ 325              		.align	2
+ 328              	rgb565_ov7670:
+ 329 0000 12       		.byte	18
+ 330 0001 04       		.byte	4
+ 331 0002 8C       		.byte	-116
+ 332 0003 00       		.byte	0
+ 333 0004 04       		.byte	4
+ 334 0005 00       		.byte	0
+ 335 0006 40       		.byte	64
+ 336 0007 D0       		.byte	-48
+ 337 0008 14       		.byte	20
+ 338 0009 6A       		.byte	106
+ 339 000a 4F       		.byte	79
+ 340 000b B3       		.byte	-77
+ 341 000c 50       		.byte	80
+ 342 000d B3       		.byte	-77
+ 343 000e 51       		.byte	81
+ 344 000f 00       		.byte	0
+ 345 0010 52       		.byte	82
+ 346 0011 3D       		.byte	61
+ 347 0012 53       		.byte	83
+ 348 0013 A7       		.byte	-89
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 7
+
+
+ 349 0014 54       		.byte	84
+ 350 0015 E4       		.byte	-28
+ 351 0016 3D       		.byte	61
+ 352 0017 40       		.byte	64
+ 353 0018 FF       		.byte	-1
+ 354 0019 FF       		.byte	-1
+ 355              		.global	yuv422_ov7670
+ 356              		.section	.rodata.yuv422_ov7670,"a"
+ 357              		.align	2
+ 360              	yuv422_ov7670:
+ 361 0000 12       		.byte	18
+ 362 0001 00       		.byte	0
+ 363 0002 8C       		.byte	-116
+ 364 0003 00       		.byte	0
+ 365 0004 04       		.byte	4
+ 366 0005 00       		.byte	0
+ 367 0006 40       		.byte	64
+ 368 0007 C0       		.byte	-64
+ 369 0008 14       		.byte	20
+ 370 0009 18       		.byte	24
+ 371 000a 4F       		.byte	79
+ 372 000b 80       		.byte	-128
+ 373 000c 50       		.byte	80
+ 374 000d 80       		.byte	-128
+ 375 000e 51       		.byte	81
+ 376 000f 00       		.byte	0
+ 377 0010 52       		.byte	82
+ 378 0011 22       		.byte	34
+ 379 0012 53       		.byte	83
+ 380 0013 5E       		.byte	94
+ 381 0014 54       		.byte	84
+ 382 0015 80       		.byte	-128
+ 383 0016 3D       		.byte	61
+ 384 0017 C0       		.byte	-64
+ 385 0018 FF       		.byte	-1
+ 386 0019 FF       		.byte	-1
+ 387              		.global	qqvga_ov7670
+ 388              		.section	.rodata.qqvga_ov7670,"a"
+ 389              		.align	2
+ 392              	qqvga_ov7670:
+ 393 0000 3E       		.byte	62
+ 394 0001 1A       		.byte	26
+ 395 0002 72       		.byte	114
+ 396 0003 22       		.byte	34
+ 397 0004 73       		.byte	115
+ 398 0005 F2       		.byte	-14
+ 399 0006 17       		.byte	23
+ 400 0007 16       		.byte	22
+ 401 0008 18       		.byte	24
+ 402 0009 04       		.byte	4
+ 403 000a 32       		.byte	50
+ 404 000b A4       		.byte	-92
+ 405 000c 19       		.byte	25
+ 406 000d 02       		.byte	2
+ 407 000e 1A       		.byte	26
+ 408 000f 7A       		.byte	122
+ 409 0010 03       		.byte	3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 8
+
+
+ 410 0011 0A       		.byte	10
+ 411 0012 FF       		.byte	-1
+ 412 0013 FF       		.byte	-1
+ 413              		.global	qvga_ov7670
+ 414              		.section	.rodata.qvga_ov7670,"a"
+ 415              		.align	2
+ 418              	qvga_ov7670:
+ 419 0000 3E       		.byte	62
+ 420 0001 19       		.byte	25
+ 421 0002 72       		.byte	114
+ 422 0003 11       		.byte	17
+ 423 0004 73       		.byte	115
+ 424 0005 F1       		.byte	-15
+ 425 0006 17       		.byte	23
+ 426 0007 16       		.byte	22
+ 427 0008 18       		.byte	24
+ 428 0009 04       		.byte	4
+ 429 000a 32       		.byte	50
+ 430 000b 24       		.byte	36
+ 431 000c 19       		.byte	25
+ 432 000d 02       		.byte	2
+ 433 000e 1A       		.byte	26
+ 434 000f 7A       		.byte	122
+ 435 0010 03       		.byte	3
+ 436 0011 0A       		.byte	10
+ 437 0012 FF       		.byte	-1
+ 438 0013 FF       		.byte	-1
+ 439              		.global	vga_ov7670
+ 440              		.section	.rodata.vga_ov7670,"a"
+ 441              		.align	2
+ 444              	vga_ov7670:
+ 445 0000 17       		.byte	23
+ 446 0001 11       		.byte	17
+ 447 0002 18       		.byte	24
+ 448 0003 61       		.byte	97
+ 449 0004 32       		.byte	50
+ 450 0005 80       		.byte	-128
+ 451 0006 19       		.byte	25
+ 452 0007 03       		.byte	3
+ 453 0008 1A       		.byte	26
+ 454 0009 7B       		.byte	123
+ 455 000a 03       		.byte	3
+ 456 000b 00       		.byte	0
+ 457 000c FF       		.byte	-1
+ 458 000d FF       		.byte	-1
+ 459              		.text
+ 460              	.Letext0:
+ 461              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 462              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 463              		.file 4 "Drivers/BSP/Camera/camera.h"
+ 464              		.file 5 "Drivers/BSP/Camera/ov7670_regs.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov7670_regs.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:24     .rodata.ov7670_default_regs:00000000 ov7670_default_regs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:21     .rodata.ov7670_default_regs:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:312    .rodata.bayerRGB_ov7670:00000000 bayerRGB_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:309    .rodata.bayerRGB_ov7670:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:328    .rodata.rgb565_ov7670:00000000 rgb565_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:325    .rodata.rgb565_ov7670:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:360    .rodata.yuv422_ov7670:00000000 yuv422_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:357    .rodata.yuv422_ov7670:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:392    .rodata.qqvga_ov7670:00000000 qqvga_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:389    .rodata.qqvga_ov7670:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:418    .rodata.qvga_ov7670:00000000 qvga_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:415    .rodata.qvga_ov7670:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:444    .rodata.vga_ov7670:00000000 vga_ov7670
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccPFVCY9.s:441    .rodata.vga_ov7670:00000000 $d
+
+NO UNDEFINED SYMBOLS

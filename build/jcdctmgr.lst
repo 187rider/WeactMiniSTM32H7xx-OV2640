@@ -1,0 +1,2556 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jcdctmgr.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c"
+  19              		.section	.text.forward_DCT,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	forward_DCT:
+  26              	.LVL0:
+  27              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * jcdctmgr.c
+   3:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * Copyright (C) 1994-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * This file contains the forward-DCT management logic.
+   9:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * This code selects a particular DCT implementation to be used,
+  10:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * and it performs related housekeeping chores including coefficient
+  11:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * quantization.
+  12:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  */
+  13:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  14:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define JPEG_INTERNALS
+  15:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #include "jinclude.h"
+  16:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #include "jpeglib.h"
+  17:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #include "jdct.h"		/* Private declarations for DCT subsystem */
+  18:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  20:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /* Private subobject for this module */
+  21:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** typedef struct {
+  23:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   struct jpeg_forward_dct pub;	/* public fields */
+  24:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* Pointer to the DCT routine actually in use */
+  26:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   forward_DCT_method_ptr do_dct[MAX_COMPONENTS];
+  27:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  28:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* The actual post-DCT divisors --- not identical to the quant table
+  29:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****    * entries, because of scaling (especially for an unnormalized DCT).
+  30:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****    * Each table is given in normal array order.
+  31:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****    */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 2
+
+
+  32:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   DCTELEM * divisors[NUM_QUANT_TBLS];
+  33:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  34:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_FLOAT_SUPPORTED
+  35:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* Same as above for the floating-point case. */
+  36:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   float_DCT_method_ptr do_float_dct[MAX_COMPONENTS];
+  37:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   FAST_FLOAT * float_divisors[NUM_QUANT_TBLS];
+  38:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+  39:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** } my_fdct_controller;
+  40:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  41:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** typedef my_fdct_controller * my_fdct_ptr;
+  42:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  43:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  44:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /* The current scaled-DCT routines require ISLOW-style divisor tables,
+  45:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * so be sure to compile that code if either ISLOW or SCALING is requested.
+  46:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  */
+  47:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_ISLOW_SUPPORTED
+  48:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define PROVIDE_ISLOW_TABLES
+  49:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #else
+  50:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+  51:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define PROVIDE_ISLOW_TABLES
+  52:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+  53:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+  54:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  55:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  56:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /*
+  57:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * Perform forward DCT on one or more blocks of a component.
+  58:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  *
+  59:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * The input samples are taken from the sample_data[] array starting at
+  60:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * position start_row/start_col, and moving to the right for any additional
+  61:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * blocks. The quantized coefficients are returned in coef_blocks[].
+  62:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  */
+  63:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  64:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** METHODDEF(void)
+  65:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
+  66:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	     JSAMPARRAY sample_data, JBLOCKROW coef_blocks,
+  67:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	     JDIMENSION start_row, JDIMENSION start_col,
+  68:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	     JDIMENSION num_blocks)
+  69:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /* This version is used for integer DCT implementations. */
+  70:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** {
+  28              		.loc 1 70 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 12, pretend = 0, frame = 256
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 70 1 is_stmt 0 view .LVU1
+  33 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 36
+  36              		.cfi_offset 4, -36
+  37              		.cfi_offset 5, -32
+  38              		.cfi_offset 6, -28
+  39              		.cfi_offset 7, -24
+  40              		.cfi_offset 8, -20
+  41              		.cfi_offset 9, -16
+  42              		.cfi_offset 10, -12
+  43              		.cfi_offset 11, -8
+  44              		.cfi_offset 14, -4
+  45 0004 C1B0     		sub	sp, sp, #260
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 3
+
+
+  46              	.LCFI1:
+  47              		.cfi_def_cfa_offset 296
+  48 0006 8846     		mov	r8, r1
+  49 0008 1C46     		mov	r4, r3
+  50 000a DDF830A1 		ldr	r10, [sp, #304]
+  71:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* This routine is heavily used, so it's worth coding it tightly. */
+  72:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;
+  51              		.loc 1 72 3 is_stmt 1 view .LVU2
+  52              		.loc 1 72 15 is_stmt 0 view .LVU3
+  53 000e D0F8A011 		ldr	r1, [r0, #416]
+  54              	.LVL1:
+  73:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   forward_DCT_method_ptr do_dct = fdct->do_dct[compptr->component_index];
+  55              		.loc 1 73 3 is_stmt 1 view .LVU4
+  56              		.loc 1 73 55 is_stmt 0 view .LVU5
+  57 0012 D8F80430 		ldr	r3, [r8, #4]
+  58              	.LVL2:
+  59              		.loc 1 73 26 view .LVU6
+  60 0016 0A33     		adds	r3, r3, #10
+  61 0018 01EB8303 		add	r3, r1, r3, lsl #2
+  62 001c D3F804B0 		ldr	fp, [r3, #4]
+  63              	.LVL3:
+  74:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   DCTELEM * divisors = fdct->divisors[compptr->quant_tbl_no];
+  64              		.loc 1 74 3 is_stmt 1 view .LVU7
+  65              		.loc 1 74 46 is_stmt 0 view .LVU8
+  66 0020 D8F81030 		ldr	r3, [r8, #16]
+  67              		.loc 1 74 13 view .LVU9
+  68 0024 1433     		adds	r3, r3, #20
+  69 0026 01EB8301 		add	r1, r1, r3, lsl #2
+  70              	.LVL4:
+  71              		.loc 1 74 13 view .LVU10
+  72 002a 4D68     		ldr	r5, [r1, #4]
+  73              	.LVL5:
+  75:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
+  74              		.loc 1 75 3 is_stmt 1 view .LVU11
+  76:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   JDIMENSION bi;
+  75              		.loc 1 76 3 view .LVU12
+  77:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  78:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   sample_data += start_row;	/* fold in the vertical offset once */
+  76              		.loc 1 78 3 view .LVU13
+  77              		.loc 1 78 15 is_stmt 0 view .LVU14
+  78 002c 4A9B     		ldr	r3, [sp, #296]
+  79 002e 02EB8309 		add	r9, r2, r3, lsl #2
+  80              	.LVL6:
+  79:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
+  81              		.loc 1 80 3 is_stmt 1 view .LVU15
+  82              		.loc 1 80 11 is_stmt 0 view .LVU16
+  83 0032 0026     		movs	r6, #0
+  84              		.loc 1 80 3 view .LVU17
+  85 0034 24E0     		b	.L2
+  86              	.LVL7:
+  87              	.L13:
+  88              	.LBB2:
+  81:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+  82:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     (*do_dct) (workspace, sample_data, start_col);
+  83:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  84:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Quantize/descale the coefficients, and store into coef_blocks[] */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 4
+
+
+  85:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     { register DCTELEM temp, qval;
+  86:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register int i;
+  87:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register JCOEFPTR output_ptr = coef_blocks[bi];
+  88:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       for (i = 0; i < DCTSIZE2; i++) {
+  90:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+  91:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	temp = workspace[i];
+  92:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Divide the coefficient value by qval, ensuring proper rounding.
+  93:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * Since C does not specify the direction of rounding for negative
+  94:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * quotients, we have to force the dividend positive for portability.
+  95:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 *
+  96:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * In most files, at least half of the output values will be zero
+  97:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * (at default quantization settings, more like three-quarters...)
+  98:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * so we should ensure that this case is fast.  On many machines,
+  99:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * a comparison is enough cheaper than a divide to make a special test
+ 100:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * a win.  Since both inputs will be nonnegative, we need only test
+ 101:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * for a < b to discover whether a/b is 0.
+ 102:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * If your machine's division is fast enough, define FAST_DIVIDE.
+ 103:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 */
+ 104:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef FAST_DIVIDE
+ 105:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define DIVIDE_BY(a,b)	a /= b
+ 106:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #else
+ 107:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define DIVIDE_BY(a,b)	if (a >= b) a /= b; else a = 0
+ 108:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 109:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	if (temp < 0) {
+ 110:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+  89              		.loc 1 110 4 is_stmt 1 view .LVU18
+ 111:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp += qval>>1;	/* for rounding */
+  90              		.loc 1 111 4 view .LVU19
+  91 0036 C3EB6703 		rsb	r3, r3, r7, asr #1
+  92              	.LVL8:
+ 112:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  DIVIDE_BY(temp, qval);
+  93              		.loc 1 112 4 view .LVU20
+  94 003a BB42     		cmp	r3, r7
+  95 003c 16DB     		blt	.L9
+  96              		.loc 1 112 4 discriminator 1 view .LVU21
+  97 003e 93FBF7F3 		sdiv	r3, r3, r7
+  98              	.LVL9:
+  99              	.L5:
+ 113:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+ 100              		.loc 1 113 4 view .LVU22
+ 101              		.loc 1 113 9 is_stmt 0 view .LVU23
+ 102 0042 5B42     		rsbs	r3, r3, #0
+ 103              	.LVL10:
+ 104              	.L6:
+ 114:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	} else {
+ 115:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp += qval>>1;	/* for rounding */
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  DIVIDE_BY(temp, qval);
+ 117:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 118:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	output_ptr[i] = (JCOEF) temp;
+ 105              		.loc 1 118 2 is_stmt 1 view .LVU24
+ 106              		.loc 1 118 12 is_stmt 0 view .LVU25
+ 107 0044 00EB4101 		add	r1, r0, r1, lsl #1
+ 108              	.LVL11:
+ 109              		.loc 1 118 16 view .LVU26
+ 110 0048 6352     		strh	r3, [r4, r1]	@ movhi
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 5
+
+
+ 111              		.loc 1 89 34 is_stmt 1 discriminator 2 view .LVU27
+ 112 004a 0132     		adds	r2, r2, #1
+ 113              	.LVL12:
+ 114              	.L3:
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ 115              		.loc 1 89 21 discriminator 1 view .LVU28
+ 116 004c 3F2A     		cmp	r2, #63
+ 117 004e 11DC     		bgt	.L12
+  90:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	temp = workspace[i];
+ 118              		.loc 1 90 2 view .LVU29
+  90:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	temp = workspace[i];
+ 119              		.loc 1 90 17 is_stmt 0 view .LVU30
+ 120 0050 1146     		mov	r1, r2
+  90:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	temp = workspace[i];
+ 121              		.loc 1 90 7 view .LVU31
+ 122 0052 55F82270 		ldr	r7, [r5, r2, lsl #2]
+ 123              	.LVL13:
+  91:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Divide the coefficient value by qval, ensuring proper rounding.
+ 124              		.loc 1 91 2 is_stmt 1 view .LVU32
+  91:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Divide the coefficient value by qval, ensuring proper rounding.
+ 125              		.loc 1 91 7 is_stmt 0 view .LVU33
+ 126 0056 5DF82230 		ldr	r3, [sp, r2, lsl #2]
+ 127              	.LVL14:
+ 109:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+ 128              		.loc 1 109 2 is_stmt 1 view .LVU34
+ 109:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+ 129              		.loc 1 109 5 is_stmt 0 view .LVU35
+ 130 005a 002B     		cmp	r3, #0
+ 131 005c EBDB     		blt	.L13
+ 115:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  DIVIDE_BY(temp, qval);
+ 132              		.loc 1 115 4 is_stmt 1 view .LVU36
+ 115:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  DIVIDE_BY(temp, qval);
+ 133              		.loc 1 115 9 is_stmt 0 view .LVU37
+ 134 005e 03EB6703 		add	r3, r3, r7, asr #1
+ 135              	.LVL15:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 136              		.loc 1 116 4 is_stmt 1 view .LVU38
+ 137 0062 9F42     		cmp	r7, r3
+ 138 0064 04DC     		bgt	.L10
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 139              		.loc 1 116 4 discriminator 1 view .LVU39
+ 140 0066 93FBF7F3 		sdiv	r3, r3, r7
+ 141              	.LVL16:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 142              		.loc 1 116 4 is_stmt 0 discriminator 1 view .LVU40
+ 143 006a EBE7     		b	.L6
+ 144              	.L9:
+ 112:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+ 145              		.loc 1 112 4 discriminator 2 view .LVU41
+ 146 006c 0023     		movs	r3, #0
+ 147              	.LVL17:
+ 112:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  temp = -temp;
+ 148              		.loc 1 112 4 discriminator 2 view .LVU42
+ 149 006e E8E7     		b	.L5
+ 150              	.LVL18:
+ 151              	.L10:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 6
+
+
+ 152              		.loc 1 116 4 discriminator 2 view .LVU43
+ 153 0070 0023     		movs	r3, #0
+ 154              	.LVL19:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 155              		.loc 1 116 4 discriminator 2 view .LVU44
+ 156 0072 E7E7     		b	.L6
+ 157              	.LVL20:
+ 158              	.L12:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 159              		.loc 1 116 4 discriminator 2 view .LVU45
+ 160              	.LBE2:
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 161              		.loc 1 80 37 is_stmt 1 discriminator 2 view .LVU46
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 162              		.loc 1 80 35 is_stmt 0 discriminator 2 view .LVU47
+ 163 0074 0136     		adds	r6, r6, #1
+ 164              	.LVL21:
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 165              		.loc 1 80 59 discriminator 2 view .LVU48
+ 166 0076 D8F82430 		ldr	r3, [r8, #36]
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 167              		.loc 1 80 49 discriminator 2 view .LVU49
+ 168 007a 4B9A     		ldr	r2, [sp, #300]
+ 169              	.LVL22:
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 170              		.loc 1 80 49 discriminator 2 view .LVU50
+ 171 007c 1A44     		add	r2, r2, r3
+ 172 007e 4B92     		str	r2, [sp, #300]
+ 173              	.LVL23:
+ 174              	.L2:
+  80:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 175              		.loc 1 80 19 is_stmt 1 discriminator 1 view .LVU51
+ 176 0080 5645     		cmp	r6, r10
+ 177 0082 06D2     		bcs	.L14
+  82:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 178              		.loc 1 82 5 view .LVU52
+  82:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 179              		.loc 1 82 6 is_stmt 0 view .LVU53
+ 180 0084 4B9A     		ldr	r2, [sp, #300]
+ 181 0086 4946     		mov	r1, r9
+ 182 0088 6846     		mov	r0, sp
+ 183 008a D847     		blx	fp
+ 184              	.LVL24:
+ 185              	.LBB3:
+  85:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register int i;
+ 186              		.loc 1 85 7 is_stmt 1 view .LVU54
+  86:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register JCOEFPTR output_ptr = coef_blocks[bi];
+ 187              		.loc 1 86 7 view .LVU55
+  87:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 188              		.loc 1 87 7 view .LVU56
+  87:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 189              		.loc 1 87 49 is_stmt 0 view .LVU57
+ 190 008c F001     		lsls	r0, r6, #7
+ 191              	.LVL25:
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ 192              		.loc 1 89 7 is_stmt 1 view .LVU58
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 7
+
+
+ 193              		.loc 1 89 14 is_stmt 0 view .LVU59
+ 194 008e 0022     		movs	r2, #0
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ 195              		.loc 1 89 7 view .LVU60
+ 196 0090 DCE7     		b	.L3
+ 197              	.LVL26:
+ 198              	.L14:
+  89:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	qval = divisors[i];
+ 199              		.loc 1 89 7 view .LVU61
+ 200              	.LBE3:
+ 119:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 120:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     }
+ 121:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   }
+ 122:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** }
+ 201              		.loc 1 122 1 view .LVU62
+ 202 0092 41B0     		add	sp, sp, #260
+ 203              	.LCFI2:
+ 204              		.cfi_def_cfa_offset 36
+ 205              		@ sp needed
+ 206 0094 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 207              		.loc 1 122 1 view .LVU63
+ 208              		.cfi_endproc
+ 209              	.LFE147:
+ 211              		.section	.text.forward_DCT_float,"ax",%progbits
+ 212              		.align	1
+ 213              		.syntax unified
+ 214              		.thumb
+ 215              		.thumb_func
+ 217              	forward_DCT_float:
+ 218              	.LVL27:
+ 219              	.LFB148:
+ 123:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 124:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 125:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_FLOAT_SUPPORTED
+ 126:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 127:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** METHODDEF(void)
+ 128:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** forward_DCT_float (j_compress_ptr cinfo, jpeg_component_info * compptr,
+ 129:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 		   JSAMPARRAY sample_data, JBLOCKROW coef_blocks,
+ 130:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 		   JDIMENSION start_row, JDIMENSION start_col,
+ 131:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 		   JDIMENSION num_blocks)
+ 132:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /* This version is used for floating-point DCT implementations. */
+ 133:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** {
+ 220              		.loc 1 133 1 is_stmt 1 view -0
+ 221              		.cfi_startproc
+ 222              		@ args = 12, pretend = 0, frame = 256
+ 223              		@ frame_needed = 0, uses_anonymous_args = 0
+ 224              		.loc 1 133 1 is_stmt 0 view .LVU65
+ 225 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 226              	.LCFI3:
+ 227              		.cfi_def_cfa_offset 36
+ 228              		.cfi_offset 4, -36
+ 229              		.cfi_offset 5, -32
+ 230              		.cfi_offset 6, -28
+ 231              		.cfi_offset 7, -24
+ 232              		.cfi_offset 8, -20
+ 233              		.cfi_offset 9, -16
+ 234              		.cfi_offset 10, -12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 8
+
+
+ 235              		.cfi_offset 11, -8
+ 236              		.cfi_offset 14, -4
+ 237 0004 C1B0     		sub	sp, sp, #260
+ 238              	.LCFI4:
+ 239              		.cfi_def_cfa_offset 296
+ 240 0006 8846     		mov	r8, r1
+ 241 0008 1C46     		mov	r4, r3
+ 242 000a 4B9F     		ldr	r7, [sp, #300]
+ 243 000c DDF830A1 		ldr	r10, [sp, #304]
+ 134:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* This routine is heavily used, so it's worth coding it tightly. */
+ 135:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;
+ 244              		.loc 1 135 3 is_stmt 1 view .LVU66
+ 245              		.loc 1 135 15 is_stmt 0 view .LVU67
+ 246 0010 D0F8A011 		ldr	r1, [r0, #416]
+ 247              	.LVL28:
+ 136:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   float_DCT_method_ptr do_dct = fdct->do_float_dct[compptr->component_index];
+ 248              		.loc 1 136 3 is_stmt 1 view .LVU68
+ 249              		.loc 1 136 59 is_stmt 0 view .LVU69
+ 250 0014 D8F80430 		ldr	r3, [r8, #4]
+ 251              	.LVL29:
+ 252              		.loc 1 136 24 view .LVU70
+ 253 0018 1833     		adds	r3, r3, #24
+ 254 001a 01EB8303 		add	r3, r1, r3, lsl #2
+ 255 001e D3F804B0 		ldr	fp, [r3, #4]
+ 256              	.LVL30:
+ 137:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   FAST_FLOAT * divisors = fdct->float_divisors[compptr->quant_tbl_no];
+ 257              		.loc 1 137 3 is_stmt 1 view .LVU71
+ 258              		.loc 1 137 55 is_stmt 0 view .LVU72
+ 259 0022 D8F81030 		ldr	r3, [r8, #16]
+ 260              		.loc 1 137 16 view .LVU73
+ 261 0026 2233     		adds	r3, r3, #34
+ 262 0028 01EB8301 		add	r1, r1, r3, lsl #2
+ 263              	.LVL31:
+ 264              		.loc 1 137 16 view .LVU74
+ 265 002c 4D68     		ldr	r5, [r1, #4]
+ 266              	.LVL32:
+ 138:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   FAST_FLOAT workspace[DCTSIZE2]; /* work area for FDCT subroutine */
+ 267              		.loc 1 138 3 is_stmt 1 view .LVU75
+ 139:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   JDIMENSION bi;
+ 268              		.loc 1 139 3 view .LVU76
+ 140:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 141:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   sample_data += start_row;	/* fold in the vertical offset once */
+ 269              		.loc 1 141 3 view .LVU77
+ 270              		.loc 1 141 15 is_stmt 0 view .LVU78
+ 271 002e 4A9B     		ldr	r3, [sp, #296]
+ 272 0030 02EB8309 		add	r9, r2, r3, lsl #2
+ 273              	.LVL33:
+ 142:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
+ 274              		.loc 1 143 3 is_stmt 1 view .LVU79
+ 275              		.loc 1 143 11 is_stmt 0 view .LVU80
+ 276 0034 0026     		movs	r6, #0
+ 277              		.loc 1 143 3 view .LVU81
+ 278 0036 1DE0     		b	.L16
+ 279              	.LVL34:
+ 280              	.L18:
+ 281              	.LBB4:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 9
+
+
+ 144:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 145:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     (*do_dct) (workspace, sample_data, start_col);
+ 146:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 147:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Quantize/descale the coefficients, and store into coef_blocks[] */
+ 148:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     { register FAST_FLOAT temp;
+ 149:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register int i;
+ 150:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register JCOEFPTR output_ptr = coef_blocks[bi];
+ 151:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       for (i = 0; i < DCTSIZE2; i++) {
+ 153:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 154:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	temp = workspace[i] * divisors[i];
+ 282              		.loc 1 154 2 is_stmt 1 view .LVU82
+ 283              		.loc 1 154 18 is_stmt 0 view .LVU83
+ 284 0038 0DEB8203 		add	r3, sp, r2, lsl #2
+ 285 003c D3ED007A 		vldr.32	s15, [r3]
+ 286              		.loc 1 154 32 view .LVU84
+ 287 0040 05EB8203 		add	r3, r5, r2, lsl #2
+ 288 0044 93ED007A 		vldr.32	s14, [r3]
+ 289              		.loc 1 154 7 view .LVU85
+ 290 0048 67EE877A 		vmul.f32	s15, s15, s14
+ 291              	.LVL35:
+ 155:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Round to nearest integer.
+ 156:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * Since C does not specify the direction of rounding for negative
+ 157:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * quotients, we have to force the dividend positive for portability.
+ 158:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * The maximum coefficient size is +-16K (for 12-bit data), so this
+ 159:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * code should work for either 16-bit or 32-bit ints.
+ 160:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 */
+ 161:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	output_ptr[i] = (JCOEF) ((int) (temp + (FAST_FLOAT) 16384.5) - 16384);
+ 292              		.loc 1 161 2 is_stmt 1 view .LVU86
+ 293              		.loc 1 161 39 is_stmt 0 view .LVU87
+ 294 004c 9FED0F7A 		vldr.32	s14, .L22
+ 295 0050 77EE877A 		vadd.f32	s15, s15, s14
+ 296              	.LVL36:
+ 297              		.loc 1 161 27 view .LVU88
+ 298 0054 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 299 0058 17EE903A 		vmov	r3, s15	@ int
+ 300              	.LVL37:
+ 301              		.loc 1 161 63 view .LVU89
+ 302 005c A3F58043 		sub	r3, r3, #16384
+ 303              		.loc 1 161 12 view .LVU90
+ 304 0060 00EB4201 		add	r1, r0, r2, lsl #1
+ 305              		.loc 1 161 16 view .LVU91
+ 306 0064 6352     		strh	r3, [r4, r1]	@ movhi
+ 307              	.LVL38:
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 308              		.loc 1 152 34 is_stmt 1 discriminator 3 view .LVU92
+ 309 0066 0132     		adds	r2, r2, #1
+ 310              	.LVL39:
+ 311              	.L17:
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 312              		.loc 1 152 21 discriminator 1 view .LVU93
+ 313 0068 3F2A     		cmp	r2, #63
+ 314 006a E5DD     		ble	.L18
+ 315              	.LBE4:
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 316              		.loc 1 143 37 discriminator 2 view .LVU94
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 10
+
+
+ 317              		.loc 1 143 35 is_stmt 0 discriminator 2 view .LVU95
+ 318 006c 0136     		adds	r6, r6, #1
+ 319              	.LVL40:
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 320              		.loc 1 143 59 discriminator 2 view .LVU96
+ 321 006e D8F82430 		ldr	r3, [r8, #36]
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 322              		.loc 1 143 49 discriminator 2 view .LVU97
+ 323 0072 1F44     		add	r7, r7, r3
+ 324              	.LVL41:
+ 325              	.L16:
+ 143:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Perform the DCT */
+ 326              		.loc 1 143 19 is_stmt 1 discriminator 1 view .LVU98
+ 327 0074 5645     		cmp	r6, r10
+ 328 0076 06D2     		bcs	.L21
+ 145:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 329              		.loc 1 145 5 view .LVU99
+ 145:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 330              		.loc 1 145 6 is_stmt 0 view .LVU100
+ 331 0078 3A46     		mov	r2, r7
+ 332 007a 4946     		mov	r1, r9
+ 333 007c 6846     		mov	r0, sp
+ 334 007e D847     		blx	fp
+ 335              	.LVL42:
+ 336              	.LBB5:
+ 148:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register int i;
+ 337              		.loc 1 148 7 is_stmt 1 view .LVU101
+ 149:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       register JCOEFPTR output_ptr = coef_blocks[bi];
+ 338              		.loc 1 149 7 view .LVU102
+ 150:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 339              		.loc 1 150 7 view .LVU103
+ 150:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 340              		.loc 1 150 49 is_stmt 0 view .LVU104
+ 341 0080 F001     		lsls	r0, r6, #7
+ 342              	.LVL43:
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 343              		.loc 1 152 7 is_stmt 1 view .LVU105
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 344              		.loc 1 152 14 is_stmt 0 view .LVU106
+ 345 0082 0022     		movs	r2, #0
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 346              		.loc 1 152 7 view .LVU107
+ 347 0084 F0E7     		b	.L17
+ 348              	.LVL44:
+ 349              	.L21:
+ 152:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* Apply the quantization and scaling factor */
+ 350              		.loc 1 152 7 view .LVU108
+ 351              	.LBE5:
+ 162:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 163:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     }
+ 164:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   }
+ 165:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** }
+ 352              		.loc 1 165 1 view .LVU109
+ 353 0086 41B0     		add	sp, sp, #260
+ 354              	.LCFI5:
+ 355              		.cfi_def_cfa_offset 36
+ 356              		@ sp needed
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 11
+
+
+ 357 0088 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 358              	.LVL45:
+ 359              	.L23:
+ 360              		.loc 1 165 1 view .LVU110
+ 361              		.align	2
+ 362              	.L22:
+ 363 008c 00018046 		.word	1182793984
+ 364              		.cfi_endproc
+ 365              	.LFE148:
+ 367              		.section	.text.start_pass_fdctmgr,"ax",%progbits
+ 368              		.align	1
+ 369              		.syntax unified
+ 370              		.thumb
+ 371              		.thumb_func
+ 373              	start_pass_fdctmgr:
+ 374              	.LVL46:
+ 375              	.LFB149:
+ 166:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 167:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif /* DCT_FLOAT_SUPPORTED */
+ 168:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 169:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 170:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /*
+ 171:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * Initialize for a processing pass.
+ 172:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * Verify that all referenced Q-tables are present, and set up
+ 173:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * the divisor table for each one.
+ 174:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * In the current implementation, DCT of all components is done during
+ 175:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * the first pass, even if only some components will be output in the
+ 176:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * first scan.  Hence all components should be examined here.
+ 177:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  */
+ 178:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 179:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** METHODDEF(void)
+ 180:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** start_pass_fdctmgr (j_compress_ptr cinfo)
+ 181:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** {
+ 376              		.loc 1 181 1 is_stmt 1 view -0
+ 377              		.cfi_startproc
+ 378              		@ args = 0, pretend = 0, frame = 0
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380              		.loc 1 181 1 is_stmt 0 view .LVU112
+ 381 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 382              	.LCFI6:
+ 383              		.cfi_def_cfa_offset 32
+ 384              		.cfi_offset 4, -32
+ 385              		.cfi_offset 5, -28
+ 386              		.cfi_offset 6, -24
+ 387              		.cfi_offset 7, -20
+ 388              		.cfi_offset 8, -16
+ 389              		.cfi_offset 9, -12
+ 390              		.cfi_offset 10, -8
+ 391              		.cfi_offset 14, -4
+ 392 0004 0546     		mov	r5, r0
+ 182:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;
+ 393              		.loc 1 182 3 is_stmt 1 view .LVU113
+ 394              		.loc 1 182 15 is_stmt 0 view .LVU114
+ 395 0006 D0F8A091 		ldr	r9, [r0, #416]
+ 396              	.LVL47:
+ 183:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   int ci, qtblno, i;
+ 397              		.loc 1 183 3 is_stmt 1 view .LVU115
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 12
+
+
+ 184:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   jpeg_component_info *compptr;
+ 398              		.loc 1 184 3 view .LVU116
+ 185:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   int method = 0;
+ 399              		.loc 1 185 3 view .LVU117
+ 186:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   JQUANT_TBL * qtbl;
+ 400              		.loc 1 186 3 view .LVU118
+ 187:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   DCTELEM * dtbl;
+ 401              		.loc 1 187 3 view .LVU119
+ 188:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 189:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 402              		.loc 1 189 3 view .LVU120
+ 403              		.loc 1 189 24 is_stmt 0 view .LVU121
+ 404 000a 466D     		ldr	r6, [r0, #84]
+ 405              	.LVL48:
+ 185:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   JQUANT_TBL * qtbl;
+ 406              		.loc 1 185 7 view .LVU122
+ 407 000c 4FF00008 		mov	r8, #0
+ 408              		.loc 1 189 11 view .LVU123
+ 409 0010 4746     		mov	r7, r8
+ 410              		.loc 1 189 3 view .LVU124
+ 411 0012 45E2     		b	.L25
+ 412              	.LVL49:
+ 413              	.L33:
+ 190:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        ci++, compptr++) {
+ 191:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Select the proper DCT routine for this component's scaling */
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     switch ((compptr->DCT_h_scaled_size << 8) + compptr->DCT_v_scaled_size) {
+ 414              		.loc 1 192 5 view .LVU125
+ 415 0014 40F20222 		movw	r2, #514
+ 416 0018 9342     		cmp	r3, r2
+ 417 001a 40F01882 		bne	.L36
+ 193:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 194:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((1 << 8) + 1):
+ 195:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_1x1;
+ 196:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 197:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 198:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 2):
+ 199:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_2x2;
+ 418              		.loc 1 199 7 is_stmt 1 view .LVU126
+ 419              		.loc 1 199 24 is_stmt 0 view .LVU127
+ 420 001e 07F10A03 		add	r3, r7, #10
+ 421 0022 09EB8303 		add	r3, r9, r3, lsl #2
+ 422 0026 BE4A     		ldr	r2, .L97
+ 423 0028 5A60     		str	r2, [r3, #4]
+ 200:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 424              		.loc 1 200 7 is_stmt 1 view .LVU128
+ 425              	.LVL50:
+ 201:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 426              		.loc 1 201 7 view .LVU129
+ 200:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 427              		.loc 1 200 14 is_stmt 0 view .LVU130
+ 428 002a 4FF00008 		mov	r8, #0
+ 429              		.loc 1 201 7 view .LVU131
+ 430 002e C5E0     		b	.L67
+ 431              	.LVL51:
+ 432              	.L31:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 433              		.loc 1 192 5 view .LVU132
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 13
+
+
+ 434 0030 40F20632 		movw	r2, #774
+ 435 0034 9342     		cmp	r3, r2
+ 436 0036 00F0CE81 		beq	.L38
+ 437 003a 40F20242 		movw	r2, #1026
+ 438 003e 9342     		cmp	r3, r2
+ 439 0040 00F06481 		beq	.L39
+ 440 0044 40F20332 		movw	r2, #771
+ 441 0048 9342     		cmp	r3, r2
+ 442 004a 40F00082 		bne	.L36
+ 202:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((3 << 8) + 3):
+ 203:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_3x3;
+ 443              		.loc 1 203 7 is_stmt 1 view .LVU133
+ 444              		.loc 1 203 24 is_stmt 0 view .LVU134
+ 445 004e 07F10A03 		add	r3, r7, #10
+ 446 0052 09EB8303 		add	r3, r9, r3, lsl #2
+ 447 0056 B34A     		ldr	r2, .L97+4
+ 448 0058 5A60     		str	r2, [r3, #4]
+ 204:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 449              		.loc 1 204 7 is_stmt 1 view .LVU135
+ 450              	.LVL52:
+ 205:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 451              		.loc 1 205 7 view .LVU136
+ 204:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 452              		.loc 1 204 14 is_stmt 0 view .LVU137
+ 453 005a 4FF00008 		mov	r8, #0
+ 454              		.loc 1 205 7 view .LVU138
+ 455 005e ADE0     		b	.L67
+ 456              	.LVL53:
+ 457              	.L29:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 458              		.loc 1 192 5 view .LVU139
+ 459 0060 40F20362 		movw	r2, #1539
+ 460 0064 9342     		cmp	r3, r2
+ 461 0066 00F04881 		beq	.L41
+ 462 006a 16DC     		bgt	.L42
+ 463 006c 40F20552 		movw	r2, #1285
+ 464 0070 9342     		cmp	r3, r2
+ 465 0072 00F0DF80 		beq	.L43
+ 466 0076 40F20A52 		movw	r2, #1290
+ 467 007a 9342     		cmp	r3, r2
+ 468 007c 00F0A281 		beq	.L44
+ 469 0080 B3F5816F 		cmp	r3, #1032
+ 470 0084 40F0E381 		bne	.L36
+ 206:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 4):
+ 207:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_4x4;
+ 208:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 209:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 210:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 5):
+ 211:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_5x5;
+ 212:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 213:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 214:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 6):
+ 215:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_6x6;
+ 216:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 217:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 218:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 7):
+ 219:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_7x7;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 14
+
+
+ 220:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 221:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 222:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((9 << 8) + 9):
+ 223:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_9x9;
+ 224:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 225:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 226:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 10):
+ 227:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_10x10;
+ 228:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 229:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 230:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((11 << 8) + 11):
+ 231:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_11x11;
+ 232:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 233:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 234:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 12):
+ 235:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_12x12;
+ 236:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 237:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 238:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((13 << 8) + 13):
+ 239:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_13x13;
+ 240:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 241:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 242:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 14):
+ 243:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_14x14;
+ 244:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 245:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 246:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((15 << 8) + 15):
+ 247:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_15x15;
+ 248:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 249:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 250:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 16):
+ 251:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_16x16;
+ 252:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 253:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 254:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 8):
+ 255:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_16x8;
+ 256:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 257:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 258:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 7):
+ 259:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_14x7;
+ 260:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 261:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 262:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 6):
+ 263:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_12x6;
+ 264:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 265:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 266:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 5):
+ 267:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_10x5;
+ 268:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 269:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 270:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 4):
+ 271:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_8x4;
+ 272:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 273:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 274:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 3):
+ 275:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_6x3;
+ 276:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 15
+
+
+ 277:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 278:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 2):
+ 279:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_4x2;
+ 280:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 281:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 282:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 1):
+ 283:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_2x1;
+ 284:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 285:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 286:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 16):
+ 287:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_8x16;
+ 288:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 289:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 290:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 14):
+ 291:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_7x14;
+ 292:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 293:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 294:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 12):
+ 295:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_6x12;
+ 296:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 297:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 298:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 10):
+ 299:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_5x10;
+ 300:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 301:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 302:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 8):
+ 303:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_4x8;
+ 471              		.loc 1 303 7 is_stmt 1 view .LVU140
+ 472              		.loc 1 303 24 is_stmt 0 view .LVU141
+ 473 0088 07F10A03 		add	r3, r7, #10
+ 474 008c 09EB8303 		add	r3, r9, r3, lsl #2
+ 475 0090 A54A     		ldr	r2, .L97+8
+ 476 0092 5A60     		str	r2, [r3, #4]
+ 304:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 477              		.loc 1 304 7 is_stmt 1 view .LVU142
+ 478              	.LVL54:
+ 305:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 479              		.loc 1 305 7 view .LVU143
+ 304:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 480              		.loc 1 304 14 is_stmt 0 view .LVU144
+ 481 0094 4FF00008 		mov	r8, #0
+ 482              		.loc 1 305 7 view .LVU145
+ 483 0098 90E0     		b	.L67
+ 484              	.LVL55:
+ 485              	.L42:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 486              		.loc 1 192 5 view .LVU146
+ 487 009a 40F20C62 		movw	r2, #1548
+ 488 009e 9342     		cmp	r3, r2
+ 489 00a0 00F08781 		beq	.L46
+ 490 00a4 40F20772 		movw	r2, #1799
+ 491 00a8 9342     		cmp	r3, r2
+ 492 00aa 00F0CC80 		beq	.L47
+ 493 00ae 40F20662 		movw	r2, #1542
+ 494 00b2 9342     		cmp	r3, r2
+ 495 00b4 40F0CB81 		bne	.L36
+ 215:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 16
+
+
+ 496              		.loc 1 215 7 is_stmt 1 view .LVU147
+ 215:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 497              		.loc 1 215 24 is_stmt 0 view .LVU148
+ 498 00b8 07F10A03 		add	r3, r7, #10
+ 499 00bc 09EB8303 		add	r3, r9, r3, lsl #2
+ 500 00c0 9A4A     		ldr	r2, .L97+12
+ 501 00c2 5A60     		str	r2, [r3, #4]
+ 216:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 502              		.loc 1 216 7 is_stmt 1 view .LVU149
+ 503              	.LVL56:
+ 217:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 7):
+ 504              		.loc 1 217 7 view .LVU150
+ 216:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 505              		.loc 1 216 14 is_stmt 0 view .LVU151
+ 506 00c4 4FF00008 		mov	r8, #0
+ 217:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 7):
+ 507              		.loc 1 217 7 view .LVU152
+ 508 00c8 78E0     		b	.L67
+ 509              	.LVL57:
+ 510              	.L27:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 511              		.loc 1 192 5 view .LVU153
+ 512 00ca 40F60642 		movw	r2, #3078
+ 513 00ce 9342     		cmp	r3, r2
+ 514 00d0 00F00A81 		beq	.L49
+ 515 00d4 34DC     		bgt	.L50
+ 516 00d6 40F60912 		movw	r2, #2313
+ 517 00da 9342     		cmp	r3, r2
+ 518 00dc 00F0BC80 		beq	.L51
+ 519 00e0 17DD     		ble	.L90
+ 520 00e2 40F60A22 		movw	r2, #2570
+ 521 00e6 9342     		cmp	r3, r2
+ 522 00e8 00F0BF80 		beq	.L56
+ 523 00ec 40F60B32 		movw	r2, #2827
+ 524 00f0 9342     		cmp	r3, r2
+ 525 00f2 00F0C380 		beq	.L57
+ 526 00f6 40F60522 		movw	r2, #2565
+ 527 00fa 9342     		cmp	r3, r2
+ 528 00fc 40F0A781 		bne	.L36
+ 267:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 529              		.loc 1 267 7 is_stmt 1 view .LVU154
+ 267:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 530              		.loc 1 267 24 is_stmt 0 view .LVU155
+ 531 0100 07F10A03 		add	r3, r7, #10
+ 532 0104 09EB8303 		add	r3, r9, r3, lsl #2
+ 533 0108 894A     		ldr	r2, .L97+16
+ 534 010a 5A60     		str	r2, [r3, #4]
+ 268:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 535              		.loc 1 268 7 is_stmt 1 view .LVU156
+ 536              	.LVL58:
+ 269:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 4):
+ 537              		.loc 1 269 7 view .LVU157
+ 268:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 538              		.loc 1 268 14 is_stmt 0 view .LVU158
+ 539 010c 4FF00008 		mov	r8, #0
+ 269:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 4):
+ 540              		.loc 1 269 7 view .LVU159
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 17
+
+
+ 541 0110 54E0     		b	.L67
+ 542              	.LVL59:
+ 543              	.L90:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 544              		.loc 1 192 5 view .LVU160
+ 545 0112 40F60802 		movw	r2, #2056
+ 546 0116 9342     		cmp	r3, r2
+ 547 0118 00F06F81 		beq	.L53
+ 548 011c B3F5016F 		cmp	r3, #2064
+ 549 0120 00F03581 		beq	.L54
+ 550 0124 40F60402 		movw	r2, #2052
+ 551 0128 9342     		cmp	r3, r2
+ 552 012a 40F09081 		bne	.L36
+ 271:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 553              		.loc 1 271 7 is_stmt 1 view .LVU161
+ 271:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 554              		.loc 1 271 24 is_stmt 0 view .LVU162
+ 555 012e 07F10A03 		add	r3, r7, #10
+ 556 0132 09EB8303 		add	r3, r9, r3, lsl #2
+ 557 0136 7F4A     		ldr	r2, .L97+20
+ 558 0138 5A60     		str	r2, [r3, #4]
+ 272:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 559              		.loc 1 272 7 is_stmt 1 view .LVU163
+ 560              	.LVL60:
+ 273:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 3):
+ 561              		.loc 1 273 7 view .LVU164
+ 272:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 562              		.loc 1 272 14 is_stmt 0 view .LVU165
+ 563 013a 4FF00008 		mov	r8, #0
+ 273:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 3):
+ 564              		.loc 1 273 7 view .LVU166
+ 565 013e 3DE0     		b	.L67
+ 566              	.LVL61:
+ 567              	.L50:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 568              		.loc 1 192 5 view .LVU167
+ 569 0140 40F60E62 		movw	r2, #3598
+ 570 0144 9342     		cmp	r3, r2
+ 571 0146 00F0AB80 		beq	.L59
+ 572 014a 17DD     		ble	.L91
+ 573 014c 41F20802 		movw	r2, #4104
+ 574 0150 9342     		cmp	r3, r2
+ 575 0152 00F0B780 		beq	.L64
+ 576 0156 41F21002 		movw	r2, #4112
+ 577 015a 9342     		cmp	r3, r2
+ 578 015c 00F0A980 		beq	.L65
+ 579 0160 40F60F72 		movw	r2, #3855
+ 580 0164 9342     		cmp	r3, r2
+ 581 0166 40F07281 		bne	.L36
+ 247:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 582              		.loc 1 247 7 is_stmt 1 view .LVU168
+ 247:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 583              		.loc 1 247 24 is_stmt 0 view .LVU169
+ 584 016a 07F10A03 		add	r3, r7, #10
+ 585 016e 09EB8303 		add	r3, r9, r3, lsl #2
+ 586 0172 714A     		ldr	r2, .L97+24
+ 587 0174 5A60     		str	r2, [r3, #4]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 18
+
+
+ 248:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 588              		.loc 1 248 7 is_stmt 1 view .LVU170
+ 589              	.LVL62:
+ 249:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 16):
+ 590              		.loc 1 249 7 view .LVU171
+ 248:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 591              		.loc 1 248 14 is_stmt 0 view .LVU172
+ 592 0176 4FF00008 		mov	r8, #0
+ 249:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 16):
+ 593              		.loc 1 249 7 view .LVU173
+ 594 017a 1FE0     		b	.L67
+ 595              	.LVL63:
+ 596              	.L91:
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 597              		.loc 1 192 5 view .LVU174
+ 598 017c 40F60D52 		movw	r2, #3341
+ 599 0180 9342     		cmp	r3, r2
+ 600 0182 00F08480 		beq	.L61
+ 601 0186 40F60762 		movw	r2, #3591
+ 602 018a 9342     		cmp	r3, r2
+ 603 018c 00F0A380 		beq	.L62
+ 604 0190 40F60C42 		movw	r2, #3084
+ 605 0194 9342     		cmp	r3, r2
+ 606 0196 40F05A81 		bne	.L36
+ 235:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 607              		.loc 1 235 7 is_stmt 1 view .LVU175
+ 235:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 608              		.loc 1 235 24 is_stmt 0 view .LVU176
+ 609 019a 07F10A03 		add	r3, r7, #10
+ 610 019e 09EB8303 		add	r3, r9, r3, lsl #2
+ 611 01a2 664A     		ldr	r2, .L97+28
+ 612 01a4 5A60     		str	r2, [r3, #4]
+ 236:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 613              		.loc 1 236 7 is_stmt 1 view .LVU177
+ 614              	.LVL64:
+ 237:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((13 << 8) + 13):
+ 615              		.loc 1 237 7 view .LVU178
+ 236:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 616              		.loc 1 236 14 is_stmt 0 view .LVU179
+ 617 01a6 4FF00008 		mov	r8, #0
+ 237:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((13 << 8) + 13):
+ 618              		.loc 1 237 7 view .LVU180
+ 619 01aa 07E0     		b	.L67
+ 620              	.LVL65:
+ 621              	.L34:
+ 195:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 622              		.loc 1 195 7 is_stmt 1 view .LVU181
+ 195:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 623              		.loc 1 195 24 is_stmt 0 view .LVU182
+ 624 01ac 07F10A03 		add	r3, r7, #10
+ 625 01b0 09EB8303 		add	r3, r9, r3, lsl #2
+ 626 01b4 624A     		ldr	r2, .L97+32
+ 627 01b6 5A60     		str	r2, [r3, #4]
+ 196:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 628              		.loc 1 196 7 is_stmt 1 view .LVU183
+ 629              	.LVL66:
+ 197:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 2):
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 19
+
+
+ 630              		.loc 1 197 7 view .LVU184
+ 196:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 631              		.loc 1 196 14 is_stmt 0 view .LVU185
+ 632 01b8 4FF00008 		mov	r8, #0
+ 633              	.LVL67:
+ 634              	.L67:
+ 306:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((3 << 8) + 6):
+ 307:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_3x6;
+ 308:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 309:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 310:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 4):
+ 311:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_2x4;
+ 312:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 313:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 314:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((1 << 8) + 2):
+ 315:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->do_dct[ci] = jpeg_fdct_1x2;
+ 316:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 317:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 318:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 319:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((DCTSIZE << 8) + DCTSIZE):
+ 320:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       switch (cinfo->dct_method) {
+ 321:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_ISLOW_SUPPORTED
+ 322:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       case JDCT_ISLOW:
+ 323:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	fdct->do_dct[ci] = jpeg_fdct_islow;
+ 324:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_ISLOW;
+ 325:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 326:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 327:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_IFAST_SUPPORTED
+ 328:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       case JDCT_IFAST:
+ 329:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	fdct->do_dct[ci] = jpeg_fdct_ifast;
+ 330:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_IFAST;
+ 331:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 332:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 333:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_FLOAT_SUPPORTED
+ 334:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       case JDCT_FLOAT:
+ 335:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	fdct->do_float_dct[ci] = jpeg_fdct_float;
+ 336:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_FLOAT;
+ 337:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 338:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 339:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       default:
+ 340:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 341:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 342:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 343:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 344:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     default:
+ 345:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       ERREXIT2(cinfo, JERR_BAD_DCTSIZE,
+ 346:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	       compptr->DCT_h_scaled_size, compptr->DCT_v_scaled_size);
+ 347:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 348:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     }
+ 349:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     qtblno = compptr->quant_tbl_no;
+ 635              		.loc 1 349 5 is_stmt 1 view .LVU186
+ 636              		.loc 1 349 12 is_stmt 0 view .LVU187
+ 637 01bc D6F810A0 		ldr	r10, [r6, #16]
+ 638              	.LVL68:
+ 350:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Make sure specified quantization table is present */
+ 351:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     if (qtblno < 0 || qtblno >= NUM_QUANT_TBLS ||
+ 639              		.loc 1 351 5 is_stmt 1 view .LVU188
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 20
+
+
+ 640              		.loc 1 351 8 is_stmt 0 view .LVU189
+ 641 01c0 BAF1030F 		cmp	r10, #3
+ 642 01c4 04D8     		bhi	.L71
+ 352:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	cinfo->quant_tbl_ptrs[qtblno] == NULL)
+ 643              		.loc 1 352 23 view .LVU190
+ 644 01c6 0AF11603 		add	r3, r10, #22
+ 645 01ca 55F82330 		ldr	r3, [r5, r3, lsl #2]
+ 351:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	cinfo->quant_tbl_ptrs[qtblno] == NULL)
+ 646              		.loc 1 351 48 discriminator 1 view .LVU191
+ 647 01ce 4BB9     		cbnz	r3, .L72
+ 648              	.L71:
+ 353:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       ERREXIT1(cinfo, JERR_NO_QUANT_TABLE, qtblno);
+ 649              		.loc 1 353 7 is_stmt 1 view .LVU192
+ 650 01d0 2B68     		ldr	r3, [r5]
+ 651 01d2 3622     		movs	r2, #54
+ 652 01d4 5A61     		str	r2, [r3, #20]
+ 653 01d6 2B68     		ldr	r3, [r5]
+ 654 01d8 C3F818A0 		str	r10, [r3, #24]
+ 655 01dc 2B68     		ldr	r3, [r5]
+ 656 01de 1B68     		ldr	r3, [r3]
+ 657 01e0 2846     		mov	r0, r5
+ 658 01e2 9847     		blx	r3
+ 659              	.LVL69:
+ 660              	.L72:
+ 354:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     qtbl = cinfo->quant_tbl_ptrs[qtblno];
+ 661              		.loc 1 354 5 view .LVU193
+ 662              		.loc 1 354 10 is_stmt 0 view .LVU194
+ 663 01e4 0AF11603 		add	r3, r10, #22
+ 664 01e8 55F82340 		ldr	r4, [r5, r3, lsl #2]
+ 665              	.LVL70:
+ 355:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Compute divisors for this quant table */
+ 356:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* We may do this more than once for same table, but it's not a big deal */
+ 357:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     switch (method) {
+ 666              		.loc 1 357 5 is_stmt 1 view .LVU195
+ 667 01ec B8F1010F 		cmp	r8, #1
+ 668 01f0 00F08981 		beq	.L73
+ 669 01f4 B8F1020F 		cmp	r8, #2
+ 670 01f8 00F0B381 		beq	.L74
+ 671 01fc B8F1000F 		cmp	r8, #0
+ 672 0200 40F0FA81 		bne	.L75
+ 358:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef PROVIDE_ISLOW_TABLES
+ 359:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case JDCT_ISLOW:
+ 360:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       /* For LL&M IDCT method, divisors are equal to raw quantization
+ 361:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        * coefficients multiplied by 8 (to counteract scaling).
+ 362:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        */
+ 363:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       if (fdct->divisors[qtblno] == NULL) {
+ 673              		.loc 1 363 7 view .LVU196
+ 674              		.loc 1 363 25 is_stmt 0 view .LVU197
+ 675 0204 0AF11403 		add	r3, r10, #20
+ 676 0208 09EB8303 		add	r3, r9, r3, lsl #2
+ 677 020c 5B68     		ldr	r3, [r3, #4]
+ 678              		.loc 1 363 10 view .LVU198
+ 679 020e 002B     		cmp	r3, #0
+ 680 0210 00F02B81 		beq	.L92
+ 681              	.L76:
+ 364:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	fdct->divisors[qtblno] = (DCTELEM *)
+ 365:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 21
+
+
+ 366:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 				      DCTSIZE2 * SIZEOF(DCTELEM));
+ 367:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 368:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       dtbl = fdct->divisors[qtblno];
+ 682              		.loc 1 368 7 is_stmt 1 view .LVU199
+ 683              		.loc 1 368 12 is_stmt 0 view .LVU200
+ 684 0214 0AF11403 		add	r3, r10, #20
+ 685 0218 09EB8303 		add	r3, r9, r3, lsl #2
+ 686 021c 5968     		ldr	r1, [r3, #4]
+ 687              	.LVL71:
+ 369:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       for (i = 0; i < DCTSIZE2; i++) {
+ 688              		.loc 1 369 7 is_stmt 1 view .LVU201
+ 689              		.loc 1 369 14 is_stmt 0 view .LVU202
+ 690 021e 4346     		mov	r3, r8
+ 691              		.loc 1 369 7 view .LVU203
+ 692 0220 36E1     		b	.L77
+ 693              	.LVL72:
+ 694              	.L28:
+ 207:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 695              		.loc 1 207 7 is_stmt 1 view .LVU204
+ 207:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 696              		.loc 1 207 24 is_stmt 0 view .LVU205
+ 697 0222 07F10A03 		add	r3, r7, #10
+ 698 0226 09EB8303 		add	r3, r9, r3, lsl #2
+ 699 022a 464A     		ldr	r2, .L97+36
+ 700 022c 5A60     		str	r2, [r3, #4]
+ 208:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 701              		.loc 1 208 7 is_stmt 1 view .LVU206
+ 702              	.LVL73:
+ 209:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 5):
+ 703              		.loc 1 209 7 view .LVU207
+ 208:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 704              		.loc 1 208 14 is_stmt 0 view .LVU208
+ 705 022e 4FF00008 		mov	r8, #0
+ 209:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 5):
+ 706              		.loc 1 209 7 view .LVU209
+ 707 0232 C3E7     		b	.L67
+ 708              	.LVL74:
+ 709              	.L43:
+ 211:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 710              		.loc 1 211 7 is_stmt 1 view .LVU210
+ 211:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 711              		.loc 1 211 24 is_stmt 0 view .LVU211
+ 712 0234 07F10A03 		add	r3, r7, #10
+ 713 0238 09EB8303 		add	r3, r9, r3, lsl #2
+ 714 023c 424A     		ldr	r2, .L97+40
+ 715 023e 5A60     		str	r2, [r3, #4]
+ 212:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 716              		.loc 1 212 7 is_stmt 1 view .LVU212
+ 717              	.LVL75:
+ 213:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 6):
+ 718              		.loc 1 213 7 view .LVU213
+ 212:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 719              		.loc 1 212 14 is_stmt 0 view .LVU214
+ 720 0240 4FF00008 		mov	r8, #0
+ 213:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 6):
+ 721              		.loc 1 213 7 view .LVU215
+ 722 0244 BAE7     		b	.L67
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 22
+
+
+ 723              	.LVL76:
+ 724              	.L47:
+ 219:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 725              		.loc 1 219 7 is_stmt 1 view .LVU216
+ 219:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 726              		.loc 1 219 24 is_stmt 0 view .LVU217
+ 727 0246 07F10A03 		add	r3, r7, #10
+ 728 024a 09EB8303 		add	r3, r9, r3, lsl #2
+ 729 024e 3F4A     		ldr	r2, .L97+44
+ 730 0250 5A60     		str	r2, [r3, #4]
+ 220:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 731              		.loc 1 220 7 is_stmt 1 view .LVU218
+ 732              	.LVL77:
+ 221:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((9 << 8) + 9):
+ 733              		.loc 1 221 7 view .LVU219
+ 220:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 734              		.loc 1 220 14 is_stmt 0 view .LVU220
+ 735 0252 4FF00008 		mov	r8, #0
+ 221:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((9 << 8) + 9):
+ 736              		.loc 1 221 7 view .LVU221
+ 737 0256 B1E7     		b	.L67
+ 738              	.LVL78:
+ 739              	.L51:
+ 223:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 740              		.loc 1 223 7 is_stmt 1 view .LVU222
+ 223:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 741              		.loc 1 223 24 is_stmt 0 view .LVU223
+ 742 0258 07F10A03 		add	r3, r7, #10
+ 743 025c 09EB8303 		add	r3, r9, r3, lsl #2
+ 744 0260 3B4A     		ldr	r2, .L97+48
+ 745 0262 5A60     		str	r2, [r3, #4]
+ 224:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 746              		.loc 1 224 7 is_stmt 1 view .LVU224
+ 747              	.LVL79:
+ 225:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 10):
+ 748              		.loc 1 225 7 view .LVU225
+ 224:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 749              		.loc 1 224 14 is_stmt 0 view .LVU226
+ 750 0264 4FF00008 		mov	r8, #0
+ 225:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 10):
+ 751              		.loc 1 225 7 view .LVU227
+ 752 0268 A8E7     		b	.L67
+ 753              	.LVL80:
+ 754              	.L56:
+ 227:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 755              		.loc 1 227 7 is_stmt 1 view .LVU228
+ 227:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 756              		.loc 1 227 24 is_stmt 0 view .LVU229
+ 757 026a 07F10A03 		add	r3, r7, #10
+ 758 026e 09EB8303 		add	r3, r9, r3, lsl #2
+ 759 0272 384A     		ldr	r2, .L97+52
+ 760 0274 5A60     		str	r2, [r3, #4]
+ 228:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 761              		.loc 1 228 7 is_stmt 1 view .LVU230
+ 762              	.LVL81:
+ 229:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((11 << 8) + 11):
+ 763              		.loc 1 229 7 view .LVU231
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 23
+
+
+ 228:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 764              		.loc 1 228 14 is_stmt 0 view .LVU232
+ 765 0276 4FF00008 		mov	r8, #0
+ 229:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((11 << 8) + 11):
+ 766              		.loc 1 229 7 view .LVU233
+ 767 027a 9FE7     		b	.L67
+ 768              	.LVL82:
+ 769              	.L57:
+ 231:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 770              		.loc 1 231 7 is_stmt 1 view .LVU234
+ 231:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 771              		.loc 1 231 24 is_stmt 0 view .LVU235
+ 772 027c 07F10A03 		add	r3, r7, #10
+ 773 0280 09EB8303 		add	r3, r9, r3, lsl #2
+ 774 0284 344A     		ldr	r2, .L97+56
+ 775 0286 5A60     		str	r2, [r3, #4]
+ 232:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 776              		.loc 1 232 7 is_stmt 1 view .LVU236
+ 777              	.LVL83:
+ 233:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 12):
+ 778              		.loc 1 233 7 view .LVU237
+ 232:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 779              		.loc 1 232 14 is_stmt 0 view .LVU238
+ 780 0288 4FF00008 		mov	r8, #0
+ 233:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 12):
+ 781              		.loc 1 233 7 view .LVU239
+ 782 028c 96E7     		b	.L67
+ 783              	.LVL84:
+ 784              	.L61:
+ 239:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 785              		.loc 1 239 7 is_stmt 1 view .LVU240
+ 239:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 786              		.loc 1 239 24 is_stmt 0 view .LVU241
+ 787 028e 07F10A03 		add	r3, r7, #10
+ 788 0292 09EB8303 		add	r3, r9, r3, lsl #2
+ 789 0296 314A     		ldr	r2, .L97+60
+ 790 0298 5A60     		str	r2, [r3, #4]
+ 240:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 791              		.loc 1 240 7 is_stmt 1 view .LVU242
+ 792              	.LVL85:
+ 241:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 14):
+ 793              		.loc 1 241 7 view .LVU243
+ 240:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 794              		.loc 1 240 14 is_stmt 0 view .LVU244
+ 795 029a 4FF00008 		mov	r8, #0
+ 241:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 14):
+ 796              		.loc 1 241 7 view .LVU245
+ 797 029e 8DE7     		b	.L67
+ 798              	.LVL86:
+ 799              	.L59:
+ 243:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 800              		.loc 1 243 7 is_stmt 1 view .LVU246
+ 243:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 801              		.loc 1 243 24 is_stmt 0 view .LVU247
+ 802 02a0 07F10A03 		add	r3, r7, #10
+ 803 02a4 09EB8303 		add	r3, r9, r3, lsl #2
+ 804 02a8 2D4A     		ldr	r2, .L97+64
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 24
+
+
+ 805 02aa 5A60     		str	r2, [r3, #4]
+ 244:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 806              		.loc 1 244 7 is_stmt 1 view .LVU248
+ 807              	.LVL87:
+ 245:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((15 << 8) + 15):
+ 808              		.loc 1 245 7 view .LVU249
+ 244:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 809              		.loc 1 244 14 is_stmt 0 view .LVU250
+ 810 02ac 4FF00008 		mov	r8, #0
+ 245:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((15 << 8) + 15):
+ 811              		.loc 1 245 7 view .LVU251
+ 812 02b0 84E7     		b	.L67
+ 813              	.LVL88:
+ 814              	.L65:
+ 251:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 815              		.loc 1 251 7 is_stmt 1 view .LVU252
+ 251:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 816              		.loc 1 251 24 is_stmt 0 view .LVU253
+ 817 02b2 07F10A03 		add	r3, r7, #10
+ 818 02b6 09EB8303 		add	r3, r9, r3, lsl #2
+ 819 02ba 2A4A     		ldr	r2, .L97+68
+ 820 02bc 5A60     		str	r2, [r3, #4]
+ 252:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 821              		.loc 1 252 7 is_stmt 1 view .LVU254
+ 822              	.LVL89:
+ 253:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 8):
+ 823              		.loc 1 253 7 view .LVU255
+ 252:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 824              		.loc 1 252 14 is_stmt 0 view .LVU256
+ 825 02be 4FF00008 		mov	r8, #0
+ 253:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((16 << 8) + 8):
+ 826              		.loc 1 253 7 view .LVU257
+ 827 02c2 7BE7     		b	.L67
+ 828              	.LVL90:
+ 829              	.L64:
+ 255:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 830              		.loc 1 255 7 is_stmt 1 view .LVU258
+ 255:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 831              		.loc 1 255 24 is_stmt 0 view .LVU259
+ 832 02c4 07F10A03 		add	r3, r7, #10
+ 833 02c8 09EB8303 		add	r3, r9, r3, lsl #2
+ 834 02cc 264A     		ldr	r2, .L97+72
+ 835 02ce 5A60     		str	r2, [r3, #4]
+ 256:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 836              		.loc 1 256 7 is_stmt 1 view .LVU260
+ 837              	.LVL91:
+ 257:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 7):
+ 838              		.loc 1 257 7 view .LVU261
+ 256:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 839              		.loc 1 256 14 is_stmt 0 view .LVU262
+ 840 02d0 4FF00008 		mov	r8, #0
+ 257:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((14 << 8) + 7):
+ 841              		.loc 1 257 7 view .LVU263
+ 842 02d4 72E7     		b	.L67
+ 843              	.LVL92:
+ 844              	.L62:
+ 259:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 25
+
+
+ 845              		.loc 1 259 7 is_stmt 1 view .LVU264
+ 259:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 846              		.loc 1 259 24 is_stmt 0 view .LVU265
+ 847 02d6 07F10A03 		add	r3, r7, #10
+ 848 02da 09EB8303 		add	r3, r9, r3, lsl #2
+ 849 02de 234A     		ldr	r2, .L97+76
+ 850 02e0 5A60     		str	r2, [r3, #4]
+ 260:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 851              		.loc 1 260 7 is_stmt 1 view .LVU266
+ 852              	.LVL93:
+ 261:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 6):
+ 853              		.loc 1 261 7 view .LVU267
+ 260:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 854              		.loc 1 260 14 is_stmt 0 view .LVU268
+ 855 02e2 4FF00008 		mov	r8, #0
+ 261:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((12 << 8) + 6):
+ 856              		.loc 1 261 7 view .LVU269
+ 857 02e6 69E7     		b	.L67
+ 858              	.LVL94:
+ 859              	.L49:
+ 263:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 860              		.loc 1 263 7 is_stmt 1 view .LVU270
+ 263:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 861              		.loc 1 263 24 is_stmt 0 view .LVU271
+ 862 02e8 07F10A03 		add	r3, r7, #10
+ 863 02ec 09EB8303 		add	r3, r9, r3, lsl #2
+ 864 02f0 1F4A     		ldr	r2, .L97+80
+ 865 02f2 5A60     		str	r2, [r3, #4]
+ 264:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 866              		.loc 1 264 7 is_stmt 1 view .LVU272
+ 867              	.LVL95:
+ 265:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 5):
+ 868              		.loc 1 265 7 view .LVU273
+ 264:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 869              		.loc 1 264 14 is_stmt 0 view .LVU274
+ 870 02f4 4FF00008 		mov	r8, #0
+ 265:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((10 << 8) + 5):
+ 871              		.loc 1 265 7 view .LVU275
+ 872 02f8 60E7     		b	.L67
+ 873              	.LVL96:
+ 874              	.L41:
+ 275:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 875              		.loc 1 275 7 is_stmt 1 view .LVU276
+ 275:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 876              		.loc 1 275 24 is_stmt 0 view .LVU277
+ 877 02fa 07F10A03 		add	r3, r7, #10
+ 878 02fe 09EB8303 		add	r3, r9, r3, lsl #2
+ 879 0302 1C4A     		ldr	r2, .L97+84
+ 880 0304 5A60     		str	r2, [r3, #4]
+ 276:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 881              		.loc 1 276 7 is_stmt 1 view .LVU278
+ 882              	.LVL97:
+ 277:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 2):
+ 883              		.loc 1 277 7 view .LVU279
+ 276:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 884              		.loc 1 276 14 is_stmt 0 view .LVU280
+ 885 0306 4FF00008 		mov	r8, #0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 26
+
+
+ 277:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 2):
+ 886              		.loc 1 277 7 view .LVU281
+ 887 030a 57E7     		b	.L67
+ 888              	.LVL98:
+ 889              	.L39:
+ 279:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 890              		.loc 1 279 7 is_stmt 1 view .LVU282
+ 279:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 891              		.loc 1 279 24 is_stmt 0 view .LVU283
+ 892 030c 07F10A03 		add	r3, r7, #10
+ 893 0310 09EB8303 		add	r3, r9, r3, lsl #2
+ 894 0314 184A     		ldr	r2, .L97+88
+ 895 0316 5A60     		str	r2, [r3, #4]
+ 280:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 896              		.loc 1 280 7 is_stmt 1 view .LVU284
+ 897              	.LVL99:
+ 281:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 1):
+ 898              		.loc 1 281 7 view .LVU285
+ 280:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 899              		.loc 1 280 14 is_stmt 0 view .LVU286
+ 900 0318 4FF00008 		mov	r8, #0
+ 281:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 1):
+ 901              		.loc 1 281 7 view .LVU287
+ 902 031c 4EE7     		b	.L67
+ 903              	.L98:
+ 904 031e 00BF     		.align	2
+ 905              	.L97:
+ 906 0320 00000000 		.word	jpeg_fdct_2x2
+ 907 0324 00000000 		.word	jpeg_fdct_3x3
+ 908 0328 00000000 		.word	jpeg_fdct_4x8
+ 909 032c 00000000 		.word	jpeg_fdct_6x6
+ 910 0330 00000000 		.word	jpeg_fdct_10x5
+ 911 0334 00000000 		.word	jpeg_fdct_8x4
+ 912 0338 00000000 		.word	jpeg_fdct_15x15
+ 913 033c 00000000 		.word	jpeg_fdct_12x12
+ 914 0340 00000000 		.word	jpeg_fdct_1x1
+ 915 0344 00000000 		.word	jpeg_fdct_4x4
+ 916 0348 00000000 		.word	jpeg_fdct_5x5
+ 917 034c 00000000 		.word	jpeg_fdct_7x7
+ 918 0350 00000000 		.word	jpeg_fdct_9x9
+ 919 0354 00000000 		.word	jpeg_fdct_10x10
+ 920 0358 00000000 		.word	jpeg_fdct_11x11
+ 921 035c 00000000 		.word	jpeg_fdct_13x13
+ 922 0360 00000000 		.word	jpeg_fdct_14x14
+ 923 0364 00000000 		.word	jpeg_fdct_16x16
+ 924 0368 00000000 		.word	jpeg_fdct_16x8
+ 925 036c 00000000 		.word	jpeg_fdct_14x7
+ 926 0370 00000000 		.word	jpeg_fdct_12x6
+ 927 0374 00000000 		.word	jpeg_fdct_6x3
+ 928 0378 00000000 		.word	jpeg_fdct_4x2
+ 929              	.LVL100:
+ 930              	.L32:
+ 283:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 931              		.loc 1 283 7 is_stmt 1 view .LVU288
+ 283:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 932              		.loc 1 283 24 is_stmt 0 view .LVU289
+ 933 037c 07F10A03 		add	r3, r7, #10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 27
+
+
+ 934 0380 09EB8303 		add	r3, r9, r3, lsl #2
+ 935 0384 A14A     		ldr	r2, .L99
+ 936 0386 5A60     		str	r2, [r3, #4]
+ 284:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 937              		.loc 1 284 7 is_stmt 1 view .LVU290
+ 938              	.LVL101:
+ 285:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 16):
+ 939              		.loc 1 285 7 view .LVU291
+ 284:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 940              		.loc 1 284 14 is_stmt 0 view .LVU292
+ 941 0388 4FF00008 		mov	r8, #0
+ 285:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((8 << 8) + 16):
+ 942              		.loc 1 285 7 view .LVU293
+ 943 038c 16E7     		b	.L67
+ 944              	.LVL102:
+ 945              	.L54:
+ 287:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 946              		.loc 1 287 7 is_stmt 1 view .LVU294
+ 287:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 947              		.loc 1 287 24 is_stmt 0 view .LVU295
+ 948 038e 07F10A03 		add	r3, r7, #10
+ 949 0392 09EB8303 		add	r3, r9, r3, lsl #2
+ 950 0396 9E4A     		ldr	r2, .L99+4
+ 951 0398 5A60     		str	r2, [r3, #4]
+ 288:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 952              		.loc 1 288 7 is_stmt 1 view .LVU296
+ 953              	.LVL103:
+ 289:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 14):
+ 954              		.loc 1 289 7 view .LVU297
+ 288:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 955              		.loc 1 288 14 is_stmt 0 view .LVU298
+ 956 039a 4FF00008 		mov	r8, #0
+ 289:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((7 << 8) + 14):
+ 957              		.loc 1 289 7 view .LVU299
+ 958 039e 0DE7     		b	.L67
+ 959              	.LVL104:
+ 960              	.L26:
+ 291:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 961              		.loc 1 291 7 is_stmt 1 view .LVU300
+ 291:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 962              		.loc 1 291 24 is_stmt 0 view .LVU301
+ 963 03a0 07F10A03 		add	r3, r7, #10
+ 964 03a4 09EB8303 		add	r3, r9, r3, lsl #2
+ 965 03a8 9A4A     		ldr	r2, .L99+8
+ 966 03aa 5A60     		str	r2, [r3, #4]
+ 292:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 967              		.loc 1 292 7 is_stmt 1 view .LVU302
+ 968              	.LVL105:
+ 293:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 12):
+ 969              		.loc 1 293 7 view .LVU303
+ 292:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 970              		.loc 1 292 14 is_stmt 0 view .LVU304
+ 971 03ac 4FF00008 		mov	r8, #0
+ 293:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((6 << 8) + 12):
+ 972              		.loc 1 293 7 view .LVU305
+ 973 03b0 04E7     		b	.L67
+ 974              	.LVL106:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 28
+
+
+ 975              	.L46:
+ 295:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 976              		.loc 1 295 7 is_stmt 1 view .LVU306
+ 295:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 977              		.loc 1 295 24 is_stmt 0 view .LVU307
+ 978 03b2 07F10A03 		add	r3, r7, #10
+ 979 03b6 09EB8303 		add	r3, r9, r3, lsl #2
+ 980 03ba 974A     		ldr	r2, .L99+12
+ 981 03bc 5A60     		str	r2, [r3, #4]
+ 296:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 982              		.loc 1 296 7 is_stmt 1 view .LVU308
+ 983              	.LVL107:
+ 297:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 10):
+ 984              		.loc 1 297 7 view .LVU309
+ 296:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 985              		.loc 1 296 14 is_stmt 0 view .LVU310
+ 986 03be 4FF00008 		mov	r8, #0
+ 297:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((5 << 8) + 10):
+ 987              		.loc 1 297 7 view .LVU311
+ 988 03c2 FBE6     		b	.L67
+ 989              	.LVL108:
+ 990              	.L44:
+ 299:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 991              		.loc 1 299 7 is_stmt 1 view .LVU312
+ 299:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 992              		.loc 1 299 24 is_stmt 0 view .LVU313
+ 993 03c4 07F10A03 		add	r3, r7, #10
+ 994 03c8 09EB8303 		add	r3, r9, r3, lsl #2
+ 995 03cc 934A     		ldr	r2, .L99+16
+ 996 03ce 5A60     		str	r2, [r3, #4]
+ 300:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 997              		.loc 1 300 7 is_stmt 1 view .LVU314
+ 998              	.LVL109:
+ 301:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 8):
+ 999              		.loc 1 301 7 view .LVU315
+ 300:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1000              		.loc 1 300 14 is_stmt 0 view .LVU316
+ 1001 03d0 4FF00008 		mov	r8, #0
+ 301:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((4 << 8) + 8):
+ 1002              		.loc 1 301 7 view .LVU317
+ 1003 03d4 F2E6     		b	.L67
+ 1004              	.LVL110:
+ 1005              	.L38:
+ 307:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1006              		.loc 1 307 7 is_stmt 1 view .LVU318
+ 307:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1007              		.loc 1 307 24 is_stmt 0 view .LVU319
+ 1008 03d6 07F10A03 		add	r3, r7, #10
+ 1009 03da 09EB8303 		add	r3, r9, r3, lsl #2
+ 1010 03de 904A     		ldr	r2, .L99+20
+ 1011 03e0 5A60     		str	r2, [r3, #4]
+ 308:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1012              		.loc 1 308 7 is_stmt 1 view .LVU320
+ 1013              	.LVL111:
+ 309:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 4):
+ 1014              		.loc 1 309 7 view .LVU321
+ 308:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 29
+
+
+ 1015              		.loc 1 308 14 is_stmt 0 view .LVU322
+ 1016 03e2 4FF00008 		mov	r8, #0
+ 309:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((2 << 8) + 4):
+ 1017              		.loc 1 309 7 view .LVU323
+ 1018 03e6 E9E6     		b	.L67
+ 1019              	.LVL112:
+ 1020              	.L30:
+ 311:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1021              		.loc 1 311 7 is_stmt 1 view .LVU324
+ 311:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1022              		.loc 1 311 24 is_stmt 0 view .LVU325
+ 1023 03e8 07F10A03 		add	r3, r7, #10
+ 1024 03ec 09EB8303 		add	r3, r9, r3, lsl #2
+ 1025 03f0 8C4A     		ldr	r2, .L99+24
+ 1026 03f2 5A60     		str	r2, [r3, #4]
+ 312:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1027              		.loc 1 312 7 is_stmt 1 view .LVU326
+ 1028              	.LVL113:
+ 313:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((1 << 8) + 2):
+ 1029              		.loc 1 313 7 view .LVU327
+ 312:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1030              		.loc 1 312 14 is_stmt 0 view .LVU328
+ 1031 03f4 4FF00008 		mov	r8, #0
+ 313:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case ((1 << 8) + 2):
+ 1032              		.loc 1 313 7 view .LVU329
+ 1033 03f8 E0E6     		b	.L67
+ 1034              	.LVL114:
+ 1035              	.L53:
+ 320:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_ISLOW_SUPPORTED
+ 1036              		.loc 1 320 7 is_stmt 1 view .LVU330
+ 320:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_ISLOW_SUPPORTED
+ 1037              		.loc 1 320 20 is_stmt 0 view .LVU331
+ 1038 03fa 95F8E830 		ldrb	r3, [r5, #232]	@ zero_extendqisi2
+ 320:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_ISLOW_SUPPORTED
+ 1039              		.loc 1 320 7 view .LVU332
+ 1040 03fe 012B     		cmp	r3, #1
+ 1041 0400 0BD0     		beq	.L68
+ 1042 0402 022B     		cmp	r3, #2
+ 1043 0404 12D0     		beq	.L69
+ 1044 0406 D3B9     		cbnz	r3, .L70
+ 323:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_ISLOW;
+ 1045              		.loc 1 323 2 is_stmt 1 view .LVU333
+ 323:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_ISLOW;
+ 1046              		.loc 1 323 19 is_stmt 0 view .LVU334
+ 1047 0408 07F10A03 		add	r3, r7, #10
+ 1048 040c 09EB8303 		add	r3, r9, r3, lsl #2
+ 1049 0410 854A     		ldr	r2, .L99+28
+ 1050 0412 5A60     		str	r2, [r3, #4]
+ 324:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1051              		.loc 1 324 2 is_stmt 1 view .LVU335
+ 1052              	.LVL115:
+ 325:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1053              		.loc 1 325 2 view .LVU336
+ 324:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1054              		.loc 1 324 9 is_stmt 0 view .LVU337
+ 1055 0414 4FF00008 		mov	r8, #0
+ 325:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 30
+
+
+ 1056              		.loc 1 325 2 view .LVU338
+ 1057 0418 D0E6     		b	.L67
+ 1058              	.LVL116:
+ 1059              	.L68:
+ 329:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_IFAST;
+ 1060              		.loc 1 329 2 is_stmt 1 view .LVU339
+ 329:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_IFAST;
+ 1061              		.loc 1 329 19 is_stmt 0 view .LVU340
+ 1062 041a 07F10A03 		add	r3, r7, #10
+ 1063 041e 09EB8303 		add	r3, r9, r3, lsl #2
+ 1064 0422 824A     		ldr	r2, .L99+32
+ 1065 0424 5A60     		str	r2, [r3, #4]
+ 330:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1066              		.loc 1 330 2 is_stmt 1 view .LVU341
+ 1067              	.LVL117:
+ 331:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1068              		.loc 1 331 2 view .LVU342
+ 330:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1069              		.loc 1 330 9 is_stmt 0 view .LVU343
+ 1070 0426 4FF00108 		mov	r8, #1
+ 331:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1071              		.loc 1 331 2 view .LVU344
+ 1072 042a C7E6     		b	.L67
+ 1073              	.LVL118:
+ 1074              	.L69:
+ 335:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_FLOAT;
+ 1075              		.loc 1 335 2 is_stmt 1 view .LVU345
+ 335:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	method = JDCT_FLOAT;
+ 1076              		.loc 1 335 25 is_stmt 0 view .LVU346
+ 1077 042c 07F11803 		add	r3, r7, #24
+ 1078 0430 09EB8303 		add	r3, r9, r3, lsl #2
+ 1079 0434 7E4A     		ldr	r2, .L99+36
+ 1080 0436 5A60     		str	r2, [r3, #4]
+ 336:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1081              		.loc 1 336 2 is_stmt 1 view .LVU347
+ 1082              	.LVL119:
+ 337:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1083              		.loc 1 337 2 view .LVU348
+ 336:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1084              		.loc 1 336 9 is_stmt 0 view .LVU349
+ 1085 0438 4FF00208 		mov	r8, #2
+ 337:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1086              		.loc 1 337 2 view .LVU350
+ 1087 043c BEE6     		b	.L67
+ 1088              	.LVL120:
+ 1089              	.L70:
+ 340:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	break;
+ 1090              		.loc 1 340 2 is_stmt 1 view .LVU351
+ 1091 043e 2B68     		ldr	r3, [r5]
+ 1092 0440 3122     		movs	r2, #49
+ 1093 0442 5A61     		str	r2, [r3, #20]
+ 1094 0444 2B68     		ldr	r3, [r5]
+ 1095 0446 1B68     		ldr	r3, [r3]
+ 1096 0448 2846     		mov	r0, r5
+ 1097 044a 9847     		blx	r3
+ 1098              	.LVL121:
+ 341:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 31
+
+
+ 1099              		.loc 1 341 2 view .LVU352
+ 1100 044c B6E6     		b	.L67
+ 1101              	.L36:
+ 345:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	       compptr->DCT_h_scaled_size, compptr->DCT_v_scaled_size);
+ 1102              		.loc 1 345 7 view .LVU353
+ 1103 044e 2B68     		ldr	r3, [r5]
+ 1104 0450 0722     		movs	r2, #7
+ 1105 0452 5A61     		str	r2, [r3, #20]
+ 1106 0454 2B68     		ldr	r3, [r5]
+ 1107 0456 726A     		ldr	r2, [r6, #36]
+ 1108 0458 9A61     		str	r2, [r3, #24]
+ 1109 045a 2B68     		ldr	r3, [r5]
+ 1110 045c B26A     		ldr	r2, [r6, #40]
+ 1111 045e DA61     		str	r2, [r3, #28]
+ 1112 0460 2B68     		ldr	r3, [r5]
+ 1113 0462 1B68     		ldr	r3, [r3]
+ 1114 0464 2846     		mov	r0, r5
+ 1115 0466 9847     		blx	r3
+ 1116              	.LVL122:
+ 347:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     }
+ 1117              		.loc 1 347 7 view .LVU354
+ 1118 0468 A8E6     		b	.L67
+ 1119              	.LVL123:
+ 1120              	.L92:
+ 364:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1121              		.loc 1 364 2 view .LVU355
+ 365:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 				      DCTSIZE2 * SIZEOF(DCTELEM));
+ 1122              		.loc 1 365 11 is_stmt 0 view .LVU356
+ 1123 046a 6B68     		ldr	r3, [r5, #4]
+ 365:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 				      DCTSIZE2 * SIZEOF(DCTELEM));
+ 1124              		.loc 1 365 5 view .LVU357
+ 1125 046c 1B68     		ldr	r3, [r3]
+ 1126 046e 4FF48072 		mov	r2, #256
+ 1127 0472 0121     		movs	r1, #1
+ 1128 0474 2846     		mov	r0, r5
+ 1129 0476 9847     		blx	r3
+ 1130              	.LVL124:
+ 364:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1131              		.loc 1 364 25 view .LVU358
+ 1132 0478 0AF11403 		add	r3, r10, #20
+ 1133 047c 09EB8303 		add	r3, r9, r3, lsl #2
+ 1134 0480 5860     		str	r0, [r3, #4]
+ 1135 0482 C7E6     		b	.L76
+ 1136              	.LVL125:
+ 1137              	.L78:
+ 370:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	dtbl[i] = ((DCTELEM) qtbl->quantval[i]) << 3;
+ 1138              		.loc 1 370 2 is_stmt 1 view .LVU359
+ 1139              		.loc 1 370 37 is_stmt 0 view .LVU360
+ 1140 0484 34F81320 		ldrh	r2, [r4, r3, lsl #1]
+ 1141              		.loc 1 370 42 view .LVU361
+ 1142 0488 D200     		lsls	r2, r2, #3
+ 1143              		.loc 1 370 10 view .LVU362
+ 1144 048a 41F82320 		str	r2, [r1, r3, lsl #2]
+ 369:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	dtbl[i] = ((DCTELEM) qtbl->quantval[i]) << 3;
+ 1145              		.loc 1 369 34 is_stmt 1 discriminator 3 view .LVU363
+ 1146 048e 0133     		adds	r3, r3, #1
+ 1147              	.LVL126:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 32
+
+
+ 1148              	.L77:
+ 369:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	dtbl[i] = ((DCTELEM) qtbl->quantval[i]) << 3;
+ 1149              		.loc 1 369 21 discriminator 1 view .LVU364
+ 1150 0490 3F2B     		cmp	r3, #63
+ 1151 0492 F7DD     		ble	.L78
+ 371:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 372:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->pub.forward_DCT[ci] = forward_DCT;
+ 1152              		.loc 1 372 7 view .LVU365
+ 1153              		.loc 1 372 33 is_stmt 0 view .LVU366
+ 1154 0494 09EB8703 		add	r3, r9, r7, lsl #2
+ 1155              	.LVL127:
+ 1156              		.loc 1 372 33 view .LVU367
+ 1157 0498 664A     		ldr	r2, .L99+40
+ 1158 049a 5A60     		str	r2, [r3, #4]
+ 373:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1159              		.loc 1 373 7 is_stmt 1 view .LVU368
+ 1160              	.LVL128:
+ 1161              	.L79:
+ 190:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Select the proper DCT routine for this component's scaling */
+ 1162              		.loc 1 190 12 view .LVU369
+ 190:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Select the proper DCT routine for this component's scaling */
+ 1163              		.loc 1 190 10 is_stmt 0 view .LVU370
+ 1164 049c 0137     		adds	r7, r7, #1
+ 1165              	.LVL129:
+ 190:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     /* Select the proper DCT routine for this component's scaling */
+ 1166              		.loc 1 190 21 view .LVU371
+ 1167 049e 5836     		adds	r6, r6, #88
+ 1168              	.LVL130:
+ 1169              	.L25:
+ 189:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        ci++, compptr++) {
+ 1170              		.loc 1 189 47 is_stmt 1 discriminator 1 view .LVU372
+ 189:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        ci++, compptr++) {
+ 1171              		.loc 1 189 54 is_stmt 0 discriminator 1 view .LVU373
+ 1172 04a0 EB6C     		ldr	r3, [r5, #76]
+ 189:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****        ci++, compptr++) {
+ 1173              		.loc 1 189 47 discriminator 1 view .LVU374
+ 1174 04a2 BB42     		cmp	r3, r7
+ 1175 04a4 40F3B080 		ble	.L93
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 1176              		.loc 1 192 5 is_stmt 1 view .LVU375
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 1177              		.loc 1 192 21 is_stmt 0 view .LVU376
+ 1178 04a8 726A     		ldr	r2, [r6, #36]
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 1179              		.loc 1 192 56 view .LVU377
+ 1180 04aa B36A     		ldr	r3, [r6, #40]
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 1181              		.loc 1 192 47 view .LVU378
+ 1182 04ac 03EB0223 		add	r3, r3, r2, lsl #8
+ 192:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_SCALING_SUPPORTED
+ 1183              		.loc 1 192 5 view .LVU379
+ 1184 04b0 40F20E72 		movw	r2, #1806
+ 1185 04b4 9342     		cmp	r3, r2
+ 1186 04b6 3FF473AF 		beq	.L26
+ 1187 04ba 3FF706AE 		bgt	.L27
+ 1188 04be 40F20442 		movw	r2, #1028
+ 1189 04c2 9342     		cmp	r3, r2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 33
+
+
+ 1190 04c4 3FF4ADAE 		beq	.L28
+ 1191 04c8 3FF7CAAD 		bgt	.L29
+ 1192 04cc B3F5017F 		cmp	r3, #516
+ 1193 04d0 8AD0     		beq	.L30
+ 1194 04d2 3FF7ADAD 		bgt	.L31
+ 1195 04d6 40F20122 		movw	r2, #513
+ 1196 04da 9342     		cmp	r3, r2
+ 1197 04dc 3FF44EAF 		beq	.L32
+ 1198 04e0 3FF798AD 		bgt	.L33
+ 1199 04e4 40F20112 		movw	r2, #257
+ 1200 04e8 9342     		cmp	r3, r2
+ 1201 04ea 3FF45FAE 		beq	.L34
+ 1202 04ee B3F5817F 		cmp	r3, #258
+ 1203 04f2 ACD1     		bne	.L36
+ 315:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1204              		.loc 1 315 7 is_stmt 1 view .LVU380
+ 315:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       method = JDCT_ISLOW;	/* jfdctint uses islow-style table */
+ 1205              		.loc 1 315 24 is_stmt 0 view .LVU381
+ 1206 04f4 07F10A03 		add	r3, r7, #10
+ 1207 04f8 09EB8303 		add	r3, r9, r3, lsl #2
+ 1208 04fc 4E4A     		ldr	r2, .L99+44
+ 1209 04fe 5A60     		str	r2, [r3, #4]
+ 316:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1210              		.loc 1 316 7 is_stmt 1 view .LVU382
+ 1211              	.LVL131:
+ 317:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1212              		.loc 1 317 7 view .LVU383
+ 316:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1213              		.loc 1 316 14 is_stmt 0 view .LVU384
+ 1214 0500 4FF00008 		mov	r8, #0
+ 317:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 1215              		.loc 1 317 7 view .LVU385
+ 1216 0504 5AE6     		b	.L67
+ 1217              	.LVL132:
+ 1218              	.L73:
+ 1219              	.LBB6:
+ 374:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 375:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_IFAST_SUPPORTED
+ 376:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case JDCT_IFAST:
+ 377:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       {
+ 378:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* For AA&N IDCT method, divisors are equal to quantization
+ 379:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * coefficients scaled by scalefactor[row]*scalefactor[col], where
+ 380:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 *   scalefactor[0] = 1
+ 381:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 *   scalefactor[k] = cos(k*PI/16) * sqrt(2)    for k=1..7
+ 382:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * We apply a further scale factor of 8.
+ 383:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 */
+ 384:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #define CONST_BITS 14
+ 385:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	static const INT16 aanscales[DCTSIZE2] = {
+ 1220              		.loc 1 385 2 is_stmt 1 view .LVU386
+ 386:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  /* precomputed values scaled up by 14 bits */
+ 387:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  16384, 22725, 21407, 19266, 16384, 12873,  8867,  4520,
+ 388:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  22725, 31521, 29692, 26722, 22725, 17855, 12299,  6270,
+ 389:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  21407, 29692, 27969, 25172, 21407, 16819, 11585,  5906,
+ 390:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  19266, 26722, 25172, 22654, 19266, 15137, 10426,  5315,
+ 391:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  16384, 22725, 21407, 19266, 16384, 12873,  8867,  4520,
+ 392:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  12873, 17855, 16819, 15137, 12873, 10114,  6967,  3552,
+ 393:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	   8867, 12299, 11585, 10426,  8867,  6967,  4799,  2446,
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 34
+
+
+ 394:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	   4520,  6270,  5906,  5315,  4520,  3552,  2446,  1247
+ 395:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	};
+ 396:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	SHIFT_TEMPS
+ 397:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 398:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	if (fdct->divisors[qtblno] == NULL) {
+ 1221              		.loc 1 398 2 view .LVU387
+ 1222              		.loc 1 398 20 is_stmt 0 view .LVU388
+ 1223 0506 0AF11403 		add	r3, r10, #20
+ 1224 050a 09EB8303 		add	r3, r9, r3, lsl #2
+ 1225 050e 5B68     		ldr	r3, [r3, #4]
+ 1226              		.loc 1 398 5 view .LVU389
+ 1227 0510 33B1     		cbz	r3, .L94
+ 1228              	.L80:
+ 399:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  fdct->divisors[qtblno] = (DCTELEM *)
+ 400:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 401:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(DCTELEM));
+ 402:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 403:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	dtbl = fdct->divisors[qtblno];
+ 1229              		.loc 1 403 2 is_stmt 1 view .LVU390
+ 1230              		.loc 1 403 7 is_stmt 0 view .LVU391
+ 1231 0512 0AF11403 		add	r3, r10, #20
+ 1232 0516 09EB8303 		add	r3, r9, r3, lsl #2
+ 1233 051a 5868     		ldr	r0, [r3, #4]
+ 1234              	.LVL133:
+ 404:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	for (i = 0; i < DCTSIZE2; i++) {
+ 1235              		.loc 1 404 2 is_stmt 1 view .LVU392
+ 1236              		.loc 1 404 9 is_stmt 0 view .LVU393
+ 1237 051c 0022     		movs	r2, #0
+ 1238              		.loc 1 404 2 view .LVU394
+ 1239 051e 19E0     		b	.L81
+ 1240              	.LVL134:
+ 1241              	.L94:
+ 399:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  fdct->divisors[qtblno] = (DCTELEM *)
+ 1242              		.loc 1 399 4 is_stmt 1 view .LVU395
+ 400:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(DCTELEM));
+ 1243              		.loc 1 400 13 is_stmt 0 view .LVU396
+ 1244 0520 6B68     		ldr	r3, [r5, #4]
+ 400:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(DCTELEM));
+ 1245              		.loc 1 400 7 view .LVU397
+ 1246 0522 1B68     		ldr	r3, [r3]
+ 1247 0524 4FF48072 		mov	r2, #256
+ 1248 0528 0121     		movs	r1, #1
+ 1249 052a 2846     		mov	r0, r5
+ 1250 052c 9847     		blx	r3
+ 1251              	.LVL135:
+ 399:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  fdct->divisors[qtblno] = (DCTELEM *)
+ 1252              		.loc 1 399 27 view .LVU398
+ 1253 052e 0AF11403 		add	r3, r10, #20
+ 1254 0532 09EB8303 		add	r3, r9, r3, lsl #2
+ 1255 0536 5860     		str	r0, [r3, #4]
+ 1256 0538 EBE7     		b	.L80
+ 1257              	.LVL136:
+ 1258              	.L82:
+ 405:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  dtbl[i] = (DCTELEM)
+ 1259              		.loc 1 405 4 is_stmt 1 view .LVU399
+ 406:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    DESCALE(MULTIPLY16V16((INT32) qtbl->quantval[i],
+ 1260              		.loc 1 406 6 is_stmt 0 view .LVU400
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 35
+
+
+ 1261 053a 34F81230 		ldrh	r3, [r4, r2, lsl #1]
+ 1262 053e 3F49     		ldr	r1, .L99+48
+ 1263 0540 31F91210 		ldrsh	r1, [r1, r2, lsl #1]
+ 1264 0544 01FB03F3 		mul	r3, r1, r3
+ 1265 0548 03F58063 		add	r3, r3, #1024
+ 1266 054c DB12     		asrs	r3, r3, #11
+ 405:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  dtbl[i] = (DCTELEM)
+ 1267              		.loc 1 405 12 view .LVU401
+ 1268 054e 40F82230 		str	r3, [r0, r2, lsl #2]
+ 404:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  dtbl[i] = (DCTELEM)
+ 1269              		.loc 1 404 29 is_stmt 1 discriminator 3 view .LVU402
+ 1270 0552 0132     		adds	r2, r2, #1
+ 1271              	.LVL137:
+ 1272              	.L81:
+ 404:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  dtbl[i] = (DCTELEM)
+ 1273              		.loc 1 404 16 discriminator 1 view .LVU403
+ 1274 0554 3F2A     		cmp	r2, #63
+ 1275 0556 F0DD     		ble	.L82
+ 1276              	.LBE6:
+ 407:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 				  (INT32) aanscales[i]),
+ 408:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 		    CONST_BITS-3);
+ 409:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 410:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 411:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->pub.forward_DCT[ci] = forward_DCT;
+ 1277              		.loc 1 411 7 view .LVU404
+ 1278              		.loc 1 411 33 is_stmt 0 view .LVU405
+ 1279 0558 09EB8703 		add	r3, r9, r7, lsl #2
+ 1280 055c 354A     		ldr	r2, .L99+40
+ 1281              	.LVL138:
+ 1282              		.loc 1 411 33 view .LVU406
+ 1283 055e 5A60     		str	r2, [r3, #4]
+ 412:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1284              		.loc 1 412 7 is_stmt 1 view .LVU407
+ 1285 0560 9CE7     		b	.L79
+ 1286              	.LVL139:
+ 1287              	.L74:
+ 1288              	.LBB7:
+ 413:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 414:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_FLOAT_SUPPORTED
+ 415:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     case JDCT_FLOAT:
+ 416:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       {
+ 417:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	/* For float AA&N IDCT method, divisors are equal to quantization
+ 418:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * coefficients scaled by scalefactor[row]*scalefactor[col], where
+ 419:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 *   scalefactor[0] = 1
+ 420:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 *   scalefactor[k] = cos(k*PI/16) * sqrt(2)    for k=1..7
+ 421:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * We apply a further scale factor of 8.
+ 422:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * What's actually stored is 1/divisor so that the inner loop can
+ 423:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 * use a multiplication rather than a division.
+ 424:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	 */
+ 425:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	FAST_FLOAT * fdtbl;
+ 1289              		.loc 1 425 2 view .LVU408
+ 426:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	int row, col;
+ 1290              		.loc 1 426 2 view .LVU409
+ 427:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	static const double aanscalefactor[DCTSIZE] = {
+ 1291              		.loc 1 427 2 view .LVU410
+ 428:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  1.0, 1.387039845, 1.306562965, 1.175875602,
+ 429:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  1.0, 0.785694958, 0.541196100, 0.275899379
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 36
+
+
+ 430:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	};
+ 431:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 432:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	if (fdct->float_divisors[qtblno] == NULL) {
+ 1292              		.loc 1 432 2 view .LVU411
+ 1293              		.loc 1 432 26 is_stmt 0 view .LVU412
+ 1294 0562 0AF12203 		add	r3, r10, #34
+ 1295 0566 09EB8303 		add	r3, r9, r3, lsl #2
+ 1296 056a 5B68     		ldr	r3, [r3, #4]
+ 1297              		.loc 1 432 5 view .LVU413
+ 1298 056c 43B1     		cbz	r3, .L95
+ 1299              	.L83:
+ 433:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  fdct->float_divisors[qtblno] = (FAST_FLOAT *)
+ 434:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 435:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(FAST_FLOAT));
+ 436:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 437:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	fdtbl = fdct->float_divisors[qtblno];
+ 1300              		.loc 1 437 2 is_stmt 1 view .LVU414
+ 1301              		.loc 1 437 8 is_stmt 0 view .LVU415
+ 1302 056e 0AF12203 		add	r3, r10, #34
+ 1303 0572 09EB8303 		add	r3, r9, r3, lsl #2
+ 1304 0576 D3F804C0 		ldr	ip, [r3, #4]
+ 1305              	.LVL140:
+ 438:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	i = 0;
+ 1306              		.loc 1 438 2 is_stmt 1 view .LVU416
+ 439:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	for (row = 0; row < DCTSIZE; row++) {
+ 1307              		.loc 1 439 2 view .LVU417
+ 1308              		.loc 1 439 11 is_stmt 0 view .LVU418
+ 1309 057a 0020     		movs	r0, #0
+ 438:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	i = 0;
+ 1310              		.loc 1 438 4 view .LVU419
+ 1311 057c 0146     		mov	r1, r0
+ 1312              		.loc 1 439 2 view .LVU420
+ 1313 057e 32E0     		b	.L84
+ 1314              	.LVL141:
+ 1315              	.L95:
+ 433:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  fdct->float_divisors[qtblno] = (FAST_FLOAT *)
+ 1316              		.loc 1 433 4 is_stmt 1 view .LVU421
+ 434:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(FAST_FLOAT));
+ 1317              		.loc 1 434 13 is_stmt 0 view .LVU422
+ 1318 0580 6B68     		ldr	r3, [r5, #4]
+ 434:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 					DCTSIZE2 * SIZEOF(FAST_FLOAT));
+ 1319              		.loc 1 434 7 view .LVU423
+ 1320 0582 1B68     		ldr	r3, [r3]
+ 1321 0584 4FF48072 		mov	r2, #256
+ 1322 0588 0121     		movs	r1, #1
+ 1323 058a 2846     		mov	r0, r5
+ 1324 058c 9847     		blx	r3
+ 1325              	.LVL142:
+ 433:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1326              		.loc 1 433 33 view .LVU424
+ 1327 058e 0AF12203 		add	r3, r10, #34
+ 1328 0592 09EB8303 		add	r3, r9, r3, lsl #2
+ 1329 0596 5860     		str	r0, [r3, #4]
+ 1330 0598 E9E7     		b	.L83
+ 1331              	.LVL143:
+ 1332              	.L85:
+ 440:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  for (col = 0; col < DCTSIZE; col++) {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 37
+
+
+ 441:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    fdtbl[i] = (FAST_FLOAT)
+ 1333              		.loc 1 441 6 is_stmt 1 view .LVU425
+ 442:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1334              		.loc 1 442 40 is_stmt 0 view .LVU426
+ 1335 059a 34F81130 		ldrh	r3, [r4, r1, lsl #1]
+ 1336 059e 07EE103A 		vmov	s14, r3	@ int
+ 1337              		.loc 1 442 17 view .LVU427
+ 1338 05a2 B8EE477B 		vcvt.f64.u32	d7, s14
+ 443:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 		       aanscalefactor[row] * aanscalefactor[col] * 8.0)));
+ 1339              		.loc 1 443 24 view .LVU428
+ 1340 05a6 264B     		ldr	r3, .L99+52
+ 1341 05a8 03EBC00E 		add	lr, r3, r0, lsl #3
+ 1342 05ac 9EED006B 		vldr.64	d6, [lr]
+ 442:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1343              		.loc 1 442 44 view .LVU429
+ 1344 05b0 27EE067B 		vmul.f64	d7, d7, d6
+ 1345              		.loc 1 443 46 view .LVU430
+ 1346 05b4 03EBC203 		add	r3, r3, r2, lsl #3
+ 1347 05b8 93ED006B 		vldr.64	d6, [r3]
+ 1348              		.loc 1 443 30 view .LVU431
+ 1349 05bc 27EE067B 		vmul.f64	d7, d7, d6
+ 1350              		.loc 1 443 52 view .LVU432
+ 1351 05c0 B2EE006B 		vmov.f64	d6, #8.0e+0
+ 1352 05c4 27EE067B 		vmul.f64	d7, d7, d6
+ 442:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1353              		.loc 1 442 13 view .LVU433
+ 1354 05c8 B7EE005B 		vmov.f64	d5, #1.0e+0
+ 1355 05cc 85EE076B 		vdiv.f64	d6, d5, d7
+ 441:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1356              		.loc 1 441 11 view .LVU434
+ 1357 05d0 0CEB8103 		add	r3, ip, r1, lsl #2
+ 441:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1358              		.loc 1 441 17 view .LVU435
+ 1359 05d4 B7EEC66B 		vcvt.f32.f64	s12, d6
+ 441:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	      (1.0 / (((double) qtbl->quantval[i] *
+ 1360              		.loc 1 441 15 view .LVU436
+ 1361 05d8 83ED006A 		vstr.32	s12, [r3]
+ 444:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    i++;
+ 1362              		.loc 1 444 6 is_stmt 1 view .LVU437
+ 1363              		.loc 1 444 7 is_stmt 0 view .LVU438
+ 1364 05dc 0131     		adds	r1, r1, #1
+ 1365              	.LVL144:
+ 440:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    fdtbl[i] = (FAST_FLOAT)
+ 1366              		.loc 1 440 36 is_stmt 1 discriminator 3 view .LVU439
+ 1367 05de 0132     		adds	r2, r2, #1
+ 1368              	.LVL145:
+ 1369              	.L86:
+ 440:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    fdtbl[i] = (FAST_FLOAT)
+ 1370              		.loc 1 440 22 discriminator 1 view .LVU440
+ 1371 05e0 072A     		cmp	r2, #7
+ 1372 05e2 DADD     		ble	.L85
+ 439:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  for (col = 0; col < DCTSIZE; col++) {
+ 1373              		.loc 1 439 34 discriminator 2 view .LVU441
+ 1374 05e4 0130     		adds	r0, r0, #1
+ 1375              	.LVL146:
+ 1376              	.L84:
+ 439:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  for (col = 0; col < DCTSIZE; col++) {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 38
+
+
+ 1377              		.loc 1 439 20 discriminator 1 view .LVU442
+ 1378 05e6 0728     		cmp	r0, #7
+ 1379 05e8 01DC     		bgt	.L96
+ 440:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	    fdtbl[i] = (FAST_FLOAT)
+ 1380              		.loc 1 440 13 is_stmt 0 view .LVU443
+ 1381 05ea 0022     		movs	r2, #0
+ 1382 05ec F8E7     		b	.L86
+ 1383              	.L96:
+ 1384              	.LBE7:
+ 445:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	  }
+ 446:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 	}
+ 447:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       }
+ 448:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       fdct->pub.forward_DCT[ci] = forward_DCT_float;
+ 1385              		.loc 1 448 7 is_stmt 1 view .LVU444
+ 1386              		.loc 1 448 33 is_stmt 0 view .LVU445
+ 1387 05ee 09EB8703 		add	r3, r9, r7, lsl #2
+ 1388 05f2 144A     		ldr	r2, .L99+56
+ 1389 05f4 5A60     		str	r2, [r3, #4]
+ 449:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1390              		.loc 1 449 7 is_stmt 1 view .LVU446
+ 1391 05f6 51E7     		b	.L79
+ 1392              	.LVL147:
+ 1393              	.L75:
+ 450:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 451:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     default:
+ 452:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 1394              		.loc 1 452 7 view .LVU447
+ 1395 05f8 2B68     		ldr	r3, [r5]
+ 1396 05fa 3122     		movs	r2, #49
+ 1397 05fc 5A61     		str	r2, [r3, #20]
+ 1398 05fe 2B68     		ldr	r3, [r5]
+ 1399 0600 1B68     		ldr	r3, [r3]
+ 1400 0602 2846     		mov	r0, r5
+ 1401 0604 9847     		blx	r3
+ 1402              	.LVL148:
+ 453:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****       break;
+ 1403              		.loc 1 453 7 view .LVU448
+ 1404 0606 49E7     		b	.L79
+ 1405              	.LVL149:
+ 1406              	.L93:
+ 454:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     }
+ 455:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   }
+ 456:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** }
+ 1407              		.loc 1 456 1 is_stmt 0 view .LVU449
+ 1408 0608 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1409              	.LVL150:
+ 1410              	.L100:
+ 1411              		.loc 1 456 1 view .LVU450
+ 1412              		.align	2
+ 1413              	.L99:
+ 1414 060c 00000000 		.word	jpeg_fdct_2x1
+ 1415 0610 00000000 		.word	jpeg_fdct_8x16
+ 1416 0614 00000000 		.word	jpeg_fdct_7x14
+ 1417 0618 00000000 		.word	jpeg_fdct_6x12
+ 1418 061c 00000000 		.word	jpeg_fdct_5x10
+ 1419 0620 00000000 		.word	jpeg_fdct_3x6
+ 1420 0624 00000000 		.word	jpeg_fdct_2x4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 39
+
+
+ 1421 0628 00000000 		.word	jpeg_fdct_islow
+ 1422 062c 00000000 		.word	jpeg_fdct_ifast
+ 1423 0630 00000000 		.word	jpeg_fdct_float
+ 1424 0634 00000000 		.word	forward_DCT
+ 1425 0638 00000000 		.word	jpeg_fdct_1x2
+ 1426 063c 00000000 		.word	aanscales.1
+ 1427 0640 00000000 		.word	aanscalefactor.0
+ 1428 0644 00000000 		.word	forward_DCT_float
+ 1429              		.cfi_endproc
+ 1430              	.LFE149:
+ 1432              		.section	.text.jinit_forward_dct,"ax",%progbits
+ 1433              		.align	1
+ 1434              		.global	jinit_forward_dct
+ 1435              		.syntax unified
+ 1436              		.thumb
+ 1437              		.thumb_func
+ 1439              	jinit_forward_dct:
+ 1440              	.LVL151:
+ 1441              	.LFB150:
+ 457:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 458:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 459:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** /*
+ 460:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  * Initialize FDCT manager.
+ 461:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****  */
+ 462:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 463:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** GLOBAL(void)
+ 464:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** jinit_forward_dct (j_compress_ptr cinfo)
+ 465:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** {
+ 1442              		.loc 1 465 1 is_stmt 1 view -0
+ 1443              		.cfi_startproc
+ 1444              		@ args = 0, pretend = 0, frame = 0
+ 1445              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1446              		.loc 1 465 1 is_stmt 0 view .LVU452
+ 1447 0000 10B5     		push	{r4, lr}
+ 1448              	.LCFI7:
+ 1449              		.cfi_def_cfa_offset 8
+ 1450              		.cfi_offset 4, -8
+ 1451              		.cfi_offset 14, -4
+ 1452 0002 0446     		mov	r4, r0
+ 466:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   my_fdct_ptr fdct;
+ 1453              		.loc 1 466 3 is_stmt 1 view .LVU453
+ 467:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   int i;
+ 1454              		.loc 1 467 3 view .LVU454
+ 468:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 469:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   fdct = (my_fdct_ptr)
+ 1455              		.loc 1 469 3 view .LVU455
+ 470:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1456              		.loc 1 470 12 is_stmt 0 view .LVU456
+ 1457 0004 4368     		ldr	r3, [r0, #4]
+ 1458              		.loc 1 470 6 view .LVU457
+ 1459 0006 1B68     		ldr	r3, [r3]
+ 1460 0008 9C22     		movs	r2, #156
+ 1461 000a 0121     		movs	r1, #1
+ 1462 000c 9847     		blx	r3
+ 1463              	.LVL152:
+ 471:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 				SIZEOF(my_fdct_controller));
+ 472:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   cinfo->fdct = (struct jpeg_forward_dct *) fdct;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 40
+
+
+ 1464              		.loc 1 472 3 is_stmt 1 view .LVU458
+ 1465              		.loc 1 472 15 is_stmt 0 view .LVU459
+ 1466 000e C4F8A001 		str	r0, [r4, #416]
+ 473:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   fdct->pub.start_pass = start_pass_fdctmgr;
+ 1467              		.loc 1 473 3 is_stmt 1 view .LVU460
+ 1468              		.loc 1 473 24 is_stmt 0 view .LVU461
+ 1469 0012 094B     		ldr	r3, .L105
+ 1470 0014 0360     		str	r3, [r0]
+ 474:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** 
+ 475:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   /* Mark divisor tables unallocated */
+ 476:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   for (i = 0; i < NUM_QUANT_TBLS; i++) {
+ 1471              		.loc 1 476 3 is_stmt 1 view .LVU462
+ 1472              	.LVL153:
+ 1473              		.loc 1 476 10 is_stmt 0 view .LVU463
+ 1474 0016 0023     		movs	r3, #0
+ 1475              		.loc 1 476 3 view .LVU464
+ 1476 0018 0BE0     		b	.L102
+ 1477              	.LVL154:
+ 1478              	.L103:
+ 477:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     fdct->divisors[i] = NULL;
+ 1479              		.loc 1 477 5 is_stmt 1 view .LVU465
+ 1480              		.loc 1 477 23 is_stmt 0 view .LVU466
+ 1481 001a 03F11402 		add	r2, r3, #20
+ 1482 001e 00EB8202 		add	r2, r0, r2, lsl #2
+ 1483 0022 0021     		movs	r1, #0
+ 1484 0024 5160     		str	r1, [r2, #4]
+ 478:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #ifdef DCT_FLOAT_SUPPORTED
+ 479:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     fdct->float_divisors[i] = NULL;
+ 1485              		.loc 1 479 5 is_stmt 1 view .LVU467
+ 1486              		.loc 1 479 29 is_stmt 0 view .LVU468
+ 1487 0026 03F12202 		add	r2, r3, #34
+ 1488 002a 00EB8202 		add	r2, r0, r2, lsl #2
+ 1489 002e 5160     		str	r1, [r2, #4]
+ 476:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     fdct->divisors[i] = NULL;
+ 1490              		.loc 1 476 36 is_stmt 1 discriminator 3 view .LVU469
+ 1491 0030 0133     		adds	r3, r3, #1
+ 1492              	.LVL155:
+ 1493              	.L102:
+ 476:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****     fdct->divisors[i] = NULL;
+ 1494              		.loc 1 476 17 discriminator 1 view .LVU470
+ 1495 0032 032B     		cmp	r3, #3
+ 1496 0034 F1DD     		ble	.L103
+ 480:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** #endif
+ 481:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c ****   }
+ 482:Middlewares/Third_Party/LibJPEG/source/jcdctmgr.c **** }
+ 1497              		.loc 1 482 1 is_stmt 0 view .LVU471
+ 1498 0036 10BD     		pop	{r4, pc}
+ 1499              	.LVL156:
+ 1500              	.L106:
+ 1501              		.loc 1 482 1 view .LVU472
+ 1502              		.align	2
+ 1503              	.L105:
+ 1504 0038 00000000 		.word	start_pass_fdctmgr
+ 1505              		.cfi_endproc
+ 1506              	.LFE150:
+ 1508              		.section	.rodata.aanscalefactor.0,"a"
+ 1509              		.align	3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 41
+
+
+ 1512              	aanscalefactor.0:
+ 1513 0000 00000000 		.word	0
+ 1514 0004 0000F03F 		.word	1072693248
+ 1515 0008 EF6148B1 		.word	-1320656401
+ 1516 000c 5031F63F 		.word	1073099088
+ 1517 0010 CA6F4D91 		.word	-1857196086
+ 1518 0014 AEE7F43F 		.word	1073014702
+ 1519 0018 AA116CEF 		.word	-278130262
+ 1520 001c 62D0F23F 		.word	1072877666
+ 1521 0020 00000000 		.word	0
+ 1522 0024 0000F03F 		.word	1072693248
+ 1523 0028 3BBFA7C0 		.word	-1062748357
+ 1524 002c 6924E93F 		.word	1072243817
+ 1525 0030 BB20C77B 		.word	2076647611
+ 1526 0034 7A51E13F 		.word	1071731066
+ 1527 0038 5DAB72DE 		.word	-562910371
+ 1528 003c 55A8D13F 		.word	1070704725
+ 1529              		.section	.rodata.aanscales.1,"a"
+ 1530              		.align	2
+ 1533              	aanscales.1:
+ 1534 0000 0040     		.short	16384
+ 1535 0002 C558     		.short	22725
+ 1536 0004 9F53     		.short	21407
+ 1537 0006 424B     		.short	19266
+ 1538 0008 0040     		.short	16384
+ 1539 000a 4932     		.short	12873
+ 1540 000c A322     		.short	8867
+ 1541 000e A811     		.short	4520
+ 1542 0010 C558     		.short	22725
+ 1543 0012 217B     		.short	31521
+ 1544 0014 FC73     		.short	29692
+ 1545 0016 6268     		.short	26722
+ 1546 0018 C558     		.short	22725
+ 1547 001a BF45     		.short	17855
+ 1548 001c 0B30     		.short	12299
+ 1549 001e 7E18     		.short	6270
+ 1550 0020 9F53     		.short	21407
+ 1551 0022 FC73     		.short	29692
+ 1552 0024 416D     		.short	27969
+ 1553 0026 5462     		.short	25172
+ 1554 0028 9F53     		.short	21407
+ 1555 002a B341     		.short	16819
+ 1556 002c 412D     		.short	11585
+ 1557 002e 1217     		.short	5906
+ 1558 0030 424B     		.short	19266
+ 1559 0032 6268     		.short	26722
+ 1560 0034 5462     		.short	25172
+ 1561 0036 7E58     		.short	22654
+ 1562 0038 424B     		.short	19266
+ 1563 003a 213B     		.short	15137
+ 1564 003c BA28     		.short	10426
+ 1565 003e C314     		.short	5315
+ 1566 0040 0040     		.short	16384
+ 1567 0042 C558     		.short	22725
+ 1568 0044 9F53     		.short	21407
+ 1569 0046 424B     		.short	19266
+ 1570 0048 0040     		.short	16384
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 42
+
+
+ 1571 004a 4932     		.short	12873
+ 1572 004c A322     		.short	8867
+ 1573 004e A811     		.short	4520
+ 1574 0050 4932     		.short	12873
+ 1575 0052 BF45     		.short	17855
+ 1576 0054 B341     		.short	16819
+ 1577 0056 213B     		.short	15137
+ 1578 0058 4932     		.short	12873
+ 1579 005a 8227     		.short	10114
+ 1580 005c 371B     		.short	6967
+ 1581 005e E00D     		.short	3552
+ 1582 0060 A322     		.short	8867
+ 1583 0062 0B30     		.short	12299
+ 1584 0064 412D     		.short	11585
+ 1585 0066 BA28     		.short	10426
+ 1586 0068 A322     		.short	8867
+ 1587 006a 371B     		.short	6967
+ 1588 006c BF12     		.short	4799
+ 1589 006e 8E09     		.short	2446
+ 1590 0070 A811     		.short	4520
+ 1591 0072 7E18     		.short	6270
+ 1592 0074 1217     		.short	5906
+ 1593 0076 C314     		.short	5315
+ 1594 0078 A811     		.short	4520
+ 1595 007a E00D     		.short	3552
+ 1596 007c 8E09     		.short	2446
+ 1597 007e DF04     		.short	1247
+ 1598              		.text
+ 1599              	.Letext0:
+ 1600              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 1601              		.file 3 "Inc/jmorecfg.h"
+ 1602              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 1603              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 1604              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 1605              		.file 7 "Middlewares/Third_Party/LibJPEG/include/jdct.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s 			page 43
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jcdctmgr.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:20     .text.forward_DCT:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:25     .text.forward_DCT:00000000 forward_DCT
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:212    .text.forward_DCT_float:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:217    .text.forward_DCT_float:00000000 forward_DCT_float
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:363    .text.forward_DCT_float:0000008c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:368    .text.start_pass_fdctmgr:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:373    .text.start_pass_fdctmgr:00000000 start_pass_fdctmgr
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:906    .text.start_pass_fdctmgr:00000320 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:933    .text.start_pass_fdctmgr:0000037c $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1414   .text.start_pass_fdctmgr:0000060c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1533   .rodata.aanscales.1:00000000 aanscales.1
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1512   .rodata.aanscalefactor.0:00000000 aanscalefactor.0
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1433   .text.jinit_forward_dct:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1439   .text.jinit_forward_dct:00000000 jinit_forward_dct
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1504   .text.jinit_forward_dct:00000038 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1509   .rodata.aanscalefactor.0:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3TQciB.s:1530   .rodata.aanscales.1:00000000 $d
+
+UNDEFINED SYMBOLS
+jpeg_fdct_2x2
+jpeg_fdct_3x3
+jpeg_fdct_4x8
+jpeg_fdct_6x6
+jpeg_fdct_10x5
+jpeg_fdct_8x4
+jpeg_fdct_15x15
+jpeg_fdct_12x12
+jpeg_fdct_1x1
+jpeg_fdct_4x4
+jpeg_fdct_5x5
+jpeg_fdct_7x7
+jpeg_fdct_9x9
+jpeg_fdct_10x10
+jpeg_fdct_11x11
+jpeg_fdct_13x13
+jpeg_fdct_14x14
+jpeg_fdct_16x16
+jpeg_fdct_16x8
+jpeg_fdct_14x7
+jpeg_fdct_12x6
+jpeg_fdct_6x3
+jpeg_fdct_4x2
+jpeg_fdct_2x1
+jpeg_fdct_8x16
+jpeg_fdct_7x14
+jpeg_fdct_6x12
+jpeg_fdct_5x10
+jpeg_fdct_3x6
+jpeg_fdct_2x4
+jpeg_fdct_islow
+jpeg_fdct_ifast
+jpeg_fdct_float
+jpeg_fdct_1x2

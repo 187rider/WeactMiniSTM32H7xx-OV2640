@@ -1,0 +1,1109 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov7725.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov7725.c"
+  19              		.section	.text.ov7725_WR_Reg,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	ov7725_WR_Reg:
+  26              	.LVL0:
+  27              	.LFB144:
+   1:Drivers/BSP/Camera/ov7725.c **** #include "ov7725.h"
+   2:Drivers/BSP/Camera/ov7725.c **** #include "ov7725_regs.h"
+   3:Drivers/BSP/Camera/ov7725.c **** #include <stdbool.h>
+   4:Drivers/BSP/Camera/ov7725.c **** 
+   5:Drivers/BSP/Camera/ov7725.c **** static uint8_t ov7725_WR_Reg(uint8_t reg, uint8_t data)
+   6:Drivers/BSP/Camera/ov7725.c **** {
+  28              		.loc 1 6 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 6 1 is_stmt 0 view .LVU1
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 83B0     		sub	sp, sp, #12
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 16
+  40 0004 8DF80710 		strb	r1, [sp, #7]
+   7:Drivers/BSP/Camera/ov7725.c ****     Camera_WriteReg(&hcamera, reg, &data);
+  41              		.loc 1 7 5 is_stmt 1 view .LVU2
+  42 0008 0DF10702 		add	r2, sp, #7
+  43 000c 0146     		mov	r1, r0
+  44              	.LVL1:
+  45              		.loc 1 7 5 is_stmt 0 view .LVU3
+  46 000e 0348     		ldr	r0, .L3
+  47              	.LVL2:
+  48              		.loc 1 7 5 view .LVU4
+  49 0010 FFF7FEFF 		bl	Camera_WriteReg
+  50              	.LVL3:
+   8:Drivers/BSP/Camera/ov7725.c ****     return 0;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 2
+
+
+  51              		.loc 1 8 5 is_stmt 1 view .LVU5
+   9:Drivers/BSP/Camera/ov7725.c **** }
+  52              		.loc 1 9 1 is_stmt 0 view .LVU6
+  53 0014 0020     		movs	r0, #0
+  54 0016 03B0     		add	sp, sp, #12
+  55              	.LCFI2:
+  56              		.cfi_def_cfa_offset 4
+  57              		@ sp needed
+  58 0018 5DF804FB 		ldr	pc, [sp], #4
+  59              	.L4:
+  60              		.align	2
+  61              	.L3:
+  62 001c 00000000 		.word	hcamera
+  63              		.cfi_endproc
+  64              	.LFE144:
+  66              		.section	.text.ov7725_reset,"ax",%progbits
+  67              		.align	1
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  72              	ov7725_reset:
+  73              	.LFB146:
+  10:Drivers/BSP/Camera/ov7725.c **** 
+  11:Drivers/BSP/Camera/ov7725.c **** static uint8_t ov7725_RD_Reg(uint8_t reg,uint8_t *data)
+  12:Drivers/BSP/Camera/ov7725.c **** {
+  13:Drivers/BSP/Camera/ov7725.c ****     return Camera_ReadReg(&hcamera,reg,data);
+  14:Drivers/BSP/Camera/ov7725.c **** }
+  15:Drivers/BSP/Camera/ov7725.c **** 
+  16:Drivers/BSP/Camera/ov7725.c **** static int ov7725_reset(void)
+  17:Drivers/BSP/Camera/ov7725.c **** {
+  74              		.loc 1 17 1 is_stmt 1 view -0
+  75              		.cfi_startproc
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78 0000 38B5     		push	{r3, r4, r5, lr}
+  79              	.LCFI3:
+  80              		.cfi_def_cfa_offset 16
+  81              		.cfi_offset 3, -16
+  82              		.cfi_offset 4, -12
+  83              		.cfi_offset 5, -8
+  84              		.cfi_offset 14, -4
+  18:Drivers/BSP/Camera/ov7725.c ****     // Reset all registers
+  19:Drivers/BSP/Camera/ov7725.c ****     int ret = ov7725_WR_Reg( COM7, COM7_RESET);
+  85              		.loc 1 19 5 view .LVU8
+  86              		.loc 1 19 15 is_stmt 0 view .LVU9
+  87 0002 8021     		movs	r1, #128
+  88 0004 1220     		movs	r0, #18
+  89 0006 FFF7FEFF 		bl	ov7725_WR_Reg
+  90              	.LVL4:
+  91              		.loc 1 19 9 discriminator 1 view .LVU10
+  92 000a 0546     		mov	r5, r0
+  93              	.LVL5:
+  20:Drivers/BSP/Camera/ov7725.c **** 
+  21:Drivers/BSP/Camera/ov7725.c ****     // Delay 2 ms
+  22:Drivers/BSP/Camera/ov7725.c ****     Camera_delay(2);
+  94              		.loc 1 22 5 is_stmt 1 view .LVU11
+  95 000c 0220     		movs	r0, #2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 3
+
+
+  96              	.LVL6:
+  97              		.loc 1 22 5 is_stmt 0 view .LVU12
+  98 000e FFF7FEFF 		bl	HAL_Delay
+  99              	.LVL7:
+  23:Drivers/BSP/Camera/ov7725.c **** 
+  24:Drivers/BSP/Camera/ov7725.c ****     // Write default regsiters
+  25:Drivers/BSP/Camera/ov7725.c ****     for (int i = 0; ov7725_default_regs[i][0]; i++) {
+ 100              		.loc 1 25 5 is_stmt 1 view .LVU13
+ 101              	.LBB2:
+ 102              		.loc 1 25 10 view .LVU14
+ 103              		.loc 1 25 14 is_stmt 0 view .LVU15
+ 104 0012 0024     		movs	r4, #0
+ 105              		.loc 1 25 5 view .LVU16
+ 106 0014 07E0     		b	.L6
+ 107              	.LVL8:
+ 108              	.L7:
+  26:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(ov7725_default_regs[i][0], ov7725_default_regs[i][1]);
+ 109              		.loc 1 26 9 is_stmt 1 view .LVU17
+ 110              		.loc 1 26 79 is_stmt 0 view .LVU18
+ 111 0016 094B     		ldr	r3, .L9
+ 112 0018 03EB4403 		add	r3, r3, r4, lsl #1
+ 113              		.loc 1 26 16 view .LVU19
+ 114 001c 5978     		ldrb	r1, [r3, #1]	@ zero_extendqisi2
+ 115 001e FFF7FEFF 		bl	ov7725_WR_Reg
+ 116              	.LVL9:
+ 117              		.loc 1 26 13 discriminator 1 view .LVU20
+ 118 0022 0543     		orrs	r5, r5, r0
+ 119              	.LVL10:
+  25:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(ov7725_default_regs[i][0], ov7725_default_regs[i][1]);
+ 120              		.loc 1 25 49 is_stmt 1 discriminator 3 view .LVU21
+ 121 0024 0134     		adds	r4, r4, #1
+ 122              	.LVL11:
+ 123              	.L6:
+  25:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(ov7725_default_regs[i][0], ov7725_default_regs[i][1]);
+ 124              		.loc 1 25 21 discriminator 1 view .LVU22
+  25:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(ov7725_default_regs[i][0], ov7725_default_regs[i][1]);
+ 125              		.loc 1 25 43 is_stmt 0 discriminator 1 view .LVU23
+ 126 0026 054B     		ldr	r3, .L9
+ 127 0028 13F81400 		ldrb	r0, [r3, r4, lsl #1]	@ zero_extendqisi2
+  25:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(ov7725_default_regs[i][0], ov7725_default_regs[i][1]);
+ 128              		.loc 1 25 21 discriminator 1 view .LVU24
+ 129 002c 0028     		cmp	r0, #0
+ 130 002e F2D1     		bne	.L7
+ 131              	.LBE2:
+  27:Drivers/BSP/Camera/ov7725.c ****     }
+  28:Drivers/BSP/Camera/ov7725.c **** 
+  29:Drivers/BSP/Camera/ov7725.c ****     // Delay 300 ms
+  30:Drivers/BSP/Camera/ov7725.c ****     Camera_delay(300);
+ 132              		.loc 1 30 5 is_stmt 1 view .LVU25
+ 133 0030 4FF49670 		mov	r0, #300
+ 134 0034 FFF7FEFF 		bl	HAL_Delay
+ 135              	.LVL12:
+  31:Drivers/BSP/Camera/ov7725.c **** 
+  32:Drivers/BSP/Camera/ov7725.c ****     return ret;
+ 136              		.loc 1 32 5 view .LVU26
+  33:Drivers/BSP/Camera/ov7725.c **** }
+ 137              		.loc 1 33 1 is_stmt 0 view .LVU27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 4
+
+
+ 138 0038 2846     		mov	r0, r5
+ 139 003a 38BD     		pop	{r3, r4, r5, pc}
+ 140              	.LVL13:
+ 141              	.L10:
+ 142              		.loc 1 33 1 view .LVU28
+ 143              		.align	2
+ 144              	.L9:
+ 145 003c 00000000 		.word	ov7725_default_regs
+ 146              		.cfi_endproc
+ 147              	.LFE146:
+ 149              		.section	.text.ov7725_RD_Reg,"ax",%progbits
+ 150              		.align	1
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 155              	ov7725_RD_Reg:
+ 156              	.LVL14:
+ 157              	.LFB145:
+  12:Drivers/BSP/Camera/ov7725.c ****     return Camera_ReadReg(&hcamera,reg,data);
+ 158              		.loc 1 12 1 is_stmt 1 view -0
+ 159              		.cfi_startproc
+ 160              		@ args = 0, pretend = 0, frame = 0
+ 161              		@ frame_needed = 0, uses_anonymous_args = 0
+  12:Drivers/BSP/Camera/ov7725.c ****     return Camera_ReadReg(&hcamera,reg,data);
+ 162              		.loc 1 12 1 is_stmt 0 view .LVU30
+ 163 0000 08B5     		push	{r3, lr}
+ 164              	.LCFI4:
+ 165              		.cfi_def_cfa_offset 8
+ 166              		.cfi_offset 3, -8
+ 167              		.cfi_offset 14, -4
+ 168 0002 0A46     		mov	r2, r1
+  13:Drivers/BSP/Camera/ov7725.c **** }
+ 169              		.loc 1 13 5 is_stmt 1 view .LVU31
+  13:Drivers/BSP/Camera/ov7725.c **** }
+ 170              		.loc 1 13 12 is_stmt 0 view .LVU32
+ 171 0004 0146     		mov	r1, r0
+ 172              	.LVL15:
+  13:Drivers/BSP/Camera/ov7725.c **** }
+ 173              		.loc 1 13 12 view .LVU33
+ 174 0006 0248     		ldr	r0, .L13
+ 175              	.LVL16:
+  13:Drivers/BSP/Camera/ov7725.c **** }
+ 176              		.loc 1 13 12 view .LVU34
+ 177 0008 FFF7FEFF 		bl	Camera_ReadReg
+ 178              	.LVL17:
+  14:Drivers/BSP/Camera/ov7725.c **** 
+ 179              		.loc 1 14 1 view .LVU35
+ 180 000c C0B2     		uxtb	r0, r0
+ 181 000e 08BD     		pop	{r3, pc}
+ 182              	.L14:
+ 183              		.align	2
+ 184              	.L13:
+ 185 0010 00000000 		.word	hcamera
+ 186              		.cfi_endproc
+ 187              	.LFE145:
+ 189              		.section	.text.ov7725_set_pixformat,"ax",%progbits
+ 190              		.align	1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 5
+
+
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 195              	ov7725_set_pixformat:
+ 196              	.LVL18:
+ 197              	.LFB147:
+  34:Drivers/BSP/Camera/ov7725.c **** 
+  35:Drivers/BSP/Camera/ov7725.c **** static int ov7725_set_pixformat(pixformat_t pixformat)
+  36:Drivers/BSP/Camera/ov7725.c **** {
+ 198              		.loc 1 36 1 is_stmt 1 view -0
+ 199              		.cfi_startproc
+ 200              		@ args = 0, pretend = 0, frame = 8
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202              		.loc 1 36 1 is_stmt 0 view .LVU37
+ 203 0000 30B5     		push	{r4, r5, lr}
+ 204              	.LCFI5:
+ 205              		.cfi_def_cfa_offset 12
+ 206              		.cfi_offset 4, -12
+ 207              		.cfi_offset 5, -8
+ 208              		.cfi_offset 14, -4
+ 209 0002 83B0     		sub	sp, sp, #12
+ 210              	.LCFI6:
+ 211              		.cfi_def_cfa_offset 24
+ 212 0004 0446     		mov	r4, r0
+  37:Drivers/BSP/Camera/ov7725.c ****     uint8_t reg;
+ 213              		.loc 1 37 5 is_stmt 1 view .LVU38
+  38:Drivers/BSP/Camera/ov7725.c ****     int ret = ov7725_RD_Reg( COM7, &reg);
+ 214              		.loc 1 38 5 view .LVU39
+ 215              		.loc 1 38 15 is_stmt 0 view .LVU40
+ 216 0006 0DF10701 		add	r1, sp, #7
+ 217 000a 1220     		movs	r0, #18
+ 218              	.LVL19:
+ 219              		.loc 1 38 15 view .LVU41
+ 220 000c FFF7FEFF 		bl	ov7725_RD_Reg
+ 221              	.LVL20:
+ 222 0010 0546     		mov	r5, r0
+ 223              	.LVL21:
+  39:Drivers/BSP/Camera/ov7725.c **** 
+  40:Drivers/BSP/Camera/ov7725.c ****     switch (pixformat) {
+ 224              		.loc 1 40 5 is_stmt 1 view .LVU42
+ 225 0012 042C     		cmp	r4, #4
+ 226 0014 1CD8     		bhi	.L16
+ 227 0016 032C     		cmp	r4, #3
+ 228 0018 2FD2     		bcs	.L17
+ 229 001a 012C     		cmp	r4, #1
+ 230 001c 15D1     		bne	.L23
+  41:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_RGB565:
+  42:Drivers/BSP/Camera/ov7725.c ****             reg = COM7_SET_FMT(reg, COM7_FMT_RGB);
+ 231              		.loc 1 42 13 view .LVU43
+ 232              		.loc 1 42 19 is_stmt 0 view .LVU44
+ 233 001e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 234              		.loc 1 42 17 view .LVU45
+ 235 0022 23F00303 		bic	r3, r3, #3
+ 236 0026 43F00203 		orr	r3, r3, #2
+ 237 002a 8DF80730 		strb	r3, [sp, #7]
+  43:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg( DSP_CTRL4, DSP_CTRL4_YUV_RGB);
+ 238              		.loc 1 43 13 is_stmt 1 view .LVU46
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 6
+
+
+ 239              		.loc 1 43 20 is_stmt 0 view .LVU47
+ 240 002e 0021     		movs	r1, #0
+ 241 0030 6720     		movs	r0, #103
+ 242 0032 FFF7FEFF 		bl	ov7725_WR_Reg
+ 243              	.LVL22:
+ 244              		.loc 1 43 17 discriminator 1 view .LVU48
+ 245 0036 2843     		orrs	r0, r0, r5
+ 246 0038 C4B2     		uxtb	r4, r0
+ 247              	.LVL23:
+  44:Drivers/BSP/Camera/ov7725.c ****             break;
+ 248              		.loc 1 44 13 is_stmt 1 view .LVU49
+ 249              	.L21:
+  45:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_YUV422:
+  46:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_GRAYSCALE:
+  47:Drivers/BSP/Camera/ov7725.c ****             reg = COM7_SET_FMT(reg, COM7_FMT_YUV);
+  48:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_YUV_RGB);
+  49:Drivers/BSP/Camera/ov7725.c ****             break;
+  50:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_BAYER:
+  51:Drivers/BSP/Camera/ov7725.c ****             reg = COM7_SET_FMT(reg, COM7_FMT_P_BAYER);
+  52:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_RAW8);
+  53:Drivers/BSP/Camera/ov7725.c ****             break;
+  54:Drivers/BSP/Camera/ov7725.c ****         default:
+  55:Drivers/BSP/Camera/ov7725.c ****             return -1;
+  56:Drivers/BSP/Camera/ov7725.c ****     }
+  57:Drivers/BSP/Camera/ov7725.c **** 
+  58:Drivers/BSP/Camera/ov7725.c ****     // Write back register
+  59:Drivers/BSP/Camera/ov7725.c ****     return ov7725_WR_Reg(COM7, reg) | ret;
+ 250              		.loc 1 59 5 view .LVU50
+ 251              		.loc 1 59 12 is_stmt 0 view .LVU51
+ 252 003a 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 253 003e 1220     		movs	r0, #18
+ 254 0040 FFF7FEFF 		bl	ov7725_WR_Reg
+ 255              	.LVL24:
+ 256              		.loc 1 59 37 discriminator 1 view .LVU52
+ 257 0044 2043     		orrs	r0, r0, r4
+ 258              	.LVL25:
+ 259              	.L15:
+  60:Drivers/BSP/Camera/ov7725.c **** }
+ 260              		.loc 1 60 1 view .LVU53
+ 261 0046 03B0     		add	sp, sp, #12
+ 262              	.LCFI7:
+ 263              		.cfi_remember_state
+ 264              		.cfi_def_cfa_offset 12
+ 265              		@ sp needed
+ 266 0048 30BD     		pop	{r4, r5, pc}
+ 267              	.LVL26:
+ 268              	.L23:
+ 269              	.LCFI8:
+ 270              		.cfi_restore_state
+  40:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_RGB565:
+ 271              		.loc 1 40 5 view .LVU54
+ 272 004a 4FF0FF30 		mov	r0, #-1
+ 273 004e FAE7     		b	.L15
+ 274              	.L16:
+ 275 0050 052C     		cmp	r4, #5
+ 276 0052 0FD1     		bne	.L24
+  51:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_RAW8);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 7
+
+
+ 277              		.loc 1 51 13 is_stmt 1 view .LVU55
+  51:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_RAW8);
+ 278              		.loc 1 51 19 is_stmt 0 view .LVU56
+ 279 0054 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+  51:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_RAW8);
+ 280              		.loc 1 51 17 view .LVU57
+ 281 0058 23F00303 		bic	r3, r3, #3
+ 282 005c 43F00103 		orr	r3, r3, #1
+ 283 0060 8DF80730 		strb	r3, [sp, #7]
+  52:Drivers/BSP/Camera/ov7725.c ****             break;
+ 284              		.loc 1 52 13 is_stmt 1 view .LVU58
+  52:Drivers/BSP/Camera/ov7725.c ****             break;
+ 285              		.loc 1 52 20 is_stmt 0 view .LVU59
+ 286 0064 0221     		movs	r1, #2
+ 287 0066 6720     		movs	r0, #103
+ 288 0068 FFF7FEFF 		bl	ov7725_WR_Reg
+ 289              	.LVL27:
+  52:Drivers/BSP/Camera/ov7725.c ****             break;
+ 290              		.loc 1 52 17 discriminator 1 view .LVU60
+ 291 006c 45EA0004 		orr	r4, r5, r0
+ 292 0070 E4B2     		uxtb	r4, r4
+ 293              	.LVL28:
+  53:Drivers/BSP/Camera/ov7725.c ****         default:
+ 294              		.loc 1 53 13 is_stmt 1 view .LVU61
+ 295 0072 E2E7     		b	.L21
+ 296              	.LVL29:
+ 297              	.L24:
+  40:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_RGB565:
+ 298              		.loc 1 40 5 is_stmt 0 view .LVU62
+ 299 0074 4FF0FF30 		mov	r0, #-1
+ 300 0078 E5E7     		b	.L15
+ 301              	.L17:
+  47:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_YUV_RGB);
+ 302              		.loc 1 47 13 is_stmt 1 view .LVU63
+  47:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_YUV_RGB);
+ 303              		.loc 1 47 19 is_stmt 0 view .LVU64
+ 304 007a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 305 007e 03F0FC03 		and	r3, r3, #252
+  47:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_YUV_RGB);
+ 306              		.loc 1 47 17 view .LVU65
+ 307 0082 8DF80730 		strb	r3, [sp, #7]
+  48:Drivers/BSP/Camera/ov7725.c ****             break;
+ 308              		.loc 1 48 13 is_stmt 1 view .LVU66
+  48:Drivers/BSP/Camera/ov7725.c ****             break;
+ 309              		.loc 1 48 20 is_stmt 0 view .LVU67
+ 310 0086 0021     		movs	r1, #0
+ 311 0088 6720     		movs	r0, #103
+ 312 008a FFF7FEFF 		bl	ov7725_WR_Reg
+ 313              	.LVL30:
+  48:Drivers/BSP/Camera/ov7725.c ****             break;
+ 314              		.loc 1 48 17 discriminator 1 view .LVU68
+ 315 008e 2843     		orrs	r0, r0, r5
+ 316 0090 C4B2     		uxtb	r4, r0
+ 317              	.LVL31:
+  49:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_BAYER:
+ 318              		.loc 1 49 13 is_stmt 1 view .LVU69
+ 319 0092 D2E7     		b	.L21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 8
+
+
+ 320              		.cfi_endproc
+ 321              	.LFE147:
+ 323              		.section	.text.ov7725_set_framesize,"ax",%progbits
+ 324              		.align	1
+ 325              		.syntax unified
+ 326              		.thumb
+ 327              		.thumb_func
+ 329              	ov7725_set_framesize:
+ 330              	.LVL32:
+ 331              	.LFB148:
+  61:Drivers/BSP/Camera/ov7725.c **** 
+  62:Drivers/BSP/Camera/ov7725.c **** static int ov7725_set_framesize(framesize_t framesize)
+  63:Drivers/BSP/Camera/ov7725.c **** {
+ 332              		.loc 1 63 1 view -0
+ 333              		.cfi_startproc
+ 334              		@ args = 0, pretend = 0, frame = 8
+ 335              		@ frame_needed = 0, uses_anonymous_args = 0
+ 336              		.loc 1 63 1 is_stmt 0 view .LVU71
+ 337 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 338              	.LCFI9:
+ 339              		.cfi_def_cfa_offset 28
+ 340              		.cfi_offset 4, -28
+ 341              		.cfi_offset 5, -24
+ 342              		.cfi_offset 6, -20
+ 343              		.cfi_offset 7, -16
+ 344              		.cfi_offset 8, -12
+ 345              		.cfi_offset 9, -8
+ 346              		.cfi_offset 14, -4
+ 347 0004 83B0     		sub	sp, sp, #12
+ 348              	.LCFI10:
+ 349              		.cfi_def_cfa_offset 40
+  64:Drivers/BSP/Camera/ov7725.c ****     uint8_t reg;
+ 350              		.loc 1 64 5 is_stmt 1 view .LVU72
+  65:Drivers/BSP/Camera/ov7725.c ****     int ret=0;
+ 351              		.loc 1 65 5 view .LVU73
+ 352              	.LVL33:
+  66:Drivers/BSP/Camera/ov7725.c ****     uint16_t w = dvp_cam_resolution[framesize][0];
+ 353              		.loc 1 66 5 view .LVU74
+ 354              		.loc 1 66 14 is_stmt 0 view .LVU75
+ 355 0006 554B     		ldr	r3, .L33
+ 356 0008 33F82060 		ldrh	r6, [r3, r0, lsl #2]
+ 357              	.LVL34:
+  67:Drivers/BSP/Camera/ov7725.c ****     uint16_t h = dvp_cam_resolution[framesize][1];
+ 358              		.loc 1 67 5 is_stmt 1 view .LVU76
+ 359              		.loc 1 67 14 is_stmt 0 view .LVU77
+ 360 000c 03EB8003 		add	r3, r3, r0, lsl #2
+ 361 0010 5D88     		ldrh	r5, [r3, #2]
+ 362              	.LVL35:
+  68:Drivers/BSP/Camera/ov7725.c ****     bool vflip;
+ 363              		.loc 1 68 5 is_stmt 1 view .LVU78
+  69:Drivers/BSP/Camera/ov7725.c **** 
+  70:Drivers/BSP/Camera/ov7725.c ****     if ((w > 640) || (h > 480)) {
+ 364              		.loc 1 70 5 view .LVU79
+ 365              		.loc 1 70 8 is_stmt 0 view .LVU80
+ 366 0012 B5F5F07F 		cmp	r5, #480
+ 367 0016 98BF     		it	ls
+ 368 0018 B6F5207F 		cmpls	r6, #640
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 9
+
+
+ 369 001c 00F29A80 		bhi	.L29
+  71:Drivers/BSP/Camera/ov7725.c ****         return -1;
+  72:Drivers/BSP/Camera/ov7725.c ****     }
+  73:Drivers/BSP/Camera/ov7725.c **** 
+  74:Drivers/BSP/Camera/ov7725.c ****     // Write MSBs
+  75:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(HOUTSIZE, w>>2);
+ 370              		.loc 1 75 5 is_stmt 1 view .LVU81
+ 371              		.loc 1 75 12 is_stmt 0 view .LVU82
+ 372 0020 C6F38701 		ubfx	r1, r6, #2, #8
+ 373 0024 2920     		movs	r0, #41
+ 374              	.LVL36:
+ 375              		.loc 1 75 12 view .LVU83
+ 376 0026 FFF7FEFF 		bl	ov7725_WR_Reg
+ 377              	.LVL37:
+ 378 002a 0446     		mov	r4, r0
+ 379              	.LVL38:
+  76:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(VOUTSIZE, h>>1);
+ 380              		.loc 1 76 5 is_stmt 1 view .LVU84
+ 381              		.loc 1 76 12 is_stmt 0 view .LVU85
+ 382 002c C5F34701 		ubfx	r1, r5, #1, #8
+ 383 0030 2C20     		movs	r0, #44
+ 384 0032 FFF7FEFF 		bl	ov7725_WR_Reg
+ 385              	.LVL39:
+ 386 0036 0443     		orrs	r4, r4, r0
+ 387              	.LVL40:
+ 388              		.loc 1 76 12 view .LVU86
+ 389 0038 E4B2     		uxtb	r4, r4
+ 390              	.LVL41:
+  77:Drivers/BSP/Camera/ov7725.c **** 
+  78:Drivers/BSP/Camera/ov7725.c ****     // Write LSBs
+  79:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(EXHCH, ((w&0x3) | ((h&0x1) << 2)));
+ 391              		.loc 1 79 5 is_stmt 1 view .LVU87
+ 392              		.loc 1 79 36 is_stmt 0 view .LVU88
+ 393 003a 06F00301 		and	r1, r6, #3
+ 394              		.loc 1 79 53 view .LVU89
+ 395 003e AB00     		lsls	r3, r5, #2
+ 396 0040 03F00403 		and	r3, r3, #4
+ 397              		.loc 1 79 12 view .LVU90
+ 398 0044 1943     		orrs	r1, r1, r3
+ 399 0046 2A20     		movs	r0, #42
+ 400 0048 FFF7FEFF 		bl	ov7725_WR_Reg
+ 401              	.LVL42:
+ 402 004c 0443     		orrs	r4, r4, r0
+ 403              	.LVL43:
+ 404              		.loc 1 79 12 view .LVU91
+ 405 004e E4B2     		uxtb	r4, r4
+ 406              	.LVL44:
+  80:Drivers/BSP/Camera/ov7725.c **** 
+  81:Drivers/BSP/Camera/ov7725.c ****     // Sample VFLIP
+  82:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_RD_Reg(COM3, &reg);
+ 407              		.loc 1 82 5 is_stmt 1 view .LVU92
+ 408              		.loc 1 82 12 is_stmt 0 view .LVU93
+ 409 0050 0DF10701 		add	r1, sp, #7
+ 410 0054 0C20     		movs	r0, #12
+ 411 0056 FFF7FEFF 		bl	ov7725_RD_Reg
+ 412              	.LVL45:
+ 413 005a 0443     		orrs	r4, r4, r0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 10
+
+
+ 414              	.LVL46:
+ 415              		.loc 1 82 12 view .LVU94
+ 416 005c E4B2     		uxtb	r4, r4
+ 417              	.LVL47:
+  83:Drivers/BSP/Camera/ov7725.c ****     vflip = reg & COM3_VFLIP;
+ 418              		.loc 1 83 5 is_stmt 1 view .LVU95
+ 419 005e 9DF90790 		ldrsb	r9, [sp, #7]
+ 420              		.loc 1 83 11 is_stmt 0 view .LVU96
+ 421 0062 4FEAD978 		lsr	r8, r9, #31
+ 422              	.LVL48:
+  84:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_RD_Reg(HREF, &reg);
+ 423              		.loc 1 84 5 is_stmt 1 view .LVU97
+ 424              		.loc 1 84 12 is_stmt 0 view .LVU98
+ 425 0066 0DF10701 		add	r1, sp, #7
+ 426 006a 3220     		movs	r0, #50
+ 427 006c FFF7FEFF 		bl	ov7725_RD_Reg
+ 428              	.LVL49:
+ 429 0070 40EA0407 		orr	r7, r0, r4
+ 430 0074 FFB2     		uxtb	r7, r7
+ 431              	.LVL50:
+  85:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(HREF, (reg & 0xBF) | (vflip ? 0x40 : 0x00));
+ 432              		.loc 1 85 5 is_stmt 1 view .LVU99
+ 433              		.loc 1 85 37 is_stmt 0 view .LVU100
+ 434 0076 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 435 007a 03F0BF03 		and	r3, r3, #191
+ 436              		.loc 1 85 45 view .LVU101
+ 437 007e B9F1000F 		cmp	r9, #0
+ 438 0082 34DB     		blt	.L32
+ 439              		.loc 1 85 45 discriminator 2 view .LVU102
+ 440 0084 0021     		movs	r1, #0
+ 441              	.L27:
+ 442              		.loc 1 85 12 discriminator 4 view .LVU103
+ 443 0086 1943     		orrs	r1, r1, r3
+ 444 0088 3220     		movs	r0, #50
+ 445 008a FFF7FEFF 		bl	ov7725_WR_Reg
+ 446              	.LVL51:
+ 447              		.loc 1 85 9 discriminator 1 view .LVU104
+ 448 008e 40EA0704 		orr	r4, r0, r7
+ 449 0092 E4B2     		uxtb	r4, r4
+ 450              	.LVL52:
+  86:Drivers/BSP/Camera/ov7725.c **** 
+  87:Drivers/BSP/Camera/ov7725.c ****     if ((w <= 320) && (h <= 240)) {
+ 451              		.loc 1 87 5 is_stmt 1 view .LVU105
+ 452              		.loc 1 87 8 is_stmt 0 view .LVU106
+ 453 0094 B6F5A07F 		cmp	r6, #320
+ 454 0098 98BF     		it	ls
+ 455 009a F02D     		cmpls	r5, #240
+ 456 009c 29D8     		bhi	.L28
+ 457              	.LBB3:
+  88:Drivers/BSP/Camera/ov7725.c ****         // Set QVGA Resolution
+  89:Drivers/BSP/Camera/ov7725.c ****         uint8_t reg;
+ 458              		.loc 1 89 9 is_stmt 1 view .LVU107
+  90:Drivers/BSP/Camera/ov7725.c ****         int ret = ov7725_RD_Reg(COM7, &reg);
+ 459              		.loc 1 90 9 view .LVU108
+ 460              		.loc 1 90 19 is_stmt 0 view .LVU109
+ 461 009e 0DF10601 		add	r1, sp, #6
+ 462 00a2 1220     		movs	r0, #18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 11
+
+
+ 463 00a4 FFF7FEFF 		bl	ov7725_RD_Reg
+ 464              	.LVL53:
+  91:Drivers/BSP/Camera/ov7725.c ****         reg = COM7_SET_RES(reg, COM7_RES_QVGA);
+ 465              		.loc 1 91 9 is_stmt 1 view .LVU110
+ 466              		.loc 1 91 15 is_stmt 0 view .LVU111
+ 467 00a8 9DF80610 		ldrb	r1, [sp, #6]	@ zero_extendqisi2
+ 468 00ac 41F04001 		orr	r1, r1, #64
+ 469              		.loc 1 91 13 view .LVU112
+ 470 00b0 8DF80610 		strb	r1, [sp, #6]
+  92:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
+ 471              		.loc 1 92 9 is_stmt 1 view .LVU113
+ 472              		.loc 1 92 16 is_stmt 0 view .LVU114
+ 473 00b4 1220     		movs	r0, #18
+ 474 00b6 FFF7FEFF 		bl	ov7725_WR_Reg
+ 475              	.LVL54:
+  93:Drivers/BSP/Camera/ov7725.c **** 
+  94:Drivers/BSP/Camera/ov7725.c ****         // Set QVGA Window Size
+  95:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSTART, 0x3F);
+ 476              		.loc 1 95 9 is_stmt 1 view .LVU115
+ 477              		.loc 1 95 16 is_stmt 0 view .LVU116
+ 478 00ba 3F21     		movs	r1, #63
+ 479 00bc 1720     		movs	r0, #23
+ 480 00be FFF7FEFF 		bl	ov7725_WR_Reg
+ 481              	.LVL55:
+  96:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSIZE,  0x50);
+ 482              		.loc 1 96 9 is_stmt 1 view .LVU117
+ 483              		.loc 1 96 16 is_stmt 0 view .LVU118
+ 484 00c2 5021     		movs	r1, #80
+ 485 00c4 1820     		movs	r0, #24
+ 486 00c6 FFF7FEFF 		bl	ov7725_WR_Reg
+ 487              	.LVL56:
+  97:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSTART, 0x03 - vflip);
+ 488              		.loc 1 97 9 is_stmt 1 view .LVU119
+ 489              		.loc 1 97 16 is_stmt 0 view .LVU120
+ 490 00ca C8F10301 		rsb	r1, r8, #3
+ 491 00ce C9B2     		uxtb	r1, r1
+ 492 00d0 1920     		movs	r0, #25
+ 493 00d2 FFF7FEFF 		bl	ov7725_WR_Reg
+ 494              	.LVL57:
+  98:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSIZE,  0x78);
+ 495              		.loc 1 98 9 is_stmt 1 view .LVU121
+ 496              		.loc 1 98 16 is_stmt 0 view .LVU122
+ 497 00d6 7821     		movs	r1, #120
+ 498 00d8 1A20     		movs	r0, #26
+ 499 00da FFF7FEFF 		bl	ov7725_WR_Reg
+ 500              	.LVL58:
+  99:Drivers/BSP/Camera/ov7725.c **** 
+ 100:Drivers/BSP/Camera/ov7725.c ****         // Enable auto-scaling/zooming factors
+ 101:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(DSPAUTO, 0xFF);
+ 501              		.loc 1 101 9 is_stmt 1 view .LVU123
+ 502              		.loc 1 101 16 is_stmt 0 view .LVU124
+ 503 00de FF21     		movs	r1, #255
+ 504 00e0 AC20     		movs	r0, #172
+ 505 00e2 FFF7FEFF 		bl	ov7725_WR_Reg
+ 506              	.LVL59:
+ 507              	.L25:
+ 508              		.loc 1 101 16 view .LVU125
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 12
+
+
+ 509              	.LBE3:
+ 102:Drivers/BSP/Camera/ov7725.c ****     } else {
+ 103:Drivers/BSP/Camera/ov7725.c ****         // Set VGA Resolution
+ 104:Drivers/BSP/Camera/ov7725.c ****         uint8_t reg;
+ 105:Drivers/BSP/Camera/ov7725.c ****         int ret = ov7725_RD_Reg(COM7, &reg);
+ 106:Drivers/BSP/Camera/ov7725.c ****         reg = COM7_SET_RES(reg, COM7_RES_VGA);
+ 107:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
+ 108:Drivers/BSP/Camera/ov7725.c **** 
+ 109:Drivers/BSP/Camera/ov7725.c ****         // Set VGA Window Size
+ 110:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSTART, 0x23);
+ 111:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSIZE,  0xA0);
+ 112:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSTART, 0x07 - vflip);
+ 113:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSIZE,  0xF0);
+ 114:Drivers/BSP/Camera/ov7725.c **** 
+ 115:Drivers/BSP/Camera/ov7725.c ****         // Disable auto-scaling/zooming factors
+ 116:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(DSPAUTO, 0xF3);
+ 117:Drivers/BSP/Camera/ov7725.c **** 
+ 118:Drivers/BSP/Camera/ov7725.c ****         // Clear auto-scaling/zooming factors
+ 119:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL0, 0x00);
+ 120:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL1, 0x40);
+ 121:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL2, 0x40);
+ 122:Drivers/BSP/Camera/ov7725.c ****     }
+ 123:Drivers/BSP/Camera/ov7725.c **** 
+ 124:Drivers/BSP/Camera/ov7725.c ****     return ret;
+ 125:Drivers/BSP/Camera/ov7725.c **** }
+ 510              		.loc 1 125 1 view .LVU126
+ 511 00e6 2046     		mov	r0, r4
+ 512 00e8 03B0     		add	sp, sp, #12
+ 513              	.LCFI11:
+ 514              		.cfi_remember_state
+ 515              		.cfi_def_cfa_offset 28
+ 516              		@ sp needed
+ 517 00ea BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 518              	.LVL60:
+ 519              	.L32:
+ 520              	.LCFI12:
+ 521              		.cfi_restore_state
+  85:Drivers/BSP/Camera/ov7725.c **** 
+ 522              		.loc 1 85 45 discriminator 1 view .LVU127
+ 523 00ee 4021     		movs	r1, #64
+ 524 00f0 C9E7     		b	.L27
+ 525              	.LVL61:
+ 526              	.L28:
+ 527              	.LBB4:
+ 104:Drivers/BSP/Camera/ov7725.c ****         int ret = ov7725_RD_Reg(COM7, &reg);
+ 528              		.loc 1 104 9 is_stmt 1 view .LVU128
+ 105:Drivers/BSP/Camera/ov7725.c ****         reg = COM7_SET_RES(reg, COM7_RES_VGA);
+ 529              		.loc 1 105 9 view .LVU129
+ 105:Drivers/BSP/Camera/ov7725.c ****         reg = COM7_SET_RES(reg, COM7_RES_VGA);
+ 530              		.loc 1 105 19 is_stmt 0 view .LVU130
+ 531 00f2 0DF10601 		add	r1, sp, #6
+ 532 00f6 1220     		movs	r0, #18
+ 533 00f8 FFF7FEFF 		bl	ov7725_RD_Reg
+ 534              	.LVL62:
+ 106:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
+ 535              		.loc 1 106 9 is_stmt 1 view .LVU131
+ 106:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 13
+
+
+ 536              		.loc 1 106 15 is_stmt 0 view .LVU132
+ 537 00fc 9DF80610 		ldrb	r1, [sp, #6]	@ zero_extendqisi2
+ 538 0100 01F0BF01 		and	r1, r1, #191
+ 106:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
+ 539              		.loc 1 106 13 view .LVU133
+ 540 0104 8DF80610 		strb	r1, [sp, #6]
+ 107:Drivers/BSP/Camera/ov7725.c **** 
+ 541              		.loc 1 107 9 is_stmt 1 view .LVU134
+ 107:Drivers/BSP/Camera/ov7725.c **** 
+ 542              		.loc 1 107 16 is_stmt 0 view .LVU135
+ 543 0108 1220     		movs	r0, #18
+ 544 010a FFF7FEFF 		bl	ov7725_WR_Reg
+ 545              	.LVL63:
+ 110:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSIZE,  0xA0);
+ 546              		.loc 1 110 9 is_stmt 1 view .LVU136
+ 110:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(HSIZE,  0xA0);
+ 547              		.loc 1 110 16 is_stmt 0 view .LVU137
+ 548 010e 2321     		movs	r1, #35
+ 549 0110 1720     		movs	r0, #23
+ 550 0112 FFF7FEFF 		bl	ov7725_WR_Reg
+ 551              	.LVL64:
+ 111:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSTART, 0x07 - vflip);
+ 552              		.loc 1 111 9 is_stmt 1 view .LVU138
+ 111:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSTART, 0x07 - vflip);
+ 553              		.loc 1 111 16 is_stmt 0 view .LVU139
+ 554 0116 A021     		movs	r1, #160
+ 555 0118 1820     		movs	r0, #24
+ 556 011a FFF7FEFF 		bl	ov7725_WR_Reg
+ 557              	.LVL65:
+ 112:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSIZE,  0xF0);
+ 558              		.loc 1 112 9 is_stmt 1 view .LVU140
+ 112:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(VSIZE,  0xF0);
+ 559              		.loc 1 112 16 is_stmt 0 view .LVU141
+ 560 011e C8F10701 		rsb	r1, r8, #7
+ 561 0122 C9B2     		uxtb	r1, r1
+ 562 0124 1920     		movs	r0, #25
+ 563 0126 FFF7FEFF 		bl	ov7725_WR_Reg
+ 564              	.LVL66:
+ 113:Drivers/BSP/Camera/ov7725.c **** 
+ 565              		.loc 1 113 9 is_stmt 1 view .LVU142
+ 113:Drivers/BSP/Camera/ov7725.c **** 
+ 566              		.loc 1 113 16 is_stmt 0 view .LVU143
+ 567 012a F021     		movs	r1, #240
+ 568 012c 1A20     		movs	r0, #26
+ 569 012e FFF7FEFF 		bl	ov7725_WR_Reg
+ 570              	.LVL67:
+ 116:Drivers/BSP/Camera/ov7725.c **** 
+ 571              		.loc 1 116 9 is_stmt 1 view .LVU144
+ 116:Drivers/BSP/Camera/ov7725.c **** 
+ 572              		.loc 1 116 16 is_stmt 0 view .LVU145
+ 573 0132 F321     		movs	r1, #243
+ 574 0134 AC20     		movs	r0, #172
+ 575 0136 FFF7FEFF 		bl	ov7725_WR_Reg
+ 576              	.LVL68:
+ 119:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL1, 0x40);
+ 577              		.loc 1 119 9 is_stmt 1 view .LVU146
+ 119:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL1, 0x40);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 14
+
+
+ 578              		.loc 1 119 16 is_stmt 0 view .LVU147
+ 579 013a 0021     		movs	r1, #0
+ 580 013c A020     		movs	r0, #160
+ 581 013e FFF7FEFF 		bl	ov7725_WR_Reg
+ 582              	.LVL69:
+ 120:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL2, 0x40);
+ 583              		.loc 1 120 9 is_stmt 1 view .LVU148
+ 120:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL2, 0x40);
+ 584              		.loc 1 120 16 is_stmt 0 view .LVU149
+ 585 0142 4021     		movs	r1, #64
+ 586 0144 A120     		movs	r0, #161
+ 587 0146 FFF7FEFF 		bl	ov7725_WR_Reg
+ 588              	.LVL70:
+ 121:Drivers/BSP/Camera/ov7725.c ****     }
+ 589              		.loc 1 121 9 is_stmt 1 view .LVU150
+ 121:Drivers/BSP/Camera/ov7725.c ****     }
+ 590              		.loc 1 121 16 is_stmt 0 view .LVU151
+ 591 014a 4021     		movs	r1, #64
+ 592 014c A220     		movs	r0, #162
+ 593 014e FFF7FEFF 		bl	ov7725_WR_Reg
+ 594              	.LVL71:
+ 121:Drivers/BSP/Camera/ov7725.c ****     }
+ 595              		.loc 1 121 16 view .LVU152
+ 596 0152 C8E7     		b	.L25
+ 597              	.LVL72:
+ 598              	.L29:
+ 121:Drivers/BSP/Camera/ov7725.c ****     }
+ 599              		.loc 1 121 16 view .LVU153
+ 600              	.LBE4:
+  71:Drivers/BSP/Camera/ov7725.c ****     }
+ 601              		.loc 1 71 16 view .LVU154
+ 602 0154 4FF0FF34 		mov	r4, #-1
+ 603 0158 C5E7     		b	.L25
+ 604              	.L34:
+ 605 015a 00BF     		.align	2
+ 606              	.L33:
+ 607 015c 00000000 		.word	dvp_cam_resolution
+ 608              		.cfi_endproc
+ 609              	.LFE148:
+ 611              		.section	.text.ov7725_set_hmirror,"ax",%progbits
+ 612              		.align	1
+ 613              		.syntax unified
+ 614              		.thumb
+ 615              		.thumb_func
+ 617              	ov7725_set_hmirror:
+ 618              	.LVL73:
+ 619              	.LFB149:
+ 126:Drivers/BSP/Camera/ov7725.c **** static int ov7725_set_hmirror(int enable)
+ 127:Drivers/BSP/Camera/ov7725.c **** {
+ 620              		.loc 1 127 1 is_stmt 1 view -0
+ 621              		.cfi_startproc
+ 622              		@ args = 0, pretend = 0, frame = 8
+ 623              		@ frame_needed = 0, uses_anonymous_args = 0
+ 624              		.loc 1 127 1 is_stmt 0 view .LVU156
+ 625 0000 30B5     		push	{r4, r5, lr}
+ 626              	.LCFI13:
+ 627              		.cfi_def_cfa_offset 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 15
+
+
+ 628              		.cfi_offset 4, -12
+ 629              		.cfi_offset 5, -8
+ 630              		.cfi_offset 14, -4
+ 631 0002 83B0     		sub	sp, sp, #12
+ 632              	.LCFI14:
+ 633              		.cfi_def_cfa_offset 24
+ 634 0004 0446     		mov	r4, r0
+ 128:Drivers/BSP/Camera/ov7725.c ****     uint8_t reg;
+ 635              		.loc 1 128 5 is_stmt 1 view .LVU157
+ 129:Drivers/BSP/Camera/ov7725.c ****     int ret = ov7725_RD_Reg(COM3, &reg);
+ 636              		.loc 1 129 5 view .LVU158
+ 637              		.loc 1 129 15 is_stmt 0 view .LVU159
+ 638 0006 0DF10701 		add	r1, sp, #7
+ 639 000a 0C20     		movs	r0, #12
+ 640              	.LVL74:
+ 641              		.loc 1 129 15 view .LVU160
+ 642 000c FFF7FEFF 		bl	ov7725_RD_Reg
+ 643              	.LVL75:
+ 644 0010 0546     		mov	r5, r0
+ 645              	.LVL76:
+ 130:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(COM3, COM3_SET_MIRROR(reg, enable)) ;
+ 646              		.loc 1 130 5 is_stmt 1 view .LVU161
+ 647              		.loc 1 130 32 is_stmt 0 view .LVU162
+ 648 0012 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 649 0016 A401     		lsls	r4, r4, #6
+ 650              	.LVL77:
+ 651              		.loc 1 130 32 view .LVU163
+ 652 0018 04F04004 		and	r4, r4, #64
+ 653              		.loc 1 130 12 view .LVU164
+ 654 001c 21F04001 		bic	r1, r1, #64
+ 655 0020 2143     		orrs	r1, r1, r4
+ 656 0022 0C20     		movs	r0, #12
+ 657 0024 FFF7FEFF 		bl	ov7725_WR_Reg
+ 658              	.LVL78:
+ 659              		.loc 1 130 9 discriminator 1 view .LVU165
+ 660 0028 2843     		orrs	r0, r0, r5
+ 661              	.LVL79:
+ 131:Drivers/BSP/Camera/ov7725.c **** 
+ 132:Drivers/BSP/Camera/ov7725.c ****     return ret;
+ 662              		.loc 1 132 5 is_stmt 1 view .LVU166
+ 133:Drivers/BSP/Camera/ov7725.c **** }
+ 663              		.loc 1 133 1 is_stmt 0 view .LVU167
+ 664 002a C0B2     		uxtb	r0, r0
+ 665              	.LVL80:
+ 666              		.loc 1 133 1 view .LVU168
+ 667 002c 03B0     		add	sp, sp, #12
+ 668              	.LCFI15:
+ 669              		.cfi_def_cfa_offset 12
+ 670              		@ sp needed
+ 671 002e 30BD     		pop	{r4, r5, pc}
+ 672              		.cfi_endproc
+ 673              	.LFE149:
+ 675              		.section	.text.ov7725_set_vflip,"ax",%progbits
+ 676              		.align	1
+ 677              		.syntax unified
+ 678              		.thumb
+ 679              		.thumb_func
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 16
+
+
+ 681              	ov7725_set_vflip:
+ 682              	.LVL81:
+ 683              	.LFB150:
+ 134:Drivers/BSP/Camera/ov7725.c **** 
+ 135:Drivers/BSP/Camera/ov7725.c **** static int ov7725_set_vflip(int enable)
+ 136:Drivers/BSP/Camera/ov7725.c **** {
+ 684              		.loc 1 136 1 is_stmt 1 view -0
+ 685              		.cfi_startproc
+ 686              		@ args = 0, pretend = 0, frame = 8
+ 687              		@ frame_needed = 0, uses_anonymous_args = 0
+ 688              		.loc 1 136 1 is_stmt 0 view .LVU170
+ 689 0000 30B5     		push	{r4, r5, lr}
+ 690              	.LCFI16:
+ 691              		.cfi_def_cfa_offset 12
+ 692              		.cfi_offset 4, -12
+ 693              		.cfi_offset 5, -8
+ 694              		.cfi_offset 14, -4
+ 695 0002 83B0     		sub	sp, sp, #12
+ 696              	.LCFI17:
+ 697              		.cfi_def_cfa_offset 24
+ 698 0004 0546     		mov	r5, r0
+ 137:Drivers/BSP/Camera/ov7725.c ****     uint8_t reg;
+ 699              		.loc 1 137 5 is_stmt 1 view .LVU171
+ 138:Drivers/BSP/Camera/ov7725.c ****     int ret = ov7725_RD_Reg(COM3, &reg);
+ 700              		.loc 1 138 5 view .LVU172
+ 701              		.loc 1 138 15 is_stmt 0 view .LVU173
+ 702 0006 0DF10701 		add	r1, sp, #7
+ 703 000a 0C20     		movs	r0, #12
+ 704              	.LVL82:
+ 705              		.loc 1 138 15 view .LVU174
+ 706 000c FFF7FEFF 		bl	ov7725_RD_Reg
+ 707              	.LVL83:
+ 708 0010 0446     		mov	r4, r0
+ 709              	.LVL84:
+ 139:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_WR_Reg(COM3, COM3_SET_FLIP(reg, enable));
+ 710              		.loc 1 139 5 is_stmt 1 view .LVU175
+ 711              		.loc 1 139 32 is_stmt 0 view .LVU176
+ 712 0012 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 713              		.loc 1 139 12 view .LVU177
+ 714 0016 01F07F01 		and	r1, r1, #127
+ 715 001a 41EAC511 		orr	r1, r1, r5, lsl #7
+ 716 001e C9B2     		uxtb	r1, r1
+ 717 0020 0C20     		movs	r0, #12
+ 718 0022 FFF7FEFF 		bl	ov7725_WR_Reg
+ 719              	.LVL85:
+ 720              		.loc 1 139 9 discriminator 1 view .LVU178
+ 721 0026 0443     		orrs	r4, r4, r0
+ 722              	.LVL86:
+ 723              		.loc 1 139 9 discriminator 1 view .LVU179
+ 724 0028 E4B2     		uxtb	r4, r4
+ 725              	.LVL87:
+ 140:Drivers/BSP/Camera/ov7725.c ****     // Apply new vertical flip setting.
+ 141:Drivers/BSP/Camera/ov7725.c ****     ret |= ov7725_set_framesize(hcamera.framesize);
+ 726              		.loc 1 141 5 is_stmt 1 view .LVU180
+ 727              		.loc 1 141 12 is_stmt 0 view .LVU181
+ 728 002a 034B     		ldr	r3, .L39
+ 729 002c 187C     		ldrb	r0, [r3, #16]	@ zero_extendqisi2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 17
+
+
+ 730 002e FFF7FEFF 		bl	ov7725_set_framesize
+ 731              	.LVL88:
+ 142:Drivers/BSP/Camera/ov7725.c **** 
+ 143:Drivers/BSP/Camera/ov7725.c ****     return ret;
+ 732              		.loc 1 143 5 is_stmt 1 view .LVU182
+ 144:Drivers/BSP/Camera/ov7725.c **** }
+ 733              		.loc 1 144 1 is_stmt 0 view .LVU183
+ 734 0032 2043     		orrs	r0, r0, r4
+ 735              	.LVL89:
+ 736              		.loc 1 144 1 view .LVU184
+ 737 0034 03B0     		add	sp, sp, #12
+ 738              	.LCFI18:
+ 739              		.cfi_def_cfa_offset 12
+ 740              		@ sp needed
+ 741 0036 30BD     		pop	{r4, r5, pc}
+ 742              	.LVL90:
+ 743              	.L40:
+ 744              		.loc 1 144 1 view .LVU185
+ 745              		.align	2
+ 746              	.L39:
+ 747 0038 00000000 		.word	hcamera
+ 748              		.cfi_endproc
+ 749              	.LFE150:
+ 751              		.section	.text.ov7725_init,"ax",%progbits
+ 752              		.align	1
+ 753              		.global	ov7725_init
+ 754              		.syntax unified
+ 755              		.thumb
+ 756              		.thumb_func
+ 758              	ov7725_init:
+ 759              	.LVL91:
+ 760              	.LFB151:
+ 145:Drivers/BSP/Camera/ov7725.c **** 
+ 146:Drivers/BSP/Camera/ov7725.c **** int ov7725_init(framesize_t framesize)
+ 147:Drivers/BSP/Camera/ov7725.c **** {
+ 761              		.loc 1 147 1 is_stmt 1 view -0
+ 762              		.cfi_startproc
+ 763              		@ args = 0, pretend = 0, frame = 0
+ 764              		@ frame_needed = 0, uses_anonymous_args = 0
+ 765              		.loc 1 147 1 is_stmt 0 view .LVU187
+ 766 0000 38B5     		push	{r3, r4, r5, lr}
+ 767              	.LCFI19:
+ 768              		.cfi_def_cfa_offset 16
+ 769              		.cfi_offset 3, -16
+ 770              		.cfi_offset 4, -12
+ 771              		.cfi_offset 5, -8
+ 772              		.cfi_offset 14, -4
+ 773 0002 0446     		mov	r4, r0
+ 148:Drivers/BSP/Camera/ov7725.c **** 	ov7725_reset();
+ 774              		.loc 1 148 2 is_stmt 1 view .LVU188
+ 775 0004 FFF7FEFF 		bl	ov7725_reset
+ 776              	.LVL92:
+ 149:Drivers/BSP/Camera/ov7725.c **** 	hcamera.framesize = framesize;
+ 777              		.loc 1 149 2 view .LVU189
+ 778              		.loc 1 149 20 is_stmt 0 view .LVU190
+ 779 0008 084D     		ldr	r5, .L43
+ 780 000a 2C74     		strb	r4, [r5, #16]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 18
+
+
+ 150:Drivers/BSP/Camera/ov7725.c **** 	hcamera.pixformat = PIXFORMAT_RGB565;
+ 781              		.loc 1 150 2 is_stmt 1 view .LVU191
+ 782              		.loc 1 150 20 is_stmt 0 view .LVU192
+ 783 000c 0124     		movs	r4, #1
+ 784              	.LVL93:
+ 785              		.loc 1 150 20 view .LVU193
+ 786 000e 6C74     		strb	r4, [r5, #17]
+ 151:Drivers/BSP/Camera/ov7725.c **** 	ov7725_set_pixformat(hcamera.pixformat);
+ 787              		.loc 1 151 2 is_stmt 1 view .LVU194
+ 788 0010 2046     		mov	r0, r4
+ 789 0012 FFF7FEFF 		bl	ov7725_set_pixformat
+ 790              	.LVL94:
+ 152:Drivers/BSP/Camera/ov7725.c **** 	ov7725_set_framesize(hcamera.framesize);
+ 791              		.loc 1 152 2 view .LVU195
+ 792 0016 287C     		ldrb	r0, [r5, #16]	@ zero_extendqisi2
+ 793 0018 FFF7FEFF 		bl	ov7725_set_framesize
+ 794              	.LVL95:
+ 153:Drivers/BSP/Camera/ov7725.c **** 	ov7725_set_hmirror(1);
+ 795              		.loc 1 153 2 view .LVU196
+ 796 001c 2046     		mov	r0, r4
+ 797 001e FFF7FEFF 		bl	ov7725_set_hmirror
+ 798              	.LVL96:
+ 154:Drivers/BSP/Camera/ov7725.c **** 	ov7725_set_vflip(1);
+ 799              		.loc 1 154 2 view .LVU197
+ 800 0022 2046     		mov	r0, r4
+ 801 0024 FFF7FEFF 		bl	ov7725_set_vflip
+ 802              	.LVL97:
+ 155:Drivers/BSP/Camera/ov7725.c **** 	
+ 156:Drivers/BSP/Camera/ov7725.c **** 	return 1;
+ 803              		.loc 1 156 2 view .LVU198
+ 157:Drivers/BSP/Camera/ov7725.c **** }
+ 804              		.loc 1 157 1 is_stmt 0 view .LVU199
+ 805 0028 2046     		mov	r0, r4
+ 806 002a 38BD     		pop	{r3, r4, r5, pc}
+ 807              	.L44:
+ 808              		.align	2
+ 809              	.L43:
+ 810 002c 00000000 		.word	hcamera
+ 811              		.cfi_endproc
+ 812              	.LFE151:
+ 814              		.text
+ 815              	.Letext0:
+ 816              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 817              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 818              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 819              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 820              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 821              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 822              		.file 8 "Drivers/BSP/Camera/camera.h"
+ 823              		.file 9 "Drivers/BSP/Camera/ov7725_regs.h"
+ 824              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov7725.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:20     .text.ov7725_WR_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:25     .text.ov7725_WR_Reg:00000000 ov7725_WR_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:62     .text.ov7725_WR_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:67     .text.ov7725_reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:72     .text.ov7725_reset:00000000 ov7725_reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:145    .text.ov7725_reset:0000003c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:150    .text.ov7725_RD_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:155    .text.ov7725_RD_Reg:00000000 ov7725_RD_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:185    .text.ov7725_RD_Reg:00000010 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:190    .text.ov7725_set_pixformat:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:195    .text.ov7725_set_pixformat:00000000 ov7725_set_pixformat
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:324    .text.ov7725_set_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:329    .text.ov7725_set_framesize:00000000 ov7725_set_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:607    .text.ov7725_set_framesize:0000015c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:612    .text.ov7725_set_hmirror:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:617    .text.ov7725_set_hmirror:00000000 ov7725_set_hmirror
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:676    .text.ov7725_set_vflip:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:681    .text.ov7725_set_vflip:00000000 ov7725_set_vflip
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:747    .text.ov7725_set_vflip:00000038 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:752    .text.ov7725_init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:758    .text.ov7725_init:00000000 ov7725_init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:810    .text.ov7725_init:0000002c $d
+
+UNDEFINED SYMBOLS
+Camera_WriteReg
+hcamera
+HAL_Delay
+ov7725_default_regs
+Camera_ReadReg
+dvp_cam_resolution

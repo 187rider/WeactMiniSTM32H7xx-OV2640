@@ -1,0 +1,247 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jcinit.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jcinit.c"
+  19              		.section	.text.jinit_compress_master,"ax",%progbits
+  20              		.align	1
+  21              		.global	jinit_compress_master
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	jinit_compress_master:
+  27              	.LVL0:
+  28              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * jcinit.c
+   3:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * Copyright (C) 1991-1997, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * This file contains initialization logic for the JPEG compressor.
+   9:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * This routine is in charge of selecting the modules to be executed and
+  10:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * making an initialization call to each one.
+  11:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  *
+  12:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * Logically, this code belongs in jcmaster.c.  It's split out because
+  13:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * linking this routine implies linking the entire compression library.
+  14:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * For a transcoding-only application, we want to be able to use jcmaster.c
+  15:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * without linking in the whole library.
+  16:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  */
+  17:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  18:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** #define JPEG_INTERNALS
+  19:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** #include "jinclude.h"
+  20:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** #include "jpeglib.h"
+  21:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  23:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** /*
+  24:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * Master selection of compression modules.
+  25:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * This is done once at the start of processing an image.  We determine
+  26:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  * which modules will be used and give them appropriate initialization calls.
+  27:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****  */
+  28:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  29:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** GLOBAL(void)
+  30:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** jinit_compress_master (j_compress_ptr cinfo)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** {
+  29              		.loc 1 31 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 31 1 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 0446     		mov	r4, r0
+  32:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Initialize master control (includes parameter checking/processing) */
+  33:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_c_master_control(cinfo, FALSE /* full compression */);
+  40              		.loc 1 33 3 is_stmt 1 view .LVU2
+  41 0004 0021     		movs	r1, #0
+  42 0006 FFF7FEFF 		bl	jinit_c_master_control
+  43              	.LVL1:
+  34:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  35:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Preprocessing */
+  36:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   if (! cinfo->raw_data_in) {
+  44              		.loc 1 36 3 view .LVU3
+  45              		.loc 1 36 14 is_stmt 0 view .LVU4
+  46 000a D4F8D030 		ldr	r3, [r4, #208]
+  47              		.loc 1 36 6 view .LVU5
+  48 000e 0BB3     		cbz	r3, .L8
+  49              	.L2:
+  37:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_color_converter(cinfo);
+  38:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_downsampler(cinfo);
+  39:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_c_prep_controller(cinfo, FALSE /* never need full buffer here */);
+  40:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   }
+  41:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Forward DCT */
+  42:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_forward_dct(cinfo);
+  50              		.loc 1 42 3 is_stmt 1 view .LVU6
+  51 0010 2046     		mov	r0, r4
+  52 0012 FFF7FEFF 		bl	jinit_forward_dct
+  53              	.LVL2:
+  43:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Entropy encoding: either Huffman or arithmetic coding. */
+  44:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   if (cinfo->arith_code)
+  54              		.loc 1 44 3 view .LVU7
+  55              		.loc 1 44 12 is_stmt 0 view .LVU8
+  56 0016 D4F8D430 		ldr	r3, [r4, #212]
+  57              		.loc 1 44 6 view .LVU9
+  58 001a 33B3     		cbz	r3, .L3
+  45:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_arith_encoder(cinfo);
+  59              		.loc 1 45 5 is_stmt 1 view .LVU10
+  60 001c 2046     		mov	r0, r4
+  61 001e FFF7FEFF 		bl	jinit_arith_encoder
+  62              	.LVL3:
+  63              	.L4:
+  46:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   else {
+  47:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_huff_encoder(cinfo);
+  48:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   }
+  49:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  50:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Need a full-image coefficient buffer in any multi-pass mode. */
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_c_coef_controller(cinfo,
+  64              		.loc 1 51 3 view .LVU11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s 			page 3
+
+
+  52:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+  65              		.loc 1 52 19 is_stmt 0 view .LVU12
+  66 0022 D4F8C830 		ldr	r3, [r4, #200]
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+  67              		.loc 1 51 3 view .LVU13
+  68 0026 012B     		cmp	r3, #1
+  69 0028 23DD     		ble	.L9
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+  70              		.loc 1 51 3 discriminator 3 view .LVU14
+  71 002a 0121     		movs	r1, #1
+  72              	.L5:
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+  73              		.loc 1 51 3 discriminator 6 view .LVU15
+  74 002c 2046     		mov	r0, r4
+  75 002e FFF7FEFF 		bl	jinit_c_coef_controller
+  76              	.LVL4:
+  53:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_c_main_controller(cinfo, FALSE /* never need full buffer here */);
+  77              		.loc 1 53 3 is_stmt 1 view .LVU16
+  78 0032 0021     		movs	r1, #0
+  79 0034 2046     		mov	r0, r4
+  80 0036 FFF7FEFF 		bl	jinit_c_main_controller
+  81              	.LVL5:
+  54:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  55:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_marker_writer(cinfo);
+  82              		.loc 1 55 3 view .LVU17
+  83 003a 2046     		mov	r0, r4
+  84 003c FFF7FEFF 		bl	jinit_marker_writer
+  85              	.LVL6:
+  56:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  57:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* We can now tell the memory manager to allocate virtual arrays. */
+  58:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   (*cinfo->mem->realize_virt_arrays) ((j_common_ptr) cinfo);
+  86              		.loc 1 58 3 view .LVU18
+  87              		.loc 1 58 10 is_stmt 0 view .LVU19
+  88 0040 6368     		ldr	r3, [r4, #4]
+  89              		.loc 1 58 4 view .LVU20
+  90 0042 9B69     		ldr	r3, [r3, #24]
+  91 0044 2046     		mov	r0, r4
+  92 0046 9847     		blx	r3
+  93              	.LVL7:
+  59:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 
+  60:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   /* Write the datastream header (SOI) immediately.
+  61:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****    * Frame and scan headers are postponed till later.
+  62:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****    * This lets application insert special markers after the SOI.
+  63:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****    */
+  64:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   (*cinfo->marker->write_file_header) (cinfo);
+  94              		.loc 1 64 3 is_stmt 1 view .LVU21
+  95              		.loc 1 64 10 is_stmt 0 view .LVU22
+  96 0048 D4F89431 		ldr	r3, [r4, #404]
+  97              		.loc 1 64 4 view .LVU23
+  98 004c 1B68     		ldr	r3, [r3]
+  99 004e 2046     		mov	r0, r4
+ 100 0050 9847     		blx	r3
+ 101              	.LVL8:
+  65:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** }
+ 102              		.loc 1 65 1 view .LVU24
+ 103 0052 10BD     		pop	{r4, pc}
+ 104              	.LVL9:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s 			page 4
+
+
+ 105              	.L8:
+  37:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_downsampler(cinfo);
+ 106              		.loc 1 37 5 is_stmt 1 view .LVU25
+ 107 0054 2046     		mov	r0, r4
+ 108 0056 FFF7FEFF 		bl	jinit_color_converter
+ 109              	.LVL10:
+  38:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****     jinit_c_prep_controller(cinfo, FALSE /* never need full buffer here */);
+ 110              		.loc 1 38 5 view .LVU26
+ 111 005a 2046     		mov	r0, r4
+ 112 005c FFF7FEFF 		bl	jinit_downsampler
+ 113              	.LVL11:
+  39:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   }
+ 114              		.loc 1 39 5 view .LVU27
+ 115 0060 0021     		movs	r1, #0
+ 116 0062 2046     		mov	r0, r4
+ 117 0064 FFF7FEFF 		bl	jinit_c_prep_controller
+ 118              	.LVL12:
+ 119 0068 D2E7     		b	.L2
+ 120              	.L3:
+  47:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   }
+ 121              		.loc 1 47 5 view .LVU28
+ 122 006a 2046     		mov	r0, r4
+ 123 006c FFF7FEFF 		bl	jinit_huff_encoder
+ 124              	.LVL13:
+ 125 0070 D7E7     		b	.L4
+ 126              	.L9:
+  52:Middlewares/Third_Party/LibJPEG/source/jcinit.c ****   jinit_c_main_controller(cinfo, FALSE /* never need full buffer here */);
+ 127              		.loc 1 52 43 is_stmt 0 view .LVU29
+ 128 0072 D4F8D810 		ldr	r1, [r4, #216]
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+ 129              		.loc 1 51 3 discriminator 2 view .LVU30
+ 130 0076 0029     		cmp	r1, #0
+ 131 0078 D8D0     		beq	.L5
+  51:Middlewares/Third_Party/LibJPEG/source/jcinit.c **** 		(boolean) (cinfo->num_scans > 1 || cinfo->optimize_coding));
+ 132              		.loc 1 51 3 discriminator 3 view .LVU31
+ 133 007a 0121     		movs	r1, #1
+ 134 007c D6E7     		b	.L5
+ 135              		.cfi_endproc
+ 136              	.LFE147:
+ 138              		.text
+ 139              	.Letext0:
+ 140              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 141              		.file 3 "Inc/jmorecfg.h"
+ 142              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 143              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jcinit.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s:20     .text.jinit_compress_master:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc58oBca.s:26     .text.jinit_compress_master:00000000 jinit_compress_master
+
+UNDEFINED SYMBOLS
+jinit_c_master_control
+jinit_forward_dct
+jinit_arith_encoder
+jinit_c_coef_controller
+jinit_c_main_controller
+jinit_marker_writer
+jinit_color_converter
+jinit_downsampler
+jinit_c_prep_controller
+jinit_huff_encoder

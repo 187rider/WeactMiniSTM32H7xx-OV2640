@@ -1,0 +1,1257 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"jcapimin.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jcapimin.c"
+  19              		.section	.text.jpeg_CreateCompress,"ax",%progbits
+  20              		.align	1
+  21              		.global	jpeg_CreateCompress
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	jpeg_CreateCompress:
+  27              	.LVL0:
+  28              	.LFB147:
+   1:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * jcapimin.c
+   3:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Copyright (C) 1994-1998, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Modified 2003-2010 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * This file contains application interface code for the compression half
+  10:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * of the JPEG library.  These are the "minimum" API routines that may be
+  11:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * needed in either the normal full-compression case or the transcoding-only
+  12:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * case.
+  13:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+  14:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Most of the routines intended to be called directly by an application
+  15:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * are in this file or in jcapistd.c.  But also see jcparam.c for
+  16:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * parameter-setup helper routines, jcomapi.c for routines shared by
+  17:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * compression and decompression, and jctrans.c for the transcoding case.
+  18:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+  19:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  20:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** #define JPEG_INTERNALS
+  21:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** #include "jinclude.h"
+  22:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** #include "jpeglib.h"
+  23:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  24:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+  26:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Initialization of a JPEG compression object.
+  27:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * The error manager must already be set up (in case memory manager fails).
+  28:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+  29:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  30:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_CreateCompress (j_compress_ptr cinfo, int version, size_t structsize)
+  32:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+  29              		.loc 1 32 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 32 1 is_stmt 0 view .LVU1
+  34 0000 70B5     		push	{r4, r5, r6, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 4, -16
+  38              		.cfi_offset 5, -12
+  39              		.cfi_offset 6, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0446     		mov	r4, r0
+  42 0004 1546     		mov	r5, r2
+  33:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   int i;
+  43              		.loc 1 33 3 is_stmt 1 view .LVU2
+  34:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  35:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Guard against version mismatches between library and caller. */
+  36:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->mem = NULL;		/* so jpeg_destroy knows mem mgr not called */
+  44              		.loc 1 36 3 view .LVU3
+  45              		.loc 1 36 14 is_stmt 0 view .LVU4
+  46 0006 0023     		movs	r3, #0
+  47 0008 4360     		str	r3, [r0, #4]
+  37:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (version != JPEG_LIB_VERSION)
+  48              		.loc 1 37 3 is_stmt 1 view .LVU5
+  49              		.loc 1 37 6 is_stmt 0 view .LVU6
+  50 000a 5029     		cmp	r1, #80
+  51 000c 0AD0     		beq	.L2
+  38:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT2(cinfo, JERR_BAD_LIB_VERSION, JPEG_LIB_VERSION, version);
+  52              		.loc 1 38 5 is_stmt 1 view .LVU7
+  53 000e 0368     		ldr	r3, [r0]
+  54 0010 0D22     		movs	r2, #13
+  55              	.LVL1:
+  56              		.loc 1 38 5 is_stmt 0 view .LVU8
+  57 0012 5A61     		str	r2, [r3, #20]
+  58 0014 0368     		ldr	r3, [r0]
+  59 0016 5022     		movs	r2, #80
+  60 0018 9A61     		str	r2, [r3, #24]
+  61 001a 0368     		ldr	r3, [r0]
+  62 001c D961     		str	r1, [r3, #28]
+  63 001e 0368     		ldr	r3, [r0]
+  64 0020 1B68     		ldr	r3, [r3]
+  65 0022 9847     		blx	r3
+  66              	.LVL2:
+  67              	.L2:
+  39:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (structsize != SIZEOF(struct jpeg_compress_struct))
+  68              		.loc 1 39 3 is_stmt 1 view .LVU9
+  69              		.loc 1 39 6 is_stmt 0 view .LVU10
+  70 0024 B5F5D87F 		cmp	r5, #432
+  71 0028 0CD0     		beq	.L3
+  40:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT2(cinfo, JERR_BAD_STRUCT_SIZE, 
+  72              		.loc 1 40 5 is_stmt 1 view .LVU11
+  73 002a 2368     		ldr	r3, [r4]
+  74 002c 1622     		movs	r2, #22
+  75 002e 5A61     		str	r2, [r3, #20]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 3
+
+
+  76 0030 2368     		ldr	r3, [r4]
+  77 0032 4FF4D872 		mov	r2, #432
+  78 0036 9A61     		str	r2, [r3, #24]
+  79 0038 2368     		ldr	r3, [r4]
+  80 003a DD61     		str	r5, [r3, #28]
+  81 003c 2368     		ldr	r3, [r4]
+  82 003e 1B68     		ldr	r3, [r3]
+  83 0040 2046     		mov	r0, r4
+  84 0042 9847     		blx	r3
+  85              	.LVL3:
+  86              	.L3:
+  87              	.LBB2:
+  41:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 	     (int) SIZEOF(struct jpeg_compress_struct), (int) structsize);
+  42:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  43:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* For debugging purposes, we zero the whole master structure.
+  44:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * But the application has already set the err pointer, and may have set
+  45:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * client_data, so we have to save and restore those fields.
+  46:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * Note: if application hasn't set client_data, tools like Purify may
+  47:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * complain here.
+  48:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    */
+  49:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   {
+  50:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     struct jpeg_error_mgr * err = cinfo->err;
+  88              		.loc 1 50 5 view .LVU12
+  89              		.loc 1 50 29 is_stmt 0 view .LVU13
+  90 0044 2668     		ldr	r6, [r4]
+  91              	.LVL4:
+  51:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     void * client_data = cinfo->client_data; /* ignore Purify complaint here */
+  92              		.loc 1 51 5 is_stmt 1 view .LVU14
+  93              		.loc 1 51 12 is_stmt 0 view .LVU15
+  94 0046 E568     		ldr	r5, [r4, #12]
+  95              	.LVL5:
+  52:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     MEMZERO(cinfo, SIZEOF(struct jpeg_compress_struct));
+  96              		.loc 1 52 5 is_stmt 1 view .LVU16
+  97 0048 4FF4D872 		mov	r2, #432
+  98 004c 0021     		movs	r1, #0
+  99 004e 2046     		mov	r0, r4
+ 100 0050 FFF7FEFF 		bl	memset
+ 101              	.LVL6:
+  53:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->err = err;
+ 102              		.loc 1 53 5 view .LVU17
+ 103              		.loc 1 53 16 is_stmt 0 view .LVU18
+ 104 0054 2660     		str	r6, [r4]
+  54:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->client_data = client_data;
+ 105              		.loc 1 54 5 is_stmt 1 view .LVU19
+ 106              		.loc 1 54 24 is_stmt 0 view .LVU20
+ 107 0056 E560     		str	r5, [r4, #12]
+ 108              	.LBE2:
+  55:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+  56:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->is_decompressor = FALSE;
+ 109              		.loc 1 56 3 is_stmt 1 view .LVU21
+  57:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  58:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Initialize a memory manager instance for this object */
+  59:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   jinit_memory_mgr((j_common_ptr) cinfo);
+ 110              		.loc 1 59 3 view .LVU22
+ 111 0058 2046     		mov	r0, r4
+ 112 005a FFF7FEFF 		bl	jinit_memory_mgr
+ 113              	.LVL7:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 4
+
+
+  60:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  61:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Zero out pointers to permanent structures. */
+  62:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->progress = NULL;
+ 114              		.loc 1 62 3 view .LVU23
+ 115              		.loc 1 62 19 is_stmt 0 view .LVU24
+ 116 005e 0023     		movs	r3, #0
+ 117 0060 A360     		str	r3, [r4, #8]
+  63:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->dest = NULL;
+ 118              		.loc 1 63 3 is_stmt 1 view .LVU25
+ 119              		.loc 1 63 15 is_stmt 0 view .LVU26
+ 120 0062 A361     		str	r3, [r4, #24]
+  64:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  65:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->comp_info = NULL;
+ 121              		.loc 1 65 3 is_stmt 1 view .LVU27
+ 122              		.loc 1 65 20 is_stmt 0 view .LVU28
+ 123 0064 6365     		str	r3, [r4, #84]
+  66:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  67:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   for (i = 0; i < NUM_QUANT_TBLS; i++) {
+ 124              		.loc 1 67 3 is_stmt 1 view .LVU29
+ 125              	.LVL8:
+ 126              		.loc 1 67 3 is_stmt 0 view .LVU30
+ 127 0066 0AE0     		b	.L4
+ 128              	.LVL9:
+ 129              	.L5:
+  68:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 130              		.loc 1 68 5 is_stmt 1 view .LVU31
+ 131              		.loc 1 68 30 is_stmt 0 view .LVU32
+ 132 0068 03F11602 		add	r2, r3, #22
+ 133 006c 0021     		movs	r1, #0
+ 134 006e 44F82210 		str	r1, [r4, r2, lsl #2]
+  69:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->q_scale_factor[i] = 100;
+ 135              		.loc 1 69 5 is_stmt 1 view .LVU33
+ 136              		.loc 1 69 30 is_stmt 0 view .LVU34
+ 137 0072 03F11A02 		add	r2, r3, #26
+ 138 0076 6421     		movs	r1, #100
+ 139 0078 44F82210 		str	r1, [r4, r2, lsl #2]
+  67:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 140              		.loc 1 67 36 is_stmt 1 discriminator 3 view .LVU35
+ 141 007c 0133     		adds	r3, r3, #1
+ 142              	.LVL10:
+ 143              	.L4:
+  67:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 144              		.loc 1 67 17 discriminator 1 view .LVU36
+ 145 007e 032B     		cmp	r3, #3
+ 146 0080 F2DD     		ble	.L5
+  70:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+  71:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  72:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   for (i = 0; i < NUM_HUFF_TBLS; i++) {
+ 147              		.loc 1 72 10 is_stmt 0 view .LVU37
+ 148 0082 0023     		movs	r3, #0
+ 149              	.LVL11:
+ 150              		.loc 1 72 10 view .LVU38
+ 151 0084 09E0     		b	.L6
+ 152              	.LVL12:
+ 153              	.L7:
+  73:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 154              		.loc 1 73 5 is_stmt 1 view .LVU39
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 5
+
+
+ 155              		.loc 1 73 32 is_stmt 0 view .LVU40
+ 156 0086 03F11E01 		add	r1, r3, #30
+ 157 008a 0022     		movs	r2, #0
+ 158 008c 44F82120 		str	r2, [r4, r1, lsl #2]
+  74:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->ac_huff_tbl_ptrs[i] = NULL;
+ 159              		.loc 1 74 5 is_stmt 1 view .LVU41
+ 160              		.loc 1 74 32 is_stmt 0 view .LVU42
+ 161 0090 03F12201 		add	r1, r3, #34
+ 162 0094 44F82120 		str	r2, [r4, r1, lsl #2]
+  72:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 163              		.loc 1 72 35 is_stmt 1 discriminator 3 view .LVU43
+ 164 0098 0133     		adds	r3, r3, #1
+ 165              	.LVL13:
+ 166              	.L6:
+  72:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 167              		.loc 1 72 17 discriminator 1 view .LVU44
+ 168 009a 032B     		cmp	r3, #3
+ 169 009c F3DD     		ble	.L7
+  75:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+  76:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  77:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Must do it here for emit_dqt in case jpeg_write_tables is used */
+  78:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->block_size = DCTSIZE;
+ 170              		.loc 1 78 3 view .LVU45
+ 171              		.loc 1 78 21 is_stmt 0 view .LVU46
+ 172 009e 0823     		movs	r3, #8
+ 173              	.LVL14:
+ 174              		.loc 1 78 21 view .LVU47
+ 175 00a0 C4F87831 		str	r3, [r4, #376]
+  79:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->natural_order = jpeg_natural_order;
+ 176              		.loc 1 79 3 is_stmt 1 view .LVU48
+ 177              		.loc 1 79 24 is_stmt 0 view .LVU49
+ 178 00a4 074B     		ldr	r3, .L9
+ 179 00a6 C4F87C31 		str	r3, [r4, #380]
+  80:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->lim_Se = DCTSIZE2-1;
+ 180              		.loc 1 80 3 is_stmt 1 view .LVU50
+ 181              		.loc 1 80 17 is_stmt 0 view .LVU51
+ 182 00aa 3F23     		movs	r3, #63
+ 183 00ac C4F88031 		str	r3, [r4, #384]
+  81:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  82:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->script_space = NULL;
+ 184              		.loc 1 82 3 is_stmt 1 view .LVU52
+ 185              		.loc 1 82 23 is_stmt 0 view .LVU53
+ 186 00b0 0023     		movs	r3, #0
+ 187 00b2 C4F8A831 		str	r3, [r4, #424]
+  83:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  84:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->input_gamma = 1.0;	/* in case application forgets */
+ 188              		.loc 1 84 3 is_stmt 1 view .LVU54
+ 189              		.loc 1 84 22 is_stmt 0 view .LVU55
+ 190 00b6 0022     		movs	r2, #0
+ 191 00b8 034B     		ldr	r3, .L9+4
+ 192 00ba C4E90C23 		strd	r2, [r4, #48]
+  85:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  86:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* OK, I'm ready */
+  87:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   cinfo->global_state = CSTATE_START;
+ 193              		.loc 1 87 3 is_stmt 1 view .LVU56
+ 194              		.loc 1 87 23 is_stmt 0 view .LVU57
+ 195 00be 6423     		movs	r3, #100
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 6
+
+
+ 196 00c0 6361     		str	r3, [r4, #20]
+  88:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 197              		.loc 1 88 1 view .LVU58
+ 198 00c2 70BD     		pop	{r4, r5, r6, pc}
+ 199              	.LVL15:
+ 200              	.L10:
+ 201              		.loc 1 88 1 view .LVU59
+ 202              		.align	2
+ 203              	.L9:
+ 204 00c4 00000000 		.word	jpeg_natural_order
+ 205 00c8 0000F03F 		.word	1072693248
+ 206              		.cfi_endproc
+ 207              	.LFE147:
+ 209              		.section	.text.jpeg_destroy_compress,"ax",%progbits
+ 210              		.align	1
+ 211              		.global	jpeg_destroy_compress
+ 212              		.syntax unified
+ 213              		.thumb
+ 214              		.thumb_func
+ 216              	jpeg_destroy_compress:
+ 217              	.LVL16:
+ 218              	.LFB148:
+  89:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  90:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  91:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+  92:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Destruction of a JPEG compression object
+  93:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+  94:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+  95:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+  96:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_destroy_compress (j_compress_ptr cinfo)
+  97:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 219              		.loc 1 97 1 is_stmt 1 view -0
+ 220              		.cfi_startproc
+ 221              		@ args = 0, pretend = 0, frame = 0
+ 222              		@ frame_needed = 0, uses_anonymous_args = 0
+ 223              		.loc 1 97 1 is_stmt 0 view .LVU61
+ 224 0000 08B5     		push	{r3, lr}
+ 225              	.LCFI1:
+ 226              		.cfi_def_cfa_offset 8
+ 227              		.cfi_offset 3, -8
+ 228              		.cfi_offset 14, -4
+  98:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
+ 229              		.loc 1 98 3 is_stmt 1 view .LVU62
+ 230 0002 FFF7FEFF 		bl	jpeg_destroy
+ 231              	.LVL17:
+  99:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 232              		.loc 1 99 1 is_stmt 0 view .LVU63
+ 233 0006 08BD     		pop	{r3, pc}
+ 234              		.cfi_endproc
+ 235              	.LFE148:
+ 237              		.section	.text.jpeg_abort_compress,"ax",%progbits
+ 238              		.align	1
+ 239              		.global	jpeg_abort_compress
+ 240              		.syntax unified
+ 241              		.thumb
+ 242              		.thumb_func
+ 244              	jpeg_abort_compress:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 7
+
+
+ 245              	.LVL18:
+ 246              	.LFB149:
+ 100:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 101:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 102:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+ 103:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Abort processing of a JPEG compression operation,
+ 104:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * but don't destroy the object itself.
+ 105:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+ 106:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 107:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 108:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_abort_compress (j_compress_ptr cinfo)
+ 109:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 247              		.loc 1 109 1 is_stmt 1 view -0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 251              		.loc 1 109 1 is_stmt 0 view .LVU65
+ 252 0000 08B5     		push	{r3, lr}
+ 253              	.LCFI2:
+ 254              		.cfi_def_cfa_offset 8
+ 255              		.cfi_offset 3, -8
+ 256              		.cfi_offset 14, -4
+ 110:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
+ 257              		.loc 1 110 3 is_stmt 1 view .LVU66
+ 258 0002 FFF7FEFF 		bl	jpeg_abort
+ 259              	.LVL19:
+ 111:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 260              		.loc 1 111 1 is_stmt 0 view .LVU67
+ 261 0006 08BD     		pop	{r3, pc}
+ 262              		.cfi_endproc
+ 263              	.LFE149:
+ 265              		.section	.text.jpeg_suppress_tables,"ax",%progbits
+ 266              		.align	1
+ 267              		.global	jpeg_suppress_tables
+ 268              		.syntax unified
+ 269              		.thumb
+ 270              		.thumb_func
+ 272              	jpeg_suppress_tables:
+ 273              	.LVL20:
+ 274              	.LFB150:
+ 112:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 113:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 114:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+ 115:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Forcibly suppress or un-suppress all quantization and Huffman tables.
+ 116:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Marks all currently defined tables as already written (if suppress)
+ 117:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * or not written (if !suppress).  This will control whether they get emitted
+ 118:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * by a subsequent jpeg_start_compress call.
+ 119:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+ 120:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * This routine is exported for use by applications that want to produce
+ 121:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * abbreviated JPEG datastreams.  It logically belongs in jcparam.c, but
+ 122:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * since it is called by jpeg_start_compress, we put it here --- otherwise
+ 123:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * jcparam.o would be linked whether the application used it or not.
+ 124:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+ 125:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 126:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 127:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_suppress_tables (j_compress_ptr cinfo, boolean suppress)
+ 128:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 8
+
+
+ 275              		.loc 1 128 1 is_stmt 1 view -0
+ 276              		.cfi_startproc
+ 277              		@ args = 0, pretend = 0, frame = 0
+ 278              		@ frame_needed = 0, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 129:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   int i;
+ 280              		.loc 1 129 3 view .LVU69
+ 130:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   JQUANT_TBL * qtbl;
+ 281              		.loc 1 130 3 view .LVU70
+ 131:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   JHUFF_TBL * htbl;
+ 282              		.loc 1 131 3 view .LVU71
+ 132:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 133:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   for (i = 0; i < NUM_QUANT_TBLS; i++) {
+ 283              		.loc 1 133 3 view .LVU72
+ 284              		.loc 1 133 10 is_stmt 0 view .LVU73
+ 285 0000 0023     		movs	r3, #0
+ 286              		.loc 1 133 3 view .LVU74
+ 287 0002 02E0     		b	.L16
+ 288              	.LVL21:
+ 289              	.L24:
+ 134:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 135:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       qtbl->sent_table = suppress;
+ 290              		.loc 1 135 7 is_stmt 1 view .LVU75
+ 291              		.loc 1 135 24 is_stmt 0 view .LVU76
+ 292 0004 C2F88010 		str	r1, [r2, #128]
+ 293              	.L17:
+ 133:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 294              		.loc 1 133 36 is_stmt 1 discriminator 2 view .LVU77
+ 295 0008 0133     		adds	r3, r3, #1
+ 296              	.LVL22:
+ 297              	.L16:
+ 133:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 298              		.loc 1 133 17 discriminator 1 view .LVU78
+ 299 000a 032B     		cmp	r3, #3
+ 300 000c 06DC     		bgt	.L23
+ 134:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 301              		.loc 1 134 5 view .LVU79
+ 134:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 302              		.loc 1 134 15 is_stmt 0 view .LVU80
+ 303 000e 03F11602 		add	r2, r3, #22
+ 304 0012 50F82220 		ldr	r2, [r0, r2, lsl #2]
+ 305              	.LVL23:
+ 134:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((qtbl = cinfo->quant_tbl_ptrs[i]) != NULL)
+ 306              		.loc 1 134 8 view .LVU81
+ 307 0016 002A     		cmp	r2, #0
+ 308 0018 F4D1     		bne	.L24
+ 309 001a F5E7     		b	.L17
+ 310              	.LVL24:
+ 311              	.L23:
+ 136:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+ 137:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 138:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   for (i = 0; i < NUM_HUFF_TBLS; i++) {
+ 312              		.loc 1 138 10 view .LVU82
+ 313 001c 0023     		movs	r3, #0
+ 314              	.LVL25:
+ 315              		.loc 1 138 10 view .LVU83
+ 316 001e 02E0     		b	.L19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 9
+
+
+ 317              	.LVL26:
+ 318              	.L26:
+ 139:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 140:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 141:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->ac_huff_tbl_ptrs[i]) != NULL)
+ 142:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 319              		.loc 1 142 7 is_stmt 1 view .LVU84
+ 320              		.loc 1 142 24 is_stmt 0 view .LVU85
+ 321 0020 C2F81411 		str	r1, [r2, #276]
+ 322              	.L21:
+ 138:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 323              		.loc 1 138 35 is_stmt 1 discriminator 2 view .LVU86
+ 324 0024 0133     		adds	r3, r3, #1
+ 325              	.LVL27:
+ 326              	.L19:
+ 138:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 327              		.loc 1 138 17 discriminator 1 view .LVU87
+ 328 0026 032B     		cmp	r3, #3
+ 329 0028 0DDC     		bgt	.L25
+ 139:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 330              		.loc 1 139 5 view .LVU88
+ 139:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 331              		.loc 1 139 15 is_stmt 0 view .LVU89
+ 332 002a 03F11E02 		add	r2, r3, #30
+ 333 002e 50F82220 		ldr	r2, [r0, r2, lsl #2]
+ 334              	.LVL28:
+ 139:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->dc_huff_tbl_ptrs[i]) != NULL)
+ 335              		.loc 1 139 8 view .LVU90
+ 336 0032 0AB1     		cbz	r2, .L20
+ 140:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->ac_huff_tbl_ptrs[i]) != NULL)
+ 337              		.loc 1 140 7 is_stmt 1 view .LVU91
+ 140:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if ((htbl = cinfo->ac_huff_tbl_ptrs[i]) != NULL)
+ 338              		.loc 1 140 24 is_stmt 0 view .LVU92
+ 339 0034 C2F81411 		str	r1, [r2, #276]
+ 340              	.L20:
+ 141:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 341              		.loc 1 141 5 is_stmt 1 view .LVU93
+ 141:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 342              		.loc 1 141 15 is_stmt 0 view .LVU94
+ 343 0038 03F12202 		add	r2, r3, #34
+ 344              	.LVL29:
+ 141:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 345              		.loc 1 141 15 view .LVU95
+ 346 003c 50F82220 		ldr	r2, [r0, r2, lsl #2]
+ 347              	.LVL30:
+ 141:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       htbl->sent_table = suppress;
+ 348              		.loc 1 141 8 view .LVU96
+ 349 0040 002A     		cmp	r2, #0
+ 350 0042 EDD1     		bne	.L26
+ 351 0044 EEE7     		b	.L21
+ 352              	.LVL31:
+ 353              	.L25:
+ 143:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+ 144:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 354              		.loc 1 144 1 view .LVU97
+ 355 0046 7047     		bx	lr
+ 356              		.cfi_endproc
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 10
+
+
+ 357              	.LFE150:
+ 359              		.section	.text.jpeg_finish_compress,"ax",%progbits
+ 360              		.align	1
+ 361              		.global	jpeg_finish_compress
+ 362              		.syntax unified
+ 363              		.thumb
+ 364              		.thumb_func
+ 366              	jpeg_finish_compress:
+ 367              	.LVL32:
+ 368              	.LFB151:
+ 145:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 146:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 147:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+ 148:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Finish JPEG compression.
+ 149:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+ 150:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * If a multipass operating mode was selected, this may do a great deal of
+ 151:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * work including most of the actual output.
+ 152:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+ 153:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 154:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 155:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_finish_compress (j_compress_ptr cinfo)
+ 156:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 369              		.loc 1 156 1 is_stmt 1 view -0
+ 370              		.cfi_startproc
+ 371              		@ args = 0, pretend = 0, frame = 0
+ 372              		@ frame_needed = 0, uses_anonymous_args = 0
+ 373              		.loc 1 156 1 is_stmt 0 view .LVU99
+ 374 0000 38B5     		push	{r3, r4, r5, lr}
+ 375              	.LCFI3:
+ 376              		.cfi_def_cfa_offset 16
+ 377              		.cfi_offset 3, -16
+ 378              		.cfi_offset 4, -12
+ 379              		.cfi_offset 5, -8
+ 380              		.cfi_offset 14, -4
+ 381 0002 0446     		mov	r4, r0
+ 157:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   JDIMENSION iMCU_row;
+ 382              		.loc 1 157 3 is_stmt 1 view .LVU100
+ 158:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 159:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (cinfo->global_state == CSTATE_SCANNING ||
+ 383              		.loc 1 159 3 view .LVU101
+ 384              		.loc 1 159 12 is_stmt 0 view .LVU102
+ 385 0004 4369     		ldr	r3, [r0, #20]
+ 386              		.loc 1 159 46 view .LVU103
+ 387 0006 A3F16502 		sub	r2, r3, #101
+ 388              		.loc 1 159 6 view .LVU104
+ 389 000a 012A     		cmp	r2, #1
+ 390 000c 0BD9     		bls	.L38
+ 160:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       cinfo->global_state == CSTATE_RAW_OK) {
+ 161:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     /* Terminate first pass */
+ 162:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     if (cinfo->next_scanline < cinfo->image_height)
+ 163:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 164:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->finish_pass) (cinfo);
+ 165:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   } else if (cinfo->global_state != CSTATE_WRCOEFS)
+ 391              		.loc 1 165 10 is_stmt 1 view .LVU105
+ 392              		.loc 1 165 13 is_stmt 0 view .LVU106
+ 393 000e 672B     		cmp	r3, #103
+ 394 0010 3FD0     		beq	.L30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 11
+
+
+ 166:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 395              		.loc 1 166 5 is_stmt 1 view .LVU107
+ 396 0012 0368     		ldr	r3, [r0]
+ 397 0014 1522     		movs	r2, #21
+ 398 0016 5A61     		str	r2, [r3, #20]
+ 399 0018 0368     		ldr	r3, [r0]
+ 400 001a 4269     		ldr	r2, [r0, #20]
+ 401 001c 9A61     		str	r2, [r3, #24]
+ 402 001e 0368     		ldr	r3, [r0]
+ 403 0020 1B68     		ldr	r3, [r3]
+ 404 0022 9847     		blx	r3
+ 405              	.LVL33:
+ 406              		.loc 1 166 5 is_stmt 0 view .LVU108
+ 407 0024 35E0     		b	.L30
+ 408              	.LVL34:
+ 409              	.L38:
+ 162:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 410              		.loc 1 162 5 is_stmt 1 view .LVU109
+ 162:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 411              		.loc 1 162 14 is_stmt 0 view .LVU110
+ 412 0026 D0F80421 		ldr	r2, [r0, #260]
+ 162:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 413              		.loc 1 162 37 view .LVU111
+ 414 002a 036A     		ldr	r3, [r0, #32]
+ 162:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 415              		.loc 1 162 8 view .LVU112
+ 416 002c 9A42     		cmp	r2, r3
+ 417 002e 05D2     		bcs	.L29
+ 163:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->finish_pass) (cinfo);
+ 418              		.loc 1 163 7 is_stmt 1 view .LVU113
+ 419 0030 0368     		ldr	r3, [r0]
+ 420 0032 4522     		movs	r2, #69
+ 421 0034 5A61     		str	r2, [r3, #20]
+ 422 0036 0368     		ldr	r3, [r0]
+ 423 0038 1B68     		ldr	r3, [r3]
+ 424 003a 9847     		blx	r3
+ 425              	.LVL35:
+ 426              	.L29:
+ 164:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   } else if (cinfo->global_state != CSTATE_WRCOEFS)
+ 427              		.loc 1 164 5 view .LVU114
+ 164:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   } else if (cinfo->global_state != CSTATE_WRCOEFS)
+ 428              		.loc 1 164 12 is_stmt 0 view .LVU115
+ 429 003c D4F88431 		ldr	r3, [r4, #388]
+ 164:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   } else if (cinfo->global_state != CSTATE_WRCOEFS)
+ 430              		.loc 1 164 6 view .LVU116
+ 431 0040 9B68     		ldr	r3, [r3, #8]
+ 432 0042 2046     		mov	r0, r4
+ 433 0044 9847     		blx	r3
+ 434              	.LVL36:
+ 435 0046 24E0     		b	.L30
+ 436              	.LVL37:
+ 437              	.L34:
+ 167:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Perform any remaining passes */
+ 168:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (! cinfo->master->is_last_pass) {
+ 169:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->prepare_for_pass) (cinfo);
+ 170:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     for (iMCU_row = 0; iMCU_row < cinfo->total_iMCU_rows; iMCU_row++) {
+ 438              		.loc 1 170 67 is_stmt 1 discriminator 2 view .LVU117
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 12
+
+
+ 439 0048 0135     		adds	r5, r5, #1
+ 440              	.LVL38:
+ 441              	.L32:
+ 442              		.loc 1 170 33 discriminator 1 view .LVU118
+ 443              		.loc 1 170 40 is_stmt 0 discriminator 1 view .LVU119
+ 444 004a D4F81C31 		ldr	r3, [r4, #284]
+ 445              		.loc 1 170 33 discriminator 1 view .LVU120
+ 446 004e AB42     		cmp	r3, r5
+ 447 0050 1AD9     		bls	.L39
+ 171:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       if (cinfo->progress != NULL) {
+ 448              		.loc 1 171 7 is_stmt 1 view .LVU121
+ 449              		.loc 1 171 16 is_stmt 0 view .LVU122
+ 450 0052 A368     		ldr	r3, [r4, #8]
+ 451              		.loc 1 171 10 view .LVU123
+ 452 0054 43B1     		cbz	r3, .L33
+ 172:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 	cinfo->progress->pass_counter = (long) iMCU_row;
+ 453              		.loc 1 172 2 is_stmt 1 view .LVU124
+ 454              		.loc 1 172 32 is_stmt 0 view .LVU125
+ 455 0056 5D60     		str	r5, [r3, #4]
+ 173:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 	cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows;
+ 456              		.loc 1 173 2 is_stmt 1 view .LVU126
+ 457              		.loc 1 173 44 is_stmt 0 view .LVU127
+ 458 0058 D4F81C21 		ldr	r2, [r4, #284]
+ 459              		.loc 1 173 7 view .LVU128
+ 460 005c A368     		ldr	r3, [r4, #8]
+ 461              		.loc 1 173 30 view .LVU129
+ 462 005e 9A60     		str	r2, [r3, #8]
+ 174:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 463              		.loc 1 174 2 is_stmt 1 view .LVU130
+ 464              		.loc 1 174 9 is_stmt 0 view .LVU131
+ 465 0060 A368     		ldr	r3, [r4, #8]
+ 466              		.loc 1 174 3 view .LVU132
+ 467 0062 1B68     		ldr	r3, [r3]
+ 468 0064 2046     		mov	r0, r4
+ 469 0066 9847     		blx	r3
+ 470              	.LVL39:
+ 471              	.L33:
+ 175:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       }
+ 176:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       /* We bypass the main controller and invoke coef controller directly;
+ 177:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        * all work is being done from the coefficient buffer.
+ 178:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        */
+ 179:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       if (! (*cinfo->coef->compress_data) (cinfo, (JSAMPIMAGE) NULL))
+ 472              		.loc 1 179 7 is_stmt 1 view .LVU133
+ 473              		.loc 1 179 20 is_stmt 0 view .LVU134
+ 474 0068 D4F89031 		ldr	r3, [r4, #400]
+ 475              		.loc 1 179 14 view .LVU135
+ 476 006c 5B68     		ldr	r3, [r3, #4]
+ 477 006e 0021     		movs	r1, #0
+ 478 0070 2046     		mov	r0, r4
+ 479 0072 9847     		blx	r3
+ 480              	.LVL40:
+ 481              		.loc 1 179 10 discriminator 1 view .LVU136
+ 482 0074 0028     		cmp	r0, #0
+ 483 0076 E7D1     		bne	.L34
+ 180:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 	ERREXIT(cinfo, JERR_CANT_SUSPEND);
+ 484              		.loc 1 180 2 is_stmt 1 view .LVU137
+ 485 0078 2368     		ldr	r3, [r4]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 13
+
+
+ 486 007a 1922     		movs	r2, #25
+ 487 007c 5A61     		str	r2, [r3, #20]
+ 488 007e 2368     		ldr	r3, [r4]
+ 489 0080 1B68     		ldr	r3, [r3]
+ 490 0082 2046     		mov	r0, r4
+ 491 0084 9847     		blx	r3
+ 492              	.LVL41:
+ 493 0086 DFE7     		b	.L34
+ 494              	.L39:
+ 181:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     }
+ 182:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->finish_pass) (cinfo);
+ 495              		.loc 1 182 5 view .LVU138
+ 496              		.loc 1 182 12 is_stmt 0 view .LVU139
+ 497 0088 D4F88431 		ldr	r3, [r4, #388]
+ 498              		.loc 1 182 6 view .LVU140
+ 499 008c 9B68     		ldr	r3, [r3, #8]
+ 500 008e 2046     		mov	r0, r4
+ 501 0090 9847     		blx	r3
+ 502              	.LVL42:
+ 503              	.L30:
+ 168:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->prepare_for_pass) (cinfo);
+ 504              		.loc 1 168 10 is_stmt 1 view .LVU141
+ 168:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->prepare_for_pass) (cinfo);
+ 505              		.loc 1 168 17 is_stmt 0 view .LVU142
+ 506 0092 D4F88431 		ldr	r3, [r4, #388]
+ 168:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->prepare_for_pass) (cinfo);
+ 507              		.loc 1 168 25 view .LVU143
+ 508 0096 1A69     		ldr	r2, [r3, #16]
+ 168:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*cinfo->master->prepare_for_pass) (cinfo);
+ 509              		.loc 1 168 10 view .LVU144
+ 510 0098 22B9     		cbnz	r2, .L40
+ 169:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     for (iMCU_row = 0; iMCU_row < cinfo->total_iMCU_rows; iMCU_row++) {
+ 511              		.loc 1 169 5 is_stmt 1 view .LVU145
+ 169:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     for (iMCU_row = 0; iMCU_row < cinfo->total_iMCU_rows; iMCU_row++) {
+ 512              		.loc 1 169 6 is_stmt 0 view .LVU146
+ 513 009a 1B68     		ldr	r3, [r3]
+ 514 009c 2046     		mov	r0, r4
+ 515 009e 9847     		blx	r3
+ 516              	.LVL43:
+ 170:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       if (cinfo->progress != NULL) {
+ 517              		.loc 1 170 5 is_stmt 1 view .LVU147
+ 170:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       if (cinfo->progress != NULL) {
+ 518              		.loc 1 170 19 is_stmt 0 view .LVU148
+ 519 00a0 0025     		movs	r5, #0
+ 170:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       if (cinfo->progress != NULL) {
+ 520              		.loc 1 170 5 view .LVU149
+ 521 00a2 D2E7     		b	.L32
+ 522              	.LVL44:
+ 523              	.L40:
+ 183:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+ 184:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Write EOI, do final cleanup */
+ 185:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->marker->write_file_trailer) (cinfo);
+ 524              		.loc 1 185 3 is_stmt 1 view .LVU150
+ 525              		.loc 1 185 10 is_stmt 0 view .LVU151
+ 526 00a4 D4F89431 		ldr	r3, [r4, #404]
+ 527              		.loc 1 185 4 view .LVU152
+ 528 00a8 DB68     		ldr	r3, [r3, #12]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 14
+
+
+ 529 00aa 2046     		mov	r0, r4
+ 530 00ac 9847     		blx	r3
+ 531              	.LVL45:
+ 186:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->dest->term_destination) (cinfo);
+ 532              		.loc 1 186 3 is_stmt 1 view .LVU153
+ 533              		.loc 1 186 10 is_stmt 0 view .LVU154
+ 534 00ae A369     		ldr	r3, [r4, #24]
+ 535              		.loc 1 186 4 view .LVU155
+ 536 00b0 1B69     		ldr	r3, [r3, #16]
+ 537 00b2 2046     		mov	r0, r4
+ 538 00b4 9847     		blx	r3
+ 539              	.LVL46:
+ 187:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* We can use jpeg_abort to release memory and reset global_state */
+ 188:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   jpeg_abort((j_common_ptr) cinfo);
+ 540              		.loc 1 188 3 is_stmt 1 view .LVU156
+ 541 00b6 2046     		mov	r0, r4
+ 542 00b8 FFF7FEFF 		bl	jpeg_abort
+ 543              	.LVL47:
+ 189:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 544              		.loc 1 189 1 is_stmt 0 view .LVU157
+ 545 00bc 38BD     		pop	{r3, r4, r5, pc}
+ 546              		.loc 1 189 1 view .LVU158
+ 547              		.cfi_endproc
+ 548              	.LFE151:
+ 550              		.section	.text.jpeg_write_marker,"ax",%progbits
+ 551              		.align	1
+ 552              		.global	jpeg_write_marker
+ 553              		.syntax unified
+ 554              		.thumb
+ 555              		.thumb_func
+ 557              	jpeg_write_marker:
+ 558              	.LVL48:
+ 559              	.LFB152:
+ 190:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 191:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 192:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+ 193:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Write a special marker.
+ 194:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * This is only recommended for writing COM or APPn markers.
+ 195:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Must be called after jpeg_start_compress() and before
+ 196:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * first call to jpeg_write_scanlines() or jpeg_write_raw_data().
+ 197:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+ 198:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 199:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 200:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_write_marker (j_compress_ptr cinfo, int marker,
+ 201:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 		   const JOCTET *dataptr, unsigned int datalen)
+ 202:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 560              		.loc 1 202 1 is_stmt 1 view -0
+ 561              		.cfi_startproc
+ 562              		@ args = 0, pretend = 0, frame = 0
+ 563              		@ frame_needed = 0, uses_anonymous_args = 0
+ 564              		.loc 1 202 1 is_stmt 0 view .LVU160
+ 565 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 566              	.LCFI4:
+ 567              		.cfi_def_cfa_offset 24
+ 568              		.cfi_offset 4, -24
+ 569              		.cfi_offset 5, -20
+ 570              		.cfi_offset 6, -16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 15
+
+
+ 571              		.cfi_offset 7, -12
+ 572              		.cfi_offset 8, -8
+ 573              		.cfi_offset 14, -4
+ 574 0004 0546     		mov	r5, r0
+ 575 0006 0F46     		mov	r7, r1
+ 576 0008 1646     		mov	r6, r2
+ 577 000a 1C46     		mov	r4, r3
+ 203:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   JMETHOD(void, write_marker_byte, (j_compress_ptr info, int val));
+ 578              		.loc 1 203 3 is_stmt 1 view .LVU161
+ 204:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 205:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (cinfo->next_scanline != 0 ||
+ 579              		.loc 1 205 3 view .LVU162
+ 580              		.loc 1 205 12 is_stmt 0 view .LVU163
+ 581 000c D0F80431 		ldr	r3, [r0, #260]
+ 582              	.LVL49:
+ 583              		.loc 1 205 6 view .LVU164
+ 584 0010 1BB9     		cbnz	r3, .L42
+ 206:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       (cinfo->global_state != CSTATE_SCANNING &&
+ 585              		.loc 1 206 13 view .LVU165
+ 586 0012 4369     		ldr	r3, [r0, #20]
+ 207:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        cinfo->global_state != CSTATE_RAW_OK &&
+ 587              		.loc 1 207 45 view .LVU166
+ 588 0014 653B     		subs	r3, r3, #101
+ 205:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       (cinfo->global_state != CSTATE_SCANNING &&
+ 589              		.loc 1 205 33 discriminator 1 view .LVU167
+ 590 0016 022B     		cmp	r3, #2
+ 591 0018 09D9     		bls	.L43
+ 592              	.L42:
+ 208:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        cinfo->global_state != CSTATE_WRCOEFS))
+ 209:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 593              		.loc 1 209 5 is_stmt 1 view .LVU168
+ 594 001a 2B68     		ldr	r3, [r5]
+ 595 001c 1522     		movs	r2, #21
+ 596              	.LVL50:
+ 597              		.loc 1 209 5 is_stmt 0 view .LVU169
+ 598 001e 5A61     		str	r2, [r3, #20]
+ 599 0020 2B68     		ldr	r3, [r5]
+ 600 0022 6A69     		ldr	r2, [r5, #20]
+ 601 0024 9A61     		str	r2, [r3, #24]
+ 602 0026 2B68     		ldr	r3, [r5]
+ 603 0028 1B68     		ldr	r3, [r3]
+ 604 002a 2846     		mov	r0, r5
+ 605              	.LVL51:
+ 606              		.loc 1 209 5 view .LVU170
+ 607 002c 9847     		blx	r3
+ 608              	.LVL52:
+ 609              	.L43:
+ 210:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 211:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->marker->write_marker_header) (cinfo, marker, datalen);
+ 610              		.loc 1 211 3 is_stmt 1 view .LVU171
+ 611              		.loc 1 211 10 is_stmt 0 view .LVU172
+ 612 002e D5F89431 		ldr	r3, [r5, #404]
+ 613              		.loc 1 211 4 view .LVU173
+ 614 0032 5B69     		ldr	r3, [r3, #20]
+ 615 0034 2246     		mov	r2, r4
+ 616 0036 3946     		mov	r1, r7
+ 617 0038 2846     		mov	r0, r5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 16
+
+
+ 618 003a 9847     		blx	r3
+ 619              	.LVL53:
+ 212:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   write_marker_byte = cinfo->marker->write_marker_byte;	/* copy for speed */
+ 620              		.loc 1 212 3 is_stmt 1 view .LVU174
+ 621              		.loc 1 212 28 is_stmt 0 view .LVU175
+ 622 003c D5F89431 		ldr	r3, [r5, #404]
+ 623              		.loc 1 212 21 view .LVU176
+ 624 0040 D3F81880 		ldr	r8, [r3, #24]
+ 625              	.LVL54:
+ 213:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (datalen--) {
+ 626              		.loc 1 213 3 is_stmt 1 view .LVU177
+ 627              		.loc 1 213 9 is_stmt 0 view .LVU178
+ 628 0044 04E0     		b	.L44
+ 629              	.LVL55:
+ 630              	.L45:
+ 214:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     (*write_marker_byte) (cinfo, *dataptr);
+ 631              		.loc 1 214 5 is_stmt 1 view .LVU179
+ 632              		.loc 1 214 6 is_stmt 0 view .LVU180
+ 633 0046 16F8011B 		ldrb	r1, [r6], #1	@ zero_extendqisi2
+ 634              	.LVL56:
+ 635              		.loc 1 214 6 view .LVU181
+ 636 004a 2846     		mov	r0, r5
+ 637 004c C047     		blx	r8
+ 638              	.LVL57:
+ 215:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     dataptr++;
+ 639              		.loc 1 215 5 is_stmt 1 view .LVU182
+ 213:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (datalen--) {
+ 640              		.loc 1 213 17 is_stmt 0 view .LVU183
+ 641 004e 3C46     		mov	r4, r7
+ 642              	.LVL58:
+ 643              	.L44:
+ 213:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (datalen--) {
+ 644              		.loc 1 213 10 is_stmt 1 view .LVU184
+ 213:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (datalen--) {
+ 645              		.loc 1 213 17 is_stmt 0 view .LVU185
+ 646 0050 671E     		subs	r7, r4, #1
+ 647              	.LVL59:
+ 213:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   while (datalen--) {
+ 648              		.loc 1 213 10 view .LVU186
+ 649 0052 002C     		cmp	r4, #0
+ 650 0054 F7D1     		bne	.L45
+ 216:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   }
+ 217:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 651              		.loc 1 217 1 view .LVU187
+ 652 0056 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 653              		.loc 1 217 1 view .LVU188
+ 654              		.cfi_endproc
+ 655              	.LFE152:
+ 657              		.section	.text.jpeg_write_m_header,"ax",%progbits
+ 658              		.align	1
+ 659              		.global	jpeg_write_m_header
+ 660              		.syntax unified
+ 661              		.thumb
+ 662              		.thumb_func
+ 664              	jpeg_write_m_header:
+ 665              	.LVL60:
+ 666              	.LFB153:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 17
+
+
+ 218:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 219:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /* Same, but piecemeal. */
+ 220:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 221:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 222:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_write_m_header (j_compress_ptr cinfo, int marker, unsigned int datalen)
+ 223:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 667              		.loc 1 223 1 is_stmt 1 view -0
+ 668              		.cfi_startproc
+ 669              		@ args = 0, pretend = 0, frame = 0
+ 670              		@ frame_needed = 0, uses_anonymous_args = 0
+ 671              		.loc 1 223 1 is_stmt 0 view .LVU190
+ 672 0000 70B5     		push	{r4, r5, r6, lr}
+ 673              	.LCFI5:
+ 674              		.cfi_def_cfa_offset 16
+ 675              		.cfi_offset 4, -16
+ 676              		.cfi_offset 5, -12
+ 677              		.cfi_offset 6, -8
+ 678              		.cfi_offset 14, -4
+ 679 0002 0446     		mov	r4, r0
+ 680 0004 0D46     		mov	r5, r1
+ 681 0006 1646     		mov	r6, r2
+ 224:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (cinfo->next_scanline != 0 ||
+ 682              		.loc 1 224 3 is_stmt 1 view .LVU191
+ 683              		.loc 1 224 12 is_stmt 0 view .LVU192
+ 684 0008 D0F80431 		ldr	r3, [r0, #260]
+ 685              		.loc 1 224 6 view .LVU193
+ 686 000c 1BB9     		cbnz	r3, .L48
+ 225:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****       (cinfo->global_state != CSTATE_SCANNING &&
+ 687              		.loc 1 225 13 view .LVU194
+ 688 000e 4369     		ldr	r3, [r0, #20]
+ 226:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        cinfo->global_state != CSTATE_RAW_OK &&
+ 689              		.loc 1 226 45 view .LVU195
+ 690 0010 653B     		subs	r3, r3, #101
+ 224:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (cinfo->next_scanline != 0 ||
+ 691              		.loc 1 224 33 discriminator 1 view .LVU196
+ 692 0012 022B     		cmp	r3, #2
+ 693 0014 09D9     		bls	.L49
+ 694              	.L48:
+ 227:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****        cinfo->global_state != CSTATE_WRCOEFS))
+ 228:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 695              		.loc 1 228 5 is_stmt 1 view .LVU197
+ 696 0016 2368     		ldr	r3, [r4]
+ 697 0018 1522     		movs	r2, #21
+ 698              	.LVL61:
+ 699              		.loc 1 228 5 is_stmt 0 view .LVU198
+ 700 001a 5A61     		str	r2, [r3, #20]
+ 701 001c 2368     		ldr	r3, [r4]
+ 702 001e 6269     		ldr	r2, [r4, #20]
+ 703 0020 9A61     		str	r2, [r3, #24]
+ 704 0022 2368     		ldr	r3, [r4]
+ 705 0024 1B68     		ldr	r3, [r3]
+ 706 0026 2046     		mov	r0, r4
+ 707              	.LVL62:
+ 708              		.loc 1 228 5 view .LVU199
+ 709 0028 9847     		blx	r3
+ 710              	.LVL63:
+ 711              	.L49:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 18
+
+
+ 229:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 230:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->marker->write_marker_header) (cinfo, marker, datalen);
+ 712              		.loc 1 230 3 is_stmt 1 view .LVU200
+ 713              		.loc 1 230 10 is_stmt 0 view .LVU201
+ 714 002a D4F89431 		ldr	r3, [r4, #404]
+ 715              		.loc 1 230 4 view .LVU202
+ 716 002e 5B69     		ldr	r3, [r3, #20]
+ 717 0030 3246     		mov	r2, r6
+ 718 0032 2946     		mov	r1, r5
+ 719 0034 2046     		mov	r0, r4
+ 720 0036 9847     		blx	r3
+ 721              	.LVL64:
+ 231:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 722              		.loc 1 231 1 view .LVU203
+ 723 0038 70BD     		pop	{r4, r5, r6, pc}
+ 724              		.loc 1 231 1 view .LVU204
+ 725              		.cfi_endproc
+ 726              	.LFE153:
+ 728              		.section	.text.jpeg_write_m_byte,"ax",%progbits
+ 729              		.align	1
+ 730              		.global	jpeg_write_m_byte
+ 731              		.syntax unified
+ 732              		.thumb
+ 733              		.thumb_func
+ 735              	jpeg_write_m_byte:
+ 736              	.LVL65:
+ 737              	.LFB154:
+ 232:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 233:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 234:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_write_m_byte (j_compress_ptr cinfo, int val)
+ 235:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 738              		.loc 1 235 1 is_stmt 1 view -0
+ 739              		.cfi_startproc
+ 740              		@ args = 0, pretend = 0, frame = 0
+ 741              		@ frame_needed = 0, uses_anonymous_args = 0
+ 742              		.loc 1 235 1 is_stmt 0 view .LVU206
+ 743 0000 08B5     		push	{r3, lr}
+ 744              	.LCFI6:
+ 745              		.cfi_def_cfa_offset 8
+ 746              		.cfi_offset 3, -8
+ 747              		.cfi_offset 14, -4
+ 236:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->marker->write_marker_byte) (cinfo, val);
+ 748              		.loc 1 236 3 is_stmt 1 view .LVU207
+ 749              		.loc 1 236 10 is_stmt 0 view .LVU208
+ 750 0002 D0F89431 		ldr	r3, [r0, #404]
+ 751              		.loc 1 236 4 view .LVU209
+ 752 0006 9B69     		ldr	r3, [r3, #24]
+ 753 0008 9847     		blx	r3
+ 754              	.LVL66:
+ 237:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 755              		.loc 1 237 1 view .LVU210
+ 756 000a 08BD     		pop	{r3, pc}
+ 757              		.cfi_endproc
+ 758              	.LFE154:
+ 760              		.section	.text.jpeg_write_tables,"ax",%progbits
+ 761              		.align	1
+ 762              		.global	jpeg_write_tables
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 19
+
+
+ 763              		.syntax unified
+ 764              		.thumb
+ 765              		.thumb_func
+ 767              	jpeg_write_tables:
+ 768              	.LVL67:
+ 769              	.LFB155:
+ 238:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 239:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 240:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** /*
+ 241:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Alternate compression function: just write an abbreviated table file.
+ 242:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * Before calling this, all parameters and a data destination must be set up.
+ 243:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+ 244:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * To produce a pair of files containing abbreviated tables and abbreviated
+ 245:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * image data, one would proceed as follows:
+ 246:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+ 247:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		initialize JPEG object
+ 248:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		set JPEG parameters
+ 249:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		set destination to table file
+ 250:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		jpeg_write_tables(cinfo);
+ 251:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		set destination to image file
+ 252:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		jpeg_start_compress(cinfo, FALSE);
+ 253:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		write data...
+ 254:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *		jpeg_finish_compress(cinfo);
+ 255:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  *
+ 256:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * jpeg_write_tables has the side effect of marking all tables written
+ 257:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * (same as jpeg_suppress_tables(..., TRUE)).  Thus a subsequent start_compress
+ 258:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  * will not re-emit the tables unless it is passed write_all_tables=TRUE.
+ 259:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****  */
+ 260:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 261:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** GLOBAL(void)
+ 262:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** jpeg_write_tables (j_compress_ptr cinfo)
+ 263:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** {
+ 770              		.loc 1 263 1 is_stmt 1 view -0
+ 771              		.cfi_startproc
+ 772              		@ args = 0, pretend = 0, frame = 0
+ 773              		@ frame_needed = 0, uses_anonymous_args = 0
+ 774              		.loc 1 263 1 is_stmt 0 view .LVU212
+ 775 0000 10B5     		push	{r4, lr}
+ 776              	.LCFI7:
+ 777              		.cfi_def_cfa_offset 8
+ 778              		.cfi_offset 4, -8
+ 779              		.cfi_offset 14, -4
+ 780 0002 0446     		mov	r4, r0
+ 264:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   if (cinfo->global_state != CSTATE_START)
+ 781              		.loc 1 264 3 is_stmt 1 view .LVU213
+ 782              		.loc 1 264 12 is_stmt 0 view .LVU214
+ 783 0004 4369     		ldr	r3, [r0, #20]
+ 784              		.loc 1 264 6 view .LVU215
+ 785 0006 642B     		cmp	r3, #100
+ 786 0008 08D0     		beq	.L54
+ 265:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 787              		.loc 1 265 5 is_stmt 1 view .LVU216
+ 788 000a 0368     		ldr	r3, [r0]
+ 789 000c 1522     		movs	r2, #21
+ 790 000e 5A61     		str	r2, [r3, #20]
+ 791 0010 0368     		ldr	r3, [r0]
+ 792 0012 4269     		ldr	r2, [r0, #20]
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 20
+
+
+ 793 0014 9A61     		str	r2, [r3, #24]
+ 794 0016 0368     		ldr	r3, [r0]
+ 795 0018 1B68     		ldr	r3, [r3]
+ 796 001a 9847     		blx	r3
+ 797              	.LVL68:
+ 798              	.L54:
+ 266:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** 
+ 267:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* (Re)initialize error mgr and destination modules */
+ 268:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->err->reset_error_mgr) ((j_common_ptr) cinfo);
+ 799              		.loc 1 268 3 view .LVU217
+ 800              		.loc 1 268 10 is_stmt 0 view .LVU218
+ 801 001c 2368     		ldr	r3, [r4]
+ 802              		.loc 1 268 4 view .LVU219
+ 803 001e 1B69     		ldr	r3, [r3, #16]
+ 804 0020 2046     		mov	r0, r4
+ 805 0022 9847     		blx	r3
+ 806              	.LVL69:
+ 269:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->dest->init_destination) (cinfo);
+ 807              		.loc 1 269 3 is_stmt 1 view .LVU220
+ 808              		.loc 1 269 10 is_stmt 0 view .LVU221
+ 809 0024 A369     		ldr	r3, [r4, #24]
+ 810              		.loc 1 269 4 view .LVU222
+ 811 0026 9B68     		ldr	r3, [r3, #8]
+ 812 0028 2046     		mov	r0, r4
+ 813 002a 9847     		blx	r3
+ 814              	.LVL70:
+ 270:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Initialize the marker writer ... bit of a crock to do it here. */
+ 271:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   jinit_marker_writer(cinfo);
+ 815              		.loc 1 271 3 is_stmt 1 view .LVU223
+ 816 002c 2046     		mov	r0, r4
+ 817 002e FFF7FEFF 		bl	jinit_marker_writer
+ 818              	.LVL71:
+ 272:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* Write them tables! */
+ 273:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->marker->write_tables_only) (cinfo);
+ 819              		.loc 1 273 3 view .LVU224
+ 820              		.loc 1 273 10 is_stmt 0 view .LVU225
+ 821 0032 D4F89431 		ldr	r3, [r4, #404]
+ 822              		.loc 1 273 4 view .LVU226
+ 823 0036 1B69     		ldr	r3, [r3, #16]
+ 824 0038 2046     		mov	r0, r4
+ 825 003a 9847     		blx	r3
+ 826              	.LVL72:
+ 274:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /* And clean up. */
+ 275:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   (*cinfo->dest->term_destination) (cinfo);
+ 827              		.loc 1 275 3 is_stmt 1 view .LVU227
+ 828              		.loc 1 275 10 is_stmt 0 view .LVU228
+ 829 003c A369     		ldr	r3, [r4, #24]
+ 830              		.loc 1 275 4 view .LVU229
+ 831 003e 1B69     		ldr	r3, [r3, #16]
+ 832 0040 2046     		mov	r0, r4
+ 833 0042 9847     		blx	r3
+ 834              	.LVL73:
+ 276:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****   /*
+ 277:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * In library releases up through v6a, we called jpeg_abort() here to free
+ 278:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * any working memory allocated by the destination manager and marker
+ 279:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * writer.  Some applications had a problem with that: they allocated space
+ 280:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * of their own from the library memory manager, and didn't want it to go
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 21
+
+
+ 281:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * away during write_tables.  So now we do nothing.  This will cause a
+ 282:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * memory leak if an app calls write_tables repeatedly without doing a full
+ 283:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * compression cycle or otherwise resetting the JPEG object.  However, that
+ 284:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * seems less bad than unexpectedly freeing memory in the normal case.
+ 285:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * An app that prefers the old behavior can call jpeg_abort for itself after
+ 286:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    * each call to jpeg_write_tables().
+ 287:Middlewares/Third_Party/LibJPEG/source/jcapimin.c ****    */
+ 288:Middlewares/Third_Party/LibJPEG/source/jcapimin.c **** }
+ 835              		.loc 1 288 1 view .LVU230
+ 836 0044 10BD     		pop	{r4, pc}
+ 837              		.loc 1 288 1 view .LVU231
+ 838              		.cfi_endproc
+ 839              	.LFE155:
+ 841              		.text
+ 842              	.Letext0:
+ 843              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 844              		.file 3 "Inc/jmorecfg.h"
+ 845              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 846              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 847              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 848              		.file 7 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/string.h"
+ 849              		.file 8 "<built-in>"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 jcapimin.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:20     .text.jpeg_CreateCompress:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:26     .text.jpeg_CreateCompress:00000000 jpeg_CreateCompress
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:204    .text.jpeg_CreateCompress:000000c4 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:210    .text.jpeg_destroy_compress:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:216    .text.jpeg_destroy_compress:00000000 jpeg_destroy_compress
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:238    .text.jpeg_abort_compress:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:244    .text.jpeg_abort_compress:00000000 jpeg_abort_compress
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:266    .text.jpeg_suppress_tables:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:272    .text.jpeg_suppress_tables:00000000 jpeg_suppress_tables
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:360    .text.jpeg_finish_compress:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:366    .text.jpeg_finish_compress:00000000 jpeg_finish_compress
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:551    .text.jpeg_write_marker:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:557    .text.jpeg_write_marker:00000000 jpeg_write_marker
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:658    .text.jpeg_write_m_header:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:664    .text.jpeg_write_m_header:00000000 jpeg_write_m_header
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:729    .text.jpeg_write_m_byte:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:735    .text.jpeg_write_m_byte:00000000 jpeg_write_m_byte
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:761    .text.jpeg_write_tables:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEC3xxx.s:767    .text.jpeg_write_tables:00000000 jpeg_write_tables
+
+UNDEFINED SYMBOLS
+memset
+jinit_memory_mgr
+jpeg_natural_order
+jpeg_destroy
+jpeg_abort
+jinit_marker_writer

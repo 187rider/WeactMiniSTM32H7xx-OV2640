@@ -1,0 +1,191 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"fatfs.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Src/fatfs.c"
+  19              		.section	.text.MX_FATFS_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_FATFS_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_FATFS_Init:
+  27              	.LFB144:
+   1:Src/fatfs.c   **** /* USER CODE BEGIN Header */
+   2:Src/fatfs.c   **** /**
+   3:Src/fatfs.c   ****   ******************************************************************************
+   4:Src/fatfs.c   ****   * @file   fatfs.c
+   5:Src/fatfs.c   ****   * @brief  Code for fatfs applications
+   6:Src/fatfs.c   ****   ******************************************************************************
+   7:Src/fatfs.c   ****   * @attention
+   8:Src/fatfs.c   ****   *
+   9:Src/fatfs.c   ****   * Copyright (c) 2025 STMicroelectronics.
+  10:Src/fatfs.c   ****   * All rights reserved.
+  11:Src/fatfs.c   ****   *
+  12:Src/fatfs.c   ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Src/fatfs.c   ****   * in the root directory of this software component.
+  14:Src/fatfs.c   ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Src/fatfs.c   ****   *
+  16:Src/fatfs.c   ****   ******************************************************************************
+  17:Src/fatfs.c   ****   */
+  18:Src/fatfs.c   **** /* USER CODE END Header */
+  19:Src/fatfs.c   **** #include "fatfs.h"
+  20:Src/fatfs.c   **** 
+  21:Src/fatfs.c   **** uint8_t retSD;    /* Return value for SD */
+  22:Src/fatfs.c   **** char SDPath[4];   /* SD logical drive path */
+  23:Src/fatfs.c   **** FATFS SDFatFS;    /* File system object for SD logical drive */
+  24:Src/fatfs.c   **** FIL SDFile;       /* File object for SD */
+  25:Src/fatfs.c   **** 
+  26:Src/fatfs.c   **** /* USER CODE BEGIN Variables */
+  27:Src/fatfs.c   **** 
+  28:Src/fatfs.c   **** /* USER CODE END Variables */
+  29:Src/fatfs.c   **** 
+  30:Src/fatfs.c   **** void MX_FATFS_Init(void)
+  31:Src/fatfs.c   **** {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s 			page 2
+
+
+  28              		.loc 1 31 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+  32:Src/fatfs.c   ****   /*## FatFS: Link the SD driver ###########################*/
+  33:Src/fatfs.c   ****   retSD = FATFS_LinkDriver(&SD_Driver, SDPath);
+  37              		.loc 1 33 3 view .LVU1
+  38              		.loc 1 33 11 is_stmt 0 view .LVU2
+  39 0002 0349     		ldr	r1, .L3
+  40 0004 0348     		ldr	r0, .L3+4
+  41 0006 FFF7FEFF 		bl	FATFS_LinkDriver
+  42              	.LVL0:
+  43              		.loc 1 33 9 discriminator 1 view .LVU3
+  44 000a 034B     		ldr	r3, .L3+8
+  45 000c 1870     		strb	r0, [r3]
+  34:Src/fatfs.c   **** 
+  35:Src/fatfs.c   ****   /* USER CODE BEGIN Init */
+  36:Src/fatfs.c   ****   /* additional user code for init */
+  37:Src/fatfs.c   ****   /* USER CODE END Init */
+  38:Src/fatfs.c   **** }
+  46              		.loc 1 38 1 view .LVU4
+  47 000e 08BD     		pop	{r3, pc}
+  48              	.L4:
+  49              		.align	2
+  50              	.L3:
+  51 0010 00000000 		.word	SDPath
+  52 0014 00000000 		.word	SD_Driver
+  53 0018 00000000 		.word	retSD
+  54              		.cfi_endproc
+  55              	.LFE144:
+  57              		.section	.text.get_fattime,"ax",%progbits
+  58              		.align	1
+  59              		.global	get_fattime
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  64              	get_fattime:
+  65              	.LFB145:
+  39:Src/fatfs.c   **** 
+  40:Src/fatfs.c   **** /**
+  41:Src/fatfs.c   ****   * @brief  Gets Time from RTC
+  42:Src/fatfs.c   ****   * @param  None
+  43:Src/fatfs.c   ****   * @retval Time in DWORD
+  44:Src/fatfs.c   ****   */
+  45:Src/fatfs.c   **** DWORD get_fattime(void)
+  46:Src/fatfs.c   **** {
+  66              		.loc 1 46 1 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70              		@ link register save eliminated.
+  47:Src/fatfs.c   ****   /* USER CODE BEGIN get_fattime */
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s 			page 3
+
+
+  48:Src/fatfs.c   ****   return 0;
+  71              		.loc 1 48 3 view .LVU6
+  49:Src/fatfs.c   ****   /* USER CODE END get_fattime */
+  50:Src/fatfs.c   **** }
+  72              		.loc 1 50 1 is_stmt 0 view .LVU7
+  73 0000 0020     		movs	r0, #0
+  74 0002 7047     		bx	lr
+  75              		.cfi_endproc
+  76              	.LFE145:
+  78              		.global	SDFile
+  79              		.section	.bss.SDFile,"aw",%nobits
+  80              		.align	2
+  83              	SDFile:
+  84 0000 00000000 		.space	560
+  84      00000000 
+  84      00000000 
+  84      00000000 
+  84      00000000 
+  85              		.global	SDFatFS
+  86              		.section	.bss.SDFatFS,"aw",%nobits
+  87              		.align	2
+  90              	SDFatFS:
+  91 0000 00000000 		.space	560
+  91      00000000 
+  91      00000000 
+  91      00000000 
+  91      00000000 
+  92              		.global	SDPath
+  93              		.section	.bss.SDPath,"aw",%nobits
+  94              		.align	2
+  97              	SDPath:
+  98 0000 00000000 		.space	4
+  99              		.global	retSD
+ 100              		.section	.bss.retSD,"aw",%nobits
+ 103              	retSD:
+ 104 0000 00       		.space	1
+ 105              		.text
+ 106              	.Letext0:
+ 107              		.file 2 "Middlewares/Third_Party/FatFs/src/integer.h"
+ 108              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 109              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 110              		.file 5 "Middlewares/Third_Party/FatFs/src/ff.h"
+ 111              		.file 6 "Middlewares/Third_Party/FatFs/src/diskio.h"
+ 112              		.file 7 "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h"
+ 113              		.file 8 "Inc/sd_diskio.h"
+ 114              		.file 9 "Inc/fatfs.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fatfs.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:20     .text.MX_FATFS_Init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:26     .text.MX_FATFS_Init:00000000 MX_FATFS_Init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:51     .text.MX_FATFS_Init:00000010 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:97     .bss.SDPath:00000000 SDPath
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:103    .bss.retSD:00000000 retSD
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:58     .text.get_fattime:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:64     .text.get_fattime:00000000 get_fattime
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:83     .bss.SDFile:00000000 SDFile
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:80     .bss.SDFile:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:90     .bss.SDFatFS:00000000 SDFatFS
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:87     .bss.SDFatFS:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:94     .bss.SDPath:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc094GSJ.s:104    .bss.retSD:00000000 $d
+
+UNDEFINED SYMBOLS
+FATFS_LinkDriver
+SD_Driver

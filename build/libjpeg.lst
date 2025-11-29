@@ -1,0 +1,97 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNsiSwa.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"libjpeg.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Src/libjpeg.c"
+  19              		.section	.text.MX_LIBJPEG_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_LIBJPEG_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_LIBJPEG_Init:
+  27              	.LFB144:
+   1:Src/libjpeg.c **** /* USER CODE BEGIN Header */
+   2:Src/libjpeg.c **** /**
+   3:Src/libjpeg.c ****  ******************************************************************************
+   4:Src/libjpeg.c ****   * File Name          : libjpeg.c
+   5:Src/libjpeg.c ****   * Description        : This file provides code for the configuration
+   6:Src/libjpeg.c ****   *                      of the libjpeg instances.
+   7:Src/libjpeg.c ****   ******************************************************************************
+   8:Src/libjpeg.c ****   * @attention
+   9:Src/libjpeg.c ****   *
+  10:Src/libjpeg.c ****   * Copyright (c) 2025 STMicroelectronics.
+  11:Src/libjpeg.c ****   * All rights reserved.
+  12:Src/libjpeg.c ****   *
+  13:Src/libjpeg.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Src/libjpeg.c ****   * in the root directory of this software component.
+  15:Src/libjpeg.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Src/libjpeg.c ****   *
+  17:Src/libjpeg.c ****   ******************************************************************************
+  18:Src/libjpeg.c ****   */
+  19:Src/libjpeg.c **** /* USER CODE END Header */
+  20:Src/libjpeg.c **** 
+  21:Src/libjpeg.c **** /* Includes ------------------------------------------------------------------*/
+  22:Src/libjpeg.c **** #include "libjpeg.h"
+  23:Src/libjpeg.c **** 
+  24:Src/libjpeg.c **** /* USER CODE BEGIN 0 */
+  25:Src/libjpeg.c **** /* USER CODE END 0 */
+  26:Src/libjpeg.c **** 
+  27:Src/libjpeg.c **** /* USER CODE BEGIN 1 */
+  28:Src/libjpeg.c **** /* USER CODE END 1 */
+  29:Src/libjpeg.c **** 
+  30:Src/libjpeg.c **** /* Global variables ---------------------------------------------------------*/
+  31:Src/libjpeg.c **** 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNsiSwa.s 			page 2
+
+
+  32:Src/libjpeg.c **** /* USER CODE BEGIN 2 */
+  33:Src/libjpeg.c **** /* USER CODE END 2 */
+  34:Src/libjpeg.c **** 
+  35:Src/libjpeg.c **** /* LIBJPEG init function */
+  36:Src/libjpeg.c **** void MX_LIBJPEG_Init(void)
+  37:Src/libjpeg.c **** {
+  28              		.loc 1 37 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  38:Src/libjpeg.c **** /***************************************/
+  39:Src/libjpeg.c ****    /**
+  40:Src/libjpeg.c ****   */
+  41:Src/libjpeg.c **** 
+  42:Src/libjpeg.c ****   /* USER CODE BEGIN 3 */
+  43:Src/libjpeg.c ****   /* USER CODE END 3 */
+  44:Src/libjpeg.c **** 
+  45:Src/libjpeg.c **** }
+  33              		.loc 1 45 1 view .LVU1
+  34 0000 7047     		bx	lr
+  35              		.cfi_endproc
+  36              	.LFE144:
+  38              		.text
+  39              	.Letext0:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNsiSwa.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 libjpeg.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNsiSwa.s:20     .text.MX_LIBJPEG_Init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNsiSwa.s:26     .text.MX_LIBJPEG_Init:00000000 MX_LIBJPEG_Init
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,114 @@
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccL9nFWb.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ov7725_regs.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/BSP/Camera/ov7725_regs.c"
+  19              		.global	ov7725_default_regs
+  20              		.section	.rodata.ov7725_default_regs,"a"
+  21              		.align	2
+  24              	ov7725_default_regs:
+  25 0000 3D03     		.ascii	"=\003"
+  26 0002 1722     		.ascii	"\027\""
+  27 0004 18A4     		.ascii	"\030\244"
+  28 0006 1907     		.ascii	"\031\007"
+  29 0008 1AF0     		.ascii	"\032\360"
+  30 000a 3200     		.ascii	"2\000"
+  31 000c 29A0     		.ascii	")\240"
+  32 000e 2CF0     		.ascii	",\360"
+  33 0010 2A00     		.ascii	"*\000"
+  34 0012 1181     		.ascii	"\021\201"
+  35 0014 427F     		.ascii	"B\177"
+  36 0016 4D09     		.ascii	"M\011"
+  37 0018 63E0     		.ascii	"c\340"
+  38 001a 64FF     		.ascii	"d\377"
+  39 001c 652F     		.ascii	"e/"
+  40 001e 6600     		.ascii	"f\000"
+  41 0020 6748     		.ascii	"gH"
+  42 0022 1502     		.ascii	"\025\002"
+  43 0024 13F0     		.ascii	"\023\360"
+  44 0026 0D40     		.ascii	"\015@"
+  45 0028 0FC5     		.ascii	"\017\305"
+  46 002a 1411     		.ascii	"\024\021"
+  47 002c 227F     		.ascii	"\"\177"
+  48 002e 2303     		.ascii	"#\003"
+  49 0030 2440     		.ascii	"$@"
+  50 0032 2530     		.ascii	"%0"
+  51 0034 26A1     		.ascii	"&\241"
+  52 0036 2B00     		.ascii	"+\000"
+  53 0038 6BAA     		.ascii	"k\252"
+  54 003a 13FF     		.ascii	"\023\377"
+  55 003c 9005     		.ascii	"\220\005"
+  56 003e 9101     		.ascii	"\221\001"
+  57 0040 9203     		.ascii	"\222\003"
+  58 0042 9300     		.ascii	"\223\000"
+  59 0044 94B0     		.ascii	"\224\260"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccL9nFWb.s 			page 2
+
+
+  60 0046 959D     		.ascii	"\225\235"
+  61 0048 9613     		.ascii	"\226\023"
+  62 004a 9716     		.ascii	"\227\026"
+  63 004c 987B     		.ascii	"\230{"
+  64 004e 9991     		.ascii	"\231\221"
+  65 0050 9A1E     		.ascii	"\232\036"
+  66 0052 9B08     		.ascii	"\233\010"
+  67 0054 9C20     		.ascii	"\234 "
+  68 0056 9E81     		.ascii	"\236\201"
+  69 0058 A606     		.ascii	"\246\006"
+  70 005a 7E0C     		.ascii	"~\014"
+  71 005c 7F16     		.ascii	"\177\026"
+  72 005e 802A     		.ascii	"\200*"
+  73 0060 814E     		.ascii	"\201N"
+  74 0062 8261     		.ascii	"\202a"
+  75 0064 836F     		.ascii	"\203o"
+  76 0066 847B     		.ascii	"\204{"
+  77 0068 8586     		.ascii	"\205\206"
+  78 006a 868E     		.ascii	"\206\216"
+  79 006c 8797     		.ascii	"\207\227"
+  80 006e 88A4     		.ascii	"\210\244"
+  81 0070 89AF     		.ascii	"\211\257"
+  82 0072 8AC5     		.ascii	"\212\305"
+  83 0074 8BD7     		.ascii	"\213\327"
+  84 0076 8CE8     		.ascii	"\214\350"
+  85 0078 8D20     		.ascii	"\215 "
+  86 007a 3300     		.ascii	"3\000"
+  87 007c 227F     		.ascii	"\"\177"
+  88 007e 2303     		.ascii	"#\003"
+  89 0080 4A10     		.ascii	"J\020"
+  90 0082 4910     		.ascii	"I\020"
+  91 0084 4B14     		.ascii	"K\024"
+  92 0086 4C17     		.ascii	"L\027"
+  93 0088 4601     		.ascii	"F\001"
+  94 008a 0EF5     		.ascii	"\016\365"
+  95 008c 1204     		.ascii	"\022\004"
+  96 008e 0000     		.ascii	"\000\000"
+  97              		.text
+  98              	.Letext0:
+  99              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 100              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 101              		.file 4 "Drivers/BSP/Camera/ov7725_regs.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccL9nFWb.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ov7725_regs.c
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccL9nFWb.s:24     .rodata.ov7725_default_regs:00000000 ov7725_default_regs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccL9nFWb.s:21     .rodata.ov7725_default_regs:00000000 $d
+
+NO UNDEFINED SYMBOLS
