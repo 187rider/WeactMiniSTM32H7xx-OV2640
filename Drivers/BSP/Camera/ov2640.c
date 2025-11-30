@@ -842,15 +842,11 @@ int ov2640_init_pic()
 	//reset();
 	//hcamera.framesize = framesize;
 	hcamera.framesize = FRAMESIZE_UXGA;
-	hcamera.pixformat = PIXFORMAT_JPEG;
-	set_pixformat(hcamera.pixformat);
-    set_quality(5); // Set quality to 10
-    //set_light_mode(0); // Auto light mode
-    //set_exposure(1); // Disable auto exposure
-    //set_contrast(0); // Set contrast to 0
-    //set_saturation(0); // Set saturation to 0
-    set_brightness(-2); // Set brightness to 0
-	set_hmirror(1);
-	set_vflip(1);
-  return 0;
+    hcamera.pixformat = PIXFORMAT_JPEG;
+    set_pixformat(hcamera.pixformat);
+    set_quality(2); // highest quality (lowest compression)
+    set_brightness(0);
+    set_hmirror(1);
+    set_vflip(1);
+    return 0;
 }

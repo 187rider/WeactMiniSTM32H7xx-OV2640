@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
   29:Drivers/BSP/Camera/ov2640.c **** };
   30:Drivers/BSP/Camera/ov2640.c **** 
   31:Drivers/BSP/Camera/ov2640.c **** //---------------------------------------
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 2
 
 
   32:Drivers/BSP/Camera/ov2640.c **** static const uint8_t rgb565_regs[][2] = {
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
   86:Drivers/BSP/Camera/ov2640.c **** };
   87:Drivers/BSP/Camera/ov2640.c **** 
   88:Drivers/BSP/Camera/ov2640.c **** //--------------------------------------------------------------------
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 3
 
 
   89:Drivers/BSP/Camera/ov2640.c **** static const uint8_t saturation_regs[NUM_SATURATION_LEVELS + 1][5] = {
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  143:Drivers/BSP/Camera/ov2640.c ****   {0x48, 0x00},
  144:Drivers/BSP/Camera/ov2640.c ****   {0x5B, 0x00},
  145:Drivers/BSP/Camera/ov2640.c ****   {0x42, 0x03},
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 4
 
 
  146:Drivers/BSP/Camera/ov2640.c ****   {0x4a, 0x81},
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  200:Drivers/BSP/Camera/ov2640.c ****   {0x7c, 0x08},
  201:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x20},
  202:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x10},
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 5
 
 
  203:Drivers/BSP/Camera/ov2640.c ****   {0x7d, 0x0e},
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  257:Drivers/BSP/Camera/ov2640.c ****   {0xb8, 0xA5},
  258:Drivers/BSP/Camera/ov2640.c ****   {0xb7, 0x64},
  259:Drivers/BSP/Camera/ov2640.c ****   {0xb9, 0x7C},
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 6
 
 
  260:Drivers/BSP/Camera/ov2640.c ****   {0xb3, 0xaf},
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  314:Drivers/BSP/Camera/ov2640.c ****   { 0xe1, 0x77 },
  315:Drivers/BSP/Camera/ov2640.c ****   { 0x00, 0x00 },
  316:Drivers/BSP/Camera/ov2640.c **** };
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 7
 
 
  317:Drivers/BSP/Camera/ov2640.c **** static const uint8_t OV2640_JPEG[][2] = {
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  371:Drivers/BSP/Camera/ov2640.c ****     { 0x04, 0x08 },   // enable JPEG output
  372:Drivers/BSP/Camera/ov2640.c ****     { 0xDA, 0x10 },   // output format JPEG
  373:Drivers/BSP/Camera/ov2640.c ****     { 0xE0, 0x00 },
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 8
 
 
  374:Drivers/BSP/Camera/ov2640.c ****     { 0x00, 0x00 },   // end marker
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  428:Drivers/BSP/Camera/ov2640.c **** {
   28              		.loc 1 428 1 view -0
   29              		.cfi_startproc
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 9
 
 
   30              		@ args = 0, pretend = 0, frame = 0
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
   75              	.L5:
   76 0020 00000000 		.word	hcamera
   77              		.cfi_endproc
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 10
 
 
   78              	.LFE146:
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  128              		.align	1
  129              		.syntax unified
  130              		.thumb
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 11
 
 
  131              		.thumb_func
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  448:Drivers/BSP/Camera/ov2640.c **** }
  171              		.loc 1 448 1 is_stmt 0 view .LVU29
  172 002a 0020     		movs	r0, #0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 12
 
 
  173 002c 08BD     		pop	{r3, pc}
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  488:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(COM8, COM8_SET(0));
  489:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(REG45, (uint8_t)((exposure >> 10) & 0x3f));
  490:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(AEC, (uint8_t)((exposure >> 2) & 0xff));
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 13
 
 
  491:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(REG04, (uint8_t)(exposure & 3));
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  545:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(QS, qsreg);
  546:Drivers/BSP/Camera/ov2640.c **** 
  547:Drivers/BSP/Camera/ov2640.c ****     // Enable DSP
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 14
 
 
  548:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  602:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(BANK_SEL, BANK_SEL_DSP);
  603:Drivers/BSP/Camera/ov2640.c ****             OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
  604:Drivers/BSP/Camera/ov2640.c ****             break;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 15
 
 
  605:Drivers/BSP/Camera/ov2640.c ****     }
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  659:Drivers/BSP/Camera/ov2640.c ****     for (int i=0; i<sizeof(contrast_regs[0])/sizeof(contrast_regs[0][0]); i++) {
  660:Drivers/BSP/Camera/ov2640.c ****         OV2640_WR_Reg(contrast_regs[0][i], contrast_regs[level][i]);
  661:Drivers/BSP/Camera/ov2640.c ****     }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 16
 
 
  662:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  200              		.loc 1 703 1 view .LVU34
  201 0006 10B5     		push	{r4, lr}
  202              	.LCFI5:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 17
 
 
  203              		.cfi_def_cfa_offset 8
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  250              		@ frame_needed = 0, uses_anonymous_args = 0
  669:Drivers/BSP/Camera/ov2640.c ****     level += (NUM_BRIGHTNESS_LEVELS / 2) + 1;
  251              		.loc 1 669 1 is_stmt 0 view .LVU44
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 18
 
 
  252 0000 38B5     		push	{r3, r4, r5, lr}
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  292              		.loc 1 677 9 view .LVU58
  293 0024 195D     		ldrb	r1, [r3, r4]	@ zero_extendqisi2
  294 0026 105D     		ldrb	r0, [r2, r4]	@ zero_extendqisi2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 19
 
 
  295 0028 FFF7FEFF 		bl	OV2640_WR_Reg
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  342              		.loc 1 420 1 is_stmt 0 view .LVU67
  343 0000 00B5     		push	{lr}
  344              	.LCFI8:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 20
 
 
  345              		.cfi_def_cfa_offset 4
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  394              		.cfi_offset 7, -12
  395              		.cfi_offset 8, -8
  396              		.cfi_offset 14, -4
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 21
 
 
  397 0004 0446     		mov	r4, r0
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  437              	.LVL45:
  517:Drivers/BSP/Camera/ov2640.c **** 
  438              		.loc 1 517 5 is_stmt 1 view .LVU89
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 22
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 22
 
 
  519:Drivers/BSP/Camera/ov2640.c ****     else regs = OV2640_uxga_regs;
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  480 0072 FFF7FEFF 		bl	OV2640_WR_Reg
  481              	.LVL52:
  532:Drivers/BSP/Camera/ov2640.c ****     //OV2640_WR_Reg(CLKRC, ov2640_sensor->night_mode);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 23
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 23
 
 
  482              		.loc 1 532 5 is_stmt 1 view .LVU103
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  525              		.loc 1 549 1 is_stmt 0 view .LVU114
  526 00b6 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
  527              	.LVL62:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 24
 
 
  528              	.L36:
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  564 0006 FF20     		movs	r0, #255
  565              	.LVL64:
  566              		.loc 1 730 5 is_stmt 0 view .LVU120
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 25
 
 
  567 0008 FFF7FEFF 		bl	OV2640_WR_Reg
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  609              	.LFB160:
  742:Drivers/BSP/Camera/ov2640.c **** 
  743:Drivers/BSP/Camera/ov2640.c **** //------------------------------
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 26
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 26
 
 
  744:Drivers/BSP/Camera/ov2640.c **** static int set_vflip(int enable)
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  649 0020 10BD     		pop	{r4, pc}
  650              	.LVL77:
  651              	.L45:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 27
 
 
  754:Drivers/BSP/Camera/ov2640.c ****     }
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  569:Drivers/BSP/Camera/ov2640.c ****     int ret = 0;
  699              		.loc 1 569 5 view .LVU156
  700 001c 0021     		movs	r1, #0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 28
 
 
  701 001e FF20     		movs	r0, #255
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  597:Drivers/BSP/Camera/ov2640.c ****             //wrSensorRegs(OV2640_160x120_JPEG);
  745              		.loc 1 597 13 view .LVU167
  746 0062 1420     		movs	r0, #20
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 29
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 29
 
 
  747 0064 FFF7FEFF 		bl	HAL_Delay
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  611:Drivers/BSP/Camera/ov2640.c **** 
  791              		.loc 1 611 5 view .LVU178
  792 00a4 1E20     		movs	r0, #30
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 30
 
 
  793 00a6 FFF7FEFF 		bl	HAL_Delay
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  839 0006 064A     		ldr	r2, .L61
  840 0008 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
  642:Drivers/BSP/Camera/ov2640.c ****     }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 31
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 31
 
 
  841              		.loc 1 642 12 view .LVU189
@@ -1858,7 +1858,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  765:Drivers/BSP/Camera/ov2640.c ****     *device_id = ((uint16_t)OV2640_RD_Reg(0x0A) << 8) | OV2640_RD_Reg(0x0B);
  766:Drivers/BSP/Camera/ov2640.c ****     return 0;
  767:Drivers/BSP/Camera/ov2640.c **** }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 32
 
 
  768:Drivers/BSP/Camera/ov2640.c **** 
@@ -1918,7 +1918,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  822:Drivers/BSP/Camera/ov2640.c ****     OV2640_WR_Reg(R_BYPASS, R_BYPASS_DSP_EN);
  823:Drivers/BSP/Camera/ov2640.c ****     //delay 30 ms
  824:Drivers/BSP/Camera/ov2640.c ****     ov2640_delay(30);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 33
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 33
 
 
  825:Drivers/BSP/Camera/ov2640.c ****     return 0;
@@ -1978,7 +1978,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  922 0024 10BD     		pop	{r4, pc}
  923              	.L66:
  924 0026 00BF     		.align	2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 34
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 34
 
 
  925              	.L65:
@@ -1999,10 +1999,10 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  940              		.cfi_startproc
  941              		@ args = 0, pretend = 0, frame = 0
  942              		@ frame_needed = 0, uses_anonymous_args = 0
- 943 0000 08B5     		push	{r3, lr}
+ 943 0000 10B5     		push	{r4, lr}
  944              	.LCFI16:
  945              		.cfi_def_cfa_offset 8
- 946              		.cfi_offset 3, -8
+ 946              		.cfi_offset 4, -8
  947              		.cfi_offset 14, -4
  842:Drivers/BSP/Camera/ov2640.c **** 	//reset();
  843:Drivers/BSP/Camera/ov2640.c **** 	//hcamera.framesize = framesize;
@@ -2012,474 +2012,471 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 1
  950 0002 0B4B     		ldr	r3, .L69
  951 0004 1B22     		movs	r2, #27
  952 0006 1A74     		strb	r2, [r3, #16]
- 845:Drivers/BSP/Camera/ov2640.c **** 	hcamera.pixformat = PIXFORMAT_JPEG;
- 953              		.loc 1 845 2 is_stmt 1 view .LVU214
- 954              		.loc 1 845 20 is_stmt 0 view .LVU215
- 955 0008 0220     		movs	r0, #2
- 956 000a 5874     		strb	r0, [r3, #17]
- 846:Drivers/BSP/Camera/ov2640.c **** 	set_pixformat(hcamera.pixformat);
- 957              		.loc 1 846 2 is_stmt 1 view .LVU216
- 958 000c FFF7FEFF 		bl	set_pixformat
- 959              	.LVL116:
- 847:Drivers/BSP/Camera/ov2640.c ****     set_quality(5); // Set quality to 10
- 960              		.loc 1 847 5 view .LVU217
- 961 0010 0520     		movs	r0, #5
- 962 0012 FFF7FEFF 		bl	set_quality
- 963              	.LVL117:
- 848:Drivers/BSP/Camera/ov2640.c ****     //set_light_mode(0); // Auto light mode
- 849:Drivers/BSP/Camera/ov2640.c ****     //set_exposure(1); // Disable auto exposure
- 850:Drivers/BSP/Camera/ov2640.c ****     //set_contrast(0); // Set contrast to 0
- 851:Drivers/BSP/Camera/ov2640.c ****     //set_saturation(0); // Set saturation to 0
- 852:Drivers/BSP/Camera/ov2640.c ****     set_brightness(-2); // Set brightness to 0
- 964              		.loc 1 852 5 view .LVU218
- 965 0016 6FF00100 		mvn	r0, #1
- 966 001a FFF7FEFF 		bl	set_brightness
- 967              	.LVL118:
- 853:Drivers/BSP/Camera/ov2640.c **** 	set_hmirror(1);
- 968              		.loc 1 853 2 view .LVU219
- 969 001e 0120     		movs	r0, #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 35
+ 845:Drivers/BSP/Camera/ov2640.c ****     hcamera.pixformat = PIXFORMAT_JPEG;
+ 953              		.loc 1 845 5 is_stmt 1 view .LVU214
+ 954              		.loc 1 845 23 is_stmt 0 view .LVU215
+ 955 0008 0224     		movs	r4, #2
+ 956 000a 5C74     		strb	r4, [r3, #17]
+ 846:Drivers/BSP/Camera/ov2640.c ****     set_pixformat(hcamera.pixformat);
+ 957              		.loc 1 846 5 is_stmt 1 view .LVU216
+ 958 000c 2046     		mov	r0, r4
+ 959 000e FFF7FEFF 		bl	set_pixformat
+ 960              	.LVL116:
+ 847:Drivers/BSP/Camera/ov2640.c ****     set_quality(2); // highest quality (lowest compression)
+ 961              		.loc 1 847 5 view .LVU217
+ 962 0012 2046     		mov	r0, r4
+ 963 0014 FFF7FEFF 		bl	set_quality
+ 964              	.LVL117:
+ 848:Drivers/BSP/Camera/ov2640.c ****     set_brightness(0);
+ 965              		.loc 1 848 5 view .LVU218
+ 966 0018 0020     		movs	r0, #0
+ 967 001a FFF7FEFF 		bl	set_brightness
+ 968              	.LVL118:
+ 849:Drivers/BSP/Camera/ov2640.c ****     set_hmirror(1);
+ 969              		.loc 1 849 5 view .LVU219
+ 970 001e 0120     		movs	r0, #1
+ 971 0020 FFF7FEFF 		bl	set_hmirror
+ 972              	.LVL119:
+ 850:Drivers/BSP/Camera/ov2640.c ****     set_vflip(1);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 35
 
 
- 970 0020 FFF7FEFF 		bl	set_hmirror
- 971              	.LVL119:
- 854:Drivers/BSP/Camera/ov2640.c **** 	set_vflip(1);
- 972              		.loc 1 854 2 view .LVU220
- 973 0024 0120     		movs	r0, #1
- 974 0026 FFF7FEFF 		bl	set_vflip
- 975              	.LVL120:
- 855:Drivers/BSP/Camera/ov2640.c ****   return 0;
- 976              		.loc 1 855 3 view .LVU221
- 856:Drivers/BSP/Camera/ov2640.c **** }
- 977              		.loc 1 856 1 is_stmt 0 view .LVU222
- 978 002a 0020     		movs	r0, #0
- 979 002c 08BD     		pop	{r3, pc}
- 980              	.L70:
- 981 002e 00BF     		.align	2
- 982              	.L69:
- 983 0030 00000000 		.word	hcamera
- 984              		.cfi_endproc
- 985              	.LFE167:
- 987              		.global	OV2640_160x120_JPEG
- 988              		.section	.rodata.OV2640_160x120_JPEG,"a"
- 989              		.align	2
- 992              	OV2640_160x120_JPEG:
- 993 0000 FF01     		.ascii	"\377\001"
- 994 0002 1240     		.ascii	"\022@"
- 995 0004 1711     		.ascii	"\027\021"
- 996 0006 1843     		.ascii	"\030C"
- 997 0008 1900     		.ascii	"\031\000"
- 998 000a 1A4B     		.ascii	"\032K"
- 999 000c 3209     		.ascii	"2\011"
- 1000 000e 4FCA     		.ascii	"O\312"
- 1001 0010 50A8     		.ascii	"P\250"
- 1002 0012 5A23     		.ascii	"Z#"
- 1003 0014 6D00     		.ascii	"m\000"
- 1004 0016 3912     		.ascii	"9\022"
- 1005 0018 35DA     		.ascii	"5\332"
- 1006 001a 221A     		.ascii	"\"\032"
- 1007 001c 37C3     		.ascii	"7\303"
- 1008 001e 2300     		.ascii	"#\000"
- 1009 0020 34C0     		.ascii	"4\300"
- 1010 0022 361A     		.ascii	"6\032"
- 1011 0024 0688     		.ascii	"\006\210"
- 1012 0026 07C0     		.ascii	"\007\300"
- 1013 0028 0D87     		.ascii	"\015\207"
- 1014 002a 0E41     		.ascii	"\016A"
- 1015 002c 4C00     		.ascii	"L\000"
- 1016 002e FF00     		.ascii	"\377\000"
- 1017 0030 E004     		.ascii	"\340\004"
- 1018 0032 C064     		.ascii	"\300d"
- 1019 0034 C14B     		.ascii	"\301K"
- 1020 0036 8635     		.ascii	"\2065"
- 1021 0038 5092     		.ascii	"P\222"
- 1022 003a 51C8     		.ascii	"Q\310"
- 1023 003c 5296     		.ascii	"R\226"
- 1024              		.section	.rodata.OV2640_1280x960_JPEG,"a"
- 1025              		.align	2
- 1028              	OV2640_1280x960_JPEG:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 36
+ 973              		.loc 1 850 5 view .LVU220
+ 974 0024 0120     		movs	r0, #1
+ 975 0026 FFF7FEFF 		bl	set_vflip
+ 976              	.LVL120:
+ 851:Drivers/BSP/Camera/ov2640.c ****     return 0;
+ 977              		.loc 1 851 5 view .LVU221
+ 852:Drivers/BSP/Camera/ov2640.c **** }
+ 978              		.loc 1 852 1 is_stmt 0 view .LVU222
+ 979 002a 0020     		movs	r0, #0
+ 980 002c 10BD     		pop	{r4, pc}
+ 981              	.L70:
+ 982 002e 00BF     		.align	2
+ 983              	.L69:
+ 984 0030 00000000 		.word	hcamera
+ 985              		.cfi_endproc
+ 986              	.LFE167:
+ 988              		.global	OV2640_160x120_JPEG
+ 989              		.section	.rodata.OV2640_160x120_JPEG,"a"
+ 990              		.align	2
+ 993              	OV2640_160x120_JPEG:
+ 994 0000 FF01     		.ascii	"\377\001"
+ 995 0002 1240     		.ascii	"\022@"
+ 996 0004 1711     		.ascii	"\027\021"
+ 997 0006 1843     		.ascii	"\030C"
+ 998 0008 1900     		.ascii	"\031\000"
+ 999 000a 1A4B     		.ascii	"\032K"
+ 1000 000c 3209     		.ascii	"2\011"
+ 1001 000e 4FCA     		.ascii	"O\312"
+ 1002 0010 50A8     		.ascii	"P\250"
+ 1003 0012 5A23     		.ascii	"Z#"
+ 1004 0014 6D00     		.ascii	"m\000"
+ 1005 0016 3912     		.ascii	"9\022"
+ 1006 0018 35DA     		.ascii	"5\332"
+ 1007 001a 221A     		.ascii	"\"\032"
+ 1008 001c 37C3     		.ascii	"7\303"
+ 1009 001e 2300     		.ascii	"#\000"
+ 1010 0020 34C0     		.ascii	"4\300"
+ 1011 0022 361A     		.ascii	"6\032"
+ 1012 0024 0688     		.ascii	"\006\210"
+ 1013 0026 07C0     		.ascii	"\007\300"
+ 1014 0028 0D87     		.ascii	"\015\207"
+ 1015 002a 0E41     		.ascii	"\016A"
+ 1016 002c 4C00     		.ascii	"L\000"
+ 1017 002e FF00     		.ascii	"\377\000"
+ 1018 0030 E004     		.ascii	"\340\004"
+ 1019 0032 C064     		.ascii	"\300d"
+ 1020 0034 C14B     		.ascii	"\301K"
+ 1021 0036 8635     		.ascii	"\2065"
+ 1022 0038 5092     		.ascii	"P\222"
+ 1023 003a 51C8     		.ascii	"Q\310"
+ 1024 003c 5296     		.ascii	"R\226"
+ 1025              		.section	.rodata.OV2640_1280x960_JPEG,"a"
+ 1026              		.align	2
+ 1029              	OV2640_1280x960_JPEG:
+ 1030 0000 FF01     		.ascii	"\377\001"
+ 1031 0002 1104     		.ascii	"\021\004"
+ 1032 0004 1200     		.ascii	"\022\000"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 36
 
 
- 1029 0000 FF01     		.ascii	"\377\001"
- 1030 0002 1104     		.ascii	"\021\004"
- 1031 0004 1200     		.ascii	"\022\000"
- 1032 0006 1711     		.ascii	"\027\021"
- 1033 0008 1875     		.ascii	"\030u"
- 1034 000a 3236     		.ascii	"26"
- 1035 000c 1901     		.ascii	"\031\001"
- 1036 000e 1A97     		.ascii	"\032\227"
- 1037 0010 030F     		.ascii	"\003\017"
- 1038 0012 3740     		.ascii	"7@"
- 1039 0014 4FBB     		.ascii	"O\273"
- 1040 0016 509C     		.ascii	"P\234"
- 1041 0018 5A5F     		.ascii	"Z_"
- 1042 001a 6D80     		.ascii	"m\200"
- 1043 001c 3D34     		.ascii	"=4"
- 1044 001e 3902     		.ascii	"9\002"
- 1045 0020 3588     		.ascii	"5\210"
- 1046 0022 220A     		.ascii	"\"\012"
- 1047 0024 3740     		.ascii	"7@"
- 1048 0026 34A0     		.ascii	"4\240"
- 1049 0028 0602     		.ascii	"\006\002"
- 1050 002a 0DB7     		.ascii	"\015\267"
- 1051 002c 0E01     		.ascii	"\016\001"
- 1052 002e FF00     		.ascii	"\377\000"
- 1053 0030 E004     		.ascii	"\340\004"
- 1054 0032 C0A0     		.ascii	"\300\240"
- 1055 0034 C15A     		.ascii	"\301Z"
- 1056 0036 8601     		.ascii	"\206\001"
- 1057 0038 5000     		.ascii	"P\000"
- 1058 003a 5190     		.ascii	"Q\220"
- 1059 003c 522C     		.ascii	"R,"
- 1060 003e 5300     		.ascii	"S\000"
- 1061 0040 5402     		.ascii	"T\002"
- 1062 0042 5588     		.ascii	"U\210"
- 1063 0044 5700     		.ascii	"W\000"
- 1064 0046 5AA0     		.ascii	"Z\240"
- 1065 0048 5B5A     		.ascii	"[Z"
- 1066 004a 5C00     		.ascii	"\\\000"
- 1067 004c D302     		.ascii	"\323\002"
- 1068 004e E000     		.ascii	"\340\000"
- 1069 0050 FF01     		.ascii	"\377\001"
- 1070 0052 0408     		.ascii	"\004\010"
- 1071 0054 DA10     		.ascii	"\332\020"
- 1072 0056 E000     		.ascii	"\340\000"
- 1073 0058 0000     		.ascii	"\000\000"
- 1074              		.section	.rodata.OV2640_JPEG,"a"
- 1075              		.align	2
- 1078              	OV2640_JPEG:
- 1079 0000 E014     		.ascii	"\340\024"
- 1080 0002 E177     		.ascii	"\341w"
- 1081 0004 E51F     		.ascii	"\345\037"
- 1082 0006 D703     		.ascii	"\327\003"
- 1083 0008 DA10     		.ascii	"\332\020"
- 1084 000a E000     		.ascii	"\340\000"
- 1085 000c FF01     		.ascii	"\377\001"
- 1086 000e 0408     		.ascii	"\004\010"
- 1087              		.section	.rodata.OV2640_YUV422,"a"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 37
+ 1033 0006 1711     		.ascii	"\027\021"
+ 1034 0008 1875     		.ascii	"\030u"
+ 1035 000a 3236     		.ascii	"26"
+ 1036 000c 1901     		.ascii	"\031\001"
+ 1037 000e 1A97     		.ascii	"\032\227"
+ 1038 0010 030F     		.ascii	"\003\017"
+ 1039 0012 3740     		.ascii	"7@"
+ 1040 0014 4FBB     		.ascii	"O\273"
+ 1041 0016 509C     		.ascii	"P\234"
+ 1042 0018 5A5F     		.ascii	"Z_"
+ 1043 001a 6D80     		.ascii	"m\200"
+ 1044 001c 3D34     		.ascii	"=4"
+ 1045 001e 3902     		.ascii	"9\002"
+ 1046 0020 3588     		.ascii	"5\210"
+ 1047 0022 220A     		.ascii	"\"\012"
+ 1048 0024 3740     		.ascii	"7@"
+ 1049 0026 34A0     		.ascii	"4\240"
+ 1050 0028 0602     		.ascii	"\006\002"
+ 1051 002a 0DB7     		.ascii	"\015\267"
+ 1052 002c 0E01     		.ascii	"\016\001"
+ 1053 002e FF00     		.ascii	"\377\000"
+ 1054 0030 E004     		.ascii	"\340\004"
+ 1055 0032 C0A0     		.ascii	"\300\240"
+ 1056 0034 C15A     		.ascii	"\301Z"
+ 1057 0036 8601     		.ascii	"\206\001"
+ 1058 0038 5000     		.ascii	"P\000"
+ 1059 003a 5190     		.ascii	"Q\220"
+ 1060 003c 522C     		.ascii	"R,"
+ 1061 003e 5300     		.ascii	"S\000"
+ 1062 0040 5402     		.ascii	"T\002"
+ 1063 0042 5588     		.ascii	"U\210"
+ 1064 0044 5700     		.ascii	"W\000"
+ 1065 0046 5AA0     		.ascii	"Z\240"
+ 1066 0048 5B5A     		.ascii	"[Z"
+ 1067 004a 5C00     		.ascii	"\\\000"
+ 1068 004c D302     		.ascii	"\323\002"
+ 1069 004e E000     		.ascii	"\340\000"
+ 1070 0050 FF01     		.ascii	"\377\001"
+ 1071 0052 0408     		.ascii	"\004\010"
+ 1072 0054 DA10     		.ascii	"\332\020"
+ 1073 0056 E000     		.ascii	"\340\000"
+ 1074 0058 0000     		.ascii	"\000\000"
+ 1075              		.section	.rodata.OV2640_JPEG,"a"
+ 1076              		.align	2
+ 1079              	OV2640_JPEG:
+ 1080 0000 E014     		.ascii	"\340\024"
+ 1081 0002 E177     		.ascii	"\341w"
+ 1082 0004 E51F     		.ascii	"\345\037"
+ 1083 0006 D703     		.ascii	"\327\003"
+ 1084 0008 DA10     		.ascii	"\332\020"
+ 1085 000a E000     		.ascii	"\340\000"
+ 1086 000c FF01     		.ascii	"\377\001"
+ 1087 000e 0408     		.ascii	"\004\010"
+ 1088              		.section	.rodata.OV2640_YUV422,"a"
+ 1089              		.align	2
+ 1092              	OV2640_YUV422:
+ 1093 0000 FF00     		.ascii	"\377\000"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 37
 
 
- 1088              		.align	2
- 1091              	OV2640_YUV422:
- 1092 0000 FF00     		.ascii	"\377\000"
- 1093 0002 0500     		.ascii	"\005\000"
- 1094 0004 DA10     		.ascii	"\332\020"
- 1095 0006 D703     		.ascii	"\327\003"
- 1096 0008 DF00     		.ascii	"\337\000"
- 1097 000a 3380     		.ascii	"3\200"
- 1098 000c 3C40     		.ascii	"<@"
- 1099 000e E177     		.ascii	"\341w"
- 1100 0010 0000     		.ascii	"\000\000"
- 1101              		.section	.rodata.OV2640_JPEG_INIT,"a"
- 1102              		.align	2
- 1105              	OV2640_JPEG_INIT:
- 1106 0000 FF00     		.ascii	"\377\000"
- 1107 0002 2CFF     		.ascii	",\377"
- 1108 0004 2EDF     		.ascii	".\337"
- 1109 0006 FF01     		.ascii	"\377\001"
- 1110 0008 3C32     		.ascii	"<2"
- 1111 000a 1103     		.ascii	"\021\003"
- 1112 000c 0902     		.ascii	"\011\002"
- 1113 000e 0428     		.ascii	"\004("
- 1114 0010 13E5     		.ascii	"\023\345"
- 1115 0012 1448     		.ascii	"\024H"
- 1116 0014 2C0C     		.ascii	",\014"
- 1117 0016 3378     		.ascii	"3x"
- 1118 0018 3A33     		.ascii	":3"
- 1119 001a 3BFB     		.ascii	";\373"
- 1120 001c 3E00     		.ascii	">\000"
- 1121 001e 4311     		.ascii	"C\021"
- 1122 0020 1610     		.ascii	"\026\020"
- 1123 0022 3992     		.ascii	"9\222"
- 1124 0024 35DA     		.ascii	"5\332"
- 1125 0026 221A     		.ascii	"\"\032"
- 1126 0028 37C3     		.ascii	"7\303"
- 1127 002a 2300     		.ascii	"#\000"
- 1128 002c 34C0     		.ascii	"4\300"
- 1129 002e 361A     		.ascii	"6\032"
- 1130 0030 0688     		.ascii	"\006\210"
- 1131 0032 07C0     		.ascii	"\007\300"
- 1132 0034 0D87     		.ascii	"\015\207"
- 1133 0036 0E41     		.ascii	"\016A"
- 1134 0038 4C00     		.ascii	"L\000"
- 1135 003a 4800     		.ascii	"H\000"
- 1136 003c 5B00     		.ascii	"[\000"
- 1137 003e 4203     		.ascii	"B\003"
- 1138 0040 4A81     		.ascii	"J\201"
- 1139 0042 2199     		.ascii	"!\231"
- 1140 0044 2440     		.ascii	"$@"
- 1141 0046 2538     		.ascii	"%8"
- 1142 0048 2682     		.ascii	"&\202"
- 1143 004a 5C00     		.ascii	"\\\000"
- 1144 004c 6300     		.ascii	"c\000"
- 1145 004e 6170     		.ascii	"ap"
- 1146 0050 6280     		.ascii	"b\200"
- 1147 0052 7C05     		.ascii	"|\005"
- 1148 0054 2080     		.ascii	" \200"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 38
+ 1094 0002 0500     		.ascii	"\005\000"
+ 1095 0004 DA10     		.ascii	"\332\020"
+ 1096 0006 D703     		.ascii	"\327\003"
+ 1097 0008 DF00     		.ascii	"\337\000"
+ 1098 000a 3380     		.ascii	"3\200"
+ 1099 000c 3C40     		.ascii	"<@"
+ 1100 000e E177     		.ascii	"\341w"
+ 1101 0010 0000     		.ascii	"\000\000"
+ 1102              		.section	.rodata.OV2640_JPEG_INIT,"a"
+ 1103              		.align	2
+ 1106              	OV2640_JPEG_INIT:
+ 1107 0000 FF00     		.ascii	"\377\000"
+ 1108 0002 2CFF     		.ascii	",\377"
+ 1109 0004 2EDF     		.ascii	".\337"
+ 1110 0006 FF01     		.ascii	"\377\001"
+ 1111 0008 3C32     		.ascii	"<2"
+ 1112 000a 1103     		.ascii	"\021\003"
+ 1113 000c 0902     		.ascii	"\011\002"
+ 1114 000e 0428     		.ascii	"\004("
+ 1115 0010 13E5     		.ascii	"\023\345"
+ 1116 0012 1448     		.ascii	"\024H"
+ 1117 0014 2C0C     		.ascii	",\014"
+ 1118 0016 3378     		.ascii	"3x"
+ 1119 0018 3A33     		.ascii	":3"
+ 1120 001a 3BFB     		.ascii	";\373"
+ 1121 001c 3E00     		.ascii	">\000"
+ 1122 001e 4311     		.ascii	"C\021"
+ 1123 0020 1610     		.ascii	"\026\020"
+ 1124 0022 3992     		.ascii	"9\222"
+ 1125 0024 35DA     		.ascii	"5\332"
+ 1126 0026 221A     		.ascii	"\"\032"
+ 1127 0028 37C3     		.ascii	"7\303"
+ 1128 002a 2300     		.ascii	"#\000"
+ 1129 002c 34C0     		.ascii	"4\300"
+ 1130 002e 361A     		.ascii	"6\032"
+ 1131 0030 0688     		.ascii	"\006\210"
+ 1132 0032 07C0     		.ascii	"\007\300"
+ 1133 0034 0D87     		.ascii	"\015\207"
+ 1134 0036 0E41     		.ascii	"\016A"
+ 1135 0038 4C00     		.ascii	"L\000"
+ 1136 003a 4800     		.ascii	"H\000"
+ 1137 003c 5B00     		.ascii	"[\000"
+ 1138 003e 4203     		.ascii	"B\003"
+ 1139 0040 4A81     		.ascii	"J\201"
+ 1140 0042 2199     		.ascii	"!\231"
+ 1141 0044 2440     		.ascii	"$@"
+ 1142 0046 2538     		.ascii	"%8"
+ 1143 0048 2682     		.ascii	"&\202"
+ 1144 004a 5C00     		.ascii	"\\\000"
+ 1145 004c 6300     		.ascii	"c\000"
+ 1146 004e 6170     		.ascii	"ap"
+ 1147 0050 6280     		.ascii	"b\200"
+ 1148 0052 7C05     		.ascii	"|\005"
+ 1149 0054 2080     		.ascii	" \200"
+ 1150 0056 2830     		.ascii	"(0"
+ 1151 0058 6C00     		.ascii	"l\000"
+ 1152 005a 6D80     		.ascii	"m\200"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 38
 
 
- 1149 0056 2830     		.ascii	"(0"
- 1150 0058 6C00     		.ascii	"l\000"
- 1151 005a 6D80     		.ascii	"m\200"
- 1152 005c 6E00     		.ascii	"n\000"
- 1153 005e 7002     		.ascii	"p\002"
- 1154 0060 7194     		.ascii	"q\224"
- 1155 0062 73C1     		.ascii	"s\301"
- 1156 0064 1711     		.ascii	"\027\021"
- 1157 0066 1843     		.ascii	"\030C"
- 1158 0068 1900     		.ascii	"\031\000"
- 1159 006a 1A4B     		.ascii	"\032K"
- 1160 006c 3209     		.ascii	"2\011"
- 1161 006e 37C0     		.ascii	"7\300"
- 1162 0070 4F60     		.ascii	"O`"
- 1163 0072 50A8     		.ascii	"P\250"
- 1164 0074 6D00     		.ascii	"m\000"
- 1165 0076 3D38     		.ascii	"=8"
- 1166 0078 463F     		.ascii	"F?"
- 1167 007a 4F60     		.ascii	"O`"
- 1168 007c 0C3C     		.ascii	"\014<"
- 1169 007e FF00     		.ascii	"\377\000"
- 1170 0080 E57F     		.ascii	"\345\177"
- 1171 0082 F9C0     		.ascii	"\371\300"
- 1172 0084 4124     		.ascii	"A$"
- 1173 0086 E014     		.ascii	"\340\024"
- 1174 0088 76FF     		.ascii	"v\377"
- 1175 008a 33A0     		.ascii	"3\240"
- 1176 008c 4220     		.ascii	"B "
- 1177 008e 4318     		.ascii	"C\030"
- 1178 0090 4C00     		.ascii	"L\000"
- 1179 0092 87D5     		.ascii	"\207\325"
- 1180 0094 883F     		.ascii	"\210?"
- 1181 0096 D703     		.ascii	"\327\003"
- 1182 0098 D910     		.ascii	"\331\020"
- 1183 009a D382     		.ascii	"\323\202"
- 1184 009c C808     		.ascii	"\310\010"
- 1185 009e C980     		.ascii	"\311\200"
- 1186 00a0 7C00     		.ascii	"|\000"
- 1187 00a2 7D00     		.ascii	"}\000"
- 1188 00a4 7C03     		.ascii	"|\003"
- 1189 00a6 7D48     		.ascii	"}H"
- 1190 00a8 7D48     		.ascii	"}H"
- 1191 00aa 7C08     		.ascii	"|\010"
- 1192 00ac 7D20     		.ascii	"} "
- 1193 00ae 7D10     		.ascii	"}\020"
- 1194 00b0 7D0E     		.ascii	"}\016"
- 1195 00b2 9000     		.ascii	"\220\000"
- 1196 00b4 910E     		.ascii	"\221\016"
- 1197 00b6 911A     		.ascii	"\221\032"
- 1198 00b8 9131     		.ascii	"\2211"
- 1199 00ba 915A     		.ascii	"\221Z"
- 1200 00bc 9169     		.ascii	"\221i"
- 1201 00be 9175     		.ascii	"\221u"
- 1202 00c0 917E     		.ascii	"\221~"
- 1203 00c2 9188     		.ascii	"\221\210"
- 1204 00c4 918F     		.ascii	"\221\217"
- 1205 00c6 9196     		.ascii	"\221\226"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 39
+ 1153 005c 6E00     		.ascii	"n\000"
+ 1154 005e 7002     		.ascii	"p\002"
+ 1155 0060 7194     		.ascii	"q\224"
+ 1156 0062 73C1     		.ascii	"s\301"
+ 1157 0064 1711     		.ascii	"\027\021"
+ 1158 0066 1843     		.ascii	"\030C"
+ 1159 0068 1900     		.ascii	"\031\000"
+ 1160 006a 1A4B     		.ascii	"\032K"
+ 1161 006c 3209     		.ascii	"2\011"
+ 1162 006e 37C0     		.ascii	"7\300"
+ 1163 0070 4F60     		.ascii	"O`"
+ 1164 0072 50A8     		.ascii	"P\250"
+ 1165 0074 6D00     		.ascii	"m\000"
+ 1166 0076 3D38     		.ascii	"=8"
+ 1167 0078 463F     		.ascii	"F?"
+ 1168 007a 4F60     		.ascii	"O`"
+ 1169 007c 0C3C     		.ascii	"\014<"
+ 1170 007e FF00     		.ascii	"\377\000"
+ 1171 0080 E57F     		.ascii	"\345\177"
+ 1172 0082 F9C0     		.ascii	"\371\300"
+ 1173 0084 4124     		.ascii	"A$"
+ 1174 0086 E014     		.ascii	"\340\024"
+ 1175 0088 76FF     		.ascii	"v\377"
+ 1176 008a 33A0     		.ascii	"3\240"
+ 1177 008c 4220     		.ascii	"B "
+ 1178 008e 4318     		.ascii	"C\030"
+ 1179 0090 4C00     		.ascii	"L\000"
+ 1180 0092 87D5     		.ascii	"\207\325"
+ 1181 0094 883F     		.ascii	"\210?"
+ 1182 0096 D703     		.ascii	"\327\003"
+ 1183 0098 D910     		.ascii	"\331\020"
+ 1184 009a D382     		.ascii	"\323\202"
+ 1185 009c C808     		.ascii	"\310\010"
+ 1186 009e C980     		.ascii	"\311\200"
+ 1187 00a0 7C00     		.ascii	"|\000"
+ 1188 00a2 7D00     		.ascii	"}\000"
+ 1189 00a4 7C03     		.ascii	"|\003"
+ 1190 00a6 7D48     		.ascii	"}H"
+ 1191 00a8 7D48     		.ascii	"}H"
+ 1192 00aa 7C08     		.ascii	"|\010"
+ 1193 00ac 7D20     		.ascii	"} "
+ 1194 00ae 7D10     		.ascii	"}\020"
+ 1195 00b0 7D0E     		.ascii	"}\016"
+ 1196 00b2 9000     		.ascii	"\220\000"
+ 1197 00b4 910E     		.ascii	"\221\016"
+ 1198 00b6 911A     		.ascii	"\221\032"
+ 1199 00b8 9131     		.ascii	"\2211"
+ 1200 00ba 915A     		.ascii	"\221Z"
+ 1201 00bc 9169     		.ascii	"\221i"
+ 1202 00be 9175     		.ascii	"\221u"
+ 1203 00c0 917E     		.ascii	"\221~"
+ 1204 00c2 9188     		.ascii	"\221\210"
+ 1205 00c4 918F     		.ascii	"\221\217"
+ 1206 00c6 9196     		.ascii	"\221\226"
+ 1207 00c8 91A3     		.ascii	"\221\243"
+ 1208 00ca 91AF     		.ascii	"\221\257"
+ 1209 00cc 91C4     		.ascii	"\221\304"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 39
 
 
- 1206 00c8 91A3     		.ascii	"\221\243"
- 1207 00ca 91AF     		.ascii	"\221\257"
- 1208 00cc 91C4     		.ascii	"\221\304"
- 1209 00ce 91D7     		.ascii	"\221\327"
- 1210 00d0 91E8     		.ascii	"\221\350"
- 1211 00d2 9120     		.ascii	"\221 "
- 1212 00d4 9200     		.ascii	"\222\000"
- 1213 00d6 9306     		.ascii	"\223\006"
- 1214 00d8 93E3     		.ascii	"\223\343"
- 1215 00da 9305     		.ascii	"\223\005"
- 1216 00dc 9305     		.ascii	"\223\005"
- 1217 00de 9300     		.ascii	"\223\000"
- 1218 00e0 9304     		.ascii	"\223\004"
- 1219 00e2 9300     		.ascii	"\223\000"
- 1220 00e4 9300     		.ascii	"\223\000"
- 1221 00e6 9300     		.ascii	"\223\000"
- 1222 00e8 9300     		.ascii	"\223\000"
- 1223 00ea 9300     		.ascii	"\223\000"
- 1224 00ec 9300     		.ascii	"\223\000"
- 1225 00ee 9300     		.ascii	"\223\000"
- 1226 00f0 9600     		.ascii	"\226\000"
- 1227 00f2 9708     		.ascii	"\227\010"
- 1228 00f4 9719     		.ascii	"\227\031"
- 1229 00f6 9702     		.ascii	"\227\002"
- 1230 00f8 970C     		.ascii	"\227\014"
- 1231 00fa 9724     		.ascii	"\227$"
- 1232 00fc 9730     		.ascii	"\2270"
- 1233 00fe 9728     		.ascii	"\227("
- 1234 0100 9726     		.ascii	"\227&"
- 1235 0102 9702     		.ascii	"\227\002"
- 1236 0104 9798     		.ascii	"\227\230"
- 1237 0106 9780     		.ascii	"\227\200"
- 1238 0108 9700     		.ascii	"\227\000"
- 1239 010a 9700     		.ascii	"\227\000"
- 1240 010c C3ED     		.ascii	"\303\355"
- 1241 010e A400     		.ascii	"\244\000"
- 1242 0110 A800     		.ascii	"\250\000"
- 1243 0112 C511     		.ascii	"\305\021"
- 1244 0114 C651     		.ascii	"\306Q"
- 1245 0116 BF80     		.ascii	"\277\200"
- 1246 0118 C710     		.ascii	"\307\020"
- 1247 011a B666     		.ascii	"\266f"
- 1248 011c B8A5     		.ascii	"\270\245"
- 1249 011e B764     		.ascii	"\267d"
- 1250 0120 B97C     		.ascii	"\271|"
- 1251 0122 B3AF     		.ascii	"\263\257"
- 1252 0124 B497     		.ascii	"\264\227"
- 1253 0126 B5FF     		.ascii	"\265\377"
- 1254 0128 B0C5     		.ascii	"\260\305"
- 1255 012a B194     		.ascii	"\261\224"
- 1256 012c B20F     		.ascii	"\262\017"
- 1257 012e C45C     		.ascii	"\304\\"
- 1258 0130 C064     		.ascii	"\300d"
- 1259 0132 C14B     		.ascii	"\301K"
- 1260 0134 8C00     		.ascii	"\214\000"
- 1261 0136 863D     		.ascii	"\206="
- 1262 0138 5000     		.ascii	"P\000"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 40
+ 1210 00ce 91D7     		.ascii	"\221\327"
+ 1211 00d0 91E8     		.ascii	"\221\350"
+ 1212 00d2 9120     		.ascii	"\221 "
+ 1213 00d4 9200     		.ascii	"\222\000"
+ 1214 00d6 9306     		.ascii	"\223\006"
+ 1215 00d8 93E3     		.ascii	"\223\343"
+ 1216 00da 9305     		.ascii	"\223\005"
+ 1217 00dc 9305     		.ascii	"\223\005"
+ 1218 00de 9300     		.ascii	"\223\000"
+ 1219 00e0 9304     		.ascii	"\223\004"
+ 1220 00e2 9300     		.ascii	"\223\000"
+ 1221 00e4 9300     		.ascii	"\223\000"
+ 1222 00e6 9300     		.ascii	"\223\000"
+ 1223 00e8 9300     		.ascii	"\223\000"
+ 1224 00ea 9300     		.ascii	"\223\000"
+ 1225 00ec 9300     		.ascii	"\223\000"
+ 1226 00ee 9300     		.ascii	"\223\000"
+ 1227 00f0 9600     		.ascii	"\226\000"
+ 1228 00f2 9708     		.ascii	"\227\010"
+ 1229 00f4 9719     		.ascii	"\227\031"
+ 1230 00f6 9702     		.ascii	"\227\002"
+ 1231 00f8 970C     		.ascii	"\227\014"
+ 1232 00fa 9724     		.ascii	"\227$"
+ 1233 00fc 9730     		.ascii	"\2270"
+ 1234 00fe 9728     		.ascii	"\227("
+ 1235 0100 9726     		.ascii	"\227&"
+ 1236 0102 9702     		.ascii	"\227\002"
+ 1237 0104 9798     		.ascii	"\227\230"
+ 1238 0106 9780     		.ascii	"\227\200"
+ 1239 0108 9700     		.ascii	"\227\000"
+ 1240 010a 9700     		.ascii	"\227\000"
+ 1241 010c C3ED     		.ascii	"\303\355"
+ 1242 010e A400     		.ascii	"\244\000"
+ 1243 0110 A800     		.ascii	"\250\000"
+ 1244 0112 C511     		.ascii	"\305\021"
+ 1245 0114 C651     		.ascii	"\306Q"
+ 1246 0116 BF80     		.ascii	"\277\200"
+ 1247 0118 C710     		.ascii	"\307\020"
+ 1248 011a B666     		.ascii	"\266f"
+ 1249 011c B8A5     		.ascii	"\270\245"
+ 1250 011e B764     		.ascii	"\267d"
+ 1251 0120 B97C     		.ascii	"\271|"
+ 1252 0122 B3AF     		.ascii	"\263\257"
+ 1253 0124 B497     		.ascii	"\264\227"
+ 1254 0126 B5FF     		.ascii	"\265\377"
+ 1255 0128 B0C5     		.ascii	"\260\305"
+ 1256 012a B194     		.ascii	"\261\224"
+ 1257 012c B20F     		.ascii	"\262\017"
+ 1258 012e C45C     		.ascii	"\304\\"
+ 1259 0130 C064     		.ascii	"\300d"
+ 1260 0132 C14B     		.ascii	"\301K"
+ 1261 0134 8C00     		.ascii	"\214\000"
+ 1262 0136 863D     		.ascii	"\206="
+ 1263 0138 5000     		.ascii	"P\000"
+ 1264 013a 51C8     		.ascii	"Q\310"
+ 1265 013c 5296     		.ascii	"R\226"
+ 1266 013e 5300     		.ascii	"S\000"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 40
 
 
- 1263 013a 51C8     		.ascii	"Q\310"
- 1264 013c 5296     		.ascii	"R\226"
- 1265 013e 5300     		.ascii	"S\000"
- 1266 0140 5400     		.ascii	"T\000"
- 1267 0142 5500     		.ascii	"U\000"
- 1268 0144 5AC8     		.ascii	"Z\310"
- 1269 0146 5B96     		.ascii	"[\226"
- 1270 0148 5C00     		.ascii	"\\\000"
- 1271 014a D37F     		.ascii	"\323\177"
- 1272 014c C3ED     		.ascii	"\303\355"
- 1273 014e 7F00     		.ascii	"\177\000"
- 1274 0150 DA00     		.ascii	"\332\000"
- 1275 0152 E51F     		.ascii	"\345\037"
- 1276 0154 E167     		.ascii	"\341g"
- 1277 0156 E000     		.ascii	"\340\000"
- 1278 0158 DD7F     		.ascii	"\335\177"
- 1279 015a 0500     		.ascii	"\005\000"
- 1280 015c 1240     		.ascii	"\022@"
- 1281 015e D37F     		.ascii	"\323\177"
- 1282 0160 C016     		.ascii	"\300\026"
- 1283 0162 C112     		.ascii	"\301\022"
- 1284 0164 8C00     		.ascii	"\214\000"
- 1285 0166 863D     		.ascii	"\206="
- 1286 0168 5000     		.ascii	"P\000"
- 1287 016a 512C     		.ascii	"Q,"
- 1288 016c 5224     		.ascii	"R$"
- 1289 016e 5300     		.ascii	"S\000"
- 1290 0170 5400     		.ascii	"T\000"
- 1291 0172 5500     		.ascii	"U\000"
- 1292 0174 5A2C     		.ascii	"Z,"
- 1293 0176 5B24     		.ascii	"[$"
- 1294 0178 5C00     		.ascii	"\\\000"
- 1295              		.section	.rodata.brightness_regs,"a"
- 1296              		.align	2
- 1299              	brightness_regs:
- 1300 0000 7C7D7C7D 		.ascii	"|}|}}"
- 1300      7D
- 1301 0005 00040900 		.ascii	"\000\004\011\000\000"
- 1301      00
- 1302 000a 00040910 		.ascii	"\000\004\011\020\000"
+ 1267 0140 5400     		.ascii	"T\000"
+ 1268 0142 5500     		.ascii	"U\000"
+ 1269 0144 5AC8     		.ascii	"Z\310"
+ 1270 0146 5B96     		.ascii	"[\226"
+ 1271 0148 5C00     		.ascii	"\\\000"
+ 1272 014a D37F     		.ascii	"\323\177"
+ 1273 014c C3ED     		.ascii	"\303\355"
+ 1274 014e 7F00     		.ascii	"\177\000"
+ 1275 0150 DA00     		.ascii	"\332\000"
+ 1276 0152 E51F     		.ascii	"\345\037"
+ 1277 0154 E167     		.ascii	"\341g"
+ 1278 0156 E000     		.ascii	"\340\000"
+ 1279 0158 DD7F     		.ascii	"\335\177"
+ 1280 015a 0500     		.ascii	"\005\000"
+ 1281 015c 1240     		.ascii	"\022@"
+ 1282 015e D37F     		.ascii	"\323\177"
+ 1283 0160 C016     		.ascii	"\300\026"
+ 1284 0162 C112     		.ascii	"\301\022"
+ 1285 0164 8C00     		.ascii	"\214\000"
+ 1286 0166 863D     		.ascii	"\206="
+ 1287 0168 5000     		.ascii	"P\000"
+ 1288 016a 512C     		.ascii	"Q,"
+ 1289 016c 5224     		.ascii	"R$"
+ 1290 016e 5300     		.ascii	"S\000"
+ 1291 0170 5400     		.ascii	"T\000"
+ 1292 0172 5500     		.ascii	"U\000"
+ 1293 0174 5A2C     		.ascii	"Z,"
+ 1294 0176 5B24     		.ascii	"[$"
+ 1295 0178 5C00     		.ascii	"\\\000"
+ 1296              		.section	.rodata.brightness_regs,"a"
+ 1297              		.align	2
+ 1300              	brightness_regs:
+ 1301 0000 7C7D7C7D 		.ascii	"|}|}}"
+ 1301      7D
+ 1302 0005 00040900 		.ascii	"\000\004\011\000\000"
  1302      00
- 1303 000f 00040920 		.ascii	"\000\004\011 \000"
+ 1303 000a 00040910 		.ascii	"\000\004\011\020\000"
  1303      00
- 1304 0014 00040930 		.ascii	"\000\004\0110\000"
+ 1304 000f 00040920 		.ascii	"\000\004\011 \000"
  1304      00
- 1305 0019 00040940 		.ascii	"\000\004\011@\000"
+ 1305 0014 00040930 		.ascii	"\000\004\0110\000"
  1305      00
- 1306              		.section	.rodata.rgb565_regs,"a"
- 1307              		.align	2
- 1310              	rgb565_regs:
- 1311 0000 FF00     		.ascii	"\377\000"
- 1312 0002 E004     		.ascii	"\340\004"
- 1313 0004 DA08     		.ascii	"\332\010"
- 1314 0006 D703     		.ascii	"\327\003"
- 1315 0008 E177     		.ascii	"\341w"
- 1316 000a E000     		.ascii	"\340\000"
- 1317 000c 0000     		.ascii	"\000\000"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 41
+ 1306 0019 00040940 		.ascii	"\000\004\011@\000"
+ 1306      00
+ 1307              		.section	.rodata.rgb565_regs,"a"
+ 1308              		.align	2
+ 1311              	rgb565_regs:
+ 1312 0000 FF00     		.ascii	"\377\000"
+ 1313 0002 E004     		.ascii	"\340\004"
+ 1314 0004 DA08     		.ascii	"\332\010"
+ 1315 0006 D703     		.ascii	"\327\003"
+ 1316 0008 E177     		.ascii	"\341w"
+ 1317 000a E000     		.ascii	"\340\000"
+ 1318 000c 0000     		.ascii	"\000\000"
+ 1319              		.section	.rodata.allowed_sizes,"a"
+ 1320              		.align	2
+ 1323              	allowed_sizes:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 41
 
 
- 1318              		.section	.rodata.allowed_sizes,"a"
- 1319              		.align	2
- 1322              	allowed_sizes:
- 1323 0000 03060912 		.ascii	"\003\006\011\022\012\013\017\027\030\031\032\033\036"
- 1323      0A0B0F17 
- 1323      18191A1B 
- 1323      1E
- 1324              		.text
- 1325              	.Letext0:
- 1326              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
- 1327              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
- 1328              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
- 1329              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
- 1330              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
- 1331              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
- 1332              		.file 8 "Drivers/BSP/Camera/camera.h"
- 1333              		.file 9 "Drivers/BSP/Camera/ov2640_regs.h"
- 1334              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 42
+ 1324 0000 03060912 		.ascii	"\003\006\011\022\012\013\017\027\030\031\032\033\036"
+ 1324      0A0B0F17 
+ 1324      18191A1B 
+ 1324      1E
+ 1325              		.text
+ 1326              	.Letext0:
+ 1327              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1328              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1329              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 1330              		.file 5 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 1331              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 1332              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ 1333              		.file 8 "Drivers/BSP/Camera/camera.h"
+ 1334              		.file 9 "Drivers/BSP/Camera/ov2640_regs.h"
+ 1335              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 42
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 ov2640.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:20     .text.wrSensorRegs:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:25     .text.wrSensorRegs:00000000 wrSensorRegs
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:76     .text.wrSensorRegs:00000020 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:81     .text.OV2640_WR_Reg:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:86     .text.OV2640_WR_Reg:00000000 OV2640_WR_Reg
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:123    .text.OV2640_WR_Reg:0000001c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:128    .text.reset:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:133    .text.reset:00000000 reset
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:177    .text.reset:00000030 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:182    .text.set_quality:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:187    .text.set_quality:00000000 set_quality
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:239    .text.set_brightness:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:244    .text.set_brightness:00000000 set_brightness
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:325    .text.set_brightness:00000044 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1299   .rodata.brightness_regs:00000000 brightness_regs
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:330    .text.OV2640_RD_Reg:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:335    .text.OV2640_RD_Reg:00000000 OV2640_RD_Reg
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:370    .text.OV2640_RD_Reg:0000001c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:375    .text._set_framesize:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:380    .text._set_framesize:00000000 _set_framesize
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:535    .text._set_framesize:000000c0 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:542    .text.set_hmirror:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:547    .text.set_hmirror:00000000 set_hmirror
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:602    .text.set_vflip:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:607    .text.set_vflip:00000000 set_vflip
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:662    .text.set_pixformat:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:668    .text.set_pixformat:00000000 set_pixformat
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:804    .text.set_pixformat:000000b0 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1105   .rodata.OV2640_JPEG_INIT:00000000 OV2640_JPEG_INIT
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1091   .rodata.OV2640_YUV422:00000000 OV2640_YUV422
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1078   .rodata.OV2640_JPEG:00000000 OV2640_JPEG
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1028   .rodata.OV2640_1280x960_JPEG:00000000 OV2640_1280x960_JPEG
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1310   .rodata.rgb565_regs:00000000 rgb565_regs
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:814    .text.ov2640_check_framesize:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:820    .text.ov2640_check_framesize:00000000 ov2640_check_framesize
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:869    .text.ov2640_check_framesize:00000020 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1322   .rodata.allowed_sizes:00000000 allowed_sizes
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:874    .text.ov2640_init:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:880    .text.ov2640_init:00000000 ov2640_init
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:926    .text.ov2640_init:00000028 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:931    .text.ov2640_init_pic:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:937    .text.ov2640_init_pic:00000000 ov2640_init_pic
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:983    .text.ov2640_init_pic:00000030 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:992    .rodata.OV2640_160x120_JPEG:00000000 OV2640_160x120_JPEG
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:989    .rodata.OV2640_160x120_JPEG:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1025   .rodata.OV2640_1280x960_JPEG:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1075   .rodata.OV2640_JPEG:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1088   .rodata.OV2640_YUV422:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1102   .rodata.OV2640_JPEG_INIT:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1296   .rodata.brightness_regs:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1307   .rodata.rgb565_regs:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s:1319   .rodata.allowed_sizes:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:20     .text.wrSensorRegs:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:25     .text.wrSensorRegs:00000000 wrSensorRegs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:76     .text.wrSensorRegs:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:81     .text.OV2640_WR_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:86     .text.OV2640_WR_Reg:00000000 OV2640_WR_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:123    .text.OV2640_WR_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:128    .text.reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:133    .text.reset:00000000 reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:177    .text.reset:00000030 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:182    .text.set_quality:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:187    .text.set_quality:00000000 set_quality
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:239    .text.set_brightness:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:244    .text.set_brightness:00000000 set_brightness
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:325    .text.set_brightness:00000044 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1300   .rodata.brightness_regs:00000000 brightness_regs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:330    .text.OV2640_RD_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:335    .text.OV2640_RD_Reg:00000000 OV2640_RD_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:370    .text.OV2640_RD_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:375    .text._set_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:380    .text._set_framesize:00000000 _set_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:535    .text._set_framesize:000000c0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:542    .text.set_hmirror:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:547    .text.set_hmirror:00000000 set_hmirror
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:602    .text.set_vflip:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:607    .text.set_vflip:00000000 set_vflip
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:662    .text.set_pixformat:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:668    .text.set_pixformat:00000000 set_pixformat
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:804    .text.set_pixformat:000000b0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1106   .rodata.OV2640_JPEG_INIT:00000000 OV2640_JPEG_INIT
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1092   .rodata.OV2640_YUV422:00000000 OV2640_YUV422
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1079   .rodata.OV2640_JPEG:00000000 OV2640_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1029   .rodata.OV2640_1280x960_JPEG:00000000 OV2640_1280x960_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1311   .rodata.rgb565_regs:00000000 rgb565_regs
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:814    .text.ov2640_check_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:820    .text.ov2640_check_framesize:00000000 ov2640_check_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:869    .text.ov2640_check_framesize:00000020 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1323   .rodata.allowed_sizes:00000000 allowed_sizes
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:874    .text.ov2640_init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:880    .text.ov2640_init:00000000 ov2640_init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:926    .text.ov2640_init:00000028 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:931    .text.ov2640_init_pic:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:937    .text.ov2640_init_pic:00000000 ov2640_init_pic
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:984    .text.ov2640_init_pic:00000030 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:993    .rodata.OV2640_160x120_JPEG:00000000 OV2640_160x120_JPEG
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:990    .rodata.OV2640_160x120_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1026   .rodata.OV2640_1280x960_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1076   .rodata.OV2640_JPEG:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1089   .rodata.OV2640_YUV422:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1103   .rodata.OV2640_JPEG_INIT:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1297   .rodata.brightness_regs:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1308   .rodata.rgb565_regs:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s:1320   .rodata.allowed_sizes:00000000 $d
 
 UNDEFINED SYMBOLS
 Camera_WriteReg
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc3NWfta.s 			page 43
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccEE1mJa.s 			page 43
 
 
 hcamera
