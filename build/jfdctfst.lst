@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
   28:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****  * accuracy is lost due to imprecise representation of the scaled
   29:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****  * quantization values.  The smaller the quantization table entry, the less
   30:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****  * precise the scaled value, so this implementation does worse with high-
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 2
 
 
   31:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****  * quality-setting files than with low-quality ones.
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
   85:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c **** #define FIX_0_382683433  FIX(0.382683433)
   86:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c **** #define FIX_0_541196100  FIX(0.541196100)
   87:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c **** #define FIX_0_707106781  FIX(0.707106781)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 3
 
 
   88:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c **** #define FIX_1_306562965  FIX(1.306562965)
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  121:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****   JSAMPROW elemptr;
   50              		.loc 1 121 3 view .LVU6
  122:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****   int ctr;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 4
 
 
   51              		.loc 1 122 3 view .LVU7
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
   91 002a 9B1B     		subs	r3, r3, r6
   92              	.LVL7:
  136:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     tmp2 = GETJSAMPLE(elemptr[2]) + GETJSAMPLE(elemptr[5]);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 5
 
 
   93              		.loc 1 136 5 is_stmt 1 view .LVU28
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  134              		.loc 1 149 5 is_stmt 1 view .LVU48
  135              		.loc 1 149 24 is_stmt 0 view .LVU49
  136 005a 07EB0B0A 		add	r10, r7, fp
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 6
 
 
  137              	.LVL17:
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  161:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c **** 
  162:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     /* The rotator is modified from fig 4-8 to avoid extra negations. */
  163:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     z5 = MULTIPLY(tmp10 - tmp12, FIX_0_382683433); /* c6 */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 7
 
 
  180              		.loc 1 163 5 is_stmt 1 view .LVU70
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  172:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     dataptr[3] = z13 - z2;
  226              		.loc 1 172 5 is_stmt 1 view .LVU90
  227              		.loc 1 172 22 is_stmt 0 view .LVU91
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 8
 
 
  228 00ca A4EB0C04 		sub	r4, r4, ip
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  268              		.loc 1 184 10 is_stmt 0 view .LVU109
  269 00f6 A1EB030E 		sub	lr, r1, r3
  270              	.LVL42:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 9
 
 
  185:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     tmp1 = dataptr[DCTSIZE*1] + dataptr[DCTSIZE*6];
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  314              	.LVL50:
  196:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     tmp11 = tmp1 + tmp2;
  315              		.loc 1 196 5 is_stmt 1 view .LVU132
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 10
 
 
  316              		.loc 1 196 11 is_stmt 0 view .LVU133
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  208:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     tmp10 = tmp4 + tmp5;	/* phase 2 */
  359              		.loc 1 208 5 is_stmt 1 view .LVU151
  360              		.loc 1 208 11 is_stmt 0 view .LVU152
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 11
 
 
  361 014a 3344     		add	r3, r3, r6
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  405 0176 0EEB2624 		add	r4, lr, r6, asr #8
  406              	.LVL73:
  219:Middlewares/Third_Party/LibJPEG/source/jfdctfst.c ****     z13 = tmp7 - z3;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 12
 
 
  407              		.loc 1 219 5 is_stmt 1 view .LVU172
@@ -718,16 +718,16 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 1
  451              	.Letext0:
  452              		.file 2 "Inc/jmorecfg.h"
  453              		.file 3 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 13
 
 
  454              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jdct.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s 			page 14
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 jfdctfst.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s:20     .text.jpeg_fdct_ifast:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFB1LKg.s:26     .text.jpeg_fdct_ifast:00000000 jpeg_fdct_ifast
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s:20     .text.jpeg_fdct_ifast:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc8liNyv.s:26     .text.jpeg_fdct_ifast:00000000 jpeg_fdct_ifast
 
 NO UNDEFINED SYMBOLS

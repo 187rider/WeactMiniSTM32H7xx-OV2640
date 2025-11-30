@@ -330,13 +330,8 @@ static const uint8_t  OV2640_1280x960_JPEG[][2] = {
     { 0xFF, 0x01 },
     { 0x11, 0x04 },
     { 0x12, 0x00 },
-    {0x13, 0x87},   // Enable AGC, AEC, AWB
     { 0x17, 0x11 },
     { 0x18, 0x75 },
-    {0x24, 0x40},   // AEC: stable upper limit
-    {0x25, 0x30},   // AEC: stable lower limit
-    {0x26, 0xA1},   // AEC: fast mode + banding filter
-    {0x14, 0x3A},  // increase gain ceiling
     { 0x32, 0x36 },
     { 0x19, 0x01 },
     { 0x1a, 0x97 },
@@ -370,8 +365,6 @@ static const uint8_t  OV2640_1280x960_JPEG[][2] = {
     { 0x5a, 0xa0 },
     { 0x5b, 0x5a },
     { 0x5c, 0x00 },
-    {0x7C, 0x00},
-    {0x7D, 0x02},   // +2x digital gain
     { 0xd3, 0x02 },
     { 0xe0, 0x00 },
     { 0xFF, 0x01 },
@@ -809,6 +802,8 @@ static int set_light_mode(uint8_t mode)
         OV2640_WR_Reg(0xcc, OV2640_LIGHTMODE_TBL[mode][0]);
         OV2640_WR_Reg(0xcd, OV2640_LIGHTMODE_TBL[mode][1]);
         OV2640_WR_Reg(0xce, OV2640_LIGHTMODE_TBL[mode][2]);
+        OV2640_WR_Reg(0xce, OV2640_LIGHTMODE_TBL[mode][3]);
+        OV2640_WR_Reg(0xce, OV2640_LIGHTMODE_TBL[mode][4]);
     }
     return 0;
 }
@@ -849,6 +844,12 @@ int ov2640_init_pic()
 	hcamera.framesize = FRAMESIZE_UXGA;
 	hcamera.pixformat = PIXFORMAT_JPEG;
 	set_pixformat(hcamera.pixformat);
+    set_quality(5); // Set quality to 10
+    //set_light_mode(0); // Auto light mode
+    //set_exposure(1); // Disable auto exposure
+    //set_contrast(0); // Set contrast to 0
+    //set_saturation(0); // Set saturation to 0
+    set_brightness(-2); // Set brightness to 0
 	set_hmirror(1);
 	set_vflip(1);
   return 0;

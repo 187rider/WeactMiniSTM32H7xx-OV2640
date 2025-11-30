@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
   29:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Saved references to initialized quantizer modules,
   30:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * in case we need to switch modes.
   31:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 2
 
 
   32:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   struct jpeg_color_quantizer * quantizer_1pass;
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
   59              		.loc 1 52 74 discriminator 2 view .LVU12
   60 0022 022A     		cmp	r2, #2
   61 0024 39D1     		bne	.L6
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 3
 
 
   54:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->out_color_components != RGB_PIXELSIZE)
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  101              		.loc 1 62 26 view .LVU28
  102 0052 D2F8BC40 		ldr	r4, [r2, #188]
   61:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].v_samp_factor != 1 ||
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 4
 
 
  103              		.loc 1 61 46 view .LVU29
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
   75:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   return FALSE;
   76:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
   77:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 5
 
 
  142              		.loc 1 77 1 view .LVU43
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
   97:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
   98:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Prevent application from calling me at wrong times */
   99:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->global_state != DSTATE_READY)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 6
 
 
  100:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  154:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Report number of components in selected colorspace. */
  155:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Probably this should be in the color conversion module... */
  156:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   switch (cinfo->out_color_space) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 7
 
 
  157:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_GRAYSCALE:
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  211:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * representation by adding CENTERJSAMPLE at the same time that we limit it.
  212:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * So the post-IDCT limiting table ends up looking like this:
  213:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   CENTERJSAMPLE,CENTERJSAMPLE+1,...,MAXJSAMPLE,
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 8
 
 
  214:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   MAXJSAMPLE (repeat 2*(MAXJSAMPLE+1)-CENTERJSAMPLE times),
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  268:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** LOCAL(void)
  269:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** master_selection (j_decompress_ptr cinfo)
  270:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 9
 
 
  271:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  325:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* We use the 2-pass code to map to external colormaps. */
  326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->enable_2pass_quant || cinfo->enable_external_quant) {
  327:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 10
 
 
  328:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_2pass_quantizer(cinfo);
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  382:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int nscans;
  383:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Estimate number of scans to set pass_limit. */
  384:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->progressive_mode) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 11
 
 
  385:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  198 000c 2BD0     		beq	.L10
  417:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
  418:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Final pass of 2-pass quantization */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 12
 
 
  419:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     master->pub.is_dummy_pass = FALSE;
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  443:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->upsample->start_pass) (cinfo);
  444:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->quantize_colors)
  445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 13
 
 
  446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  461:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->progress->total_passes += (cinfo->enable_2pass_quant ? 2 : 1);
  265              		.loc 1 461 7 is_stmt 1 view .LVU85
  266              		.loc 1 461 12 is_stmt 0 view .LVU86
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 14
 
 
  267 0054 A268     		ldr	r2, [r4, #8]
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  308 007c D4F8C031 		ldr	r3, [r4, #448]
  439:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (! cinfo->raw_data_out) {
  309              		.loc 1 439 6 view .LVU103
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 15
 
 
  310 0080 9B68     		ldr	r3, [r3, #8]
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
  348              		.loc 1 445 9 is_stmt 0 view .LVU120
  349 00a8 D4F8E031 		ldr	r3, [r4, #480]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 16
 
 
  445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
  390              		.loc 1 429 44 discriminator 1 view .LVU135
  391 00d6 C36E     		ldr	r3, [r0, #108]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 17
 
 
  429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  431 0102 0021     		movs	r1, #0
  432 0104 DCE7     		b	.L17
  433              	.L22:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 18
 
 
  456:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* In buffered-image mode, we assume one more output pass if EOI not
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  475              		.loc 1 477 6 view .LVU162
  476 000e 9B68     		ldr	r3, [r3, #8]
  477 0010 9847     		blx	r3
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 19
 
 
  478              	.LVL25:
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  236:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		(5 * (MAXJSAMPLE+1) + CENTERJSAMPLE) * SIZEOF(JSAMPLE));
  525              		.loc 1 236 6 view .LVU175
  526 0010 0446     		mov	r4, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 20
 
 
  527              	.LVL28:
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  565              		.loc 1 248 10 is_stmt 0 view .LVU191
  566 0034 03F5C072 		add	r2, r3, #384
  248:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Second half of post-IDCT table */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 21
 
 
  567              		.loc 1 248 14 view .LVU192
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  615              		.cfi_offset 6, -8
  616              		.cfi_offset 14, -4
  617 0002 0446     		mov	r4, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 22
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 22
 
 
   94:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jpeg_component_info *compptr;
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
  659              		.loc 1 117 11 view .LVU214
  660 0032 D4F83821 		ldr	r2, [r4, #312]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 23
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 23
 
 
  117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  697              		.loc 1 121 11 is_stmt 0 view .LVU232
  698 005e 4FF0010E 		mov	lr, #1
  122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 24
 
 
  699              		.loc 1 122 11 view .LVU233
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  737              		.loc 1 123 43 discriminator 1 view .LVU249
  738 0092 0823     		movs	r3, #8
  739 0094 E7E7     		b	.L42
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 25
 
 
  740              	.L43:
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  132:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
  778              		.loc 1 132 13 view .LVU266
  779 00b4 B5EB410F 		cmp	r5, r1, lsl #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 26
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 26
 
 
  780 00b8 F3DD     		ble	.L46
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  818 00e4 E862     		str	r0, [r5, #44]
  146:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_height *
  819              		.loc 1 146 5 is_stmt 1 view .LVU283
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 27
 
 
  147:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->v_samp_factor * compptr->DCT_v_scaled_size),
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  857 0114 013A     		subs	r2, r2, #1
  858 0116 042A     		cmp	r2, #4
  859 0118 1CD8     		bhi	.L50
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 28
 
 
  860 011a DFE802F0 		tbb	[pc, r2]
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  899 0140 70BD     		pop	{r4, r5, r6, pc}
  900              	.LVL58:
  901              	.L54:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 29
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 29
 
 
  161:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  940              	.LFE148:
  942              		.section	.text.master_selection,"ax",%progbits
  943              		.align	1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 30
 
 
  944              		.syntax unified
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  985              	.LVL63:
  288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
  986              		.loc 1 288 3 is_stmt 1 view .LVU346
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 31
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 31
 
 
  288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
@@ -1858,7 +1858,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1022 0032 F3B1     		cbz	r3, .L69
  300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
  1023              		.loc 1 300 5 is_stmt 1 view .LVU366
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 32
 
 
  300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
@@ -1918,7 +1918,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  316:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_1PASS_SUPPORTED
  1062              		.loc 1 316 8 view .LVU383
  1063 005c 9BBB     		cbnz	r3, .L91
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 33
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 33
 
 
  1064              	.L75:
@@ -1978,7 +1978,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1101 0080 E16E     		ldr	r1, [r4, #108]
  1102 0082 2046     		mov	r0, r4
  1103 0084 FFF7FEFF 		bl	jinit_d_post_controller
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 34
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 34
 
 
  1104              	.LVL68:
@@ -2038,7 +2038,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1141              		.loc 1 309 36 is_stmt 0 view .LVU417
  1142 00b0 0123     		movs	r3, #1
  1143 00b2 A366     		str	r3, [r4, #104]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 35
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 35
 
 
  1144 00b4 D1E7     		b	.L72
@@ -2098,7 +2098,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1184              		.loc 1 359 5 view .LVU431
  1185 00e2 2046     		mov	r0, r4
  1186 00e4 FFF7FEFF 		bl	jinit_huff_decoder
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 36
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 36
 
 
  1187              	.LVL74:
@@ -2158,7 +2158,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1226 010c 226C     		ldr	r2, [r4, #64]
  380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
  1227              		.loc 1 380 31 discriminator 1 view .LVU447
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 37
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 37
 
 
  1228 010e E2B9     		cbnz	r2, .L66
@@ -2218,7 +2218,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
  1264              		.loc 1 393 5 is_stmt 1 view .LVU466
  393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 38
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 38
 
 
  1265              		.loc 1 393 10 is_stmt 0 view .LVU467
@@ -2278,7 +2278,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  389:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
  1305              		.loc 1 389 14 is_stmt 0 view .LVU482
  1306 0156 626A     		ldr	r2, [r4, #36]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 39
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 39
 
 
  1307              	.LVL84:
@@ -2338,7 +2338,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  493:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Prevent application from calling me at wrong times */
  494:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->global_state != DSTATE_BUFIMAGE)
  1347              		.loc 1 494 3 is_stmt 1 view .LVU490
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 40
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 40
 
 
  1348              		.loc 1 494 12 is_stmt 0 view .LVU491
@@ -2398,7 +2398,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1392 003c AB60     		str	r3, [r5, #8]
  1393 003e 06E0     		b	.L93
  1394              	.L95:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 41
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 41
 
 
  504:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   } else
@@ -2458,7 +2458,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1433              		.loc 1 521 3 view .LVU514
  522:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
  1434              		.loc 1 522 14 is_stmt 0 view .LVU515
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 42
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 42
 
 
  1435 0004 4368     		ldr	r3, [r0, #4]
@@ -2518,34 +2518,34 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 1
  1481              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
  1482              		.file 7 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/string.h"
  1483              		.file 8 "<built-in>"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 43
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 43
 
 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s 			page 44
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s 			page 44
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 jdmaster.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:20     .text.use_merged_upsample:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:25     .text.use_merged_upsample:00000000 use_merged_upsample
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:168    .text.prepare_for_output_pass:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:173    .text.prepare_for_output_pass:00000000 prepare_for_output_pass
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:445    .text.finish_output_pass:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:450    .text.finish_output_pass:00000000 finish_output_pass
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:493    .text.prepare_range_limit_table:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:498    .text.prepare_range_limit_table:00000000 prepare_range_limit_table
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:596    .text.jpeg_calc_output_dimensions:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:602    .text.jpeg_calc_output_dimensions:00000000 jpeg_calc_output_dimensions
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:862    .text.jpeg_calc_output_dimensions:0000011e $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:943    .text.master_selection:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:948    .text.master_selection:00000000 master_selection
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:1321   .text.jpeg_new_colormap:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:1327   .text.jpeg_new_colormap:00000000 jpeg_new_colormap
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:1412   .text.jinit_master_decompress:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:1418   .text.jinit_master_decompress:00000000 jinit_master_decompress
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:1470   .text.jinit_master_decompress:00000028 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:867    .text.jpeg_calc_output_dimensions:00000123 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZaVLMj.s:867    .text.jpeg_calc_output_dimensions:00000124 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:20     .text.use_merged_upsample:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:25     .text.use_merged_upsample:00000000 use_merged_upsample
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:168    .text.prepare_for_output_pass:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:173    .text.prepare_for_output_pass:00000000 prepare_for_output_pass
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:445    .text.finish_output_pass:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:450    .text.finish_output_pass:00000000 finish_output_pass
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:493    .text.prepare_range_limit_table:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:498    .text.prepare_range_limit_table:00000000 prepare_range_limit_table
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:596    .text.jpeg_calc_output_dimensions:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:602    .text.jpeg_calc_output_dimensions:00000000 jpeg_calc_output_dimensions
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:862    .text.jpeg_calc_output_dimensions:0000011e $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:943    .text.master_selection:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:948    .text.master_selection:00000000 master_selection
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:1321   .text.jpeg_new_colormap:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:1327   .text.jpeg_new_colormap:00000000 jpeg_new_colormap
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:1412   .text.jinit_master_decompress:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:1418   .text.jinit_master_decompress:00000000 jinit_master_decompress
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:1470   .text.jinit_master_decompress:00000028 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:867    .text.jpeg_calc_output_dimensions:00000123 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccoeaTm6.s:867    .text.jpeg_calc_output_dimensions:00000124 $t
 
 UNDEFINED SYMBOLS
 memset

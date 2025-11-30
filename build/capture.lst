@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -40,39 +40,37 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
   11:Src/capture.c **** extern volatile uint32_t DCMI_VsyncFlag;
   12:Src/capture.c **** extern volatile uint32_t DCMI_CallbackCount;
   13:Src/capture.c **** 
-  14:Src/capture.c **** #define MAX_PICTURE_BUFF (100*2048)
-  15:Src/capture.c ****  //uint8_t pBuff[MAX_PICTURE_BUFF];
-  16:Src/capture.c **** // DMA-accessible buffer for JPEG capture, placed in AXI SRAM (.sram1)
-  17:Src/capture.c **** __attribute__((section(".sram1"))) static uint8_t pBuff[MAX_PICTURE_BUFF];
-  18:Src/capture.c **** //uint8_t pBuff[MAX_PICTURE_BUFF] __attribute__((aligned(32)));
-  19:Src/capture.c **** 
-  20:Src/capture.c **** static char to_lower(char c)
-  21:Src/capture.c **** {
-  28              		.loc 1 21 1 view -0
+  14:Src/capture.c **** #define MAX_PICTURE_BUFF (320*1024) // 320KB JPEG buffer
+  15:Src/capture.c **** // DMA-accessible buffer for JPEG capture, placed in AXI SRAM (.sram1)
+  16:Src/capture.c **** __attribute__((section(".sram1"))) static uint8_t pBuff[MAX_PICTURE_BUFF];
+  17:Src/capture.c **** 
+  18:Src/capture.c **** static char to_lower(char c)
+  19:Src/capture.c **** {
+  28              		.loc 1 19 1 view -0
   29              		.cfi_startproc
   30              		@ args = 0, pretend = 0, frame = 0
   31              		@ frame_needed = 0, uses_anonymous_args = 0
   32              		@ link register save eliminated.
-  22:Src/capture.c ****     return (c >= 'A' && c <= 'Z') ? (char)(c + 32) : c;
-  33              		.loc 1 22 5 view .LVU1
-  34              		.loc 1 22 22 is_stmt 0 view .LVU2
+  20:Src/capture.c ****     return (c >= 'A' && c <= 'Z') ? (char)(c + 32) : c;
+  33              		.loc 1 20 5 view .LVU1
+  34              		.loc 1 20 22 is_stmt 0 view .LVU2
   35 0000 A0F14103 		sub	r3, r0, #65
   36 0004 DBB2     		uxtb	r3, r3
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 2
-
-
-  37              		.loc 1 22 52 view .LVU3
+  37              		.loc 1 20 52 view .LVU3
   38 0006 192B     		cmp	r3, #25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 2
+
+
   39 0008 01D8     		bhi	.L2
-  40              		.loc 1 22 52 discriminator 1 view .LVU4
+  40              		.loc 1 20 52 discriminator 1 view .LVU4
   41 000a 2030     		adds	r0, r0, #32
   42              	.LVL1:
-  43              		.loc 1 22 52 discriminator 1 view .LVU5
+  43              		.loc 1 20 52 discriminator 1 view .LVU5
   44 000c C0B2     		uxtb	r0, r0
   45              	.LVL2:
   46              	.L2:
-  23:Src/capture.c **** }
-  47              		.loc 1 23 1 view .LVU6
+  21:Src/capture.c **** }
+  47              		.loc 1 21 1 view .LVU6
   48 000e 7047     		bx	lr
   49              		.cfi_endproc
   50              	.LFE147:
@@ -90,78 +88,78 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
   60              		.thumb_func
   62              	ensure_sd_mounted:
   63              	.LFB150:
-  24:Src/capture.c **** 
-  25:Src/capture.c **** static int parse_photo_id(const char *name, uint32_t *id_out)
-  26:Src/capture.c **** {
-  27:Src/capture.c ****     const char *dot = strrchr(name, '.');
-  28:Src/capture.c ****     if (!dot) return 0;
-  29:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
-  30:Src/capture.c ****         return 0;
-  31:Src/capture.c ****     }
-  32:Src/capture.c ****     if (strncmp(name, "PHOTO_", 6) != 0 && strncmp(name, "photo_", 6) != 0) return 0;
-  33:Src/capture.c ****     const char *p = name + 6;
-  34:Src/capture.c ****     if (p >= dot) return 0;
-  35:Src/capture.c ****     uint32_t id = 0;
-  36:Src/capture.c ****     while (p < dot) {
-  37:Src/capture.c ****         if (*p < '0' || *p > '9') return 0;
-  38:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
-  39:Src/capture.c ****         p++;
-  40:Src/capture.c ****     }
-  41:Src/capture.c ****     *id_out = id;
-  42:Src/capture.c ****     return 1;
-  43:Src/capture.c **** }
-  44:Src/capture.c **** 
-  45:Src/capture.c **** static uint32_t find_next_photo_id(void)
-  46:Src/capture.c **** {
-  47:Src/capture.c ****     DIR dir;
-  48:Src/capture.c ****     FILINFO finfo;
-  49:Src/capture.c ****     uint32_t max_id = 0;
-  50:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
-  51:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 3
+  22:Src/capture.c **** 
+  23:Src/capture.c **** static int parse_photo_id(const char *name, uint32_t *id_out)
+  24:Src/capture.c **** {
+  25:Src/capture.c ****     const char *dot = strrchr(name, '.');
+  26:Src/capture.c ****     if (!dot) return 0;
+  27:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
+  28:Src/capture.c ****         return 0;
+  29:Src/capture.c ****     }
+  30:Src/capture.c ****     if (strncmp(name, "PHOTO_", 6) != 0 && strncmp(name, "photo_", 6) != 0) return 0;
+  31:Src/capture.c ****     const char *p = name + 6;
+  32:Src/capture.c ****     if (p >= dot) return 0;
+  33:Src/capture.c ****     uint32_t id = 0;
+  34:Src/capture.c ****     while (p < dot) {
+  35:Src/capture.c ****         if (*p < '0' || *p > '9') return 0;
+  36:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+  37:Src/capture.c ****         p++;
+  38:Src/capture.c ****     }
+  39:Src/capture.c ****     *id_out = id;
+  40:Src/capture.c ****     return 1;
+  41:Src/capture.c **** }
+  42:Src/capture.c **** 
+  43:Src/capture.c **** static uint32_t find_next_photo_id(void)
+  44:Src/capture.c **** {
+  45:Src/capture.c ****     DIR dir;
+  46:Src/capture.c ****     FILINFO finfo;
+  47:Src/capture.c ****     uint32_t max_id = 0;
+  48:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
+  49:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
+  50:Src/capture.c ****             uint32_t id = 0;
+  51:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 3
 
 
-  52:Src/capture.c ****             uint32_t id = 0;
-  53:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
-  54:Src/capture.c ****                 max_id = id + 1;
-  55:Src/capture.c ****             }
-  56:Src/capture.c ****         }
-  57:Src/capture.c ****         f_closedir(&dir);
-  58:Src/capture.c ****     }
-  59:Src/capture.c ****     return max_id % 100000;
-  60:Src/capture.c **** }
-  61:Src/capture.c **** 
-  62:Src/capture.c **** static int ensure_sd_mounted(void)
-  63:Src/capture.c **** {
-  64              		.loc 1 63 1 is_stmt 1 view -0
+  52:Src/capture.c ****                 max_id = id + 1;
+  53:Src/capture.c ****             }
+  54:Src/capture.c ****         }
+  55:Src/capture.c ****         f_closedir(&dir);
+  56:Src/capture.c ****     }
+  57:Src/capture.c ****     return max_id % 100000;
+  58:Src/capture.c **** }
+  59:Src/capture.c **** 
+  60:Src/capture.c **** static int ensure_sd_mounted(void)
+  61:Src/capture.c **** {
+  64              		.loc 1 61 1 is_stmt 1 view -0
   65              		.cfi_startproc
   66              		@ args = 0, pretend = 0, frame = 32
   67              		@ frame_needed = 0, uses_anonymous_args = 0
-  64:Src/capture.c ****     if (SDFatFS.fs_type != 0) {
-  68              		.loc 1 64 5 view .LVU8
-  69              		.loc 1 64 16 is_stmt 0 view .LVU9
+  62:Src/capture.c ****     if (SDFatFS.fs_type != 0) {
+  68              		.loc 1 62 5 view .LVU8
+  69              		.loc 1 62 16 is_stmt 0 view .LVU9
   70 0000 104B     		ldr	r3, .L13
   71 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
-  72              		.loc 1 64 8 view .LVU10
+  72              		.loc 1 62 8 view .LVU10
   73 0004 0BB1     		cbz	r3, .L11
-  65:Src/capture.c ****         return 1; // already mounted
-  74              		.loc 1 65 16 view .LVU11
+  63:Src/capture.c ****         return 1; // already mounted
+  74              		.loc 1 63 16 view .LVU11
   75 0006 0120     		movs	r0, #1
-  66:Src/capture.c ****     }
-  67:Src/capture.c ****     FRESULT res = f_mount(&SDFatFS, SDPath, 1);
-  68:Src/capture.c ****     if (res != FR_OK) {
-  69:Src/capture.c ****         char msg[32];
-  70:Src/capture.c ****         sprintf(msg, "SD mount err:%d", res);
-  71:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
-  72:Src/capture.c ****         return 0;
-  73:Src/capture.c ****     }
-  74:Src/capture.c ****     return 1;
-  75:Src/capture.c **** }
-  76              		.loc 1 75 1 view .LVU12
+  64:Src/capture.c ****     }
+  65:Src/capture.c ****     FRESULT res = f_mount(&SDFatFS, SDPath, 1);
+  66:Src/capture.c ****     if (res != FR_OK) {
+  67:Src/capture.c ****         char msg[32];
+  68:Src/capture.c ****         sprintf(msg, "SD mount err:%d", res);
+  69:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+  70:Src/capture.c ****         return 0;
+  71:Src/capture.c ****     }
+  72:Src/capture.c ****     return 1;
+  73:Src/capture.c **** }
+  76              		.loc 1 73 1 view .LVU12
   77 0008 7047     		bx	lr
   78              	.L11:
-  63:Src/capture.c ****     if (SDFatFS.fs_type != 0) {
-  79              		.loc 1 63 1 view .LVU13
+  61:Src/capture.c ****     if (SDFatFS.fs_type != 0) {
+  79              		.loc 1 61 1 view .LVU13
   80 000a 10B5     		push	{r4, lr}
   81              	.LCFI0:
   82              		.cfi_def_cfa_offset 8
@@ -170,30 +168,30 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
   85 000c 8AB0     		sub	sp, sp, #40
   86              	.LCFI1:
   87              		.cfi_def_cfa_offset 48
-  67:Src/capture.c ****     if (res != FR_OK) {
-  88              		.loc 1 67 5 is_stmt 1 view .LVU14
-  67:Src/capture.c ****     if (res != FR_OK) {
-  89              		.loc 1 67 19 is_stmt 0 view .LVU15
+  65:Src/capture.c ****     if (res != FR_OK) {
+  88              		.loc 1 65 5 is_stmt 1 view .LVU14
+  65:Src/capture.c ****     if (res != FR_OK) {
+  89              		.loc 1 65 19 is_stmt 0 view .LVU15
   90 000e 0122     		movs	r2, #1
   91 0010 0D49     		ldr	r1, .L13+4
   92 0012 0C48     		ldr	r0, .L13
   93 0014 FFF7FEFF 		bl	f_mount
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 4
-
-
   94              	.LVL3:
-  68:Src/capture.c ****         char msg[32];
-  95              		.loc 1 68 5 is_stmt 1 view .LVU16
-  68:Src/capture.c ****         char msg[32];
-  96              		.loc 1 68 8 is_stmt 0 view .LVU17
+  66:Src/capture.c ****         char msg[32];
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 4
+
+
+  95              		.loc 1 66 5 is_stmt 1 view .LVU16
+  66:Src/capture.c ****         char msg[32];
+  96              		.loc 1 66 8 is_stmt 0 view .LVU17
   97 0018 0246     		mov	r2, r0
   98 001a 10B9     		cbnz	r0, .L12
-  74:Src/capture.c **** }
-  99              		.loc 1 74 12 view .LVU18
+  72:Src/capture.c **** }
+  99              		.loc 1 72 12 view .LVU18
  100 001c 0120     		movs	r0, #1
  101              	.LVL4:
  102              	.L3:
- 103              		.loc 1 75 1 view .LVU19
+ 103              		.loc 1 73 1 view .LVU19
  104 001e 0AB0     		add	sp, sp, #40
  105              	.LCFI2:
  106              		.cfi_remember_state
@@ -205,20 +203,20 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  112              	.LCFI3:
  113              		.cfi_restore_state
  114              	.LBB2:
-  69:Src/capture.c ****         sprintf(msg, "SD mount err:%d", res);
- 115              		.loc 1 69 9 is_stmt 1 view .LVU20
-  70:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 116              		.loc 1 70 9 view .LVU21
+  67:Src/capture.c ****         sprintf(msg, "SD mount err:%d", res);
+ 115              		.loc 1 67 9 is_stmt 1 view .LVU20
+  68:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 116              		.loc 1 68 9 view .LVU21
  117 0022 02AC     		add	r4, sp, #8
  118 0024 0949     		ldr	r1, .L13+8
  119 0026 2046     		mov	r0, r4
  120              	.LVL6:
-  70:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 121              		.loc 1 70 9 is_stmt 0 view .LVU22
+  68:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 121              		.loc 1 68 9 is_stmt 0 view .LVU22
  122 0028 FFF7FEFF 		bl	sprintf
  123              	.LVL7:
-  71:Src/capture.c ****         return 0;
- 124              		.loc 1 71 9 is_stmt 1 view .LVU23
+  69:Src/capture.c ****         return 0;
+ 124              		.loc 1 69 9 is_stmt 1 view .LVU23
  125 002c 0194     		str	r4, [sp, #4]
  126 002e 0C23     		movs	r3, #12
  127 0030 0093     		str	r3, [sp]
@@ -229,20 +227,20 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  132 003a 0020     		movs	r0, #0
  133 003c FFF7FEFF 		bl	LCD_ShowString
  134              	.LVL8:
-  72:Src/capture.c ****     }
- 135              		.loc 1 72 9 view .LVU24
-  72:Src/capture.c ****     }
- 136              		.loc 1 72 16 is_stmt 0 view .LVU25
+  70:Src/capture.c ****     }
+ 135              		.loc 1 70 9 view .LVU24
+  70:Src/capture.c ****     }
+ 136              		.loc 1 70 16 is_stmt 0 view .LVU25
  137 0040 0020     		movs	r0, #0
  138 0042 ECE7     		b	.L3
  139              	.L14:
  140              		.align	2
  141              	.L13:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 5
-
-
  142 0044 00000000 		.word	SDFatFS
  143 0048 00000000 		.word	SDPath
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 5
+
+
  144 004c 00000000 		.word	.LC0
  145 0050 00000000 		.word	ST7735Ctx
  146              	.LBE2:
@@ -265,13 +263,13 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  163              	parse_photo_id:
  164              	.LVL9:
  165              	.LFB148:
-  26:Src/capture.c ****     const char *dot = strrchr(name, '.');
- 166              		.loc 1 26 1 is_stmt 1 view -0
+  24:Src/capture.c ****     const char *dot = strrchr(name, '.');
+ 166              		.loc 1 24 1 is_stmt 1 view -0
  167              		.cfi_startproc
  168              		@ args = 0, pretend = 0, frame = 0
  169              		@ frame_needed = 0, uses_anonymous_args = 0
-  26:Src/capture.c ****     const char *dot = strrchr(name, '.');
- 170              		.loc 1 26 1 is_stmt 0 view .LVU27
+  24:Src/capture.c ****     const char *dot = strrchr(name, '.');
+ 170              		.loc 1 24 1 is_stmt 0 view .LVU27
  171 0000 70B5     		push	{r4, r5, r6, lr}
  172              	.LCFI4:
  173              		.cfi_def_cfa_offset 16
@@ -281,196 +279,196 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  177              		.cfi_offset 14, -4
  178 0002 0446     		mov	r4, r0
  179 0004 0D46     		mov	r5, r1
-  27:Src/capture.c ****     if (!dot) return 0;
- 180              		.loc 1 27 5 is_stmt 1 view .LVU28
-  27:Src/capture.c ****     if (!dot) return 0;
- 181              		.loc 1 27 23 is_stmt 0 view .LVU29
+  25:Src/capture.c ****     if (!dot) return 0;
+ 180              		.loc 1 25 5 is_stmt 1 view .LVU28
+  25:Src/capture.c ****     if (!dot) return 0;
+ 181              		.loc 1 25 23 is_stmt 0 view .LVU29
  182 0006 2E21     		movs	r1, #46
  183              	.LVL10:
-  27:Src/capture.c ****     if (!dot) return 0;
- 184              		.loc 1 27 23 view .LVU30
+  25:Src/capture.c ****     if (!dot) return 0;
+ 184              		.loc 1 25 23 view .LVU30
  185 0008 FFF7FEFF 		bl	strrchr
  186              	.LVL11:
-  28:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
- 187              		.loc 1 28 5 is_stmt 1 view .LVU31
-  28:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
- 188              		.loc 1 28 8 is_stmt 0 view .LVU32
+  26:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
+ 187              		.loc 1 26 5 is_stmt 1 view .LVU31
+  26:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
+ 188              		.loc 1 26 8 is_stmt 0 view .LVU32
  189 000c 0028     		cmp	r0, #0
  190 000e 39D0     		beq	.L20
  191 0010 0646     		mov	r6, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 6
+  27:Src/capture.c ****         return 0;
+ 192              		.loc 1 27 5 is_stmt 1 view .LVU33
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 6
 
 
-  29:Src/capture.c ****         return 0;
- 192              		.loc 1 29 5 is_stmt 1 view .LVU33
-  29:Src/capture.c ****         return 0;
- 193              		.loc 1 29 11 is_stmt 0 view .LVU34
+  27:Src/capture.c ****         return 0;
+ 193              		.loc 1 27 11 is_stmt 0 view .LVU34
  194 0012 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
  195              	.LVL12:
-  29:Src/capture.c ****         return 0;
- 196              		.loc 1 29 11 view .LVU35
+  27:Src/capture.c ****         return 0;
+ 196              		.loc 1 27 11 view .LVU35
  197 0014 FFF7FEFF 		bl	to_lower
  198              	.LVL13:
-  29:Src/capture.c ****         return 0;
- 199              		.loc 1 29 8 discriminator 1 view .LVU36
+  27:Src/capture.c ****         return 0;
+ 199              		.loc 1 27 8 discriminator 1 view .LVU36
  200 0018 6A28     		cmp	r0, #106
  201 001a 35D1     		bne	.L21
-  29:Src/capture.c ****         return 0;
- 202              		.loc 1 29 38 discriminator 1 view .LVU37
+  27:Src/capture.c ****         return 0;
+ 202              		.loc 1 27 38 discriminator 1 view .LVU37
  203 001c B078     		ldrb	r0, [r6, #2]	@ zero_extendqisi2
  204 001e FFF7FEFF 		bl	to_lower
  205              	.LVL14:
-  29:Src/capture.c ****         return 0;
- 206              		.loc 1 29 35 discriminator 1 view .LVU38
+  27:Src/capture.c ****         return 0;
+ 206              		.loc 1 27 35 discriminator 1 view .LVU38
  207 0022 7028     		cmp	r0, #112
  208 0024 32D1     		bne	.L22
-  29:Src/capture.c ****         return 0;
- 209              		.loc 1 29 65 discriminator 2 view .LVU39
+  27:Src/capture.c ****         return 0;
+ 209              		.loc 1 27 65 discriminator 2 view .LVU39
  210 0026 F078     		ldrb	r0, [r6, #3]	@ zero_extendqisi2
  211 0028 FFF7FEFF 		bl	to_lower
  212              	.LVL15:
-  29:Src/capture.c ****         return 0;
- 213              		.loc 1 29 62 discriminator 1 view .LVU40
+  27:Src/capture.c ****         return 0;
+ 213              		.loc 1 27 62 discriminator 1 view .LVU40
  214 002c 6528     		cmp	r0, #101
  215 002e 2FD1     		bne	.L23
-  29:Src/capture.c ****         return 0;
- 216              		.loc 1 29 92 discriminator 3 view .LVU41
+  27:Src/capture.c ****         return 0;
+ 216              		.loc 1 27 92 discriminator 3 view .LVU41
  217 0030 3079     		ldrb	r0, [r6, #4]	@ zero_extendqisi2
  218 0032 FFF7FEFF 		bl	to_lower
  219              	.LVL16:
-  29:Src/capture.c ****         return 0;
- 220              		.loc 1 29 89 discriminator 1 view .LVU42
+  27:Src/capture.c ****         return 0;
+ 220              		.loc 1 27 89 discriminator 1 view .LVU42
  221 0036 6728     		cmp	r0, #103
  222 0038 2CD1     		bne	.L24
-  29:Src/capture.c ****         return 0;
- 223              		.loc 1 29 122 discriminator 4 view .LVU43
+  27:Src/capture.c ****         return 0;
+ 223              		.loc 1 27 122 discriminator 4 view .LVU43
  224 003a 7379     		ldrb	r3, [r6, #5]	@ zero_extendqisi2
-  29:Src/capture.c ****         return 0;
- 225              		.loc 1 29 9 discriminator 4 view .LVU44
+  27:Src/capture.c ****         return 0;
+ 225              		.loc 1 27 9 discriminator 4 view .LVU44
  226 003c 63BB     		cbnz	r3, .L25
-  32:Src/capture.c ****     const char *p = name + 6;
- 227              		.loc 1 32 5 is_stmt 1 view .LVU45
-  32:Src/capture.c ****     const char *p = name + 6;
- 228              		.loc 1 32 9 is_stmt 0 view .LVU46
+  30:Src/capture.c ****     const char *p = name + 6;
+ 227              		.loc 1 30 5 is_stmt 1 view .LVU45
+  30:Src/capture.c ****     const char *p = name + 6;
+ 228              		.loc 1 30 9 is_stmt 0 view .LVU46
  229 003e 0622     		movs	r2, #6
  230 0040 1949     		ldr	r1, .L31
  231 0042 2046     		mov	r0, r4
  232 0044 FFF7FEFF 		bl	strncmp
  233              	.LVL17:
-  32:Src/capture.c ****     const char *p = name + 6;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 7
-
-
- 234              		.loc 1 32 8 discriminator 1 view .LVU47
+  30:Src/capture.c ****     const char *p = name + 6;
+ 234              		.loc 1 30 8 discriminator 1 view .LVU47
  235 0048 28B1     		cbz	r0, .L17
-  32:Src/capture.c ****     const char *p = name + 6;
- 236              		.loc 1 32 44 discriminator 1 view .LVU48
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 7
+
+
+  30:Src/capture.c ****     const char *p = name + 6;
+ 236              		.loc 1 30 44 discriminator 1 view .LVU48
  237 004a 0622     		movs	r2, #6
  238 004c 1749     		ldr	r1, .L31+4
  239 004e 2046     		mov	r0, r4
  240 0050 FFF7FEFF 		bl	strncmp
  241              	.LVL18:
-  32:Src/capture.c ****     const char *p = name + 6;
- 242              		.loc 1 32 41 discriminator 1 view .LVU49
+  30:Src/capture.c ****     const char *p = name + 6;
+ 242              		.loc 1 30 41 discriminator 1 view .LVU49
  243 0054 10BB     		cbnz	r0, .L26
  244              	.L17:
-  33:Src/capture.c ****     if (p >= dot) return 0;
- 245              		.loc 1 33 5 is_stmt 1 view .LVU50
-  33:Src/capture.c ****     if (p >= dot) return 0;
- 246              		.loc 1 33 17 is_stmt 0 view .LVU51
+  31:Src/capture.c ****     if (p >= dot) return 0;
+ 245              		.loc 1 31 5 is_stmt 1 view .LVU50
+  31:Src/capture.c ****     if (p >= dot) return 0;
+ 246              		.loc 1 31 17 is_stmt 0 view .LVU51
  247 0056 A01D     		adds	r0, r4, #6
  248              	.LVL19:
-  34:Src/capture.c ****     uint32_t id = 0;
- 249              		.loc 1 34 5 is_stmt 1 view .LVU52
-  34:Src/capture.c ****     uint32_t id = 0;
- 250              		.loc 1 34 8 is_stmt 0 view .LVU53
+  32:Src/capture.c ****     uint32_t id = 0;
+ 249              		.loc 1 32 5 is_stmt 1 view .LVU52
+  32:Src/capture.c ****     uint32_t id = 0;
+ 250              		.loc 1 32 8 is_stmt 0 view .LVU53
  251 0058 8642     		cmp	r6, r0
  252 005a 21D9     		bls	.L27
-  35:Src/capture.c ****     while (p < dot) {
- 253              		.loc 1 35 14 view .LVU54
+  33:Src/capture.c ****     while (p < dot) {
+ 253              		.loc 1 33 14 view .LVU54
  254 005c 0023     		movs	r3, #0
  255              	.L18:
  256              	.LVL20:
-  36:Src/capture.c ****         if (*p < '0' || *p > '9') return 0;
- 257              		.loc 1 36 14 is_stmt 1 view .LVU55
+  34:Src/capture.c ****         if (*p < '0' || *p > '9') return 0;
+ 257              		.loc 1 34 14 is_stmt 1 view .LVU55
  258 005e B042     		cmp	r0, r6
  259 0060 0DD2     		bcs	.L30
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 260              		.loc 1 37 9 view .LVU56
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 261              		.loc 1 37 13 is_stmt 0 view .LVU57
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 260              		.loc 1 35 9 view .LVU56
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 261              		.loc 1 35 13 is_stmt 0 view .LVU57
  262 0062 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 263              		.loc 1 37 22 view .LVU58
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 263              		.loc 1 35 22 view .LVU58
  264 0064 A2F13001 		sub	r1, r2, #48
  265 0068 C9B2     		uxtb	r1, r1
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 266              		.loc 1 37 12 view .LVU59
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 266              		.loc 1 35 12 view .LVU59
  267 006a 0929     		cmp	r1, #9
  268 006c 1AD8     		bhi	.L28
-  38:Src/capture.c ****         p++;
- 269              		.loc 1 38 9 is_stmt 1 view .LVU60
-  38:Src/capture.c ****         p++;
- 270              		.loc 1 38 17 is_stmt 0 view .LVU61
+  36:Src/capture.c ****         p++;
+ 269              		.loc 1 36 9 is_stmt 1 view .LVU60
+  36:Src/capture.c ****         p++;
+ 270              		.loc 1 36 17 is_stmt 0 view .LVU61
  271 006e 03EB8303 		add	r3, r3, r3, lsl #2
  272              	.LVL21:
-  38:Src/capture.c ****         p++;
- 273              		.loc 1 38 22 view .LVU62
+  36:Src/capture.c ****         p++;
+ 273              		.loc 1 36 22 view .LVU62
  274 0072 02EB4302 		add	r2, r2, r3, lsl #1
-  38:Src/capture.c ****         p++;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 8
-
-
- 275              		.loc 1 38 12 view .LVU63
+  36:Src/capture.c ****         p++;
+ 275              		.loc 1 36 12 view .LVU63
  276 0076 A2F13003 		sub	r3, r2, #48
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 8
+
+
  277              	.LVL22:
-  39:Src/capture.c ****     }
- 278              		.loc 1 39 9 is_stmt 1 view .LVU64
-  39:Src/capture.c ****     }
- 279              		.loc 1 39 10 is_stmt 0 view .LVU65
+  37:Src/capture.c ****     }
+ 278              		.loc 1 37 9 is_stmt 1 view .LVU64
+  37:Src/capture.c ****     }
+ 279              		.loc 1 37 10 is_stmt 0 view .LVU65
  280 007a 0130     		adds	r0, r0, #1
  281              	.LVL23:
-  39:Src/capture.c ****     }
- 282              		.loc 1 39 10 view .LVU66
+  37:Src/capture.c ****     }
+ 282              		.loc 1 37 10 view .LVU66
  283 007c EFE7     		b	.L18
  284              	.L30:
-  41:Src/capture.c ****     return 1;
- 285              		.loc 1 41 5 is_stmt 1 view .LVU67
-  41:Src/capture.c ****     return 1;
- 286              		.loc 1 41 13 is_stmt 0 view .LVU68
+  39:Src/capture.c ****     return 1;
+ 285              		.loc 1 39 5 is_stmt 1 view .LVU67
+  39:Src/capture.c ****     return 1;
+ 286              		.loc 1 39 13 is_stmt 0 view .LVU68
  287 007e 2B60     		str	r3, [r5]
-  42:Src/capture.c **** }
- 288              		.loc 1 42 5 is_stmt 1 view .LVU69
-  42:Src/capture.c **** }
- 289              		.loc 1 42 12 is_stmt 0 view .LVU70
+  40:Src/capture.c **** }
+ 288              		.loc 1 40 5 is_stmt 1 view .LVU69
+  40:Src/capture.c **** }
+ 289              		.loc 1 40 12 is_stmt 0 view .LVU70
  290 0080 0120     		movs	r0, #1
  291              	.LVL24:
-  42:Src/capture.c **** }
- 292              		.loc 1 42 12 view .LVU71
+  40:Src/capture.c **** }
+ 292              		.loc 1 40 12 view .LVU71
  293 0082 02E0     		b	.L15
  294              	.LVL25:
  295              	.L20:
-  28:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
- 296              		.loc 1 28 22 discriminator 1 view .LVU72
+  26:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
+ 296              		.loc 1 26 22 discriminator 1 view .LVU72
  297 0084 0020     		movs	r0, #0
  298              	.LVL26:
-  28:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
- 299              		.loc 1 28 22 discriminator 1 view .LVU73
+  26:Src/capture.c ****     if (!(to_lower(dot[1]) == 'j' && to_lower(dot[2]) == 'p' && to_lower(dot[3]) == 'e' && to_lower
+ 299              		.loc 1 26 22 discriminator 1 view .LVU73
  300 0086 00E0     		b	.L15
  301              	.LVL27:
  302              	.L21:
-  30:Src/capture.c ****     }
- 303              		.loc 1 30 16 view .LVU74
+  28:Src/capture.c ****     }
+ 303              		.loc 1 28 16 view .LVU74
  304 0088 0020     		movs	r0, #0
  305              	.LVL28:
  306              	.L15:
-  43:Src/capture.c **** 
- 307              		.loc 1 43 1 view .LVU75
+  41:Src/capture.c **** 
+ 307              		.loc 1 41 1 view .LVU75
  308 008a 70BD     		pop	{r4, r5, r6, pc}
  309              	.LVL29:
  310              	.L22:
-  30:Src/capture.c ****     }
- 311              		.loc 1 30 16 view .LVU76
+  28:Src/capture.c ****     }
+ 311              		.loc 1 28 16 view .LVU76
  312 008c 0020     		movs	r0, #0
  313 008e FCE7     		b	.L15
  314              	.L23:
@@ -478,35 +476,35 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  316 0092 FAE7     		b	.L15
  317              	.L24:
  318 0094 0020     		movs	r0, #0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 9
-
-
  319 0096 F8E7     		b	.L15
  320              	.L25:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 9
+
+
  321 0098 0020     		movs	r0, #0
  322 009a F6E7     		b	.L15
  323              	.L26:
-  32:Src/capture.c ****     const char *p = name + 6;
- 324              		.loc 1 32 84 discriminator 2 view .LVU77
+  30:Src/capture.c ****     const char *p = name + 6;
+ 324              		.loc 1 30 84 discriminator 2 view .LVU77
  325 009c 0020     		movs	r0, #0
  326 009e F4E7     		b	.L15
  327              	.LVL30:
  328              	.L27:
-  34:Src/capture.c ****     uint32_t id = 0;
- 329              		.loc 1 34 26 discriminator 1 view .LVU78
+  32:Src/capture.c ****     uint32_t id = 0;
+ 329              		.loc 1 32 26 discriminator 1 view .LVU78
  330 00a0 0020     		movs	r0, #0
  331              	.LVL31:
-  34:Src/capture.c ****     uint32_t id = 0;
- 332              		.loc 1 34 26 discriminator 1 view .LVU79
+  32:Src/capture.c ****     uint32_t id = 0;
+ 332              		.loc 1 32 26 discriminator 1 view .LVU79
  333 00a2 F2E7     		b	.L15
  334              	.LVL32:
  335              	.L28:
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 336              		.loc 1 37 42 discriminator 1 view .LVU80
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 336              		.loc 1 35 42 discriminator 1 view .LVU80
  337 00a4 0020     		movs	r0, #0
  338              	.LVL33:
-  37:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
- 339              		.loc 1 37 42 discriminator 1 view .LVU81
+  35:Src/capture.c ****         id = id * 10 + (uint32_t)(*p - '0');
+ 339              		.loc 1 35 42 discriminator 1 view .LVU81
  340 00a6 F0E7     		b	.L15
  341              	.L32:
  342              		.align	2
@@ -526,8 +524,8 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  357              		.thumb_func
  359              	find_next_photo_id:
  360              	.LFB149:
-  46:Src/capture.c ****     DIR dir;
- 361              		.loc 1 46 1 is_stmt 1 view -0
+  44:Src/capture.c ****     DIR dir;
+ 361              		.loc 1 44 1 is_stmt 1 view -0
  362              		.cfi_startproc
  363              		@ args = 0, pretend = 0, frame = 80
  364              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -538,111 +536,111 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  369              		.cfi_offset 14, -4
  370 0002 94B0     		sub	sp, sp, #80
  371              	.LCFI6:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 10
-
-
  372              		.cfi_def_cfa_offset 88
-  47:Src/capture.c ****     FILINFO finfo;
- 373              		.loc 1 47 5 view .LVU83
-  48:Src/capture.c ****     uint32_t max_id = 0;
- 374              		.loc 1 48 5 view .LVU84
-  49:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
- 375              		.loc 1 49 5 view .LVU85
+  45:Src/capture.c ****     FILINFO finfo;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 10
+
+
+ 373              		.loc 1 45 5 view .LVU83
+  46:Src/capture.c ****     uint32_t max_id = 0;
+ 374              		.loc 1 46 5 view .LVU84
+  47:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
+ 375              		.loc 1 47 5 view .LVU85
  376              	.LVL34:
-  50:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
- 377              		.loc 1 50 5 view .LVU86
-  50:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
- 378              		.loc 1 50 9 is_stmt 0 view .LVU87
+  48:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
+ 377              		.loc 1 48 5 view .LVU86
+  48:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
+ 378              		.loc 1 48 9 is_stmt 0 view .LVU87
  379 0004 1549     		ldr	r1, .L41
  380 0006 08A8     		add	r0, sp, #32
  381 0008 FFF7FEFF 		bl	f_opendir
  382              	.LVL35:
-  50:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
- 383              		.loc 1 50 8 discriminator 1 view .LVU88
+  48:Src/capture.c ****         while (f_readdir(&dir, &finfo) == FR_OK && finfo.fname[0]) {
+ 383              		.loc 1 48 8 discriminator 1 view .LVU88
  384 000c 08B1     		cbz	r0, .L39
-  49:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
- 385              		.loc 1 49 14 view .LVU89
+  47:Src/capture.c ****     if (f_opendir(&dir, "/") == FR_OK) {
+ 385              		.loc 1 47 14 view .LVU89
  386 000e 0024     		movs	r4, #0
  387 0010 19E0     		b	.L35
  388              	.L39:
  389 0012 0024     		movs	r4, #0
  390              	.LVL36:
  391              	.L34:
-  51:Src/capture.c ****             uint32_t id = 0;
- 392              		.loc 1 51 49 is_stmt 1 view .LVU90
-  51:Src/capture.c ****             uint32_t id = 0;
- 393              		.loc 1 51 16 is_stmt 0 view .LVU91
+  49:Src/capture.c ****             uint32_t id = 0;
+ 392              		.loc 1 49 49 is_stmt 1 view .LVU90
+  49:Src/capture.c ****             uint32_t id = 0;
+ 393              		.loc 1 49 16 is_stmt 0 view .LVU91
  394 0014 02A9     		add	r1, sp, #8
  395 0016 08A8     		add	r0, sp, #32
  396 0018 FFF7FEFF 		bl	f_readdir
  397              	.LVL37:
-  51:Src/capture.c ****             uint32_t id = 0;
- 398              		.loc 1 51 49 discriminator 1 view .LVU92
+  49:Src/capture.c ****             uint32_t id = 0;
+ 398              		.loc 1 49 49 discriminator 1 view .LVU92
  399 001c 80B9     		cbnz	r0, .L37
-  51:Src/capture.c ****             uint32_t id = 0;
- 400              		.loc 1 51 63 discriminator 1 view .LVU93
+  49:Src/capture.c ****             uint32_t id = 0;
+ 400              		.loc 1 49 63 discriminator 1 view .LVU93
  401 001e 9DF81130 		ldrb	r3, [sp, #17]	@ zero_extendqisi2
-  51:Src/capture.c ****             uint32_t id = 0;
- 402              		.loc 1 51 49 discriminator 1 view .LVU94
+  49:Src/capture.c ****             uint32_t id = 0;
+ 402              		.loc 1 49 49 discriminator 1 view .LVU94
  403 0022 6BB1     		cbz	r3, .L37
  404              	.LBB3:
-  52:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
- 405              		.loc 1 52 13 is_stmt 1 view .LVU95
-  52:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
- 406              		.loc 1 52 22 is_stmt 0 view .LVU96
+  50:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
+ 405              		.loc 1 50 13 is_stmt 1 view .LVU95
+  50:Src/capture.c ****             if (parse_photo_id(finfo.fname, &id) && id >= max_id) {
+ 406              		.loc 1 50 22 is_stmt 0 view .LVU96
  407 0024 0023     		movs	r3, #0
  408 0026 0193     		str	r3, [sp, #4]
-  53:Src/capture.c ****                 max_id = id + 1;
- 409              		.loc 1 53 13 is_stmt 1 view .LVU97
-  53:Src/capture.c ****                 max_id = id + 1;
- 410              		.loc 1 53 17 is_stmt 0 view .LVU98
+  51:Src/capture.c ****                 max_id = id + 1;
+ 409              		.loc 1 51 13 is_stmt 1 view .LVU97
+  51:Src/capture.c ****                 max_id = id + 1;
+ 410              		.loc 1 51 17 is_stmt 0 view .LVU98
  411 0028 01A9     		add	r1, sp, #4
  412 002a 0DF11100 		add	r0, sp, #17
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 11
-
-
  413 002e FFF7FEFF 		bl	parse_photo_id
  414              	.LVL38:
-  53:Src/capture.c ****                 max_id = id + 1;
- 415              		.loc 1 53 16 discriminator 1 view .LVU99
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 11
+
+
+  51:Src/capture.c ****                 max_id = id + 1;
+ 415              		.loc 1 51 16 discriminator 1 view .LVU99
  416 0032 0028     		cmp	r0, #0
  417 0034 EED0     		beq	.L34
-  53:Src/capture.c ****                 max_id = id + 1;
- 418              		.loc 1 53 56 discriminator 1 view .LVU100
+  51:Src/capture.c ****                 max_id = id + 1;
+ 418              		.loc 1 51 56 discriminator 1 view .LVU100
  419 0036 019B     		ldr	r3, [sp, #4]
-  53:Src/capture.c ****                 max_id = id + 1;
- 420              		.loc 1 53 50 discriminator 1 view .LVU101
+  51:Src/capture.c ****                 max_id = id + 1;
+ 420              		.loc 1 51 50 discriminator 1 view .LVU101
  421 0038 A342     		cmp	r3, r4
  422 003a EBD3     		bcc	.L34
-  54:Src/capture.c ****             }
- 423              		.loc 1 54 17 is_stmt 1 view .LVU102
-  54:Src/capture.c ****             }
- 424              		.loc 1 54 24 is_stmt 0 view .LVU103
+  52:Src/capture.c ****             }
+ 423              		.loc 1 52 17 is_stmt 1 view .LVU102
+  52:Src/capture.c ****             }
+ 424              		.loc 1 52 24 is_stmt 0 view .LVU103
  425 003c 5C1C     		adds	r4, r3, #1
  426              	.LVL39:
-  54:Src/capture.c ****             }
- 427              		.loc 1 54 24 view .LVU104
+  52:Src/capture.c ****             }
+ 427              		.loc 1 52 24 view .LVU104
  428 003e E9E7     		b	.L34
  429              	.L37:
-  54:Src/capture.c ****             }
- 430              		.loc 1 54 24 view .LVU105
+  52:Src/capture.c ****             }
+ 430              		.loc 1 52 24 view .LVU105
  431              	.LBE3:
-  57:Src/capture.c ****     }
- 432              		.loc 1 57 9 is_stmt 1 view .LVU106
+  55:Src/capture.c ****     }
+ 432              		.loc 1 55 9 is_stmt 1 view .LVU106
  433 0040 08A8     		add	r0, sp, #32
  434 0042 FFF7FEFF 		bl	f_closedir
  435              	.LVL40:
  436              	.L35:
-  59:Src/capture.c **** }
- 437              		.loc 1 59 5 view .LVU107
-  59:Src/capture.c **** }
- 438              		.loc 1 59 19 is_stmt 0 view .LVU108
+  57:Src/capture.c **** }
+ 437              		.loc 1 57 5 view .LVU107
+  57:Src/capture.c **** }
+ 438              		.loc 1 57 19 is_stmt 0 view .LVU108
  439 0046 6309     		lsrs	r3, r4, #5
  440 0048 054A     		ldr	r2, .L41+4
  441 004a A2FB0323 		umull	r2, r3, r2, r3
  442 004e DB09     		lsrs	r3, r3, #7
-  60:Src/capture.c **** 
- 443              		.loc 1 60 1 view .LVU109
+  58:Src/capture.c **** 
+ 443              		.loc 1 58 1 view .LVU109
  444 0050 0448     		ldr	r0, .L41+8
  445 0052 00FB1340 		mls	r0, r0, r3, r4
  446 0056 14B0     		add	sp, sp, #80
@@ -652,17 +650,17 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  450 0058 10BD     		pop	{r4, pc}
  451              	.LVL41:
  452              	.L42:
-  60:Src/capture.c **** 
- 453              		.loc 1 60 1 view .LVU110
+  58:Src/capture.c **** 
+ 453              		.loc 1 58 1 view .LVU110
  454 005a 00BF     		.align	2
  455              	.L41:
  456 005c 00000000 		.word	.LC3
  457 0060 C55A7C0A 		.word	175921861
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 12
-
-
  458 0064 A0860100 		.word	100000
  459              		.cfi_endproc
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 12
+
+
  460              	.LFE149:
  462              		.section	.rodata.take_A_Picture.str1.4,"aMS",%progbits,1
  463              		.align	2
@@ -718,11 +716,11 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  487 0089 000000   		.align	2
  488              	.LC12:
  489 008c 57616974 		.ascii	"Waiting VSYNC...\000"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 13
-
-
  489      696E6720 
  489      5653594E 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 13
+
+
  489      432E2E2E 
  489      00
  490 009d 000000   		.align	2
@@ -778,11 +776,11 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  514              		.align	2
  515              	.LC21:
  516 013c 454F4920 		.ascii	"EOI at: %lu\000"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 14
-
-
  516      61743A20 
  516      256C7500 
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 14
+
+
  517              		.align	2
  518              	.LC22:
  519 0148 53697A65 		.ascii	"Size: %lu bytes\000"
@@ -831,18 +829,18 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  542              	take_A_Picture:
  543              	.LVL42:
  544              	.LFB151:
-  76:Src/capture.c **** uint8_t take_A_Picture(DCMI_HandleTypeDef *hdcmi)
-  77:Src/capture.c **** {
- 545              		.loc 1 77 1 is_stmt 1 view -0
+  74:Src/capture.c **** uint8_t take_A_Picture(DCMI_HandleTypeDef *hdcmi)
+  75:Src/capture.c **** {
+ 545              		.loc 1 75 1 is_stmt 1 view -0
  546              		.cfi_startproc
  547              		@ args = 0, pretend = 0, frame = 672
  548              		@ frame_needed = 0, uses_anonymous_args = 0
- 549              		.loc 1 77 1 is_stmt 0 view .LVU112
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 15
-
-
+ 549              		.loc 1 75 1 is_stmt 0 view .LVU112
  550 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
  551              	.LCFI8:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 15
+
+
  552              		.cfi_def_cfa_offset 28
  553              		.cfi_offset 4, -28
  554              		.cfi_offset 5, -24
@@ -855,234 +853,234 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  561              	.LCFI9:
  562              		.cfi_def_cfa_offset 712
  563 0008 0646     		mov	r6, r0
-  78:Src/capture.c ****     FIL file;
- 564              		.loc 1 78 5 is_stmt 1 view .LVU113
-  79:Src/capture.c ****     FRESULT res;
- 565              		.loc 1 79 5 view .LVU114
-  80:Src/capture.c ****     uint32_t f_begin = 0, f_end = 0, sublen;
- 566              		.loc 1 80 5 view .LVU115
+  76:Src/capture.c ****     FIL file;
+ 564              		.loc 1 76 5 is_stmt 1 view .LVU113
+  77:Src/capture.c ****     FRESULT res;
+ 565              		.loc 1 77 5 view .LVU114
+  78:Src/capture.c ****     uint32_t f_begin = 0, f_end = 0, sublen;
+ 566              		.loc 1 78 5 view .LVU115
  567              	.LVL43:
-  81:Src/capture.c ****     uint16_t f_count, r;
- 568              		.loc 1 81 5 view .LVU116
-  82:Src/capture.c ****     UINT bw;
- 569              		.loc 1 82 5 view .LVU117
-  83:Src/capture.c ****     uint8_t picture_ok = 0;
- 570              		.loc 1 83 5 view .LVU118
-  84:Src/capture.c ****     uint8_t headerFinder = 0;
- 571              		.loc 1 84 5 view .LVU119
-  85:Src/capture.c ****     char msg[50];
- 572              		.loc 1 85 5 view .LVU120
-  86:Src/capture.c **** 
-  87:Src/capture.c ****     char fn[32];
- 573              		.loc 1 87 5 view .LVU121
-  88:Src/capture.c ****     if (!ensure_sd_mounted()) {
- 574              		.loc 1 88 5 view .LVU122
- 575              		.loc 1 88 10 is_stmt 0 view .LVU123
+  79:Src/capture.c ****     uint16_t f_count, r;
+ 568              		.loc 1 79 5 view .LVU116
+  80:Src/capture.c ****     UINT bw;
+ 569              		.loc 1 80 5 view .LVU117
+  81:Src/capture.c ****     uint8_t picture_ok = 0;
+ 570              		.loc 1 81 5 view .LVU118
+  82:Src/capture.c ****     uint8_t headerFinder = 0;
+ 571              		.loc 1 82 5 view .LVU119
+  83:Src/capture.c ****     char msg[50];
+ 572              		.loc 1 83 5 view .LVU120
+  84:Src/capture.c **** 
+  85:Src/capture.c ****     char fn[32];
+ 573              		.loc 1 85 5 view .LVU121
+  86:Src/capture.c ****     if (!ensure_sd_mounted()) {
+ 574              		.loc 1 86 5 view .LVU122
+ 575              		.loc 1 86 10 is_stmt 0 view .LVU123
  576 000a FFF7FEFF 		bl	ensure_sd_mounted
  577              	.LVL44:
- 578              		.loc 1 88 8 discriminator 1 view .LVU124
+ 578              		.loc 1 86 8 discriminator 1 view .LVU124
  579 000e 28B9     		cbnz	r0, .L83
-  89:Src/capture.c ****         return 0;
- 580              		.loc 1 89 16 view .LVU125
+  87:Src/capture.c ****         return 0;
+ 580              		.loc 1 87 16 view .LVU125
  581 0010 0025     		movs	r5, #0
  582              	.LVL45:
  583              	.L44:
-  90:Src/capture.c ****     }
-  91:Src/capture.c ****     FILINFO finfo;
-  92:Src/capture.c ****     /* Find next free PHOTO_%05u.jpeg slot (0-99999), start from current max+1.
-  93:Src/capture.c ****        If long filenames are unsupported (FR_INVALID_NAME), fall back to 8.3 P#####.JPG. */
-  94:Src/capture.c ****     photo_id = find_next_photo_id();
-  95:Src/capture.c ****     uint32_t attempts = 0;
-  96:Src/capture.c ****     int use_short_name = 0;
-  97:Src/capture.c ****     FRESULT stat_res;
-  98:Src/capture.c ****     while (attempts < 100000) {
-  99:Src/capture.c ****         if (use_short_name) {
- 100:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 16
+  88:Src/capture.c ****     }
+  89:Src/capture.c ****     FILINFO finfo;
+  90:Src/capture.c ****     /* Find next free PHOTO_%05u.jpeg slot (0-99999), start from current max+1.
+  91:Src/capture.c ****        If long filenames are unsupported (FR_INVALID_NAME), fall back to 8.3 P#####.JPG. */
+  92:Src/capture.c ****     photo_id = find_next_photo_id();
+  93:Src/capture.c ****     uint32_t attempts = 0;
+  94:Src/capture.c ****     int use_short_name = 0;
+  95:Src/capture.c ****     FRESULT stat_res;
+  96:Src/capture.c ****     while (attempts < 100000) {
+  97:Src/capture.c ****         if (use_short_name) {
+  98:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
+  99:Src/capture.c ****         } else {
+ 100:Src/capture.c ****             sprintf(fn, "PHOTO_%05lu.jpeg", photo_id % 100000);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 16
 
 
- 101:Src/capture.c ****         } else {
- 102:Src/capture.c ****             sprintf(fn, "PHOTO_%05lu.jpeg", photo_id % 100000);
- 103:Src/capture.c ****         }
- 104:Src/capture.c ****         stat_res = f_stat(fn, &finfo);
- 105:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
- 106:Src/capture.c ****             // Long filenames not supported; switch to short names
- 107:Src/capture.c ****             use_short_name = 1;
- 108:Src/capture.c ****             attempts = 0;
- 109:Src/capture.c ****             continue;
- 110:Src/capture.c ****         }
- 111:Src/capture.c ****         if (stat_res != FR_OK) {
- 112:Src/capture.c ****             break; // free name found
- 113:Src/capture.c ****         }
- 114:Src/capture.c ****         photo_id = (photo_id + 1) % 100000;
- 115:Src/capture.c ****         attempts++;
- 116:Src/capture.c ****     }
- 117:Src/capture.c ****     if (attempts >= 100000) {
- 118:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
- 119:Src/capture.c ****         return 0;
- 120:Src/capture.c ****     }
- 121:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Creating file...");
- 122:Src/capture.c **** 
- 123:Src/capture.c ****     res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
- 124:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
- 125:Src/capture.c ****         // Retry with short name if long name creation fails
- 126:Src/capture.c ****         sprintf(fn, "P%05lu.JPG", photo_id % 100000);
- 127:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
- 128:Src/capture.c ****     }
- 129:Src/capture.c ****     if(res != FR_OK) {
- 130:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
- 131:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 132:Src/capture.c ****         return 0;
- 133:Src/capture.c ****     }
- 134:Src/capture.c ****     photo_id = (photo_id + 1) % 100000;
- 135:Src/capture.c **** 
- 136:Src/capture.c ****     // Stop any ongoing capture and reset flags
- 137:Src/capture.c ****     HAL_DCMI_Stop(hdcmi);
- 138:Src/capture.c ****     HAL_Delay(50);
- 139:Src/capture.c ****     DCMI_FrameIsReady = 0;
- 140:Src/capture.c ****     DCMI_CallbackCount = 0;
- 141:Src/capture.c ****     DCMI_VsyncFlag = 0;
- 142:Src/capture.c **** 
- 143:Src/capture.c ****     // Initialize camera in JPEG mode
- 144:Src/capture.c ****     Camera_Picture_Device(&hi2c1);
- 145:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Init camera...");
- 146:Src/capture.c ****     HAL_Delay(500);
- 147:Src/capture.c **** 
- 148:Src/capture.c ****     // Clear buffer
- 149:Src/capture.c ****     memset(pBuff, 0, MAX_PICTURE_BUFF);
- 150:Src/capture.c **** 
- 151:Src/capture.c ****     // **CORRECTED: Clear and enable BOTH VSYNC and FRAME interrupts**
- 152:Src/capture.c ****     __HAL_DCMI_CLEAR_FLAG(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
- 153:Src/capture.c ****     __HAL_DCMI_ENABLE_IT(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
+ 101:Src/capture.c ****         }
+ 102:Src/capture.c ****         stat_res = f_stat(fn, &finfo);
+ 103:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
+ 104:Src/capture.c ****             // Long filenames not supported; switch to short names
+ 105:Src/capture.c ****             use_short_name = 1;
+ 106:Src/capture.c ****             attempts = 0;
+ 107:Src/capture.c ****             continue;
+ 108:Src/capture.c ****         }
+ 109:Src/capture.c ****         if (stat_res != FR_OK) {
+ 110:Src/capture.c ****             break; // free name found
+ 111:Src/capture.c ****         }
+ 112:Src/capture.c ****         photo_id = (photo_id + 1) % 100000;
+ 113:Src/capture.c ****         attempts++;
+ 114:Src/capture.c ****     }
+ 115:Src/capture.c ****     if (attempts >= 100000) {
+ 116:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
+ 117:Src/capture.c ****         return 0;
+ 118:Src/capture.c ****     }
+ 119:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Creating file...");
+ 120:Src/capture.c **** 
+ 121:Src/capture.c ****     res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
+ 122:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
+ 123:Src/capture.c ****         // Retry with short name if long name creation fails
+ 124:Src/capture.c ****         sprintf(fn, "P%05lu.JPG", photo_id % 100000);
+ 125:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
+ 126:Src/capture.c ****     }
+ 127:Src/capture.c ****     if(res != FR_OK) {
+ 128:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
+ 129:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 130:Src/capture.c ****         return 0;
+ 131:Src/capture.c ****     }
+ 132:Src/capture.c ****     photo_id = (photo_id + 1) % 100000;
+ 133:Src/capture.c **** 
+ 134:Src/capture.c ****     // Stop any ongoing capture and reset flags
+ 135:Src/capture.c ****     HAL_DCMI_Stop(hdcmi);
+ 136:Src/capture.c ****     HAL_Delay(50);
+ 137:Src/capture.c ****     DCMI_FrameIsReady = 0;
+ 138:Src/capture.c ****     DCMI_CallbackCount = 0;
+ 139:Src/capture.c ****     DCMI_VsyncFlag = 0;
+ 140:Src/capture.c **** 
+ 141:Src/capture.c ****     // Initialize camera in JPEG mode
+ 142:Src/capture.c ****     Camera_Picture_Device(&hi2c1);
+ 143:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Init camera...");
+ 144:Src/capture.c ****     HAL_Delay(500);
+ 145:Src/capture.c **** 
+ 146:Src/capture.c ****     // Clear buffer
+ 147:Src/capture.c ****     memset(pBuff, 0, MAX_PICTURE_BUFF);
+ 148:Src/capture.c **** 
+ 149:Src/capture.c ****     // **CORRECTED: Clear and enable BOTH VSYNC and FRAME interrupts**
+ 150:Src/capture.c ****     __HAL_DCMI_CLEAR_FLAG(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
+ 151:Src/capture.c ****     __HAL_DCMI_ENABLE_IT(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
+ 152:Src/capture.c **** 
+ 153:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Starting DMA...");
  154:Src/capture.c **** 
- 155:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Starting DMA...");
- 156:Src/capture.c **** 
- 157:Src/capture.c ****     // **CORRECTED: Start DMA FIRST, then wait for VSYNC**
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 17
+ 155:Src/capture.c ****     // **CORRECTED: Start DMA FIRST, then wait for VSYNC**
+ 156:Src/capture.c ****     if(HAL_DCMI_Start_DMA(hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)pBuff, MAX_PICTURE_BUFF / 4) != HAL_
+ 157:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 17
 
 
- 158:Src/capture.c ****     if(HAL_DCMI_Start_DMA(hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)pBuff, MAX_PICTURE_BUFF / 4) != HAL_
- 159:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
- 160:Src/capture.c ****         f_close(&file);
- 161:Src/capture.c ****         return 0;
- 162:Src/capture.c ****     }
- 163:Src/capture.c **** 
- 164:Src/capture.c ****     // **CORRECTED: Wait for VSYNC (frame start)**
- 165:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Waiting VSYNC...");
- 166:Src/capture.c ****     uint32_t vsync_timeout = 0;
- 167:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
- 168:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
- 169:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
- 170:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 171:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
- 172:Src/capture.c ****             f_close(&file);
- 173:Src/capture.c ****             return 0;
- 174:Src/capture.c ****         }
- 175:Src/capture.c ****         HAL_Delay(1);
- 176:Src/capture.c ****     }
- 177:Src/capture.c **** 
- 178:Src/capture.c ****     // VSYNC detected - frame has started
- 179:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"VSYNC OK - Capturing...");
- 180:Src/capture.c **** 
- 181:Src/capture.c ****     // **CORRECTED: Now wait for FRAME complete (end of frame)**
- 182:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)"Waiting frame...");
- 183:Src/capture.c ****     uint32_t frame_timeout = 0;
- 184:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
- 185:Src/capture.c ****         if(frame_timeout % 200 == 0) {
- 186:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
- 187:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 188:Src/capture.c ****         }
- 189:Src/capture.c ****         
- 190:Src/capture.c ****         if(frame_timeout++ > 3000) {  // 3 second timeout for frame completion
- 191:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
- 192:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 193:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
- 194:Src/capture.c ****             f_close(&file);
- 195:Src/capture.c ****             return 0;
- 196:Src/capture.c ****         }
- 197:Src/capture.c ****         HAL_Delay(1);
- 198:Src/capture.c ****     }
- 199:Src/capture.c **** 
- 200:Src/capture.c ****     // Frame complete - stop capture
- 201:Src/capture.c ****     HAL_DCMI_Stop(hdcmi);
- 202:Src/capture.c ****     HAL_Delay(10);
- 203:Src/capture.c **** 
- 204:Src/capture.c ****     // Rest of your JPEG processing code remains the same...
- 205:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Scanning buffer...");
- 206:Src/capture.c **** 
- 207:Src/capture.c ****     // Check first few bytes
- 208:Src/capture.c ****     sprintf(msg, "First bytes: %02X %02X %02X %02X", pBuff[0], pBuff[1], pBuff[2], pBuff[3]);
- 209:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 210:Src/capture.c ****     HAL_Delay(1000);
- 211:Src/capture.c **** 
- 212:Src/capture.c ****     // Scan for JPEG markers
- 213:Src/capture.c ****     for(uint32_t idx = 0; idx < MAX_PICTURE_BUFF - 1; idx++) {
- 214:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 18
+ 158:Src/capture.c ****         f_close(&file);
+ 159:Src/capture.c ****         return 0;
+ 160:Src/capture.c ****     }
+ 161:Src/capture.c **** 
+ 162:Src/capture.c ****     // **CORRECTED: Wait for VSYNC (frame start)**
+ 163:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Waiting VSYNC...");
+ 164:Src/capture.c ****     uint32_t vsync_timeout = 0;
+ 165:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
+ 166:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
+ 167:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
+ 168:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 169:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
+ 170:Src/capture.c ****             f_close(&file);
+ 171:Src/capture.c ****             return 0;
+ 172:Src/capture.c ****         }
+ 173:Src/capture.c ****         HAL_Delay(1);
+ 174:Src/capture.c ****     }
+ 175:Src/capture.c **** 
+ 176:Src/capture.c ****     // VSYNC detected - frame has started
+ 177:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"VSYNC OK - Capturing...");
+ 178:Src/capture.c **** 
+ 179:Src/capture.c ****     // **CORRECTED: Now wait for FRAME complete (end of frame)**
+ 180:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)"Waiting frame...");
+ 181:Src/capture.c ****     uint32_t frame_timeout = 0;
+ 182:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
+ 183:Src/capture.c ****         if(frame_timeout % 200 == 0) {
+ 184:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
+ 185:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 186:Src/capture.c ****         }
+ 187:Src/capture.c ****         
+ 188:Src/capture.c ****         if(frame_timeout++ > 3000) {  // 3 second timeout for frame completion
+ 189:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
+ 190:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 191:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
+ 192:Src/capture.c ****             f_close(&file);
+ 193:Src/capture.c ****             return 0;
+ 194:Src/capture.c ****         }
+ 195:Src/capture.c ****         HAL_Delay(1);
+ 196:Src/capture.c ****     }
+ 197:Src/capture.c **** 
+ 198:Src/capture.c ****     // Frame complete - stop capture
+ 199:Src/capture.c ****     HAL_DCMI_Stop(hdcmi);
+ 200:Src/capture.c ****     HAL_Delay(10);
+ 201:Src/capture.c **** 
+ 202:Src/capture.c ****     // Rest of your JPEG processing code remains the same...
+ 203:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Scanning buffer...");
+ 204:Src/capture.c **** 
+ 205:Src/capture.c ****     // Check first few bytes
+ 206:Src/capture.c ****     sprintf(msg, "First bytes: %02X %02X %02X %02X", pBuff[0], pBuff[1], pBuff[2], pBuff[3]);
+ 207:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 208:Src/capture.c ****     HAL_Delay(1000);
+ 209:Src/capture.c **** 
+ 210:Src/capture.c ****     // Scan for JPEG markers
+ 211:Src/capture.c ****     for(uint32_t idx = 0; idx < MAX_PICTURE_BUFF - 1; idx++) {
+ 212:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 213:Src/capture.c ****             headerFinder = 1;
+ 214:Src/capture.c ****             f_begin = idx;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 18
 
 
- 215:Src/capture.c ****             headerFinder = 1;
- 216:Src/capture.c ****             f_begin = idx;
- 217:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
- 218:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 219:Src/capture.c ****         }
- 220:Src/capture.c ****         if(headerFinder == 1 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD9) {
- 221:Src/capture.c ****             f_end = idx + 1;
- 222:Src/capture.c ****             picture_ok = 1;
- 223:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 224:Src/capture.c ****             LCD_ShowString(0, 86, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 225:Src/capture.c **** 
- 226:Src/capture.c ****             uint8_t *buff = pBuff + f_begin;
- 227:Src/capture.c ****             sublen = f_end - f_begin + 1;
- 228:Src/capture.c **** 
- 229:Src/capture.c ****             sprintf(msg, "Size: %lu bytes", sublen);
- 230:Src/capture.c ****             LCD_ShowString(0, 98, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 231:Src/capture.c **** 
- 232:Src/capture.c ****             f_count = sublen / 512;
- 233:Src/capture.c ****             r = sublen % 512;
- 234:Src/capture.c **** 
- 235:Src/capture.c ****             for(int i = 0; i < f_count; i++) {
- 236:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 237:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
- 238:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 239:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 240:Src/capture.c ****                 }
- 241:Src/capture.c ****                 buff += 512;
- 242:Src/capture.c ****             }
- 243:Src/capture.c ****             if(r > 0) {
- 244:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
- 245:Src/capture.c ****                 if(res != FR_OK || bw != r) {
- 246:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
- 247:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 248:Src/capture.c ****                 }
- 249:Src/capture.c ****             }
- 250:Src/capture.c ****             break;
- 251:Src/capture.c ****         }
- 252:Src/capture.c ****     }
+ 215:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
+ 216:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 217:Src/capture.c ****         }
+ 218:Src/capture.c ****         if(headerFinder == 1 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD9) {
+ 219:Src/capture.c ****             f_end = idx + 1;
+ 220:Src/capture.c ****             picture_ok = 1;
+ 221:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 222:Src/capture.c ****             LCD_ShowString(0, 86, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 223:Src/capture.c **** 
+ 224:Src/capture.c ****             uint8_t *buff = pBuff + f_begin;
+ 225:Src/capture.c ****             sublen = f_end - f_begin + 1;
+ 226:Src/capture.c **** 
+ 227:Src/capture.c ****             sprintf(msg, "Size: %lu bytes", sublen);
+ 228:Src/capture.c ****             LCD_ShowString(0, 98, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 229:Src/capture.c **** 
+ 230:Src/capture.c ****             f_count = sublen / 512;
+ 231:Src/capture.c ****             r = sublen % 512;
+ 232:Src/capture.c **** 
+ 233:Src/capture.c ****             for(int i = 0; i < f_count; i++) {
+ 234:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 235:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
+ 236:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 237:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 238:Src/capture.c ****                 }
+ 239:Src/capture.c ****                 buff += 512;
+ 240:Src/capture.c ****             }
+ 241:Src/capture.c ****             if(r > 0) {
+ 242:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
+ 243:Src/capture.c ****                 if(res != FR_OK || bw != r) {
+ 244:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
+ 245:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 246:Src/capture.c ****                 }
+ 247:Src/capture.c ****             }
+ 248:Src/capture.c ****             break;
+ 249:Src/capture.c ****         }
+ 250:Src/capture.c ****     }
+ 251:Src/capture.c **** 
+ 252:Src/capture.c ****     f_close(&file);
  253:Src/capture.c **** 
- 254:Src/capture.c ****     f_close(&file);
- 255:Src/capture.c **** 
- 256:Src/capture.c ****     if(!picture_ok) {
- 257:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
- 258:Src/capture.c ****         uint32_t non_zero = 0;
- 259:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
- 260:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 261:Src/capture.c ****         }
- 262:Src/capture.c ****         sprintf(msg, "Non-zero: %lu/1000", non_zero);
- 263:Src/capture.c ****         LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 264:Src/capture.c ****     } else {
- 265:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Picture saved!");
- 266:Src/capture.c ****     }
+ 254:Src/capture.c ****     if(!picture_ok) {
+ 255:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
+ 256:Src/capture.c ****         uint32_t non_zero = 0;
+ 257:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
+ 258:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 259:Src/capture.c ****         }
+ 260:Src/capture.c ****         sprintf(msg, "Non-zero: %lu/1000", non_zero);
+ 261:Src/capture.c ****         LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 262:Src/capture.c ****     } else {
+ 263:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Picture saved!");
+ 264:Src/capture.c ****     }
+ 265:Src/capture.c **** 
+ 266:Src/capture.c ****     HAL_Delay(500);
  267:Src/capture.c **** 
- 268:Src/capture.c ****     HAL_Delay(500);
- 269:Src/capture.c **** 
- 270:Src/capture.c ****     return picture_ok;
- 271:Src/capture.c **** }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 19
-
-
- 584              		.loc 1 271 1 view .LVU126
+ 268:Src/capture.c ****     return picture_ok;
+ 269:Src/capture.c **** }
+ 584              		.loc 1 269 1 view .LVU126
  585 0012 2846     		mov	r0, r5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 19
+
+
  586 0014 0DF52B7D 		add	sp, sp, #684
  587              	.LCFI10:
  588              		.cfi_remember_state
@@ -1093,40 +1091,40 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  593              	.L83:
  594              	.LCFI11:
  595              		.cfi_restore_state
-  91:Src/capture.c ****     /* Find next free PHOTO_%05u.jpeg slot (0-99999), start from current max+1.
- 596              		.loc 1 91 5 is_stmt 1 view .LVU127
-  94:Src/capture.c ****     uint32_t attempts = 0;
- 597              		.loc 1 94 5 view .LVU128
-  94:Src/capture.c ****     uint32_t attempts = 0;
- 598              		.loc 1 94 16 is_stmt 0 view .LVU129
+  89:Src/capture.c ****     /* Find next free PHOTO_%05u.jpeg slot (0-99999), start from current max+1.
+ 596              		.loc 1 89 5 is_stmt 1 view .LVU127
+  92:Src/capture.c ****     uint32_t attempts = 0;
+ 597              		.loc 1 92 5 view .LVU128
+  92:Src/capture.c ****     uint32_t attempts = 0;
+ 598              		.loc 1 92 16 is_stmt 0 view .LVU129
  599 001c FFF7FEFF 		bl	find_next_photo_id
  600              	.LVL47:
-  94:Src/capture.c ****     uint32_t attempts = 0;
- 601              		.loc 1 94 14 discriminator 1 view .LVU130
+  92:Src/capture.c ****     uint32_t attempts = 0;
+ 601              		.loc 1 92 14 discriminator 1 view .LVU130
  602 0020 A24B     		ldr	r3, .L95
  603 0022 1860     		str	r0, [r3]
-  95:Src/capture.c ****     int use_short_name = 0;
- 604              		.loc 1 95 5 is_stmt 1 view .LVU131
+  93:Src/capture.c ****     int use_short_name = 0;
+ 604              		.loc 1 93 5 is_stmt 1 view .LVU131
  605              	.LVL48:
-  96:Src/capture.c ****     FRESULT stat_res;
- 606              		.loc 1 96 5 view .LVU132
-  97:Src/capture.c ****     while (attempts < 100000) {
- 607              		.loc 1 97 5 view .LVU133
-  98:Src/capture.c ****         if (use_short_name) {
- 608              		.loc 1 98 5 view .LVU134
-  96:Src/capture.c ****     FRESULT stat_res;
- 609              		.loc 1 96 9 is_stmt 0 view .LVU135
+  94:Src/capture.c ****     FRESULT stat_res;
+ 606              		.loc 1 94 5 view .LVU132
+  95:Src/capture.c ****     while (attempts < 100000) {
+ 607              		.loc 1 95 5 view .LVU133
+  96:Src/capture.c ****         if (use_short_name) {
+ 608              		.loc 1 96 5 view .LVU134
+  94:Src/capture.c ****     FRESULT stat_res;
+ 609              		.loc 1 94 9 is_stmt 0 view .LVU135
  610 0024 0025     		movs	r5, #0
-  95:Src/capture.c ****     int use_short_name = 0;
- 611              		.loc 1 95 14 view .LVU136
+  93:Src/capture.c ****     int use_short_name = 0;
+ 611              		.loc 1 93 14 view .LVU136
  612 0026 2C46     		mov	r4, r5
-  98:Src/capture.c ****         if (use_short_name) {
- 613              		.loc 1 98 11 view .LVU137
+  96:Src/capture.c ****         if (use_short_name) {
+ 613              		.loc 1 96 11 view .LVU137
  614 0028 27E0     		b	.L45
  615              	.LVL49:
  616              	.L46:
- 102:Src/capture.c ****         }
- 617              		.loc 1 102 13 is_stmt 1 view .LVU138
+ 100:Src/capture.c ****         }
+ 617              		.loc 1 100 13 is_stmt 1 view .LVU138
  618 002a A04B     		ldr	r3, .L95
  619 002c 1A68     		ldr	r2, [r3]
  620 002e 5309     		lsrs	r3, r2, #5
@@ -1138,82 +1136,82 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  626 003e 9E49     		ldr	r1, .L95+12
  627 0040 08A8     		add	r0, sp, #32
  628 0042 FFF7FEFF 		bl	sprintf
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 20
-
-
  629              	.LVL50:
  630              	.L47:
- 104:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
- 631              		.loc 1 104 9 view .LVU139
- 104:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
- 632              		.loc 1 104 20 is_stmt 0 view .LVU140
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 20
+
+
+ 102:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
+ 631              		.loc 1 102 9 view .LVU139
+ 102:Src/capture.c ****         if (stat_res == FR_INVALID_NAME && !use_short_name) {
+ 632              		.loc 1 102 20 is_stmt 0 view .LVU140
  633 0046 02A9     		add	r1, sp, #8
  634 0048 08A8     		add	r0, sp, #32
  635 004a FFF7FEFF 		bl	f_stat
  636              	.LVL51:
- 105:Src/capture.c ****             // Long filenames not supported; switch to short names
- 637              		.loc 1 105 9 is_stmt 1 view .LVU141
- 105:Src/capture.c ****             // Long filenames not supported; switch to short names
- 638              		.loc 1 105 44 is_stmt 0 view .LVU142
+ 103:Src/capture.c ****             // Long filenames not supported; switch to short names
+ 637              		.loc 1 103 9 is_stmt 1 view .LVU141
+ 103:Src/capture.c ****             // Long filenames not supported; switch to short names
+ 638              		.loc 1 103 44 is_stmt 0 view .LVU142
  639 004e 85F00103 		eor	r3, r5, #1
- 105:Src/capture.c ****             // Long filenames not supported; switch to short names
- 640              		.loc 1 105 41 view .LVU143
+ 103:Src/capture.c ****             // Long filenames not supported; switch to short names
+ 640              		.loc 1 103 41 view .LVU143
  641 0052 0628     		cmp	r0, #6
  642 0054 14BF     		ite	ne
  643 0056 0023     		movne	r3, #0
  644 0058 03F00103 		andeq	r3, r3, #1
- 105:Src/capture.c ****             // Long filenames not supported; switch to short names
- 645              		.loc 1 105 12 view .LVU144
+ 103:Src/capture.c ****             // Long filenames not supported; switch to short names
+ 645              		.loc 1 103 12 view .LVU144
  646 005c 0BBB     		cbnz	r3, .L79
- 111:Src/capture.c ****             break; // free name found
- 647              		.loc 1 111 9 is_stmt 1 view .LVU145
- 111:Src/capture.c ****             break; // free name found
- 648              		.loc 1 111 12 is_stmt 0 view .LVU146
+ 109:Src/capture.c ****             break; // free name found
+ 647              		.loc 1 109 9 is_stmt 1 view .LVU145
+ 109:Src/capture.c ****             break; // free name found
+ 648              		.loc 1 109 12 is_stmt 0 view .LVU146
  649 005e 18BB     		cbnz	r0, .L49
- 114:Src/capture.c ****         attempts++;
- 650              		.loc 1 114 9 is_stmt 1 view .LVU147
- 114:Src/capture.c ****         attempts++;
- 651              		.loc 1 114 30 is_stmt 0 view .LVU148
+ 112:Src/capture.c ****         attempts++;
+ 650              		.loc 1 112 9 is_stmt 1 view .LVU147
+ 112:Src/capture.c ****         attempts++;
+ 651              		.loc 1 112 30 is_stmt 0 view .LVU148
  652 0060 9249     		ldr	r1, .L95
  653 0062 0A68     		ldr	r2, [r1]
  654 0064 0132     		adds	r2, r2, #1
- 114:Src/capture.c ****         attempts++;
- 655              		.loc 1 114 35 view .LVU149
+ 112:Src/capture.c ****         attempts++;
+ 655              		.loc 1 112 35 view .LVU149
  656 0066 5309     		lsrs	r3, r2, #5
  657 0068 9148     		ldr	r0, .L95+4
  658              	.LVL52:
- 114:Src/capture.c ****         attempts++;
- 659              		.loc 1 114 35 view .LVU150
+ 112:Src/capture.c ****         attempts++;
+ 659              		.loc 1 112 35 view .LVU150
  660 006a A0FB0303 		umull	r0, r3, r0, r3
  661 006e DB09     		lsrs	r3, r3, #7
  662 0070 9048     		ldr	r0, .L95+8
  663 0072 00FB1323 		mls	r3, r0, r3, r2
- 114:Src/capture.c ****         attempts++;
- 664              		.loc 1 114 18 view .LVU151
+ 112:Src/capture.c ****         attempts++;
+ 664              		.loc 1 112 18 view .LVU151
  665 0076 0B60     		str	r3, [r1]
- 115:Src/capture.c ****     }
- 666              		.loc 1 115 9 is_stmt 1 view .LVU152
- 115:Src/capture.c ****     }
- 667              		.loc 1 115 17 is_stmt 0 view .LVU153
+ 113:Src/capture.c ****     }
+ 666              		.loc 1 113 9 is_stmt 1 view .LVU152
+ 113:Src/capture.c ****     }
+ 667              		.loc 1 113 17 is_stmt 0 view .LVU153
  668 0078 0134     		adds	r4, r4, #1
  669              	.LVL53:
  670              	.L45:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 21
+  96:Src/capture.c ****         if (use_short_name) {
+ 671              		.loc 1 96 21 is_stmt 1 view .LVU154
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 21
 
 
-  98:Src/capture.c ****         if (use_short_name) {
- 671              		.loc 1 98 21 is_stmt 1 view .LVU154
  672 007a 904B     		ldr	r3, .L95+16
  673 007c 9C42     		cmp	r4, r3
  674 007e 13D8     		bhi	.L49
-  99:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
- 675              		.loc 1 99 9 view .LVU155
-  99:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
- 676              		.loc 1 99 12 is_stmt 0 view .LVU156
+  97:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
+ 675              		.loc 1 97 9 view .LVU155
+  97:Src/capture.c ****             sprintf(fn, "P%05lu.JPG", photo_id % 100000); // 8.3 safe
+ 676              		.loc 1 97 12 is_stmt 0 view .LVU156
  677 0080 002D     		cmp	r5, #0
  678 0082 D2D0     		beq	.L46
- 100:Src/capture.c ****         } else {
- 679              		.loc 1 100 13 is_stmt 1 view .LVU157
+  98:Src/capture.c ****         } else {
+ 679              		.loc 1 98 13 is_stmt 1 view .LVU157
  680 0084 894B     		ldr	r3, .L95
  681 0086 1A68     		ldr	r2, [r3]
  682 0088 5309     		lsrs	r3, r2, #5
@@ -1229,28 +1227,28 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  692 00a0 D1E7     		b	.L47
  693              	.LVL55:
  694              	.L79:
- 107:Src/capture.c ****             attempts = 0;
- 695              		.loc 1 107 28 is_stmt 0 view .LVU158
+ 105:Src/capture.c ****             attempts = 0;
+ 695              		.loc 1 105 28 is_stmt 0 view .LVU158
  696 00a2 0125     		movs	r5, #1
  697              	.LVL56:
- 108:Src/capture.c ****             continue;
- 698              		.loc 1 108 22 view .LVU159
+ 106:Src/capture.c ****             continue;
+ 698              		.loc 1 106 22 view .LVU159
  699 00a4 0024     		movs	r4, #0
  700              	.LVL57:
- 108:Src/capture.c ****             continue;
- 701              		.loc 1 108 22 view .LVU160
+ 106:Src/capture.c ****             continue;
+ 701              		.loc 1 106 22 view .LVU160
  702 00a6 E8E7     		b	.L45
  703              	.LVL58:
  704              	.L49:
- 117:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
- 705              		.loc 1 117 5 is_stmt 1 view .LVU161
- 117:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
- 706              		.loc 1 117 8 is_stmt 0 view .LVU162
+ 115:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
+ 705              		.loc 1 115 5 is_stmt 1 view .LVU161
+ 115:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"SD Full (no free name)");
+ 706              		.loc 1 115 8 is_stmt 0 view .LVU162
  707 00a8 844B     		ldr	r3, .L95+16
  708 00aa 9C42     		cmp	r4, r3
  709 00ac 00F28980 		bhi	.L84
- 121:Src/capture.c **** 
- 710              		.loc 1 121 5 is_stmt 1 view .LVU163
+ 119:Src/capture.c **** 
+ 710              		.loc 1 119 5 is_stmt 1 view .LVU163
  711 00b0 844B     		ldr	r3, .L95+24
  712 00b2 0193     		str	r3, [sp, #4]
  713 00b4 0C23     		movs	r3, #12
@@ -1258,17 +1256,17 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  715 00b8 0523     		movs	r3, #5
  716 00ba 834A     		ldr	r2, .L95+28
  717 00bc 1288     		ldrh	r2, [r2]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 22
-
-
  718 00be 3221     		movs	r1, #50
  719 00c0 0020     		movs	r0, #0
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 22
+
+
  720 00c2 FFF7FEFF 		bl	LCD_ShowString
  721              	.LVL59:
- 123:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
- 722              		.loc 1 123 5 view .LVU164
- 123:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
- 723              		.loc 1 123 11 is_stmt 0 view .LVU165
+ 121:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
+ 722              		.loc 1 121 5 view .LVU164
+ 121:Src/capture.c ****     if(res == FR_INVALID_NAME && !use_short_name) {
+ 723              		.loc 1 121 11 is_stmt 0 view .LVU165
  724 00c6 0622     		movs	r2, #6
  725 00c8 08A9     		add	r1, sp, #32
  726 00ca 1EA8     		add	r0, sp, #120
@@ -1276,93 +1274,93 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  728              	.LVL60:
  729 00d0 0446     		mov	r4, r0
  730              	.LVL61:
- 124:Src/capture.c ****         // Retry with short name if long name creation fails
- 731              		.loc 1 124 5 is_stmt 1 view .LVU166
- 124:Src/capture.c ****         // Retry with short name if long name creation fails
- 732              		.loc 1 124 34 is_stmt 0 view .LVU167
+ 122:Src/capture.c ****         // Retry with short name if long name creation fails
+ 731              		.loc 1 122 5 is_stmt 1 view .LVU166
+ 122:Src/capture.c ****         // Retry with short name if long name creation fails
+ 732              		.loc 1 122 34 is_stmt 0 view .LVU167
  733 00d2 85F00105 		eor	r5, r5, #1
  734              	.LVL62:
- 124:Src/capture.c ****         // Retry with short name if long name creation fails
- 735              		.loc 1 124 31 view .LVU168
+ 122:Src/capture.c ****         // Retry with short name if long name creation fails
+ 735              		.loc 1 122 31 view .LVU168
  736 00d6 0628     		cmp	r0, #6
  737 00d8 14BF     		ite	ne
  738 00da 0025     		movne	r5, #0
  739 00dc 05F00105 		andeq	r5, r5, #1
  740              	.LVL63:
- 124:Src/capture.c ****         // Retry with short name if long name creation fails
- 741              		.loc 1 124 7 view .LVU169
+ 122:Src/capture.c ****         // Retry with short name if long name creation fails
+ 741              		.loc 1 122 7 view .LVU169
  742 00e0 002D     		cmp	r5, #0
  743 00e2 7BD1     		bne	.L85
  744              	.LVL64:
  745              	.L52:
- 129:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
- 746              		.loc 1 129 5 is_stmt 1 view .LVU170
- 129:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
- 747              		.loc 1 129 7 is_stmt 0 view .LVU171
+ 127:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
+ 746              		.loc 1 127 5 is_stmt 1 view .LVU170
+ 127:Src/capture.c ****         sprintf(msg, "SD Error:%d", res);
+ 747              		.loc 1 127 7 is_stmt 0 view .LVU171
  748 00e4 002C     		cmp	r4, #0
  749 00e6 40F08E80 		bne	.L86
- 134:Src/capture.c **** 
- 750              		.loc 1 134 5 is_stmt 1 view .LVU172
- 134:Src/capture.c **** 
- 751              		.loc 1 134 26 is_stmt 0 view .LVU173
+ 132:Src/capture.c **** 
+ 750              		.loc 1 132 5 is_stmt 1 view .LVU172
+ 132:Src/capture.c **** 
+ 751              		.loc 1 132 26 is_stmt 0 view .LVU173
  752 00ea 7049     		ldr	r1, .L95
  753 00ec 0A68     		ldr	r2, [r1]
  754 00ee 0132     		adds	r2, r2, #1
- 134:Src/capture.c **** 
- 755              		.loc 1 134 31 view .LVU174
+ 132:Src/capture.c **** 
+ 755              		.loc 1 132 31 view .LVU174
  756 00f0 5309     		lsrs	r3, r2, #5
  757 00f2 6F48     		ldr	r0, .L95+4
  758 00f4 A0FB0303 		umull	r0, r3, r0, r3
  759 00f8 DB09     		lsrs	r3, r3, #7
  760 00fa 6E48     		ldr	r0, .L95+8
  761 00fc 00FB1323 		mls	r3, r0, r3, r2
- 134:Src/capture.c **** 
- 762              		.loc 1 134 14 view .LVU175
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 23
-
-
+ 132:Src/capture.c **** 
+ 762              		.loc 1 132 14 view .LVU175
  763 0100 0B60     		str	r3, [r1]
- 137:Src/capture.c ****     HAL_Delay(50);
- 764              		.loc 1 137 5 is_stmt 1 view .LVU176
+ 135:Src/capture.c ****     HAL_Delay(50);
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 23
+
+
+ 764              		.loc 1 135 5 is_stmt 1 view .LVU176
  765 0102 3046     		mov	r0, r6
  766 0104 FFF7FEFF 		bl	HAL_DCMI_Stop
  767              	.LVL65:
- 138:Src/capture.c ****     DCMI_FrameIsReady = 0;
- 768              		.loc 1 138 5 view .LVU177
+ 136:Src/capture.c ****     DCMI_FrameIsReady = 0;
+ 768              		.loc 1 136 5 view .LVU177
  769 0108 3220     		movs	r0, #50
  770 010a FFF7FEFF 		bl	HAL_Delay
  771              	.LVL66:
- 139:Src/capture.c ****     DCMI_CallbackCount = 0;
- 772              		.loc 1 139 5 view .LVU178
- 139:Src/capture.c ****     DCMI_CallbackCount = 0;
- 773              		.loc 1 139 23 is_stmt 0 view .LVU179
+ 137:Src/capture.c ****     DCMI_CallbackCount = 0;
+ 772              		.loc 1 137 5 view .LVU178
+ 137:Src/capture.c ****     DCMI_CallbackCount = 0;
+ 773              		.loc 1 137 23 is_stmt 0 view .LVU179
  774 010e 0025     		movs	r5, #0
  775 0110 6E4B     		ldr	r3, .L95+32
  776 0112 1D60     		str	r5, [r3]
- 140:Src/capture.c ****     DCMI_VsyncFlag = 0;
- 777              		.loc 1 140 5 is_stmt 1 view .LVU180
- 140:Src/capture.c ****     DCMI_VsyncFlag = 0;
- 778              		.loc 1 140 24 is_stmt 0 view .LVU181
+ 138:Src/capture.c ****     DCMI_VsyncFlag = 0;
+ 777              		.loc 1 138 5 is_stmt 1 view .LVU180
+ 138:Src/capture.c ****     DCMI_VsyncFlag = 0;
+ 778              		.loc 1 138 24 is_stmt 0 view .LVU181
  779 0114 6E4B     		ldr	r3, .L95+36
  780 0116 1D60     		str	r5, [r3]
- 141:Src/capture.c **** 
- 781              		.loc 1 141 5 is_stmt 1 view .LVU182
- 141:Src/capture.c **** 
- 782              		.loc 1 141 20 is_stmt 0 view .LVU183
+ 139:Src/capture.c **** 
+ 781              		.loc 1 139 5 is_stmt 1 view .LVU182
+ 139:Src/capture.c **** 
+ 782              		.loc 1 139 20 is_stmt 0 view .LVU183
  783 0118 6E4B     		ldr	r3, .L95+40
  784 011a 1D60     		str	r5, [r3]
- 144:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Init camera...");
- 785              		.loc 1 144 5 is_stmt 1 view .LVU184
+ 142:Src/capture.c ****     LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"Init camera...");
+ 785              		.loc 1 142 5 is_stmt 1 view .LVU184
  786 011c 6E48     		ldr	r0, .L95+44
  787 011e FFF7FEFF 		bl	Camera_Picture_Device
  788              	.LVL67:
- 145:Src/capture.c ****     HAL_Delay(500);
- 789              		.loc 1 145 5 view .LVU185
- 145:Src/capture.c ****     HAL_Delay(500);
- 790              		.loc 1 145 36 is_stmt 0 view .LVU186
+ 143:Src/capture.c ****     HAL_Delay(500);
+ 789              		.loc 1 143 5 view .LVU185
+ 143:Src/capture.c ****     HAL_Delay(500);
+ 790              		.loc 1 143 36 is_stmt 0 view .LVU186
  791 0122 DFF8A481 		ldr	r8, .L95+28
- 145:Src/capture.c ****     HAL_Delay(500);
- 792              		.loc 1 145 5 view .LVU187
+ 143:Src/capture.c ****     HAL_Delay(500);
+ 792              		.loc 1 143 5 view .LVU187
  793 0126 6D4B     		ldr	r3, .L95+48
  794 0128 0193     		str	r3, [sp, #4]
  795 012a 4FF00C09 		mov	r9, #12
@@ -1373,35 +1371,35 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  800 013a 2846     		mov	r0, r5
  801 013c FFF7FEFF 		bl	LCD_ShowString
  802              	.LVL68:
- 146:Src/capture.c **** 
- 803              		.loc 1 146 5 is_stmt 1 view .LVU188
+ 144:Src/capture.c **** 
+ 803              		.loc 1 144 5 is_stmt 1 view .LVU188
  804 0140 4FF4FA70 		mov	r0, #500
  805 0144 FFF7FEFF 		bl	HAL_Delay
  806              	.LVL69:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 24
+ 147:Src/capture.c **** 
+ 807              		.loc 1 147 5 view .LVU189
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 24
 
 
- 149:Src/capture.c **** 
- 807              		.loc 1 149 5 view .LVU189
  808 0148 654F     		ldr	r7, .L95+52
- 809 014a 4FF44832 		mov	r2, #204800
+ 809 014a 4FF4A022 		mov	r2, #327680
  810 014e 2946     		mov	r1, r5
  811 0150 3846     		mov	r0, r7
  812 0152 FFF7FEFF 		bl	memset
  813              	.LVL70:
- 152:Src/capture.c ****     __HAL_DCMI_ENABLE_IT(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
- 814              		.loc 1 152 5 view .LVU190
+ 150:Src/capture.c ****     __HAL_DCMI_ENABLE_IT(hdcmi, DCMI_IT_VSYNC | DCMI_IT_FRAME);
+ 814              		.loc 1 150 5 view .LVU190
  815 0156 3368     		ldr	r3, [r6]
  816 0158 0922     		movs	r2, #9
  817 015a 5A61     		str	r2, [r3, #20]
- 153:Src/capture.c **** 
- 818              		.loc 1 153 5 view .LVU191
+ 151:Src/capture.c **** 
+ 818              		.loc 1 151 5 view .LVU191
  819 015c 3268     		ldr	r2, [r6]
  820 015e D368     		ldr	r3, [r2, #12]
  821 0160 43F00903 		orr	r3, r3, #9
  822 0164 D360     		str	r3, [r2, #12]
- 155:Src/capture.c **** 
- 823              		.loc 1 155 5 view .LVU192
+ 153:Src/capture.c **** 
+ 823              		.loc 1 153 5 view .LVU192
  824 0166 5F4B     		ldr	r3, .L95+56
  825 0168 0193     		str	r3, [sp, #4]
  826 016a CDF80090 		str	r9, [sp]
@@ -1411,23 +1409,23 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  830 0176 2846     		mov	r0, r5
  831 0178 FFF7FEFF 		bl	LCD_ShowString
  832              	.LVL71:
- 158:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
- 833              		.loc 1 158 5 view .LVU193
- 158:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
- 834              		.loc 1 158 8 is_stmt 0 view .LVU194
- 835 017c 4FF44843 		mov	r3, #51200
+ 156:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
+ 833              		.loc 1 156 5 view .LVU193
+ 156:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
+ 834              		.loc 1 156 8 is_stmt 0 view .LVU194
+ 835 017c 4FF4A033 		mov	r3, #81920
  836 0180 3A46     		mov	r2, r7
  837 0182 0221     		movs	r1, #2
  838 0184 3046     		mov	r0, r6
  839 0186 FFF7FEFF 		bl	HAL_DCMI_Start_DMA
  840              	.LVL72:
- 158:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
- 841              		.loc 1 158 7 discriminator 1 view .LVU195
+ 156:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"DMA Start Failed");
+ 841              		.loc 1 156 7 discriminator 1 view .LVU195
  842 018a 0546     		mov	r5, r0
  843 018c 0028     		cmp	r0, #0
  844 018e 4CD1     		bne	.L87
- 165:Src/capture.c ****     uint32_t vsync_timeout = 0;
- 845              		.loc 1 165 5 is_stmt 1 view .LVU196
+ 163:Src/capture.c ****     uint32_t vsync_timeout = 0;
+ 845              		.loc 1 163 5 is_stmt 1 view .LVU196
  846 0190 554B     		ldr	r3, .L95+60
  847 0192 0193     		str	r3, [sp, #4]
  848 0194 0C23     		movs	r3, #12
@@ -1438,48 +1436,48 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  853 019e 3221     		movs	r1, #50
  854 01a0 0020     		movs	r0, #0
  855 01a2 FFF7FEFF 		bl	LCD_ShowString
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 25
-
-
  856              	.LVL73:
- 166:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
- 857              		.loc 1 166 5 view .LVU197
- 167:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
- 858              		.loc 1 167 5 view .LVU198
- 166:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
- 859              		.loc 1 166 14 is_stmt 0 view .LVU199
+ 164:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 25
+
+
+ 857              		.loc 1 164 5 view .LVU197
+ 165:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
+ 858              		.loc 1 165 5 view .LVU198
+ 164:Src/capture.c ****     while(DCMI_VsyncFlag == 0) {
+ 859              		.loc 1 164 14 is_stmt 0 view .LVU199
  860 01a6 0023     		movs	r3, #0
  861              	.LVL74:
  862              	.L55:
- 167:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
- 863              		.loc 1 167 26 is_stmt 1 view .LVU200
+ 165:Src/capture.c ****         if(vsync_timeout++ > 1000) {  // 1 second for VSYNC
+ 863              		.loc 1 165 26 is_stmt 1 view .LVU200
  864 01a8 4A4A     		ldr	r2, .L95+40
  865 01aa 1268     		ldr	r2, [r2]
  866 01ac 002A     		cmp	r2, #0
  867 01ae 66D1     		bne	.L88
- 168:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
- 868              		.loc 1 168 9 view .LVU201
- 168:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
- 869              		.loc 1 168 25 is_stmt 0 view .LVU202
+ 166:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
+ 868              		.loc 1 166 9 view .LVU201
+ 166:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
+ 869              		.loc 1 166 25 is_stmt 0 view .LVU202
  870 01b0 5C1C     		adds	r4, r3, #1
  871              	.LVL75:
- 168:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
- 872              		.loc 1 168 11 view .LVU203
+ 166:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
+ 872              		.loc 1 166 11 view .LVU203
  873 01b2 B3F57A7F 		cmp	r3, #1000
  874 01b6 48D8     		bhi	.L89
- 175:Src/capture.c ****     }
- 875              		.loc 1 175 9 is_stmt 1 view .LVU204
+ 173:Src/capture.c ****     }
+ 875              		.loc 1 173 9 is_stmt 1 view .LVU204
  876 01b8 0120     		movs	r0, #1
  877 01ba FFF7FEFF 		bl	HAL_Delay
  878              	.LVL76:
- 168:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
- 879              		.loc 1 168 25 is_stmt 0 view .LVU205
+ 166:Src/capture.c ****             sprintf(msg, "VSYNC Timeout!");
+ 879              		.loc 1 166 25 is_stmt 0 view .LVU205
  880 01be 2346     		mov	r3, r4
  881 01c0 F2E7     		b	.L55
  882              	.LVL77:
  883              	.L84:
- 118:Src/capture.c ****         return 0;
- 884              		.loc 1 118 9 is_stmt 1 view .LVU206
+ 116:Src/capture.c ****         return 0;
+ 884              		.loc 1 116 9 is_stmt 1 view .LVU206
  885 01c2 4A4B     		ldr	r3, .L95+64
  886 01c4 0193     		str	r3, [sp, #4]
  887 01c6 0C23     		movs	r3, #12
@@ -1491,22 +1489,22 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  893 01d2 0020     		movs	r0, #0
  894 01d4 FFF7FEFF 		bl	LCD_ShowString
  895              	.LVL78:
- 119:Src/capture.c ****     }
- 896              		.loc 1 119 9 view .LVU207
- 119:Src/capture.c ****     }
- 897              		.loc 1 119 16 is_stmt 0 view .LVU208
+ 117:Src/capture.c ****     }
+ 896              		.loc 1 117 9 view .LVU207
+ 117:Src/capture.c ****     }
+ 897              		.loc 1 117 16 is_stmt 0 view .LVU208
  898 01d8 0025     		movs	r5, #0
  899              	.LVL79:
- 119:Src/capture.c ****     }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 26
-
-
- 900              		.loc 1 119 16 view .LVU209
+ 117:Src/capture.c ****     }
+ 900              		.loc 1 117 16 view .LVU209
  901 01da 1AE7     		b	.L44
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 26
+
+
  902              	.LVL80:
  903              	.L85:
- 126:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
- 904              		.loc 1 126 9 is_stmt 1 view .LVU210
+ 124:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
+ 904              		.loc 1 124 9 is_stmt 1 view .LVU210
  905 01dc 334B     		ldr	r3, .L95
  906 01de 1A68     		ldr	r2, [r3]
  907 01e0 5309     		lsrs	r3, r2, #5
@@ -1518,14 +1516,14 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  913 01f0 3349     		ldr	r1, .L95+20
  914 01f2 08A8     		add	r0, sp, #32
  915              	.LVL81:
- 126:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
- 916              		.loc 1 126 9 is_stmt 0 view .LVU211
+ 124:Src/capture.c ****         res = f_open(&file, fn, FA_CREATE_NEW | FA_WRITE);
+ 916              		.loc 1 124 9 is_stmt 0 view .LVU211
  917 01f4 FFF7FEFF 		bl	sprintf
  918              	.LVL82:
- 127:Src/capture.c ****     }
- 919              		.loc 1 127 9 is_stmt 1 view .LVU212
- 127:Src/capture.c ****     }
- 920              		.loc 1 127 15 is_stmt 0 view .LVU213
+ 125:Src/capture.c ****     }
+ 919              		.loc 1 125 9 is_stmt 1 view .LVU212
+ 125:Src/capture.c ****     }
+ 920              		.loc 1 125 15 is_stmt 0 view .LVU213
  921 01f8 0622     		movs	r2, #6
  922 01fa 08A9     		add	r1, sp, #32
  923 01fc 1EA8     		add	r0, sp, #120
@@ -1533,20 +1531,20 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  925              	.LVL83:
  926 0202 0446     		mov	r4, r0
  927              	.LVL84:
- 127:Src/capture.c ****     }
- 928              		.loc 1 127 15 view .LVU214
+ 125:Src/capture.c ****     }
+ 928              		.loc 1 125 15 view .LVU214
  929 0204 6EE7     		b	.L52
  930              	.L86:
- 130:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 931              		.loc 1 130 9 is_stmt 1 view .LVU215
+ 128:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 931              		.loc 1 128 9 is_stmt 1 view .LVU215
  932 0206 10AD     		add	r5, sp, #64
  933 0208 2246     		mov	r2, r4
  934 020a 3949     		ldr	r1, .L95+68
  935 020c 2846     		mov	r0, r5
  936 020e FFF7FEFF 		bl	sprintf
  937              	.LVL85:
- 131:Src/capture.c ****         return 0;
- 938              		.loc 1 131 9 view .LVU216
+ 129:Src/capture.c ****         return 0;
+ 938              		.loc 1 129 9 view .LVU216
  939 0212 0195     		str	r5, [sp, #4]
  940 0214 0C23     		movs	r3, #12
  941 0216 0093     		str	r3, [sp]
@@ -1557,18 +1555,18 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  946 0220 0020     		movs	r0, #0
  947 0222 FFF7FEFF 		bl	LCD_ShowString
  948              	.LVL86:
- 132:Src/capture.c ****     }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 27
+ 130:Src/capture.c ****     }
+ 949              		.loc 1 130 9 view .LVU217
+ 130:Src/capture.c ****     }
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 27
 
 
- 949              		.loc 1 132 9 view .LVU217
- 132:Src/capture.c ****     }
- 950              		.loc 1 132 16 is_stmt 0 view .LVU218
+ 950              		.loc 1 130 16 is_stmt 0 view .LVU218
  951 0226 0025     		movs	r5, #0
  952 0228 F3E6     		b	.L44
  953              	.L87:
- 159:Src/capture.c ****         f_close(&file);
- 954              		.loc 1 159 9 is_stmt 1 view .LVU219
+ 157:Src/capture.c ****         f_close(&file);
+ 954              		.loc 1 157 9 is_stmt 1 view .LVU219
  955 022a 324B     		ldr	r3, .L95+72
  956 022c 0193     		str	r3, [sp, #4]
  957 022e CDF80090 		str	r9, [sp]
@@ -1578,34 +1576,34 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  961 023a 0020     		movs	r0, #0
  962 023c FFF7FEFF 		bl	LCD_ShowString
  963              	.LVL87:
- 160:Src/capture.c ****         return 0;
- 964              		.loc 1 160 9 view .LVU220
+ 158:Src/capture.c ****         return 0;
+ 964              		.loc 1 158 9 view .LVU220
  965 0240 1EA8     		add	r0, sp, #120
  966 0242 FFF7FEFF 		bl	f_close
  967              	.LVL88:
- 161:Src/capture.c ****     }
- 968              		.loc 1 161 9 view .LVU221
- 161:Src/capture.c ****     }
- 969              		.loc 1 161 16 is_stmt 0 view .LVU222
+ 159:Src/capture.c ****     }
+ 968              		.loc 1 159 9 view .LVU221
+ 159:Src/capture.c ****     }
+ 969              		.loc 1 159 16 is_stmt 0 view .LVU222
  970 0246 2546     		mov	r5, r4
  971 0248 E3E6     		b	.L44
  972              	.LVL89:
  973              	.L89:
- 169:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 974              		.loc 1 169 13 is_stmt 1 view .LVU223
+ 167:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 974              		.loc 1 167 13 is_stmt 1 view .LVU223
  975 024a 10AF     		add	r7, sp, #64
  976 024c 2A4B     		ldr	r3, .L95+76
  977 024e 3C46     		mov	r4, r7
  978              	.LVL90:
- 169:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 979              		.loc 1 169 13 is_stmt 0 view .LVU224
+ 167:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 979              		.loc 1 167 13 is_stmt 0 view .LVU224
  980 0250 0FCB     		ldm	r3, {r0, r1, r2, r3}
  981 0252 07C4     		stmia	r4!, {r0, r1, r2}
  982 0254 24F8023B 		strh	r3, [r4], #2	@ movhi
  983 0258 1B0C     		lsrs	r3, r3, #16
  984 025a 2370     		strb	r3, [r4]
- 170:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
- 985              		.loc 1 170 13 is_stmt 1 view .LVU225
+ 168:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
+ 985              		.loc 1 168 13 is_stmt 1 view .LVU225
  986 025c 0197     		str	r7, [sp, #4]
  987 025e 0C23     		movs	r3, #12
  988 0260 0093     		str	r3, [sp]
@@ -1616,37 +1614,37 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  993 026a 0020     		movs	r0, #0
  994 026c FFF7FEFF 		bl	LCD_ShowString
  995              	.LVL91:
- 171:Src/capture.c ****             f_close(&file);
- 996              		.loc 1 171 13 view .LVU226
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 28
-
-
+ 169:Src/capture.c ****             f_close(&file);
+ 996              		.loc 1 169 13 view .LVU226
  997 0270 3046     		mov	r0, r6
  998 0272 FFF7FEFF 		bl	HAL_DCMI_Stop
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 28
+
+
  999              	.LVL92:
- 172:Src/capture.c ****             return 0;
- 1000              		.loc 1 172 13 view .LVU227
+ 170:Src/capture.c ****             return 0;
+ 1000              		.loc 1 170 13 view .LVU227
  1001 0276 1EA8     		add	r0, sp, #120
  1002 0278 FFF7FEFF 		bl	f_close
  1003              	.LVL93:
- 173:Src/capture.c ****         }
- 1004              		.loc 1 173 13 view .LVU228
- 173:Src/capture.c ****         }
- 1005              		.loc 1 173 20 is_stmt 0 view .LVU229
+ 171:Src/capture.c ****         }
+ 1004              		.loc 1 171 13 view .LVU228
+ 171:Src/capture.c ****         }
+ 1005              		.loc 1 171 20 is_stmt 0 view .LVU229
  1006 027c C9E6     		b	.L44
  1007              	.LVL94:
  1008              	.L88:
- 179:Src/capture.c **** 
- 1009              		.loc 1 179 5 is_stmt 1 view .LVU230
- 179:Src/capture.c **** 
- 1010              		.loc 1 179 36 is_stmt 0 view .LVU231
+ 177:Src/capture.c **** 
+ 1009              		.loc 1 177 5 is_stmt 1 view .LVU230
+ 177:Src/capture.c **** 
+ 1010              		.loc 1 177 36 is_stmt 0 view .LVU231
  1011 027e 124C     		ldr	r4, .L95+28
- 179:Src/capture.c **** 
- 1012              		.loc 1 179 5 view .LVU232
+ 177:Src/capture.c **** 
+ 1012              		.loc 1 177 5 view .LVU232
  1013 0280 1E4B     		ldr	r3, .L95+80
  1014              	.LVL95:
- 179:Src/capture.c **** 
- 1015              		.loc 1 179 5 view .LVU233
+ 177:Src/capture.c **** 
+ 1015              		.loc 1 177 5 view .LVU233
  1016 0282 0193     		str	r3, [sp, #4]
  1017 0284 0C27     		movs	r7, #12
  1018 0286 0097     		str	r7, [sp]
@@ -1656,8 +1654,8 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1022 028e 0020     		movs	r0, #0
  1023 0290 FFF7FEFF 		bl	LCD_ShowString
  1024              	.LVL96:
- 182:Src/capture.c ****     uint32_t frame_timeout = 0;
- 1025              		.loc 1 182 5 is_stmt 1 view .LVU234
+ 180:Src/capture.c ****     uint32_t frame_timeout = 0;
+ 1025              		.loc 1 180 5 is_stmt 1 view .LVU234
  1026 0294 1A4B     		ldr	r3, .L95+84
  1027 0296 0193     		str	r3, [sp, #4]
  1028 0298 0097     		str	r7, [sp]
@@ -1667,22 +1665,22 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1032 02a0 0020     		movs	r0, #0
  1033 02a2 FFF7FEFF 		bl	LCD_ShowString
  1034              	.LVL97:
- 183:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
- 1035              		.loc 1 183 5 view .LVU235
- 184:Src/capture.c ****         if(frame_timeout % 200 == 0) {
- 1036              		.loc 1 184 5 view .LVU236
- 183:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
- 1037              		.loc 1 183 14 is_stmt 0 view .LVU237
+ 181:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
+ 1035              		.loc 1 181 5 view .LVU235
+ 182:Src/capture.c ****         if(frame_timeout % 200 == 0) {
+ 1036              		.loc 1 182 5 view .LVU236
+ 181:Src/capture.c ****     while(DCMI_FrameIsReady == 0) {
+ 1037              		.loc 1 181 14 is_stmt 0 view .LVU237
  1038 02a6 0024     		movs	r4, #0
- 184:Src/capture.c ****         if(frame_timeout % 200 == 0) {
- 1039              		.loc 1 184 10 view .LVU238
+ 182:Src/capture.c ****         if(frame_timeout % 200 == 0) {
+ 1039              		.loc 1 182 10 view .LVU238
  1040 02a8 35E0     		b	.L58
  1041              	.L96:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 29
-
-
  1042 02aa 00BF     		.align	2
  1043              	.L95:
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 29
+
+
  1044 02ac 00000000 		.word	photo_id
  1045 02b0 C55A7C0A 		.word	175921861
  1046 02b4 A0860100 		.word	100000
@@ -1707,59 +1705,59 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1065 0300 C8000000 		.word	.LC15
  1066              	.LVL98:
  1067              	.L59:
- 190:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
- 1068              		.loc 1 190 9 is_stmt 1 view .LVU239
- 190:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
- 1069              		.loc 1 190 25 is_stmt 0 view .LVU240
+ 188:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
+ 1068              		.loc 1 188 9 is_stmt 1 view .LVU239
+ 188:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
+ 1069              		.loc 1 188 25 is_stmt 0 view .LVU240
  1070 0304 671C     		adds	r7, r4, #1
  1071              	.LVL99:
- 190:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
- 1072              		.loc 1 190 11 view .LVU241
+ 188:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
+ 1072              		.loc 1 188 11 view .LVU241
  1073 0306 40F6B833 		movw	r3, #3000
  1074 030a 9C42     		cmp	r4, r3
  1075 030c 21D8     		bhi	.L90
- 197:Src/capture.c ****     }
- 1076              		.loc 1 197 9 is_stmt 1 view .LVU242
+ 195:Src/capture.c ****     }
+ 1076              		.loc 1 195 9 is_stmt 1 view .LVU242
  1077 030e 0120     		movs	r0, #1
  1078 0310 FFF7FEFF 		bl	HAL_Delay
  1079              	.LVL100:
- 190:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
- 1080              		.loc 1 190 25 is_stmt 0 view .LVU243
+ 188:Src/capture.c ****             sprintf(msg, "Frame Timeout!");
+ 1080              		.loc 1 188 25 is_stmt 0 view .LVU243
  1081 0314 3C46     		mov	r4, r7
  1082              	.LVL101:
  1083              	.L58:
- 184:Src/capture.c ****         if(frame_timeout % 200 == 0) {
- 1084              		.loc 1 184 29 is_stmt 1 view .LVU244
+ 182:Src/capture.c ****         if(frame_timeout % 200 == 0) {
+ 1084              		.loc 1 182 29 is_stmt 1 view .LVU244
  1085 0316 A04B     		ldr	r3, .L97
  1086 0318 1B68     		ldr	r3, [r3]
  1087 031a 002B     		cmp	r3, #0
  1088 031c 33D1     		bne	.L91
- 185:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
- 1089              		.loc 1 185 9 view .LVU245
- 185:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
- 1090              		.loc 1 185 26 is_stmt 0 view .LVU246
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 30
-
-
+ 183:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
+ 1089              		.loc 1 183 9 view .LVU245
+ 183:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
+ 1090              		.loc 1 183 26 is_stmt 0 view .LVU246
  1091 031e 9F4B     		ldr	r3, .L97+4
  1092 0320 A3FB0423 		umull	r2, r3, r3, r4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 30
+
+
  1093 0324 9B09     		lsrs	r3, r3, #6
  1094 0326 C822     		movs	r2, #200
  1095 0328 02FB1343 		mls	r3, r2, r3, r4
- 185:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
- 1096              		.loc 1 185 11 view .LVU247
+ 183:Src/capture.c ****             sprintf(msg, "Frame T:%lu", frame_timeout);
+ 1096              		.loc 1 183 11 view .LVU247
  1097 032c 002B     		cmp	r3, #0
  1098 032e E9D1     		bne	.L59
- 186:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1099              		.loc 1 186 13 is_stmt 1 view .LVU248
+ 184:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1099              		.loc 1 184 13 is_stmt 1 view .LVU248
  1100 0330 10AF     		add	r7, sp, #64
  1101 0332 2246     		mov	r2, r4
  1102 0334 9A49     		ldr	r1, .L97+8
  1103 0336 3846     		mov	r0, r7
  1104 0338 FFF7FEFF 		bl	sprintf
  1105              	.LVL102:
- 187:Src/capture.c ****         }
- 1106              		.loc 1 187 13 view .LVU249
+ 185:Src/capture.c ****         }
+ 1106              		.loc 1 185 13 view .LVU249
  1107 033c 0197     		str	r7, [sp, #4]
  1108 033e 0C23     		movs	r3, #12
  1109 0340 0093     		str	r3, [sp]
@@ -1773,24 +1771,24 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1117 0350 D8E7     		b	.L59
  1118              	.LVL104:
  1119              	.L90:
- 191:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1120              		.loc 1 191 13 view .LVU250
+ 189:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1120              		.loc 1 189 13 view .LVU250
  1121 0352 10AF     		add	r7, sp, #64
  1122              	.LVL105:
- 191:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1123              		.loc 1 191 13 is_stmt 0 view .LVU251
+ 189:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1123              		.loc 1 189 13 is_stmt 0 view .LVU251
  1124 0354 944B     		ldr	r3, .L97+16
  1125 0356 3C46     		mov	r4, r7
  1126              	.LVL106:
- 191:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1127              		.loc 1 191 13 view .LVU252
+ 189:Src/capture.c ****             LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1127              		.loc 1 189 13 view .LVU252
  1128 0358 0FCB     		ldm	r3, {r0, r1, r2, r3}
  1129 035a 07C4     		stmia	r4!, {r0, r1, r2}
  1130 035c 24F8023B 		strh	r3, [r4], #2	@ movhi
  1131 0360 1B0C     		lsrs	r3, r3, #16
  1132 0362 2370     		strb	r3, [r4]
- 192:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
- 1133              		.loc 1 192 13 is_stmt 1 view .LVU253
+ 190:Src/capture.c ****             HAL_DCMI_Stop(hdcmi);
+ 1133              		.loc 1 190 13 is_stmt 1 view .LVU253
  1134 0364 0197     		str	r7, [sp, #4]
  1135 0366 0C23     		movs	r3, #12
  1136 0368 0093     		str	r3, [sp]
@@ -1798,53 +1796,53 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1138 036c 8D4A     		ldr	r2, .L97+12
  1139 036e 1288     		ldrh	r2, [r2]
  1140 0370 3221     		movs	r1, #50
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 31
-
-
  1141 0372 0020     		movs	r0, #0
  1142 0374 FFF7FEFF 		bl	LCD_ShowString
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 31
+
+
  1143              	.LVL107:
- 193:Src/capture.c ****             f_close(&file);
- 1144              		.loc 1 193 13 view .LVU254
+ 191:Src/capture.c ****             f_close(&file);
+ 1144              		.loc 1 191 13 view .LVU254
  1145 0378 3046     		mov	r0, r6
  1146 037a FFF7FEFF 		bl	HAL_DCMI_Stop
  1147              	.LVL108:
- 194:Src/capture.c ****             return 0;
- 1148              		.loc 1 194 13 view .LVU255
+ 192:Src/capture.c ****             return 0;
+ 1148              		.loc 1 192 13 view .LVU255
  1149 037e 1EA8     		add	r0, sp, #120
  1150 0380 FFF7FEFF 		bl	f_close
  1151              	.LVL109:
- 195:Src/capture.c ****         }
- 1152              		.loc 1 195 13 view .LVU256
- 195:Src/capture.c ****         }
- 1153              		.loc 1 195 20 is_stmt 0 view .LVU257
+ 193:Src/capture.c ****         }
+ 1152              		.loc 1 193 13 view .LVU256
+ 193:Src/capture.c ****         }
+ 1153              		.loc 1 193 20 is_stmt 0 view .LVU257
  1154 0384 45E6     		b	.L44
  1155              	.LVL110:
  1156              	.L91:
- 201:Src/capture.c ****     HAL_Delay(10);
- 1157              		.loc 1 201 5 is_stmt 1 view .LVU258
+ 199:Src/capture.c ****     HAL_Delay(10);
+ 1157              		.loc 1 199 5 is_stmt 1 view .LVU258
  1158 0386 3046     		mov	r0, r6
  1159 0388 FFF7FEFF 		bl	HAL_DCMI_Stop
  1160              	.LVL111:
- 202:Src/capture.c **** 
- 1161              		.loc 1 202 5 view .LVU259
+ 200:Src/capture.c **** 
+ 1161              		.loc 1 200 5 view .LVU259
  1162 038c 0A20     		movs	r0, #10
  1163 038e FFF7FEFF 		bl	HAL_Delay
  1164              	.LVL112:
- 205:Src/capture.c **** 
- 1165              		.loc 1 205 5 view .LVU260
- 205:Src/capture.c **** 
- 1166              		.loc 1 205 36 is_stmt 0 view .LVU261
+ 203:Src/capture.c **** 
+ 1165              		.loc 1 203 5 view .LVU260
+ 203:Src/capture.c **** 
+ 1166              		.loc 1 203 36 is_stmt 0 view .LVU261
  1167 0392 844C     		ldr	r4, .L97+12
  1168              	.LVL113:
- 205:Src/capture.c **** 
- 1169              		.loc 1 205 5 view .LVU262
+ 203:Src/capture.c **** 
+ 1169              		.loc 1 203 5 view .LVU262
  1170 0394 854B     		ldr	r3, .L97+20
  1171 0396 0193     		str	r3, [sp, #4]
  1172 0398 0C26     		movs	r6, #12
  1173              	.LVL114:
- 205:Src/capture.c **** 
- 1174              		.loc 1 205 5 view .LVU263
+ 203:Src/capture.c **** 
+ 1174              		.loc 1 203 5 view .LVU263
  1175 039a 0096     		str	r6, [sp]
  1176 039c 0523     		movs	r3, #5
  1177 039e 2288     		ldrh	r2, [r4]
@@ -1852,22 +1850,22 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1179 03a2 0020     		movs	r0, #0
  1180 03a4 FFF7FEFF 		bl	LCD_ShowString
  1181              	.LVL115:
- 208:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1182              		.loc 1 208 5 is_stmt 1 view .LVU264
- 208:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1183              		.loc 1 208 59 is_stmt 0 view .LVU265
+ 206:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1182              		.loc 1 206 5 is_stmt 1 view .LVU264
+ 206:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1183              		.loc 1 206 59 is_stmt 0 view .LVU265
  1184 03a8 814A     		ldr	r2, .L97+24
- 208:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 32
-
-
- 1185              		.loc 1 208 79 view .LVU266
+ 206:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1185              		.loc 1 206 79 view .LVU266
  1186 03aa 9378     		ldrb	r3, [r2, #2]	@ zero_extendqisi2
- 208:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1187              		.loc 1 208 89 view .LVU267
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 32
+
+
+ 206:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1187              		.loc 1 206 89 view .LVU267
  1188 03ac D178     		ldrb	r1, [r2, #3]	@ zero_extendqisi2
- 208:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1189              		.loc 1 208 5 view .LVU268
+ 206:Src/capture.c ****     LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1189              		.loc 1 206 5 view .LVU268
  1190 03ae 10AF     		add	r7, sp, #64
  1191 03b0 0191     		str	r1, [sp, #4]
  1192 03b2 0093     		str	r3, [sp]
@@ -1877,8 +1875,8 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1196 03ba 3846     		mov	r0, r7
  1197 03bc FFF7FEFF 		bl	sprintf
  1198              	.LVL116:
- 209:Src/capture.c ****     HAL_Delay(1000);
- 1199              		.loc 1 209 5 is_stmt 1 view .LVU269
+ 207:Src/capture.c ****     HAL_Delay(1000);
+ 1199              		.loc 1 207 5 is_stmt 1 view .LVU269
  1200 03c0 0197     		str	r7, [sp, #4]
  1201 03c2 0096     		str	r6, [sp]
  1202 03c4 0523     		movs	r3, #5
@@ -1887,102 +1885,102 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1205 03ca 0020     		movs	r0, #0
  1206 03cc FFF7FEFF 		bl	LCD_ShowString
  1207              	.LVL117:
- 210:Src/capture.c **** 
- 1208              		.loc 1 210 5 view .LVU270
+ 208:Src/capture.c **** 
+ 1208              		.loc 1 208 5 view .LVU270
  1209 03d0 4FF47A70 		mov	r0, #1000
  1210 03d4 FFF7FEFF 		bl	HAL_Delay
  1211              	.LVL118:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1212              		.loc 1 213 5 view .LVU271
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1212              		.loc 1 211 5 view .LVU271
  1213              	.LBB4:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1214              		.loc 1 213 9 view .LVU272
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1215              		.loc 1 213 9 is_stmt 0 view .LVU273
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1214              		.loc 1 211 9 view .LVU272
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1215              		.loc 1 211 9 is_stmt 0 view .LVU273
  1216              	.LBE4:
-  84:Src/capture.c ****     char msg[50];
- 1217              		.loc 1 84 13 view .LVU274
+  82:Src/capture.c ****     char msg[50];
+ 1217              		.loc 1 82 13 view .LVU274
  1218 03d8 2A46     		mov	r2, r5
  1219              	.LBB8:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1220              		.loc 1 213 18 view .LVU275
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1220              		.loc 1 211 18 view .LVU275
  1221 03da 0024     		movs	r4, #0
  1222              	.LBE8:
-  80:Src/capture.c ****     uint16_t f_count, r;
- 1223              		.loc 1 80 14 view .LVU276
+  78:Src/capture.c ****     uint16_t f_count, r;
+ 1223              		.loc 1 78 14 view .LVU276
  1224 03dc 2646     		mov	r6, r4
  1225              	.LBB9:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1226              		.loc 1 213 5 view .LVU277
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1226              		.loc 1 211 5 view .LVU277
  1227 03de 02E0     		b	.L62
  1228              	.LVL119:
  1229              	.L63:
- 220:Src/capture.c ****             f_end = idx + 1;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 33
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1230              		.loc 1 218 9 is_stmt 1 view .LVU278
+ 218:Src/capture.c ****             f_end = idx + 1;
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 33
 
 
- 1230              		.loc 1 220 9 is_stmt 1 view .LVU278
- 220:Src/capture.c ****             f_end = idx + 1;
- 1231              		.loc 1 220 11 is_stmt 0 view .LVU279
+ 1231              		.loc 1 218 11 is_stmt 0 view .LVU279
  1232 03e0 012A     		cmp	r2, #1
  1233 03e2 20D0     		beq	.L64
  1234              	.LVL120:
  1235              	.L65:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1236              		.loc 1 213 58 is_stmt 1 discriminator 2 view .LVU280
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1236              		.loc 1 211 58 is_stmt 1 discriminator 2 view .LVU280
  1237 03e4 0134     		adds	r4, r4, #1
  1238              	.LVL121:
  1239              	.L62:
- 213:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
- 1240              		.loc 1 213 31 discriminator 1 view .LVU281
+ 211:Src/capture.c ****         if(headerFinder == 0 && pBuff[idx] == 0xFF && pBuff[idx+1] == 0xD8) {
+ 1240              		.loc 1 211 31 discriminator 1 view .LVU281
  1241 03e6 744B     		ldr	r3, .L97+32
  1242 03e8 9C42     		cmp	r4, r3
  1243 03ea 7AD8     		bhi	.L70
- 214:Src/capture.c ****             headerFinder = 1;
- 1244              		.loc 1 214 9 view .LVU282
- 214:Src/capture.c ****             headerFinder = 1;
- 1245              		.loc 1 214 11 is_stmt 0 view .LVU283
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1244              		.loc 1 212 9 view .LVU282
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1245              		.loc 1 212 11 is_stmt 0 view .LVU283
  1246 03ec 002A     		cmp	r2, #0
  1247 03ee F7D1     		bne	.L63
- 214:Src/capture.c ****             headerFinder = 1;
- 1248              		.loc 1 214 38 discriminator 1 view .LVU284
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1248              		.loc 1 212 38 discriminator 1 view .LVU284
  1249 03f0 6F4B     		ldr	r3, .L97+24
  1250 03f2 1B5D     		ldrb	r3, [r3, r4]	@ zero_extendqisi2
- 214:Src/capture.c ****             headerFinder = 1;
- 1251              		.loc 1 214 30 discriminator 1 view .LVU285
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1251              		.loc 1 212 30 discriminator 1 view .LVU285
  1252 03f4 FF2B     		cmp	r3, #255
  1253 03f6 F3D1     		bne	.L63
- 214:Src/capture.c ****             headerFinder = 1;
- 1254              		.loc 1 214 64 discriminator 2 view .LVU286
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1254              		.loc 1 212 64 discriminator 2 view .LVU286
  1255 03f8 631C     		adds	r3, r4, #1
- 214:Src/capture.c ****             headerFinder = 1;
- 1256              		.loc 1 214 60 discriminator 2 view .LVU287
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1256              		.loc 1 212 60 discriminator 2 view .LVU287
  1257 03fa 6D49     		ldr	r1, .L97+24
  1258 03fc CB5C     		ldrb	r3, [r1, r3]	@ zero_extendqisi2
- 214:Src/capture.c ****             headerFinder = 1;
- 1259              		.loc 1 214 52 discriminator 2 view .LVU288
+ 212:Src/capture.c ****             headerFinder = 1;
+ 1259              		.loc 1 212 52 discriminator 2 view .LVU288
  1260 03fe D82B     		cmp	r3, #216
  1261 0400 EED1     		bne	.L63
- 215:Src/capture.c ****             f_begin = idx;
- 1262              		.loc 1 215 13 is_stmt 1 view .LVU289
+ 213:Src/capture.c ****             f_begin = idx;
+ 1262              		.loc 1 213 13 is_stmt 1 view .LVU289
  1263              	.LVL122:
- 216:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
- 1264              		.loc 1 216 13 view .LVU290
- 217:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1265              		.loc 1 217 13 view .LVU291
+ 214:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
+ 1264              		.loc 1 214 13 view .LVU290
+ 215:Src/capture.c ****             LCD_ShowString(0, 74, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1265              		.loc 1 215 13 view .LVU291
  1266 0402 10AE     		add	r6, sp, #64
  1267 0404 2246     		mov	r2, r4
  1268 0406 6D49     		ldr	r1, .L97+36
  1269 0408 3046     		mov	r0, r6
  1270 040a FFF7FEFF 		bl	sprintf
  1271              	.LVL123:
- 218:Src/capture.c ****         }
- 1272              		.loc 1 218 13 view .LVU292
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 34
-
-
+ 216:Src/capture.c ****         }
+ 1272              		.loc 1 216 13 view .LVU292
  1273 040e 0196     		str	r6, [sp, #4]
  1274 0410 0C23     		movs	r3, #12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 34
+
+
  1275 0412 0093     		str	r3, [sp]
  1276 0414 0523     		movs	r3, #5
  1277 0416 634A     		ldr	r2, .L97+12
@@ -1991,58 +1989,58 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1280 041c 0020     		movs	r0, #0
  1281 041e FFF7FEFF 		bl	LCD_ShowString
  1282              	.LVL124:
- 220:Src/capture.c ****             f_end = idx + 1;
- 1283              		.loc 1 220 9 view .LVU293
- 216:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
- 1284              		.loc 1 216 21 is_stmt 0 view .LVU294
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1283              		.loc 1 218 9 view .LVU293
+ 214:Src/capture.c ****             sprintf(msg, "SOI at: %lu", f_begin);
+ 1284              		.loc 1 214 21 is_stmt 0 view .LVU294
  1285 0422 2646     		mov	r6, r4
- 215:Src/capture.c ****             f_begin = idx;
- 1286              		.loc 1 215 26 view .LVU295
+ 213:Src/capture.c ****             f_begin = idx;
+ 1286              		.loc 1 213 26 view .LVU295
  1287 0424 0122     		movs	r2, #1
  1288              	.LVL125:
  1289              	.L64:
- 220:Src/capture.c ****             f_end = idx + 1;
- 1290              		.loc 1 220 38 discriminator 1 view .LVU296
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1290              		.loc 1 218 38 discriminator 1 view .LVU296
  1291 0426 624B     		ldr	r3, .L97+24
  1292 0428 1B5D     		ldrb	r3, [r3, r4]	@ zero_extendqisi2
- 220:Src/capture.c ****             f_end = idx + 1;
- 1293              		.loc 1 220 30 discriminator 1 view .LVU297
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1293              		.loc 1 218 30 discriminator 1 view .LVU297
  1294 042a FF2B     		cmp	r3, #255
  1295 042c DAD1     		bne	.L65
- 220:Src/capture.c ****             f_end = idx + 1;
- 1296              		.loc 1 220 64 discriminator 2 view .LVU298
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1296              		.loc 1 218 64 discriminator 2 view .LVU298
  1297 042e 671C     		adds	r7, r4, #1
- 220:Src/capture.c ****             f_end = idx + 1;
- 1298              		.loc 1 220 60 discriminator 2 view .LVU299
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1298              		.loc 1 218 60 discriminator 2 view .LVU299
  1299 0430 5F4B     		ldr	r3, .L97+24
  1300 0432 DB5D     		ldrb	r3, [r3, r7]	@ zero_extendqisi2
- 220:Src/capture.c ****             f_end = idx + 1;
- 1301              		.loc 1 220 52 discriminator 2 view .LVU300
+ 218:Src/capture.c ****             f_end = idx + 1;
+ 1301              		.loc 1 218 52 discriminator 2 view .LVU300
  1302 0434 D92B     		cmp	r3, #217
  1303 0436 D5D1     		bne	.L65
  1304              	.LBB5:
- 221:Src/capture.c ****             picture_ok = 1;
- 1305              		.loc 1 221 13 is_stmt 1 view .LVU301
+ 219:Src/capture.c ****             picture_ok = 1;
+ 1305              		.loc 1 219 13 is_stmt 1 view .LVU301
  1306              	.LVL126:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1307              		.loc 1 222 13 view .LVU302
- 223:Src/capture.c ****             LCD_ShowString(0, 86, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1308              		.loc 1 223 13 view .LVU303
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1307              		.loc 1 220 13 view .LVU302
+ 221:Src/capture.c ****             LCD_ShowString(0, 86, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1308              		.loc 1 221 13 view .LVU303
  1309 0438 3A46     		mov	r2, r7
  1310 043a 6149     		ldr	r1, .L97+40
  1311 043c 10A8     		add	r0, sp, #64
  1312 043e FFF7FEFF 		bl	sprintf
  1313              	.LVL127:
- 224:Src/capture.c **** 
- 1314              		.loc 1 224 13 view .LVU304
- 224:Src/capture.c **** 
- 1315              		.loc 1 224 44 is_stmt 0 view .LVU305
+ 222:Src/capture.c **** 
+ 1314              		.loc 1 222 13 view .LVU304
+ 222:Src/capture.c **** 
+ 1315              		.loc 1 222 44 is_stmt 0 view .LVU305
  1316 0442 DFF86081 		ldr	r8, .L97+12
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 35
+ 222:Src/capture.c **** 
+ 1317              		.loc 1 222 13 view .LVU306
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 35
 
 
- 224:Src/capture.c **** 
- 1317              		.loc 1 224 13 view .LVU306
  1318 0446 10AB     		add	r3, sp, #64
  1319 0448 0193     		str	r3, [sp, #4]
  1320 044a 4FF00C09 		mov	r9, #12
@@ -2053,32 +2051,32 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1325 045a 0020     		movs	r0, #0
  1326 045c FFF7FEFF 		bl	LCD_ShowString
  1327              	.LVL128:
- 226:Src/capture.c ****             sublen = f_end - f_begin + 1;
- 1328              		.loc 1 226 13 is_stmt 1 view .LVU307
- 226:Src/capture.c ****             sublen = f_end - f_begin + 1;
- 1329              		.loc 1 226 22 is_stmt 0 view .LVU308
+ 224:Src/capture.c ****             sublen = f_end - f_begin + 1;
+ 1328              		.loc 1 224 13 is_stmt 1 view .LVU307
+ 224:Src/capture.c ****             sublen = f_end - f_begin + 1;
+ 1329              		.loc 1 224 22 is_stmt 0 view .LVU308
  1330 0460 534D     		ldr	r5, .L97+24
  1331 0462 3544     		add	r5, r5, r6
  1332              	.LVL129:
- 227:Src/capture.c **** 
- 1333              		.loc 1 227 13 is_stmt 1 view .LVU309
- 227:Src/capture.c **** 
- 1334              		.loc 1 227 28 is_stmt 0 view .LVU310
+ 225:Src/capture.c **** 
+ 1333              		.loc 1 225 13 is_stmt 1 view .LVU309
+ 225:Src/capture.c **** 
+ 1334              		.loc 1 225 28 is_stmt 0 view .LVU310
  1335 0464 BC1B     		subs	r4, r7, r6
  1336              	.LVL130:
- 227:Src/capture.c **** 
- 1337              		.loc 1 227 20 view .LVU311
+ 225:Src/capture.c **** 
+ 1337              		.loc 1 225 20 view .LVU311
  1338 0466 0134     		adds	r4, r4, #1
  1339              	.LVL131:
- 229:Src/capture.c ****             LCD_ShowString(0, 98, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1340              		.loc 1 229 13 is_stmt 1 view .LVU312
+ 227:Src/capture.c ****             LCD_ShowString(0, 98, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1340              		.loc 1 227 13 is_stmt 1 view .LVU312
  1341 0468 2246     		mov	r2, r4
  1342 046a 5649     		ldr	r1, .L97+44
  1343 046c 10A8     		add	r0, sp, #64
  1344 046e FFF7FEFF 		bl	sprintf
  1345              	.LVL132:
- 230:Src/capture.c **** 
- 1346              		.loc 1 230 13 view .LVU313
+ 228:Src/capture.c **** 
+ 1346              		.loc 1 228 13 view .LVU313
  1347 0472 10AB     		add	r3, sp, #64
  1348 0474 0193     		str	r3, [sp, #4]
  1349 0476 CDF80090 		str	r9, [sp]
@@ -2088,47 +2086,47 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1353 0482 0020     		movs	r0, #0
  1354 0484 FFF7FEFF 		bl	LCD_ShowString
  1355              	.LVL133:
- 232:Src/capture.c ****             r = sublen % 512;
- 1356              		.loc 1 232 13 view .LVU314
- 232:Src/capture.c ****             r = sublen % 512;
- 1357              		.loc 1 232 30 is_stmt 0 view .LVU315
+ 230:Src/capture.c ****             r = sublen % 512;
+ 1356              		.loc 1 230 13 view .LVU314
+ 230:Src/capture.c ****             r = sublen % 512;
+ 1357              		.loc 1 230 30 is_stmt 0 view .LVU315
  1358 0488 4FEA5428 		lsr	r8, r4, #9
  1359              	.LVL134:
- 233:Src/capture.c **** 
- 1360              		.loc 1 233 13 is_stmt 1 view .LVU316
- 233:Src/capture.c **** 
- 1361              		.loc 1 233 15 is_stmt 0 view .LVU317
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 36
-
-
+ 231:Src/capture.c **** 
+ 1360              		.loc 1 231 13 is_stmt 1 view .LVU316
+ 231:Src/capture.c **** 
+ 1361              		.loc 1 231 15 is_stmt 0 view .LVU317
  1362 048c C4F30804 		ubfx	r4, r4, #0, #9
  1363              	.LVL135:
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1364              		.loc 1 235 13 is_stmt 1 view .LVU318
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 36
+
+
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1364              		.loc 1 233 13 is_stmt 1 view .LVU318
  1365              	.LBB6:
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1366              		.loc 1 235 17 view .LVU319
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1367              		.loc 1 235 21 is_stmt 0 view .LVU320
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1366              		.loc 1 233 17 view .LVU319
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1367              		.loc 1 233 21 is_stmt 0 view .LVU320
  1368 0490 0026     		movs	r6, #0
  1369              	.LVL136:
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1370              		.loc 1 235 13 view .LVU321
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1370              		.loc 1 233 13 view .LVU321
  1371 0492 11E0     		b	.L66
  1372              	.LVL137:
  1373              	.L67:
- 238:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1374              		.loc 1 238 21 is_stmt 1 view .LVU322
+ 236:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1374              		.loc 1 236 21 is_stmt 1 view .LVU322
  1375 0494 10AF     		add	r7, sp, #64
  1376 0496 4C49     		ldr	r1, .L97+48
  1377 0498 3846     		mov	r0, r7
  1378              	.LVL138:
- 238:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1379              		.loc 1 238 21 is_stmt 0 view .LVU323
+ 236:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1379              		.loc 1 236 21 is_stmt 0 view .LVU323
  1380 049a FFF7FEFF 		bl	sprintf
  1381              	.LVL139:
- 239:Src/capture.c ****                 }
- 1382              		.loc 1 239 21 is_stmt 1 view .LVU324
+ 237:Src/capture.c ****                 }
+ 1382              		.loc 1 237 21 is_stmt 1 view .LVU324
  1383 049e 0197     		str	r7, [sp, #4]
  1384 04a0 0C23     		movs	r3, #12
  1385 04a2 0093     		str	r3, [sp]
@@ -2140,89 +2138,89 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1391 04ae FFF7FEFF 		bl	LCD_ShowString
  1392              	.LVL140:
  1393              	.L68:
- 241:Src/capture.c ****             }
- 1394              		.loc 1 241 17 view .LVU325
- 241:Src/capture.c ****             }
- 1395              		.loc 1 241 22 is_stmt 0 view .LVU326
+ 239:Src/capture.c ****             }
+ 1394              		.loc 1 239 17 view .LVU325
+ 239:Src/capture.c ****             }
+ 1395              		.loc 1 239 22 is_stmt 0 view .LVU326
  1396 04b2 05F50075 		add	r5, r5, #512
  1397              	.LVL141:
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1398              		.loc 1 235 42 is_stmt 1 discriminator 2 view .LVU327
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1398              		.loc 1 233 42 is_stmt 1 discriminator 2 view .LVU327
  1399 04b6 0136     		adds	r6, r6, #1
  1400              	.LVL142:
  1401              	.L66:
- 235:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
- 1402              		.loc 1 235 30 discriminator 1 view .LVU328
+ 233:Src/capture.c ****                 res = f_write(&file, buff, 512, &bw);
+ 1402              		.loc 1 233 30 discriminator 1 view .LVU328
  1403 04b8 1FFA88F3 		uxth	r3, r8
  1404 04bc B342     		cmp	r3, r6
  1405 04be 0EDD     		ble	.L92
- 236:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
- 1406              		.loc 1 236 17 view .LVU329
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 37
+ 234:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
+ 1406              		.loc 1 234 17 view .LVU329
+ 234:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
+ 1407              		.loc 1 234 23 is_stmt 0 view .LVU330
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 37
 
 
- 236:Src/capture.c ****                 if(res != FR_OK || bw != 512) {
- 1407              		.loc 1 236 23 is_stmt 0 view .LVU330
  1408 04c0 1DAB     		add	r3, sp, #116
  1409 04c2 4FF40072 		mov	r2, #512
  1410 04c6 2946     		mov	r1, r5
  1411 04c8 1EA8     		add	r0, sp, #120
  1412 04ca FFF7FEFF 		bl	f_write
  1413              	.LVL143:
- 237:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 1414              		.loc 1 237 17 is_stmt 1 view .LVU331
- 237:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 1415              		.loc 1 237 19 is_stmt 0 view .LVU332
+ 235:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 1414              		.loc 1 235 17 is_stmt 1 view .LVU331
+ 235:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 1415              		.loc 1 235 19 is_stmt 0 view .LVU332
  1416 04ce 0246     		mov	r2, r0
  1417 04d0 0028     		cmp	r0, #0
  1418 04d2 DFD1     		bne	.L67
- 237:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 1419              		.loc 1 237 39 discriminator 1 view .LVU333
+ 235:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 1419              		.loc 1 235 39 discriminator 1 view .LVU333
  1420 04d4 1D9B     		ldr	r3, [sp, #116]
- 237:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 1421              		.loc 1 237 33 discriminator 1 view .LVU334
+ 235:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 1421              		.loc 1 235 33 discriminator 1 view .LVU334
  1422 04d6 B3F5007F 		cmp	r3, #512
  1423 04da DBD1     		bne	.L67
  1424 04dc E9E7     		b	.L68
  1425              	.LVL144:
  1426              	.L92:
- 237:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
- 1427              		.loc 1 237 33 discriminator 1 view .LVU335
+ 235:Src/capture.c ****                     sprintf(msg, "Write err: %d", res);
+ 1427              		.loc 1 235 33 discriminator 1 view .LVU335
  1428              	.LBE6:
- 243:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
- 1429              		.loc 1 243 13 is_stmt 1 view .LVU336
- 243:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
- 1430              		.loc 1 243 15 is_stmt 0 view .LVU337
+ 241:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
+ 1429              		.loc 1 241 13 is_stmt 1 view .LVU336
+ 241:Src/capture.c ****                 res = f_write(&file, buff, r, &bw);
+ 1430              		.loc 1 241 15 is_stmt 0 view .LVU337
  1431 04de 9CB9     		cbnz	r4, .L93
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1432              		.loc 1 222 24 view .LVU338
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1432              		.loc 1 220 24 view .LVU338
  1433 04e0 0125     		movs	r5, #1
  1434              	.LVL145:
  1435              	.L70:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1436              		.loc 1 222 24 view .LVU339
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1436              		.loc 1 220 24 view .LVU339
  1437              	.LBE5:
  1438              	.LBE9:
- 254:Src/capture.c **** 
- 1439              		.loc 1 254 5 is_stmt 1 view .LVU340
+ 252:Src/capture.c **** 
+ 1439              		.loc 1 252 5 is_stmt 1 view .LVU340
  1440 04e2 1EA8     		add	r0, sp, #120
  1441 04e4 FFF7FEFF 		bl	f_close
  1442              	.LVL146:
- 256:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
- 1443              		.loc 1 256 5 view .LVU341
- 256:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
- 1444              		.loc 1 256 7 is_stmt 0 view .LVU342
+ 254:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
+ 1443              		.loc 1 254 5 view .LVU341
+ 254:Src/capture.c ****         LCD_ShowString(0, 50, ST7735Ctx.Width, 5, 12, (uint8_t*)"No JPEG markers!");
+ 1444              		.loc 1 254 7 is_stmt 0 view .LVU342
  1445 04e8 002D     		cmp	r5, #0
  1446 04ea 49D1     		bne	.L73
  1447              	.LBB10:
- 257:Src/capture.c ****         uint32_t non_zero = 0;
- 1448              		.loc 1 257 9 is_stmt 1 view .LVU343
+ 255:Src/capture.c ****         uint32_t non_zero = 0;
+ 1448              		.loc 1 255 9 is_stmt 1 view .LVU343
  1449 04ec 374B     		ldr	r3, .L97+52
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 38
-
-
  1450 04ee 0193     		str	r3, [sp, #4]
  1451 04f0 0C23     		movs	r3, #12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 38
+
+
  1452 04f2 0093     		str	r3, [sp]
  1453 04f4 0523     		movs	r3, #5
  1454 04f6 2B4A     		ldr	r2, .L97+12
@@ -2231,74 +2229,74 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1457 04fc 0020     		movs	r0, #0
  1458 04fe FFF7FEFF 		bl	LCD_ShowString
  1459              	.LVL147:
- 258:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
- 1460              		.loc 1 258 9 view .LVU344
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1461              		.loc 1 259 9 view .LVU345
+ 256:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
+ 1460              		.loc 1 256 9 view .LVU344
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1461              		.loc 1 257 9 view .LVU345
  1462              	.LBB11:
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1463              		.loc 1 259 13 view .LVU346
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1464              		.loc 1 259 22 is_stmt 0 view .LVU347
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1463              		.loc 1 257 13 view .LVU346
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1464              		.loc 1 257 22 is_stmt 0 view .LVU347
  1465 0502 0023     		movs	r3, #0
  1466              	.LBE11:
- 258:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
- 1467              		.loc 1 258 18 view .LVU348
+ 256:Src/capture.c ****         for(uint32_t i = 0; i < 1000; i++) {
+ 1467              		.loc 1 256 18 view .LVU348
  1468 0504 1A46     		mov	r2, r3
  1469              	.LBB12:
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1470              		.loc 1 259 9 view .LVU349
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1470              		.loc 1 257 9 view .LVU349
  1471 0506 1EE0     		b	.L74
  1472              	.LVL148:
  1473              	.L93:
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1474              		.loc 1 259 9 view .LVU350
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1474              		.loc 1 257 9 view .LVU350
  1475              	.LBE12:
  1476              	.LBE10:
  1477              	.LBB14:
  1478              	.LBB7:
- 244:Src/capture.c ****                 if(res != FR_OK || bw != r) {
- 1479              		.loc 1 244 17 is_stmt 1 view .LVU351
- 244:Src/capture.c ****                 if(res != FR_OK || bw != r) {
- 1480              		.loc 1 244 23 is_stmt 0 view .LVU352
+ 242:Src/capture.c ****                 if(res != FR_OK || bw != r) {
+ 1479              		.loc 1 242 17 is_stmt 1 view .LVU351
+ 242:Src/capture.c ****                 if(res != FR_OK || bw != r) {
+ 1480              		.loc 1 242 23 is_stmt 0 view .LVU352
  1481 0508 1DAB     		add	r3, sp, #116
  1482 050a 2246     		mov	r2, r4
  1483 050c 2946     		mov	r1, r5
  1484 050e 1EA8     		add	r0, sp, #120
  1485 0510 FFF7FEFF 		bl	f_write
  1486              	.LVL149:
- 245:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
- 1487              		.loc 1 245 17 is_stmt 1 view .LVU353
- 245:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
- 1488              		.loc 1 245 19 is_stmt 0 view .LVU354
+ 243:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
+ 1487              		.loc 1 243 17 is_stmt 1 view .LVU353
+ 243:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
+ 1488              		.loc 1 243 19 is_stmt 0 view .LVU354
  1489 0514 0246     		mov	r2, r0
  1490 0516 10B9     		cbnz	r0, .L71
- 245:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
- 1491              		.loc 1 245 39 discriminator 1 view .LVU355
+ 243:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
+ 1491              		.loc 1 243 39 discriminator 1 view .LVU355
  1492 0518 1D9B     		ldr	r3, [sp, #116]
- 245:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
- 1493              		.loc 1 245 33 discriminator 1 view .LVU356
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 39
-
-
+ 243:Src/capture.c ****                     sprintf(msg, "Final write err: %d", res);
+ 1493              		.loc 1 243 33 discriminator 1 view .LVU356
  1494 051a 9C42     		cmp	r4, r3
  1495 051c 10D0     		beq	.L81
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 39
+
+
  1496              	.L71:
- 246:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1497              		.loc 1 246 21 is_stmt 1 view .LVU357
+ 244:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1497              		.loc 1 244 21 is_stmt 1 view .LVU357
  1498 051e 10AC     		add	r4, sp, #64
  1499              	.LVL150:
- 246:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1500              		.loc 1 246 21 is_stmt 0 view .LVU358
+ 244:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1500              		.loc 1 244 21 is_stmt 0 view .LVU358
  1501 0520 2B49     		ldr	r1, .L97+56
  1502 0522 2046     		mov	r0, r4
  1503              	.LVL151:
- 246:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1504              		.loc 1 246 21 view .LVU359
+ 244:Src/capture.c ****                     LCD_ShowString(0, 110, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1504              		.loc 1 244 21 view .LVU359
  1505 0524 FFF7FEFF 		bl	sprintf
  1506              	.LVL152:
- 247:Src/capture.c ****                 }
- 1507              		.loc 1 247 21 is_stmt 1 view .LVU360
+ 245:Src/capture.c ****                 }
+ 1507              		.loc 1 245 21 is_stmt 1 view .LVU360
  1508 0528 0194     		str	r4, [sp, #4]
  1509 052a 0C23     		movs	r3, #12
  1510 052c 0093     		str	r3, [sp]
@@ -2309,74 +2307,74 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1515 0536 0020     		movs	r0, #0
  1516 0538 FFF7FEFF 		bl	LCD_ShowString
  1517              	.LVL153:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1518              		.loc 1 222 24 is_stmt 0 view .LVU361
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1518              		.loc 1 220 24 is_stmt 0 view .LVU361
  1519 053c 0125     		movs	r5, #1
  1520              	.LVL154:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1521              		.loc 1 222 24 view .LVU362
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1521              		.loc 1 220 24 view .LVU362
  1522 053e D0E7     		b	.L70
  1523              	.LVL155:
  1524              	.L81:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1525              		.loc 1 222 24 view .LVU363
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1525              		.loc 1 220 24 view .LVU363
  1526 0540 0125     		movs	r5, #1
  1527              	.LVL156:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1528              		.loc 1 222 24 view .LVU364
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1528              		.loc 1 220 24 view .LVU364
  1529 0542 CEE7     		b	.L70
  1530              	.LVL157:
  1531              	.L75:
- 222:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
- 1532              		.loc 1 222 24 view .LVU365
+ 220:Src/capture.c ****             sprintf(msg, "EOI at: %lu", f_end);
+ 1532              		.loc 1 220 24 view .LVU365
  1533              	.LBE7:
  1534              	.LBE14:
  1535              	.LBB15:
  1536              	.LBB13:
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1537              		.loc 1 259 40 is_stmt 1 discriminator 2 view .LVU366
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1537              		.loc 1 257 40 is_stmt 1 discriminator 2 view .LVU366
  1538 0544 0133     		adds	r3, r3, #1
  1539              	.LVL158:
  1540              	.L74:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 40
+ 257:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
+ 1541              		.loc 1 257 31 discriminator 1 view .LVU367
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 40
 
 
- 259:Src/capture.c ****             if(pBuff[i] != 0) non_zero++;
- 1541              		.loc 1 259 31 discriminator 1 view .LVU367
  1542 0546 B3F57A7F 		cmp	r3, #1000
  1543 054a 05D2     		bcs	.L94
- 260:Src/capture.c ****         }
- 1544              		.loc 1 260 13 view .LVU368
- 260:Src/capture.c ****         }
- 1545              		.loc 1 260 21 is_stmt 0 view .LVU369
+ 258:Src/capture.c ****         }
+ 1544              		.loc 1 258 13 view .LVU368
+ 258:Src/capture.c ****         }
+ 1545              		.loc 1 258 21 is_stmt 0 view .LVU369
  1546 054c 1849     		ldr	r1, .L97+24
  1547 054e C95C     		ldrb	r1, [r1, r3]	@ zero_extendqisi2
- 260:Src/capture.c ****         }
- 1548              		.loc 1 260 15 view .LVU370
+ 258:Src/capture.c ****         }
+ 1548              		.loc 1 258 15 view .LVU370
  1549 0550 0029     		cmp	r1, #0
  1550 0552 F7D0     		beq	.L75
- 260:Src/capture.c ****         }
- 1551              		.loc 1 260 31 is_stmt 1 discriminator 1 view .LVU371
- 260:Src/capture.c ****         }
- 1552              		.loc 1 260 39 is_stmt 0 discriminator 1 view .LVU372
+ 258:Src/capture.c ****         }
+ 1551              		.loc 1 258 31 is_stmt 1 discriminator 1 view .LVU371
+ 258:Src/capture.c ****         }
+ 1552              		.loc 1 258 39 is_stmt 0 discriminator 1 view .LVU372
  1553 0554 0132     		adds	r2, r2, #1
  1554              	.LVL159:
- 260:Src/capture.c ****         }
- 1555              		.loc 1 260 39 discriminator 1 view .LVU373
+ 258:Src/capture.c ****         }
+ 1555              		.loc 1 258 39 discriminator 1 view .LVU373
  1556 0556 F5E7     		b	.L75
  1557              	.L94:
- 260:Src/capture.c ****         }
- 1558              		.loc 1 260 39 discriminator 1 view .LVU374
+ 258:Src/capture.c ****         }
+ 1558              		.loc 1 258 39 discriminator 1 view .LVU374
  1559              	.LBE13:
- 262:Src/capture.c ****         LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
- 1560              		.loc 1 262 9 is_stmt 1 view .LVU375
+ 260:Src/capture.c ****         LCD_ShowString(0, 62, ST7735Ctx.Width, 5, 12, (uint8_t*)msg);
+ 1560              		.loc 1 260 9 is_stmt 1 view .LVU375
  1561 0558 10AC     		add	r4, sp, #64
  1562 055a 1E49     		ldr	r1, .L97+60
  1563 055c 2046     		mov	r0, r4
  1564 055e FFF7FEFF 		bl	sprintf
  1565              	.LVL160:
- 263:Src/capture.c ****     } else {
- 1566              		.loc 1 263 9 view .LVU376
+ 261:Src/capture.c ****     } else {
+ 1566              		.loc 1 261 9 view .LVU376
  1567 0562 0194     		str	r4, [sp, #4]
  1568 0564 0C23     		movs	r3, #12
  1569 0566 0093     		str	r3, [sp]
@@ -2388,25 +2386,25 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1575 0572 FFF7FEFF 		bl	LCD_ShowString
  1576              	.LVL161:
  1577              	.L77:
- 263:Src/capture.c ****     } else {
- 1578              		.loc 1 263 9 is_stmt 0 view .LVU377
+ 261:Src/capture.c ****     } else {
+ 1578              		.loc 1 261 9 is_stmt 0 view .LVU377
  1579              	.LBE15:
- 268:Src/capture.c **** 
- 1580              		.loc 1 268 5 is_stmt 1 view .LVU378
+ 266:Src/capture.c **** 
+ 1580              		.loc 1 266 5 is_stmt 1 view .LVU378
  1581 0576 4FF4FA70 		mov	r0, #500
  1582 057a FFF7FEFF 		bl	HAL_Delay
  1583              	.LVL162:
- 270:Src/capture.c **** }
- 1584              		.loc 1 270 5 view .LVU379
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 41
+ 268:Src/capture.c **** }
+ 1584              		.loc 1 268 5 view .LVU379
+ 268:Src/capture.c **** }
+ 1585              		.loc 1 268 12 is_stmt 0 view .LVU380
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 41
 
 
- 270:Src/capture.c **** }
- 1585              		.loc 1 270 12 is_stmt 0 view .LVU380
  1586 057e 48E5     		b	.L44
  1587              	.L73:
- 265:Src/capture.c ****     }
- 1588              		.loc 1 265 9 is_stmt 1 view .LVU381
+ 263:Src/capture.c ****     }
+ 1588              		.loc 1 263 9 is_stmt 1 view .LVU381
  1589 0580 154B     		ldr	r3, .L97+64
  1590 0582 0193     		str	r3, [sp, #4]
  1591 0584 0C23     		movs	r3, #12
@@ -2430,7 +2428,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1609 05ac F8000000 		.word	.LC18
  1610 05b0 00000000 		.word	pBuff
  1611 05b4 0C010000 		.word	.LC19
- 1612 05b8 FE1F0300 		.word	204798
+ 1612 05b8 FEFF0400 		.word	327678
  1613 05bc 30010000 		.word	.LC20
  1614 05c0 3C010000 		.word	.LC21
  1615 05c4 48010000 		.word	.LC22
@@ -2444,7 +2442,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1624              		.section	.sram1,"aw"
  1625              		.align	2
  1628              	pBuff:
- 1629 0000 00000000 		.space	204800
+ 1629 0000 00000000 		.space	327680
  1629      00000000 
  1629      00000000 
  1629      00000000 
@@ -2458,11 +2456,11 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1636              		.file 6 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
  1637              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
  1638              		.file 8 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 42
-
-
  1639              		.file 9 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dcmi.h"
  1640              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h"
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 42
+
+
  1641              		.file 11 "Middlewares/Third_Party/FatFs/src/ff.h"
  1642              		.file 12 "Inc/fatfs.h"
  1643              		.file 13 "Inc/i2c.h"
@@ -2473,33 +2471,33 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 1
  1648              		.file 18 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
  1649              		.file 19 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/stdio.h"
  1650              		.file 20 "<built-in>"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s 			page 43
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s 			page 43
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 capture.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:20     .text.to_lower:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:25     .text.to_lower:00000000 to_lower
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:53     .rodata.ensure_sd_mounted.str1.4:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:57     .text.ensure_sd_mounted:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:62     .text.ensure_sd_mounted:00000000 ensure_sd_mounted
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:142    .text.ensure_sd_mounted:00000044 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:151    .rodata.parse_photo_id.str1.4:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:158    .text.parse_photo_id:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:163    .text.parse_photo_id:00000000 parse_photo_id
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:344    .text.parse_photo_id:000000a8 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:350    .rodata.find_next_photo_id.str1.4:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:354    .text.find_next_photo_id:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:359    .text.find_next_photo_id:00000000 find_next_photo_id
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:456    .text.find_next_photo_id:0000005c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:463    .rodata.take_A_Picture.str1.4:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:536    .text.take_A_Picture:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:542    .text.take_A_Picture:00000000 take_A_Picture
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:1044   .text.take_A_Picture:000002ac $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:1628   .sram1:00000000 pBuff
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:1070   .text.take_A_Picture:00000304 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:1604   .text.take_A_Picture:00000598 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc4VvYSy.s:1625   .sram1:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:20     .text.to_lower:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:25     .text.to_lower:00000000 to_lower
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:53     .rodata.ensure_sd_mounted.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:57     .text.ensure_sd_mounted:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:62     .text.ensure_sd_mounted:00000000 ensure_sd_mounted
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:142    .text.ensure_sd_mounted:00000044 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:151    .rodata.parse_photo_id.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:158    .text.parse_photo_id:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:163    .text.parse_photo_id:00000000 parse_photo_id
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:344    .text.parse_photo_id:000000a8 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:350    .rodata.find_next_photo_id.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:354    .text.find_next_photo_id:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:359    .text.find_next_photo_id:00000000 find_next_photo_id
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:456    .text.find_next_photo_id:0000005c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:463    .rodata.take_A_Picture.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:536    .text.take_A_Picture:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:542    .text.take_A_Picture:00000000 take_A_Picture
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:1044   .text.take_A_Picture:000002ac $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:1628   .sram1:00000000 pBuff
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:1070   .text.take_A_Picture:00000304 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:1604   .text.take_A_Picture:00000598 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZYTPMU.s:1625   .sram1:00000000 $d
 
 UNDEFINED SYMBOLS
 f_mount

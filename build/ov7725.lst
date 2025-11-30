@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
   49 0010 FFF7FEFF 		bl	Camera_WriteReg
   50              	.LVL3:
    8:Drivers/BSP/Camera/ov7725.c ****     return 0;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 2
 
 
   51              		.loc 1 8 5 is_stmt 1 view .LVU5
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
   22:Drivers/BSP/Camera/ov7725.c ****     Camera_delay(2);
   94              		.loc 1 22 5 is_stmt 1 view .LVU11
   95 000c 0220     		movs	r0, #2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 3
 
 
   96              	.LVL6:
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  136              		.loc 1 32 5 view .LVU26
   33:Drivers/BSP/Camera/ov7725.c **** }
  137              		.loc 1 33 1 is_stmt 0 view .LVU27
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 4
 
 
  138 0038 2846     		mov	r0, r5
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  187              	.LFE145:
  189              		.section	.text.ov7725_set_pixformat,"ax",%progbits
  190              		.align	1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 5
 
 
  191              		.syntax unified
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  237 002a 8DF80730 		strb	r3, [sp, #7]
   43:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg( DSP_CTRL4, DSP_CTRL4_YUV_RGB);
  238              		.loc 1 43 13 is_stmt 1 view .LVU46
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 6
 
 
  239              		.loc 1 43 20 is_stmt 0 view .LVU47
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  275 0050 052C     		cmp	r4, #5
  276 0052 0FD1     		bne	.L24
   51:Drivers/BSP/Camera/ov7725.c ****             ret |= ov7725_WR_Reg(DSP_CTRL4, DSP_CTRL4_RAW8);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 7
 
 
  277              		.loc 1 51 13 is_stmt 1 view .LVU55
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
   49:Drivers/BSP/Camera/ov7725.c ****         case PIXFORMAT_BAYER:
  318              		.loc 1 49 13 is_stmt 1 view .LVU69
  319 0092 D2E7     		b	.L21
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 8
 
 
  320              		.cfi_endproc
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  366 0012 B5F5F07F 		cmp	r5, #480
  367 0016 98BF     		it	ls
  368 0018 B6F5207F 		cmpls	r6, #640
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 9
 
 
  369 001c 00F29A80 		bhi	.L29
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  411 0056 FFF7FEFF 		bl	ov7725_RD_Reg
  412              	.LVL45:
  413 005a 0443     		orrs	r4, r4, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 10
 
 
  414              	.LVL46:
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  460              		.loc 1 90 19 is_stmt 0 view .LVU109
  461 009e 0DF10601 		add	r1, sp, #6
  462 00a2 1220     		movs	r0, #18
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 11
 
 
  463 00a4 FFF7FEFF 		bl	ov7725_RD_Reg
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  506              	.LVL59:
  507              	.L25:
  508              		.loc 1 101 16 view .LVU125
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 12
 
 
  509              	.LBE3:
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  106:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
  535              		.loc 1 106 9 is_stmt 1 view .LVU131
  106:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(COM7, reg);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 13
 
 
  536              		.loc 1 106 15 is_stmt 0 view .LVU132
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  119:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL1, 0x40);
  577              		.loc 1 119 9 is_stmt 1 view .LVU146
  119:Drivers/BSP/Camera/ov7725.c ****         ret |= ov7725_WR_Reg(SCAL1, 0x40);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 14
 
 
  578              		.loc 1 119 16 is_stmt 0 view .LVU147
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  625 0000 30B5     		push	{r4, r5, lr}
  626              	.LCFI13:
  627              		.cfi_def_cfa_offset 12
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 15
 
 
  628              		.cfi_offset 4, -12
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  677              		.syntax unified
  678              		.thumb
  679              		.thumb_func
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 16
 
 
  681              	ov7725_set_vflip:
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  727              		.loc 1 141 12 is_stmt 0 view .LVU181
  728 002a 034B     		ldr	r3, .L39
  729 002c 187C     		ldrb	r0, [r3, #16]	@ zero_extendqisi2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 17
 
 
  730 002e FFF7FEFF 		bl	ov7725_set_framesize
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  778              		.loc 1 149 20 is_stmt 0 view .LVU190
  779 0008 084D     		ldr	r5, .L43
  780 000a 2C74     		strb	r4, [r5, #16]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 18
 
 
  150:Drivers/BSP/Camera/ov7725.c **** 	hcamera.pixformat = PIXFORMAT_RGB565;
@@ -1072,33 +1072,33 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 1
  822              		.file 8 "Drivers/BSP/Camera/camera.h"
  823              		.file 9 "Drivers/BSP/Camera/ov7725_regs.h"
  824              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s 			page 19
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 ov7725.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:20     .text.ov7725_WR_Reg:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:25     .text.ov7725_WR_Reg:00000000 ov7725_WR_Reg
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:62     .text.ov7725_WR_Reg:0000001c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:67     .text.ov7725_reset:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:72     .text.ov7725_reset:00000000 ov7725_reset
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:145    .text.ov7725_reset:0000003c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:150    .text.ov7725_RD_Reg:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:155    .text.ov7725_RD_Reg:00000000 ov7725_RD_Reg
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:185    .text.ov7725_RD_Reg:00000010 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:190    .text.ov7725_set_pixformat:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:195    .text.ov7725_set_pixformat:00000000 ov7725_set_pixformat
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:324    .text.ov7725_set_framesize:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:329    .text.ov7725_set_framesize:00000000 ov7725_set_framesize
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:607    .text.ov7725_set_framesize:0000015c $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:612    .text.ov7725_set_hmirror:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:617    .text.ov7725_set_hmirror:00000000 ov7725_set_hmirror
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:676    .text.ov7725_set_vflip:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:681    .text.ov7725_set_vflip:00000000 ov7725_set_vflip
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:747    .text.ov7725_set_vflip:00000038 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:752    .text.ov7725_init:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:758    .text.ov7725_init:00000000 ov7725_init
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc22GUor.s:810    .text.ov7725_init:0000002c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:20     .text.ov7725_WR_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:25     .text.ov7725_WR_Reg:00000000 ov7725_WR_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:62     .text.ov7725_WR_Reg:0000001c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:67     .text.ov7725_reset:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:72     .text.ov7725_reset:00000000 ov7725_reset
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:145    .text.ov7725_reset:0000003c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:150    .text.ov7725_RD_Reg:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:155    .text.ov7725_RD_Reg:00000000 ov7725_RD_Reg
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:185    .text.ov7725_RD_Reg:00000010 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:190    .text.ov7725_set_pixformat:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:195    .text.ov7725_set_pixformat:00000000 ov7725_set_pixformat
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:324    .text.ov7725_set_framesize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:329    .text.ov7725_set_framesize:00000000 ov7725_set_framesize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:607    .text.ov7725_set_framesize:0000015c $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:612    .text.ov7725_set_hmirror:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:617    .text.ov7725_set_hmirror:00000000 ov7725_set_hmirror
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:676    .text.ov7725_set_vflip:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:681    .text.ov7725_set_vflip:00000000 ov7725_set_vflip
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:747    .text.ov7725_set_vflip:00000038 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:752    .text.ov7725_init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:758    .text.ov7725_init:00000000 ov7725_init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc936lCS.s:810    .text.ov7725_init:0000002c $d
 
 UNDEFINED SYMBOLS
 Camera_WriteReg

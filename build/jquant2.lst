@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
   29:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****  * This module implements the well-known Heckbert paradigm for color
   30:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****  * quantization.  Most of the ideas used here can be traced back to
   31:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****  * Heckbert's seminal paper
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 2
 
 
   32:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****  *   Heckbert, Paul.  "Color Image Quantization for Frame Buffer Display",
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
   86:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define C0_SCALE R_SCALE
   87:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #endif
   88:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #if RGB_BLUE == 0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 3
 
 
   89:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define C0_SCALE B_SCALE
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  143:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define C0_SHIFT  (BITS_IN_JSAMPLE-HIST_C0_BITS)
  144:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define C1_SHIFT  (BITS_IN_JSAMPLE-HIST_C1_BITS)
  145:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define C2_SHIFT  (BITS_IN_JSAMPLE-HIST_C2_BITS)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 4
 
 
  146:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  200:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
  201:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   /* Variables for accumulating image statistics */
  202:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   hist3d histogram;		/* pointer to the histogram */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 5
 
 
  203:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
   53              	.LVL2:
  232:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   int row;
   54              		.loc 1 232 3 is_stmt 1 view .LVU8
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 6
 
 
  233:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   JDIMENSION col;
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
   87 0026 8008     		lsrs	r0, r0, #2
  241:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 			 [GETJSAMPLE(ptr[2]) >> C2_SHIFT];
   88              		.loc 1 241 5 view .LVU25
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 7
 
 
   89 0028 02EB8012 		add	r2, r2, r0, lsl #6
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  128              	.L9:
  247:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     }
  248:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 8
 
 
  249:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  153              		.loc 1 280 3 view .LVU47
  154              	.LVL13:
  281:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   boxptr which = NULL;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 9
 
 
  155              		.loc 1 281 3 view .LVU48
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  201              		.loc 1 286 12 view .LVU64
  202 0026 A446     		mov	ip, r4
  203              	.LVL20:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 10
 
 
  204              		.loc 1 286 12 view .LVU65
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  303:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   for (i = 0, boxp = boxlist; i < numboxes; i++, boxp++) {
  244              		.loc 1 303 3 view .LVU75
  301:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   boxptr which = NULL;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 11
 
 
  245              		.loc 1 301 10 is_stmt 0 view .LVU76
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  291              		.loc 1 309 3 is_stmt 1 view .LVU91
  310:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
  292              		.loc 1 310 1 is_stmt 0 view .LVU92
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 12
 
 
  293 0024 5DF8044B 		ldr	r4, [sp], #4
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  339              		.loc 1 320 3 is_stmt 1 view .LVU100
  321:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   int c0,c1,c2;
  340              		.loc 1 321 3 view .LVU101
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 13
 
 
  322:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   int c0min,c0max,c1min,c1max,c2min,c2max;
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  375              		.loc 1 341 6 is_stmt 0 view .LVU120
  376 0022 A445     		cmp	ip, r4
  377 0024 44DB     		blt	.L83
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 14
 
 
  378              	.L41:
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  380:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    boxp->c2min = c2min = c2;
  381:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    goto have_c2min;
  382:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	  }
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 15
 
 
  383:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       }
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  422              		.loc 1 408 30 view .LVU140
  423 0054 07FB0787 		mla	r7, r7, r7, r8
  424              	.LVL48:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 16
 
 
  425              		.loc 1 408 44 view .LVU141
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  464              		.loc 1 331 13 view .LVU156
  465 0074 6746     		mov	r7, ip
  466              	.LVL58:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 17
 
 
  467              	.L33:
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  506 009e F6E7     		b	.L35
  507              	.LVL65:
  508              	.L100:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 18
 
 
  347:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    goto have_c0max;
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  548              		.loc 1 344 21 is_stmt 0 view .LVU186
  549 00bc 5EF82730 		ldr	r3, [lr, r7, lsl #2]
  344:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	for (c2 = c2min; c2 <= c2max; c2++)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 19
 
 
  550              		.loc 1 344 25 view .LVU187
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  589 00e2 08F10108 		add	r8, r8, #1
  590              	.LVL80:
  354:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	histp = & histogram[c0][c1][c2min];
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 20
 
 
  591              		.loc 1 354 39 is_stmt 0 discriminator 2 view .LVU203
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  357:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    boxp->c1min = c1min = c1;
  632              		.loc 1 357 4 view .LVU217
  633              	.LVL88:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 21
 
 
  357:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    boxp->c1min = c1min = c1;
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  674              	.LVL97:
  364:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       for (c0 = c0min; c0 <= c0max; c0++) {
  675              		.loc 1 364 25 is_stmt 1 discriminator 1 view .LVU232
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 22
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 22
 
 
  676 012a 5745     		cmp	r7, r10
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  380:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    goto have_c2min;
  716              		.loc 1 380 6 is_stmt 1 view .LVU247
  380:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    goto have_c2min;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 23
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 23
 
 
  717              		.loc 1 380 18 is_stmt 0 view .LVU248
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  757              		.loc 1 377 25 view .LVU262
  758 017c 03EB8A13 		add	r3, r3, r10, lsl #6
  377:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	for (c1 = c1min; c1 <= c1max; c1++, histp += HIST_C2_ELEMS)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 24
 
 
  759              		.loc 1 377 8 view .LVU263
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  797              		.loc 1 387 39 is_stmt 1 discriminator 2 view .LVU279
  798 019e 09F10109 		add	r9, r9, #1
  799              	.LVL118:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 25
 
 
  387:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	histp = & histogram[c0][c1min][c2];
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  840 01c8 E9DC     		bgt	.L111
  390:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    boxp->c2max = c2max = c2;
  841              		.loc 1 390 4 view .LVU294
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 26
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 26
 
 
  390:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	    boxp->c2max = c2max = c2;
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  884              	.LVL132:
  885              	.L80:
  413:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     for (c1 = c1min; c1 <= c1max; c1++) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 27
 
 
  886              		.loc 1 413 25 discriminator 1 view .LVU312
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  927              		.thumb
  928              		.thumb_func
  930              	median_cut:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 28
 
 
  931              	.LVL136:
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  966              		.loc 1 440 12 is_stmt 0 view .LVU335
  967 0010 2946     		mov	r1, r5
  968 0012 5046     		mov	r0, r10
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 29
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 29
 
 
  969 0014 FFF7FEFF 		bl	find_biggest_volume
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  476:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       b1->c0max = lb;
  477:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       b2->c0min = lb+1;
  478:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       break;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 30
 
 
  479:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     case 1:
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1032              		.loc 1 487 17 view .LVU356
  1033 0044 2361     		str	r3, [r4, #16]
  1034              	.LVL151:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 31
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 31
 
 
  488:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       break;
@@ -1858,7 +1858,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  444:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     /* Copy the color bounds to the new box. */
  1075              		.loc 1 444 18 is_stmt 0 view .LVU371
  1076 0070 4FEA451B 		lsl	fp, r5, #5
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 32
 
 
  444:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     /* Copy the color bounds to the new box. */
@@ -1918,7 +1918,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  452:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     c1 = ((b1->c1max - b1->c1min) << C1_SHIFT) * C1_SCALE;
  1111              		.loc 1 452 14 is_stmt 0 view .LVU392
  1112 0092 4F68     		ldr	r7, [r1, #4]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 33
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 33
 
 
  452:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     c1 = ((b1->c1max - b1->c1min) << C1_SHIFT) * C1_SCALE;
@@ -1978,7 +1978,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1149              		.loc 1 459 10 view .LVU410
  1150 00bc 9646     		mov	lr, r2
  1151              	.LVL163:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 34
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 34
 
 
  459:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     if (c0 > cmax) { cmax = c0; n = 0; }
@@ -2038,7 +2038,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1191              		.loc 1 495 3 is_stmt 1 view .LVU424
  496:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
  1192              		.loc 1 496 1 is_stmt 0 view .LVU425
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 35
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 35
 
 
  1193 00e2 2846     		mov	r0, r5
@@ -2098,7 +2098,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  506:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   hist3d histogram = cquantize->histogram;
  1240              		.loc 1 506 3 is_stmt 1 view .LVU431
  1241              		.loc 1 506 10 is_stmt 0 view .LVU432
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 36
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 36
 
 
  1242 0010 D2F81890 		ldr	r9, [r2, #24]
@@ -2158,7 +2158,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1281 0026 4FF0000E 		mov	lr, #0
  513:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   long c2total = 0;
  1282              		.loc 1 513 8 view .LVU456
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 37
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 37
 
 
  1283 002a 7546     		mov	r5, lr
@@ -2218,7 +2218,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1328 0060 08F10208 		add	r8, r8, #2
  1329              		.loc 1 527 12 view .LVU474
  1330 0064 02FB0855 		mla	r5, r2, r8, r5
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 38
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 38
 
 
  1331              	.LVL188:
@@ -2278,7 +2278,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1373              		.loc 1 520 35 discriminator 2 view .LVU490
  1374 009c 8C46     		mov	ip, r1
  520:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     for (c1 = c1min; c1 <= c1max; c1++) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 39
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 39
 
 
  1375              		.loc 1 520 35 is_stmt 1 discriminator 2 view .LVU491
@@ -2338,7 +2338,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1420 00de 9268     		ldr	r2, [r2, #8]
  1421              		.loc 1 535 30 view .LVU511
  1422 00e0 02F80B30 		strb	r3, [r2, fp]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 40
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 40
 
 
  536:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
@@ -2398,7 +2398,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1466 000a 4A01     		lsls	r2, r1, #5
  1467 000c 0121     		movs	r1, #1
  1468              	.LVL199:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 41
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 41
 
 
  1469              		.loc 1 548 23 view .LVU522
@@ -2458,7 +2458,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1510 0034 FFF7FEFF 		bl	median_cut
  1511              	.LVL204:
  1512 0038 0746     		mov	r7, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 42
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 42
 
 
  1513              	.LVL205:
@@ -2518,7 +2518,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1561              	.LFB154:
  568:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
  569:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 43
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 43
 
 
  570:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** /*
@@ -2578,7 +2578,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  624:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** /* log2(histogram cells in update box) for each axis; this can be adjusted */
  625:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define BOX_C0_LOG  (HIST_C0_BITS-3)
  626:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define BOX_C1_LOG  (HIST_C1_BITS-3)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 44
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 44
 
 
  627:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define BOX_C2_LOG  (HIST_C2_BITS-3)
@@ -2638,7 +2638,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1584              		.loc 1 658 7 is_stmt 0 view .LVU554
  1585 000a D0F88470 		ldr	r7, [r0, #132]
  1586              	.LVL211:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 45
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 45
 
 
  659:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   int maxc0, maxc1, maxc2;
@@ -2698,7 +2698,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1623              		.loc 1 676 3 is_stmt 1 view .LVU573
  1624              		.loc 1 676 21 is_stmt 0 view .LVU574
  1625 002c 1818     		adds	r0, r3, r0
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 46
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 46
 
 
  1626              	.LVL220:
@@ -2758,7 +2758,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1656              		.loc 1 699 7 is_stmt 1 view .LVU588
  1657              		.loc 1 699 18 is_stmt 0 view .LVU589
  1658 004e 641A     		subs	r4, r4, r1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 47
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 47
 
 
  1659              	.LVL225:
@@ -2818,7 +2818,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1702              		.loc 1 709 11 is_stmt 0 view .LVU608
  1703 0072 04FB04F4 		mul	r4, r4, r4
  1704              	.LVL235:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 48
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 48
 
 
  703:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       if (x <= centerc0) {
@@ -2878,7 +2878,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1741 0098 049F     		ldr	r7, [sp, #16]
  1742 009a 8742     		cmp	r7, r0
  1743 009c 06DB     		blt	.L159
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 49
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 49
 
 
  727:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	tdist = (x - maxc1) * C1_SCALE;
@@ -2938,7 +2938,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1781              		.loc 1 743 7 is_stmt 1 view .LVU641
  1782              		.loc 1 743 16 is_stmt 0 view .LVU642
  1783 00c0 05FB05AA 		mla	r10, r5, r5, r10
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 50
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 50
 
 
  1784              	.LVL250:
@@ -2998,7 +2998,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1818 00e6 2868     		ldr	r0, [r5]
  1819 00e8 F446     		mov	ip, lr
  1820 00ea 10F80E40 		ldrb	r4, [r0, lr]	@ zero_extendqisi2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 51
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 51
 
 
  1821              	.LVL255:
@@ -3058,7 +3058,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  715:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       min_dist += tdist*tdist;
  1858              		.loc 1 715 18 is_stmt 0 view .LVU673
  1859 0112 A0EB020B 		sub	fp, r0, r2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 52
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 52
 
 
  715:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       min_dist += tdist*tdist;
@@ -3118,7 +3118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  739:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       max_dist += tdist*tdist;
  1897              		.loc 1 739 13 is_stmt 0 view .LVU691
  1898 013a 019D     		ldr	r5, [sp, #4]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 53
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 53
 
 
  1899              	.LVL270:
@@ -3178,7 +3178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1937              		.loc 1 753 11 view .LVU707
  1938 015a B6E7     		b	.L161
  1939              	.LVL279:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 54
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 54
 
 
  1940              	.L171:
@@ -3238,7 +3238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  1981              	.LVL285:
  1982              		.loc 1 772 1 view .LVU722
  1983              		@ sp needed
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 55
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 55
 
 
  1984 0182 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
@@ -3298,7 +3298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  788:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   JSAMPLE * cptr;		/* pointer into bestcolor[] array */
  2025              		.loc 1 788 3 view .LVU729
  789:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   INT32 dist0, dist1;		/* initial distance values */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 56
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 56
 
 
  2026              		.loc 1 789 3 view .LVU730
@@ -3358,7 +3358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  810:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** #define STEP_C2  ((1 << C2_SHIFT) * C2_SCALE)
  811:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   
  812:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   for (i = 0; i < numcolors; i++) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 57
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 57
 
 
  2057              		.loc 1 812 10 is_stmt 0 view .LVU745
@@ -3418,7 +3418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2080              		.loc 1 843 4 is_stmt 1 view .LVU753
  2081              		.loc 1 843 8 is_stmt 0 view .LVU754
  2082 003a 0135     		adds	r5, r5, #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 58
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 58
 
 
  2083              	.LVL298:
@@ -3478,7 +3478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  833:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	xx2 = inc2;
  2122              		.loc 1 833 8 view .LVU771
  2123 0062 7346     		mov	r3, lr
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 59
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 59
 
 
  835:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	  if (dist2 < *bptr) {
@@ -3538,7 +3538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  812:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     icolor = GETJSAMPLE(colorlist[i]);
  2167              		.loc 1 812 17 discriminator 1 view .LVU785
  2168 0096 7145     		cmp	r1, lr
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 60
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 60
 
 
  2169 0098 31DA     		bge	.L189
@@ -3598,7 +3598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  819:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     dist0 += inc2*inc2;
  2207              		.loc 1 819 10 view .LVU802
  2208 00cc ACEB0606 		sub	r6, ip, r6
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 61
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 61
 
 
  2209              	.LVL312:
@@ -3658,7 +3658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  829:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       dist1 = dist0;
  2245              		.loc 1 829 14 view .LVU821
  2246 00ee 0326     		movs	r6, #3
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 62
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 62
 
 
  2247 00f0 0591     		str	r1, [sp, #20]
@@ -3718,7 +3718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2291              		.cfi_offset 11, -8
  2292              		.cfi_offset 14, -4
  2293 0004 E7B0     		sub	sp, sp, #412
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 63
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 63
 
 
  2294              	.LCFI20:
@@ -3778,7 +3778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  880:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****    * histogram cell, which are the lower bounds of the volume we care about.
  881:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****    */
  882:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   minc0 = (c0 << BOX_C0_SHIFT) + ((1 << C0_SHIFT) >> 1);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 64
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 64
 
 
  2329              		.loc 1 882 3 is_stmt 1 view .LVU844
@@ -3838,7 +3838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2373 0056 5846     		mov	r0, fp
  2374              	.LVL339:
  2375              		.loc 1 892 3 is_stmt 0 view .LVU859
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 65
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 65
 
 
  2376 0058 FFF7FEFF 		bl	find_best_colors
@@ -3898,7 +3898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  901:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     for (ic1 = 0; ic1 < BOX_C1_ELEMS; ic1++) {
  2416              		.loc 1 901 42 discriminator 2 view .LVU876
  2417 0086 0131     		adds	r1, r1, #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 66
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 66
 
 
  2418              	.LVL348:
@@ -3958,7 +3958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2455              	.LCFI21:
  2456              		.cfi_def_cfa_offset 36
  2457              		@ sp needed
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 67
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 67
 
 
  2458 00b4 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
@@ -4018,7 +4018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2501 0010 D3F81890 		ldr	r9, [r3, #24]
  2502              	.LVL354:
  922:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   register JSAMPROW inptr, outptr;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 68
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 68
 
 
  2503              		.loc 1 922 3 is_stmt 1 view .LVU898
@@ -4078,7 +4078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  932:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       /* get pixel value and index into the cache */
  2536              		.loc 1 932 35 is_stmt 1 discriminator 2 view .LVU914
  2537 002e 013F     		subs	r7, r7, #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 69
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 69
 
 
  2538              	.LVL360:
@@ -4138,7 +4138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  940:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	fill_inverse_cmap(cinfo, c0,c1,c2);
  2576              		.loc 1 940 11 is_stmt 0 view .LVU932
  2577 004e 36F81430 		ldrh	r3, [r6, r4, lsl #1]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 70
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 70
 
 
  940:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	fill_inverse_cmap(cinfo, c0,c1,c2);
@@ -4198,7 +4198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  945:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   }
  946:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
  2618              		.loc 1 946 1 view .LVU946
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 71
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 71
 
 
  2619 0082 05B0     		add	sp, sp, #20
@@ -4258,7 +4258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2666              		.loc 1 955 10 is_stmt 0 view .LVU953
  2667 0012 BA69     		ldr	r2, [r7, #24]
  2668              	.LVL376:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 72
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 72
 
 
  2669              		.loc 1 955 10 view .LVU954
@@ -4318,7 +4318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  971:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   JSAMPROW colormap1 = cinfo->colormap[1];
  2708              		.loc 1 971 3 is_stmt 1 view .LVU977
  2709              		.loc 1 971 12 is_stmt 0 view .LVU978
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 73
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 73
 
 
  2710 002c 5A68     		ldr	r2, [r3, #4]
@@ -4378,7 +4378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2743              		.loc 1 989 12 view .LVU993
  2744 0046 4FF00309 		mov	r9, #3
  988:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       dir3 = 3;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 74
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 74
 
 
  2745              		.loc 1 988 11 view .LVU994
@@ -4438,7 +4438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2756              	.LVL393:
 1035:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	*outptr = (JSAMPLE) pixcode;
  2757              		.loc 1 1035 2 is_stmt 1 view .LVU998
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 75
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 75
 
 
  2758              		.loc 1 1035 10 is_stmt 0 view .LVU999
@@ -4498,7 +4498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2797              		.loc 1 1050 14 view .LVU1017
  2798 0076 2280     		strh	r2, [r4]	@ movhi
 1051:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	cur0 += delta;		/* form error * 5 */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 76
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 76
 
 
  2799              		.loc 1 1051 2 is_stmt 1 view .LVU1018
@@ -4558,7 +4558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2841              		.loc 1 1063 2 is_stmt 1 view .LVU1039
 1064:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	delta = cur2 * 2;
  2842              		.loc 1 1064 2 view .LVU1040
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 77
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 77
 
 
 1065:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	cur2 += delta;		/* form error * 3 */
@@ -4618,7 +4618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2884              	.LVL413:
 1078:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       errorptr += dir3;		/* advance errorptr to current column */
  2885              		.loc 1 1078 7 is_stmt 1 view .LVU1061
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 78
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 78
 
 
  999:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       /* curN holds the error propagated from the previous pixel on the
@@ -4678,7 +4678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
 1009:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       cur2 = RIGHT_SHIFT(cur2 + errorptr[dir3+2] + 8, 4);
  2928              		.loc 1 1009 12 view .LVU1075
  2929 00f2 1211     		asrs	r2, r2, #4
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 79
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 79
 
 
  2930              	.LVL419:
@@ -4738,7 +4738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  2967 011c 9BF80230 		ldrb	r3, [fp, #2]	@ zero_extendqisi2
 1023:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       cur0 = GETJSAMPLE(range_limit[cur0]);
  2968              		.loc 1 1023 12 view .LVU1093
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 80
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 80
 
 
  2969 0120 0344     		add	r3, r3, r0
@@ -4798,7 +4798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
 1032:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       /* Now emit the colormap index for this cell */
  3007              		.loc 1 1032 2 is_stmt 1 view .LVU1110
  3008 0148 3346     		mov	r3, r6
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 81
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 81
 
 
  3009 014a 1198     		ldr	r0, [sp, #68]
@@ -4858,7 +4858,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  977:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     if (cquantize->on_odd_row) {
  3050              		.loc 1 977 12 is_stmt 0 view .LVU1125
  3051 0176 179B     		ldr	r3, [sp, #92]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 82
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 82
 
 
  3052 0178 53F828A0 		ldr	r10, [r3, r8, lsl #2]
@@ -4918,7 +4918,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  982:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****       dir3 = -3;
  3089              		.loc 1 982 11 view .LVU1143
  3090 01a4 4FF0FF33 		mov	r3, #-1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 83
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 83
 
 
  3091 01a8 0A93     		str	r3, [sp, #40]
@@ -4978,7 +4978,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3128 01ca 19B0     		add	sp, sp, #100
  3129              	.LCFI27:
  3130              		.cfi_def_cfa_offset 36
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 84
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 84
 
 
  3131              		@ sp needed
@@ -5038,7 +5038,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3161              		.loc 1 1114 3 view .LVU1166
 1115:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
 1116:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   table = (int *) (*cinfo->mem->alloc_small)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 85
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 85
 
 
  3162              		.loc 1 1116 3 view .LVU1167
@@ -5098,7 +5098,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3203              		.loc 1 1124 40 discriminator 3 view .LVU1187
  3204 002c 0132     		adds	r2, r2, #1
  3205              	.LVL454:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 86
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 86
 
 
  3206              	.L221:
@@ -5158,7 +5158,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3246              		.loc 1 1133 27 is_stmt 0 view .LVU1205
  3247 005a A0EB8301 		sub	r1, r0, r3, lsl #2
  3248              		.loc 1 1133 35 view .LVU1206
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 87
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 87
 
 
  3249 005e 5442     		rsbs	r4, r2, #0
@@ -5218,7 +5218,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3287              		.loc 1 1149 30 is_stmt 0 view .LVU1216
  3288 0006 2269     		ldr	r2, [r4, #16]
  3289              		.loc 1 1149 19 view .LVU1217
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 88
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 88
 
 
  3290 0008 C0F88820 		str	r2, [r0, #136]
@@ -5278,7 +5278,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
 1165:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****  */
 1166:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
 1167:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** METHODDEF(void)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 89
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 89
 
 
 1168:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** start_pass_2_quant (j_decompress_ptr cinfo, boolean is_pre_scan)
@@ -5338,7 +5338,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
 1222:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   }
 1223:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** }
 1224:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 90
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 90
 
 
 1225:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
@@ -5398,7 +5398,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3374 0002 0446     		mov	r4, r0
 1170:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   hist3d histogram = cquantize->histogram;
  3375              		.loc 1 1170 3 is_stmt 1 view .LVU1233
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 91
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 91
 
 
 1170:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   hist3d histogram = cquantize->histogram;
@@ -5458,7 +5458,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
 1216:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     for (i = 0; i < HIST_C0_ELEMS; i++) {
  3412              		.loc 1 1216 16 is_stmt 0 view .LVU1252
  3413 0024 F369     		ldr	r3, [r6, #28]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 92
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 92
 
 
 1216:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****     for (i = 0; i < HIST_C0_ELEMS; i++) {
@@ -5518,7 +5518,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3452              		.loc 1 1197 7 is_stmt 1 view .LVU1268
  3453 004a 2368     		ldr	r3, [r4]
  3454 004c 3B22     		movs	r2, #59
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 93
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 93
 
 
  3455 004e 5A61     		str	r2, [r3, #20]
@@ -5578,7 +5578,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3496 0080 B36A     		ldr	r3, [r6, #40]
 1209:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 	init_error_limit(cinfo);
  3497              		.loc 1 1209 10 view .LVU1282
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 94
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 94
 
 
  3498 0082 C3B1     		cbz	r3, .L251
@@ -5638,7 +5638,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3541 00ac 0121     		movs	r1, #1
  3542 00ae 2046     		mov	r0, r4
  3543 00b0 9847     		blx	r3
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 95
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 95
 
 
  3544              	.LVL481:
@@ -5698,7 +5698,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3587 00dc 00000000 		.word	prescan_quantize
  3588 00e0 00000000 		.word	finish_pass1
  3589 00e4 00000000 		.word	pass2_no_dither
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 96
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 96
 
 
  3590 00e8 00000000 		.word	finish_pass2
@@ -5758,7 +5758,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3632 000e 0746     		mov	r7, r0
  3633              	.LVL490:
 1252:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 				SIZEOF(my_cquantizer));
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 97
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 97
 
 
 1253:Middlewares/Third_Party/LibJPEG/source/jquant2.c ****   cinfo->cquantize = (struct jpeg_color_quantizer *) cquantize;
@@ -5818,7 +5818,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3676 003c 0121     		movs	r1, #1
  3677 003e 2846     		mov	r0, r5
  3678 0040 9847     		blx	r3
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 98
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 98
 
 
  3679              	.LVL493:
@@ -5878,7 +5878,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3718              		.loc 1 1277 6 view .LVU1346
  3719 0068 002B     		cmp	r3, #0
  3720 006a 2ED0     		beq	.L258
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 99
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 99
 
 
  3721              	.LBB7:
@@ -5938,7 +5938,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3766 00a8 2246     		mov	r2, r4
  3767 00aa 0121     		movs	r1, #1
  3768 00ac 2846     		mov	r0, r5
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 100
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 100
 
 
  3769 00ae B047     		blx	r6
@@ -5998,7 +5998,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3800              	.L258:
 1290:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
  3801              		.loc 1 1290 5 is_stmt 1 view .LVU1371
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 101
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 101
 
 
 1290:Middlewares/Third_Party/LibJPEG/source/jquant2.c **** 
@@ -6052,49 +6052,49 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 1
  3844              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
  3845              		.file 7 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/string.h"
  3846              		.file 8 "<built-in>"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s 			page 102
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s 			page 102
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 jquant2.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:20     .text.prescan_quantize:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:25     .text.prescan_quantize:00000000 prescan_quantize
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:136    .text.find_biggest_color_pop:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:141    .text.find_biggest_color_pop:00000000 find_biggest_color_pop
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:224    .text.find_biggest_volume:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:229    .text.find_biggest_volume:00000000 find_biggest_volume
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:306    .text.update_box:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:311    .text.update_box:00000000 update_box
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:925    .text.median_cut:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:930    .text.median_cut:00000000 median_cut
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1204   .text.compute_color:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1209   .text.compute_color:00000000 compute_color
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1434   .text.select_colors:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1439   .text.select_colors:00000000 select_colors
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1554   .text.find_nearby_colors:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1559   .text.find_nearby_colors:00000000 find_nearby_colors
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1990   .text.find_best_colors:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:1995   .text.find_best_colors:00000000 find_best_colors
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2268   .text.fill_inverse_cmap:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2273   .text.fill_inverse_cmap:00000000 fill_inverse_cmap
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2464   .text.pass2_no_dither:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2469   .text.pass2_no_dither:00000000 pass2_no_dither
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2629   .text.pass2_fs_dither:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:2634   .text.pass2_fs_dither:00000000 pass2_fs_dither
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3138   .text.init_error_limit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3143   .text.init_error_limit:00000000 init_error_limit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3264   .text.finish_pass1:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3269   .text.finish_pass1:00000000 finish_pass1
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3306   .text.finish_pass2:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3311   .text.finish_pass2:00000000 finish_pass2
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3325   .text.new_color_map_2_quant:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3330   .text.new_color_map_2_quant:00000000 new_color_map_2_quant
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3352   .text.start_pass_2_quant:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3357   .text.start_pass_2_quant:00000000 start_pass_2_quant
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3587   .text.start_pass_2_quant:000000dc $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3596   .text.jinit_2pass_quantizer:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3602   .text.jinit_2pass_quantizer:00000000 jinit_2pass_quantizer
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccFRyvFv.s:3833   .text.jinit_2pass_quantizer:000000f0 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:20     .text.prescan_quantize:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:25     .text.prescan_quantize:00000000 prescan_quantize
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:136    .text.find_biggest_color_pop:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:141    .text.find_biggest_color_pop:00000000 find_biggest_color_pop
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:224    .text.find_biggest_volume:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:229    .text.find_biggest_volume:00000000 find_biggest_volume
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:306    .text.update_box:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:311    .text.update_box:00000000 update_box
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:925    .text.median_cut:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:930    .text.median_cut:00000000 median_cut
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1204   .text.compute_color:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1209   .text.compute_color:00000000 compute_color
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1434   .text.select_colors:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1439   .text.select_colors:00000000 select_colors
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1554   .text.find_nearby_colors:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1559   .text.find_nearby_colors:00000000 find_nearby_colors
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1990   .text.find_best_colors:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:1995   .text.find_best_colors:00000000 find_best_colors
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2268   .text.fill_inverse_cmap:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2273   .text.fill_inverse_cmap:00000000 fill_inverse_cmap
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2464   .text.pass2_no_dither:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2469   .text.pass2_no_dither:00000000 pass2_no_dither
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2629   .text.pass2_fs_dither:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:2634   .text.pass2_fs_dither:00000000 pass2_fs_dither
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3138   .text.init_error_limit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3143   .text.init_error_limit:00000000 init_error_limit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3264   .text.finish_pass1:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3269   .text.finish_pass1:00000000 finish_pass1
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3306   .text.finish_pass2:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3311   .text.finish_pass2:00000000 finish_pass2
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3325   .text.new_color_map_2_quant:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3330   .text.new_color_map_2_quant:00000000 new_color_map_2_quant
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3352   .text.start_pass_2_quant:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3357   .text.start_pass_2_quant:00000000 start_pass_2_quant
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3587   .text.start_pass_2_quant:000000dc $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3596   .text.jinit_2pass_quantizer:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3602   .text.jinit_2pass_quantizer:00000000 jinit_2pass_quantizer
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccjp6GjI.s:3833   .text.jinit_2pass_quantizer:000000f0 $d
 
 UNDEFINED SYMBOLS
 memset

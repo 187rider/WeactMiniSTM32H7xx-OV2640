@@ -11,11 +11,9 @@ extern volatile uint32_t DCMI_FrameIsReady;
 extern volatile uint32_t DCMI_VsyncFlag;
 extern volatile uint32_t DCMI_CallbackCount;
 
-#define MAX_PICTURE_BUFF (100*2048)
- //uint8_t pBuff[MAX_PICTURE_BUFF];
+#define MAX_PICTURE_BUFF (320*1024) // 320KB JPEG buffer
 // DMA-accessible buffer for JPEG capture, placed in AXI SRAM (.sram1)
 __attribute__((section(".sram1"))) static uint8_t pBuff[MAX_PICTURE_BUFF];
-//uint8_t pBuff[MAX_PICTURE_BUFF] __attribute__((aligned(32)));
 
 static char to_lower(char c)
 {

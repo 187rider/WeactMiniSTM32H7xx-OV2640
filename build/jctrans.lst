@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
   29:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * Call jpeg_finish_compress() to actually write the data.
   30:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  *
   31:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * The number of passed virtual arrays must match cinfo->num_components.
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 2
 
 
   32:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * Note that the virtual arrays need not be filled or even realized at
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
   86:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   /* jpeg_set_defaults may choose wrong colorspace, eg YCbCr if input is RGB.
   87:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****    * Fix it to get the right header markers for the image colorspace.
   88:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****    */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 3
 
 
   89:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   jpeg_set_colorspace(dstinfo, srcinfo->jpeg_color_space);
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  143:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****    * We will *not*, however, copy version info from mislabeled "2.01" files.
  144:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****    */
  145:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   if (srcinfo->saw_JFIF_marker) {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 4
 
 
  146:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     if (srcinfo->JFIF_major_version == 1) {
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  200:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** /* Private buffer controller object */
  201:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 
  202:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** typedef struct {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 5
 
 
  203:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   struct jpeg_c_coef_controller pub; /* public fields */
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  237:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   }
  238:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 
  239:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   coef->mcu_ctr = 0;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 6
 
 
   48              		.loc 1 239 3 is_stmt 1 view .LVU8
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
   88              		.section	.text.start_pass_coef,"ax",%progbits
   89              		.align	1
   90              		.syntax unified
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 7
 
 
   91              		.thumb
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  257:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   start_iMCU_row(cinfo);
  131              		.loc 1 257 3 is_stmt 1 view .LVU35
  132 001c 2046     		mov	r0, r4
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 8
 
 
  133 001e FFF7FEFF 		bl	start_iMCU_row
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  172              		.loc 1 274 15 is_stmt 0 view .LVU41
  173 0008 D0F89041 		ldr	r4, [r0, #400]
  174              	.LVL7:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 9
 
 
  275:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   JDIMENSION MCU_col_num;	/* index of current MCU within row */
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  213 002c A268     		ldr	r2, [r4, #8]
  214              		.loc 1 290 36 view .LVU64
  215 002e DB68     		ldr	r3, [r3, #12]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 10
 
 
  216              	.LVL12:
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  256 0064 D4F80C90 		ldr	r9, [r4, #12]
  257              	.LVL17:
  258              		.loc 1 297 5 view .LVU79
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 11
 
 
  259 0068 6AE0     		b	.L12
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  296              		.loc 1 311 30 is_stmt 1 discriminator 1 view .LVU93
  297 009a 8145     		cmp	r9, r0
  298 009c F3DB     		blt	.L18
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 12
 
 
  311:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 	    for (xindex = 0; xindex < blockcnt; xindex++)
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  335 00ce 8A6B     		ldr	r2, [r1, #56]
  323:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 	    MCU_buffer[blkn] = coef->dummy_buffer[blkn];
  336              		.loc 1 323 18 discriminator 1 view .LVU108
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 13
 
 
  337 00d0 4A45     		cmp	r2, r9
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  301:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 	compptr = cinfo->cur_comp_info[ci];
  377              		.loc 1 301 23 discriminator 1 view .LVU123
  301:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 	compptr = cinfo->cur_comp_info[ci];
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 14
 
 
  378              		.loc 1 301 30 is_stmt 0 discriminator 1 view .LVU124
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  415 0130 5B68     		ldr	r3, [r3, #4]
  416 0132 04A9     		add	r1, sp, #16
  417 0134 3846     		mov	r0, r7
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 15
 
 
  418 0136 9847     		blx	r3
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  452              	.LCFI3:
  453              		.cfi_remember_state
  454              		.cfi_def_cfa_offset 36
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 16
 
 
  455              		@ sp needed
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  349:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * Initialize coefficient buffer controller.
  350:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  *
  351:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * Each passed coefficient array must be the right size for that
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 17
 
 
  352:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****  * coefficient: width_in_blocks wide and height_in_blocks high,
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  535 0018 0360     		str	r3, [r0]
  369:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   coef->pub.compress_data = compress_output;
  536              		.loc 1 369 3 is_stmt 1 view .LVU177
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 18
 
 
  537              		.loc 1 369 27 is_stmt 0 view .LVU178
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  579              	.L36:
  379:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   for (i = 0; i < C_MAX_BLOCKS_IN_MCU; i++) {
  580              		.loc 1 379 17 discriminator 1 view .LVU193
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 19
 
 
  581 004c 092B     		cmp	r3, #9
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  628 0010 9BB1     		cbz	r3, .L42
  171:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   else {
  629              		.loc 1 171 5 is_stmt 1 view .LVU203
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 20
 
 
  630 0012 2046     		mov	r0, r4
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  675              		.thumb
  676              		.thumb_func
  678              	jpeg_write_coefficients:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 21
 
 
  679              	.LVL62:
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  723 002a 2046     		mov	r0, r4
  724 002c 9847     		blx	r3
  725              	.LVL65:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 22
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 22
 
 
   47:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   /* Perform master selection of active modules */
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  770              		.cfi_def_cfa_offset 36
  771              		.cfi_offset 4, -36
  772              		.cfi_offset 5, -32
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 23
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 23
 
 
  773              		.cfi_offset 6, -28
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
   77:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   dstinfo->input_components = srcinfo->num_components;
  815              		.loc 1 77 3 is_stmt 1 view .LVU248
   77:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****   dstinfo->input_components = srcinfo->num_components;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 24
 
 
  816              		.loc 1 77 34 is_stmt 0 view .LVU249
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  850              		.loc 1 85 3 is_stmt 1 view .LVU269
  851 005a 2846     		mov	r0, r5
  852 005c FFF7FEFF 		bl	jpeg_set_defaults
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 25
 
 
  853              	.LVL71:
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  893              	.L51:
   93:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     if (srcinfo->quant_tbl_ptrs[tblno] != NULL) {
  894              		.loc 1 93 48 is_stmt 1 discriminator 2 view .LVU284
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 26
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 26
 
 
  895 009e 0134     		adds	r4, r4, #1
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  934              		.loc 1 108 3 is_stmt 1 view .LVU299
  108:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     ERREXIT2(dstinfo, JERR_COMPONENT_COUNT, dstinfo->num_components,
  935              		.loc 1 108 35 is_stmt 0 view .LVU300
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 27
 
 
  936 00d4 013B     		subs	r3, r3, #1
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  981 0114 9847     		blx	r3
  982              	.LVL86:
  983              	.L57:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 28
 
 
  125:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     c_quant = incomp->quant_table;
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  1022              		.loc 1 113 27 view .LVU325
  1023 0142 CAF80030 		str	r3, [r10]
  114:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     outcomp->v_samp_factor = incomp->v_samp_factor;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 29
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 29
 
 
  1024              		.loc 1 114 5 is_stmt 1 view .LVU326
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  1062              		.loc 1 129 2 view .LVU342
  129:Middlewares/Third_Party/LibJPEG/source/jctrans.c **** 	  ERREXIT1(dstinfo, JERR_MISMATCHED_QUANT_TABLE, tblno);
  1063              		.loc 1 129 23 is_stmt 0 view .LVU343
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 30
 
 
  1064 017a 36F81420 		ldrh	r2, [r6, r4, lsl #1]
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  1105 01b2 85F8FA30 		strb	r3, [r5, #250]
  151:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     dstinfo->Y_density = srcinfo->Y_density;
  1106              		.loc 1 151 5 is_stmt 1 view .LVU357
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 31
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 31
 
 
  151:Middlewares/Third_Party/LibJPEG/source/jctrans.c ****     dstinfo->Y_density = srcinfo->Y_density;
@@ -1853,26 +1853,26 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 1
  1146              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
  1147              		.file 7 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/string.h"
  1148              		.file 8 "<built-in>"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s 			page 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s 			page 32
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 jctrans.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:20     .text.start_iMCU_row:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:25     .text.start_iMCU_row:00000000 start_iMCU_row
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:89     .text.start_pass_coef:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:94     .text.start_pass_coef:00000000 start_pass_coef
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:142    .text.compress_output:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:147    .text.compress_output:00000000 compress_output
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:490    .text.transencode_coef_controller:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:495    .text.transencode_coef_controller:00000000 transencode_coef_controller
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:590    .text.transencode_coef_controller:00000054 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:596    .text.transencode_master_selection:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:601    .text.transencode_master_selection:00000000 transencode_master_selection
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:672    .text.jpeg_write_coefficients:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:678    .text.jpeg_write_coefficients:00000000 jpeg_write_coefficients
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:754    .text.jpeg_copy_critical_parameters:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//cc1ugtni.s:760    .text.jpeg_copy_critical_parameters:00000000 jpeg_copy_critical_parameters
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:20     .text.start_iMCU_row:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:25     .text.start_iMCU_row:00000000 start_iMCU_row
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:89     .text.start_pass_coef:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:94     .text.start_pass_coef:00000000 start_pass_coef
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:142    .text.compress_output:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:147    .text.compress_output:00000000 compress_output
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:490    .text.transencode_coef_controller:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:495    .text.transencode_coef_controller:00000000 transencode_coef_controller
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:590    .text.transencode_coef_controller:00000054 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:596    .text.transencode_master_selection:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:601    .text.transencode_master_selection:00000000 transencode_master_selection
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:672    .text.jpeg_write_coefficients:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:678    .text.jpeg_write_coefficients:00000000 jpeg_write_coefficients
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:754    .text.jpeg_copy_critical_parameters:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccT98Uel.s:760    .text.jpeg_copy_critical_parameters:00000000 jpeg_copy_critical_parameters
 
 UNDEFINED SYMBOLS
 memset

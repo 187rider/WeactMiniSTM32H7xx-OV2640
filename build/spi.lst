@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
   29:Src/spi.c     **** /* SPI4 init function */
   30:Src/spi.c     **** void MX_SPI4_Init(void)
   31:Src/spi.c     **** {
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 2
 
 
   28              		.loc 1 31 1 view -0
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
   66              		.loc 1 47 32 is_stmt 0 view .LVU16
   67 0024 4FF00052 		mov	r2, #536870912
   68 0028 C261     		str	r2, [r0, #28]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 3
 
 
   48:Src/spi.c     ****   hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  109              		.loc 1 61 3 is_stmt 1 view .LVU43
  110              		.loc 1 61 21 is_stmt 0 view .LVU44
  111 0048 8365     		str	r3, [r0, #88]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 4
 
 
   62:Src/spi.c     ****   if (HAL_SPI_Init(&hspi4) != HAL_OK)
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  155 0002 B8B0     		sub	sp, sp, #224
  156              	.LCFI2:
  157              		.cfi_def_cfa_offset 232
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 5
 
 
  158 0004 0446     		mov	r4, r0
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  103:Src/spi.c     ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
  104:Src/spi.c     ****     GPIO_InitStruct.Alternate = GPIO_AF5_SPI4;
  105:Src/spi.c     ****     HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 6
 
 
  106:Src/spi.c     **** 
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  220 004c D3F8F020 		ldr	r2, [r3, #240]
  221 0050 02F40052 		and	r2, r2, #8192
  222 0054 0092     		str	r2, [sp]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 7
 
 
   93:Src/spi.c     **** 
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  259 0080 0523     		movs	r3, #5
  260 0082 3793     		str	r3, [sp, #220]
  105:Src/spi.c     **** 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 8
 
 
  261              		.loc 1 105 5 is_stmt 1 view .LVU91
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  117:Src/spi.c     ****   {
  118:Src/spi.c     ****   /* USER CODE BEGIN SPI4_MspDeInit 0 */
  119:Src/spi.c     **** 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 9
 
 
  120:Src/spi.c     ****   /* USER CODE END SPI4_MspDeInit 0 */
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  346              	.Letext0:
  347              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
  348              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 10
 
 
  349              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
@@ -550,22 +550,22 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 1
  355              		.file 10 "Inc/spi.h"
  356              		.file 11 "Inc/main.h"
  357              		.file 12 "<built-in>"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s 			page 11
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 spi.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:20     .text.MX_SPI4_Init:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:26     .text.MX_SPI4_Init:00000000 MX_SPI4_Init
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:130    .text.MX_SPI4_Init:00000058 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:343    .bss.hspi4:00000000 hspi4
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:136    .text.HAL_SPI_MspInit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:142    .text.HAL_SPI_MspInit:00000000 HAL_SPI_MspInit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:276    .text.HAL_SPI_MspInit:00000094 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:283    .text.HAL_SPI_MspDeInit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:289    .text.HAL_SPI_MspDeInit:00000000 HAL_SPI_MspDeInit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:332    .text.HAL_SPI_MspDeInit:00000028 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccUiClry.s:340    .bss.hspi4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:20     .text.MX_SPI4_Init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:26     .text.MX_SPI4_Init:00000000 MX_SPI4_Init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:130    .text.MX_SPI4_Init:00000058 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:343    .bss.hspi4:00000000 hspi4
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:136    .text.HAL_SPI_MspInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:142    .text.HAL_SPI_MspInit:00000000 HAL_SPI_MspInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:276    .text.HAL_SPI_MspInit:00000094 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:283    .text.HAL_SPI_MspDeInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:289    .text.HAL_SPI_MspDeInit:00000000 HAL_SPI_MspDeInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:332    .text.HAL_SPI_MspDeInit:00000028 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccZoNJqC.s:340    .bss.hspi4:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_SPI_Init

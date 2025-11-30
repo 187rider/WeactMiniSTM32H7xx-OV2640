@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
   29:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #endif
   30:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
   31:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #ifndef EXIT_FAILURE		/* define exit() codes if not provided */
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 2
 
 
   32:Middlewares/Third_Party/LibJPEG/source/jerror.c **** #define EXIT_FAILURE  1
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
   86:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  *
   87:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * On Windows, printing to stderr is generally completely useless,
   88:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * so we provide optional code to produce an error-dialog popup.
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 3
 
 
   89:Middlewares/Third_Party/LibJPEG/source/jerror.c ****  * Most Windows applications will still prefer to override this routine,
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
   56              	.LFE148:
   58              		.section	.text.emit_message,"ax",%progbits
   59              		.align	1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 4
 
 
   60              		.syntax unified
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  144:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     if (err->trace_level >= msg_level)
   86              		.loc 1 144 5 is_stmt 1 view .LVU14
   87              		.loc 1 144 12 is_stmt 0 view .LVU15
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 5
 
 
   88 0008 A36E     		ldr	r3, [r4, #104]
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  129              	.LFE149:
  131              		.section	.text.reset_error_mgr,"ax",%progbits
  132              		.align	1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 6
 
 
  133              		.syntax unified
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  196:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     sprintf(buffer, msgtext,
  197:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[0], err->msg_parm.i[1],
  198:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[2], err->msg_parm.i[3],
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 7
 
 
  199:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	    err->msg_parm.i[4], err->msg_parm.i[5],
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  174              		.loc 1 159 1 is_stmt 0 view .LVU41
  175 0000 30B5     		push	{r4, r5, lr}
  176              	.LCFI4:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 8
 
 
  177              		.cfi_def_cfa_offset 12
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  215              		.loc 1 177 3 is_stmt 1 view .LVU57
  177:Middlewares/Third_Party/LibJPEG/source/jerror.c ****     err->msg_parm.i[0] = msg_code;
  216              		.loc 1 177 6 is_stmt 0 view .LVU58
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 9
 
 
  217 001c 11B9     		cbnz	r1, .L15
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  254 0038 732B     		cmp	r3, #115
  255 003a 1FD0     		beq	.L22
  256              	.L18:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 10
 
 
  257              	.LVL19:
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  171:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 	     msg_code <= err->last_addon_message) {
  302              		.loc 1 171 44 view .LVU85
  303 006c D4F88050 		ldr	r5, [r4, #128]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 11
 
 
  304 0070 9D42     		cmp	r5, r3
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  348              		.loc 1 73 10 is_stmt 0 view .LVU97
  349 0004 0368     		ldr	r3, [r0]
   73:Middlewares/Third_Party/LibJPEG/source/jerror.c **** 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 12
 
 
  350              		.loc 1 73 4 view .LVU98
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  386 0006 4260     		str	r2, [r0, #4]
  236:Middlewares/Third_Party/LibJPEG/source/jerror.c ****   err->output_message = output_message;
  387              		.loc 1 236 3 is_stmt 1 view .LVU107
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 13
 
 
  388              		.loc 1 236 23 is_stmt 0 view .LVU108
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  426              		.loc 1 252 3 is_stmt 1 view .LVU129
  253:Middlewares/Third_Party/LibJPEG/source/jerror.c **** }
  427              		.loc 1 253 1 is_stmt 0 view .LVU130
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 14
 
 
  428 002c 7047     		bx	lr
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  460      20726571 
  460      75657374 
  461 00b1 000000   		.align	2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 15
 
 
  462              	.LC6:
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  485 01a4 57726F6E 		.ascii	"Wrong JPEG library version: library is %d, caller e"
  485      67204A50 
  485      4547206C 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 16
 
 
  485      69627261 
@@ -958,7 +958,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  509      20736372 
  509      69707420 
  510              		.align	2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 17
 
 
  511              	.LC21:
@@ -1018,7 +1018,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  533              	.LC28:
  534 042c 556E7375 		.ascii	"Unsupported color conversion request\000"
  534      70706F72 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 18
 
 
  534      74656420 
@@ -1078,7 +1078,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  558 04fc 4469646E 		.ascii	"Didn't expect more than one scan\000"
  558      27742065 
  558      78706563 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 19
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 19
 
 
  558      74206D6F 
@@ -1138,7 +1138,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  582      61747572 
  582      6520656E 
  582      64206F66 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 20
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 20
 
 
  582      20696E70 
@@ -1198,7 +1198,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  606              	.LC52:
  607 0750 48756666 		.ascii	"Huffman table 0x%02x was not defined\000"
  607      6D616E20 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 21
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 21
 
 
  607      7461626C 
@@ -1258,7 +1258,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  631 0894 496E7661 		.ascii	"Invalid JPEG file structure: two SOF markers\000"
  631      6C696420 
  631      4A504547 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 22
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 22
 
 
  631      2066696C 
@@ -1318,7 +1318,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  655      65206661 
  655      696C6564 
  655      206F6E20 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 23
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 23
 
 
  655      74656D70 
@@ -1378,7 +1378,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  681 0b14 38642020 		.ascii	"8d  15-Jan-2012\000"
  681      31352D4A 
  681      616E2D32 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 24
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 24
 
 
  681      30313200 
@@ -1438,7 +1438,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  704      75616E74 
  704      697A6174 
  704      696F6E20 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 25
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 25
 
 
  705 0c6f 00       		.align	2
@@ -1498,7 +1498,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  730 0d64 4A464946 		.ascii	"JFIF extension marker: type 0x%02x, length %u\000"
  730      20657874 
  730      656E7369 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 26
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 26
 
 
  730      6F6E206D 
@@ -1558,7 +1558,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  754      61726B65 
  754      72203078 
  754      25303278 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 27
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 27
 
 
  754      2C207265 
@@ -1618,7 +1618,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  780      2053653D 
  780      25642C20 
  780      41683D25 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 28
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 28
 
 
  781 0fb9 000000   		.align	2
@@ -1678,7 +1678,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  805      53206861 
  805      6E646C65 
  805      20257500 
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 29
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 29
 
 
  806              		.align	2
@@ -1738,7 +1738,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  828      20646174 
  828      613A2062 
  829              		.align	2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 30
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 30
 
 
  830              	.LC122:
@@ -1798,7 +1798,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  865 003c 14020000 		.word	.LC15
  866 0040 30020000 		.word	.LC16
  867 0044 54020000 		.word	.LC17
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 31
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 31
 
 
  868 0048 8C020000 		.word	.LC18
@@ -1858,7 +1858,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  922 0120 880A0000 		.word	.LC72
  923 0124 B00A0000 		.word	.LC73
  924 0128 C80A0000 		.word	.LC74
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 32
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 32
 
 
  925 012c DC0A0000 		.word	.LC75
@@ -1918,7 +1918,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  979              	.Letext0:
  980              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
  981              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 33
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 33
 
 
  982              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
@@ -1926,27 +1926,27 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 1
  984              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
  985              		.file 7 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
  986              		.file 8 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/stdio.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s 			page 34
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s 			page 34
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 jerror.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:20     .text.output_message:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:25     .text.output_message:00000000 output_message
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:59     .text.emit_message:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:64     .text.emit_message:00000000 emit_message
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:132    .text.reset_error_mgr:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:137    .text.reset_error_mgr:00000000 reset_error_mgr
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:162    .text.format_message:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:167    .text.format_message:00000000 format_message
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:328    .text.error_exit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:333    .text.error_exit:00000000 error_exit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:365    .text.jpeg_std_error:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:371    .text.jpeg_std_error:00000000 jpeg_std_error
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:432    .text.jpeg_std_error:00000030 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:849    .rodata.jpeg_std_message_table:00000000 jpeg_std_message_table
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:443    .rodata.str1.4:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccquw3fw.s:846    .rodata.jpeg_std_message_table:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:20     .text.output_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:25     .text.output_message:00000000 output_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:59     .text.emit_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:64     .text.emit_message:00000000 emit_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:132    .text.reset_error_mgr:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:137    .text.reset_error_mgr:00000000 reset_error_mgr
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:162    .text.format_message:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:167    .text.format_message:00000000 format_message
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:328    .text.error_exit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:333    .text.error_exit:00000000 error_exit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:365    .text.jpeg_std_error:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:371    .text.jpeg_std_error:00000000 jpeg_std_error
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:432    .text.jpeg_std_error:00000030 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:849    .rodata.jpeg_std_message_table:00000000 jpeg_std_message_table
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:443    .rodata.str1.4:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccn0Wqk6.s:846    .rodata.jpeg_std_message_table:00000000 $d
 
 UNDEFINED SYMBOLS
 sprintf

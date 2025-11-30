@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
   29:Src/dcmi.c    **** 
   30:Src/dcmi.c    **** /* DCMI init function */
   31:Src/dcmi.c    **** void MX_DCMI_Init(void)
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 2
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 2
 
 
   32:Src/dcmi.c    **** {
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
   65 001a 0262     		str	r2, [r0, #32]
   49:Src/dcmi.c    ****   hdcmi.Init.ByteSelectMode = DCMI_BSM_ALL;
   66              		.loc 1 49 3 is_stmt 1 view .LVU17
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 3
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 3
 
 
   67              		.loc 1 49 29 is_stmt 0 view .LVU18
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
   64:Src/dcmi.c    **** 
   65:Src/dcmi.c    **** }
  107              		.loc 1 65 1 is_stmt 0 view .LVU33
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 4
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 4
 
 
  108 0056 08BD     		pop	{r3, pc}
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  157              		.loc 1 71 16 is_stmt 0 view .LVU40
  158 0010 0268     		ldr	r2, [r0]
  159              		.loc 1 71 5 view .LVU41
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 5
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 5
 
 
  160 0012 574B     		ldr	r3, .L13
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  121:Src/dcmi.c    ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
  122:Src/dcmi.c    ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
  123:Src/dcmi.c    ****     GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 6
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 6
 
 
  124:Src/dcmi.c    ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  179              	.LBB2:
   77:Src/dcmi.c    **** 
  180              		.loc 1 77 5 view .LVU45
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 7
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 7
 
 
   77:Src/dcmi.c    **** 
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  220              		.loc 1 80 5 view .LVU60
  221 0066 039A     		ldr	r2, [sp, #12]
  222              	.LBE4:
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 8
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 8
 
 
   80:Src/dcmi.c    ****     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
   83:Src/dcmi.c    ****     /**DCMI GPIO Configuration
  261              		.loc 1 83 5 view .LVU77
  262 00a4 D3F8E030 		ldr	r3, [r3, #224]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 9
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 9
 
 
  263 00a8 03F00203 		and	r3, r3, #2
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  299 00ca 0025     		movs	r5, #0
  300 00cc 0995     		str	r5, [sp, #36]
  108:Src/dcmi.c    ****     GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 10
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 10
 
 
  301              		.loc 1 108 5 is_stmt 1 view .LVU96
@@ -598,7 +598,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  337              		.loc 1 120 5 is_stmt 1 view .LVU114
  120:Src/dcmi.c    ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
  338              		.loc 1 120 26 is_stmt 0 view .LVU115
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 11
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 11
 
 
  339 00f2 0897     		str	r7, [sp, #32]
@@ -658,7 +658,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  135:Src/dcmi.c    ****     hdma_dcmi.Init.Request = DMA_REQUEST_DCMI;
  375              		.loc 1 135 5 view .LVU134
  135:Src/dcmi.c    ****     hdma_dcmi.Init.Request = DMA_REQUEST_DCMI;
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 12
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 12
 
 
  376              		.loc 1 135 24 is_stmt 0 view .LVU135
@@ -718,7 +718,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  412 0140 4362     		str	r3, [r0, #36]
  145:Src/dcmi.c    ****     hdma_dcmi.Init.MemBurst = DMA_MBURST_SINGLE;
  413              		.loc 1 145 5 is_stmt 1 view .LVU154
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 13
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 13
 
 
  145:Src/dcmi.c    ****     hdma_dcmi.Init.MemBurst = DMA_MBURST_SINGLE;
@@ -778,7 +778,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  453 016c F0E7     		b	.L9
  454              	.L14:
  455 016e 00BF     		.align	2
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 14
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 14
 
 
  456              	.L13:
@@ -838,7 +838,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  500 000e 124A     		ldr	r2, .L22+4
  501 0010 D2F8DC30 		ldr	r3, [r2, #220]
  502 0014 23F00103 		bic	r3, r3, #1
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 15
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 15
 
 
  503 0018 C2F8DC30 		str	r3, [r2, #220]
@@ -898,7 +898,7 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  200:Src/dcmi.c    ****     HAL_DMA_DeInit(dcmiHandle->DMA_Handle);
  531              		.loc 1 200 5 view .LVU183
  532 0044 A06C     		ldr	r0, [r4, #72]
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 16
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 16
 
 
  533 0046 FFF7FEFF 		bl	HAL_DMA_DeInit
@@ -958,30 +958,30 @@ ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 1
  576              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h"
  577              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
  578              		.file 8 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dcmi.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 17
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 17
 
 
  579              		.file 9 "Inc/dcmi.h"
  580              		.file 10 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h"
  581              		.file 11 "Inc/main.h"
-ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s 			page 18
+ARM GAS  /var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s 			page 18
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 dcmi.c
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:20     .text.MX_DCMI_Init:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:26     .text.MX_DCMI_Init:00000000 MX_DCMI_Init
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:117    .text.MX_DCMI_Init:00000060 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:568    .bss.hdcmi:00000000 hdcmi
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:123    .text.HAL_DCMI_MspInit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:129    .text.HAL_DCMI_MspInit:00000000 HAL_DCMI_MspInit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:457    .text.HAL_DCMI_MspInit:00000170 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:561    .bss.hdma_dcmi:00000000 hdma_dcmi
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:470    .text.HAL_DCMI_MspDeInit:00000000 $t
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:476    .text.HAL_DCMI_MspDeInit:00000000 HAL_DCMI_MspDeInit
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:546    .text.HAL_DCMI_MspDeInit:00000054 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:558    .bss.hdma_dcmi:00000000 $d
-/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccNitdtH.s:565    .bss.hdcmi:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:20     .text.MX_DCMI_Init:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:26     .text.MX_DCMI_Init:00000000 MX_DCMI_Init
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:117    .text.MX_DCMI_Init:00000060 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:568    .bss.hdcmi:00000000 hdcmi
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:123    .text.HAL_DCMI_MspInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:129    .text.HAL_DCMI_MspInit:00000000 HAL_DCMI_MspInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:457    .text.HAL_DCMI_MspInit:00000170 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:561    .bss.hdma_dcmi:00000000 hdma_dcmi
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:470    .text.HAL_DCMI_MspDeInit:00000000 $t
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:476    .text.HAL_DCMI_MspDeInit:00000000 HAL_DCMI_MspDeInit
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:546    .text.HAL_DCMI_MspDeInit:00000054 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:558    .bss.hdma_dcmi:00000000 $d
+/var/folders/mq/wg13gp494590nh4zyt09lxf00000gn/T//ccHWaWNg.s:565    .bss.hdcmi:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_DCMI_Init
